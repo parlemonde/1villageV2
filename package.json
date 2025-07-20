@@ -1,25 +1,49 @@
 {
   "name": "1village-v2",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "author": "Par Le Monde",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://1v.parlemonde.org",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:lambda": "rm -rf .open-next && open-next build --config-path ./open-next/open-next.config.ts && node ./open-next/install-deps.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "typecheck": "tsc --noEmit -p .",
+    "db:migrate": "dotenvx run -- tsx src/database/migrate.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "drizzle-orm": "^0.44.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "next": "15.4.2"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@dotenvx/dotenvx": "1.48.1",
+    "@eslint/eslintrc": "3.3.1",
+    "@eslint/js": "9.31.0",
+    "@next/eslint-plugin-next": "15.4.2",
+    "@opennextjs/aws": "3.7.0",
+    "@svgr/webpack": "8.1.0",
+    "@types/node": "22.15.21",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "drizzle-kit": "0.31.4",
+    "eslint": "9.31.0",
     "eslint-config-next": "15.4.2",
-    "@eslint/eslintrc": "^3"
-  }
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.3",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "prettier": "3.6.2",
+    "raw-loader": "4.0.2",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.37.0"
+  },
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
 }

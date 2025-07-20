@@ -1,0 +1,19 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "search.exclude": {
+    "**/.next": true,
+    "**/.postgres-data": true,
+    "**/.dynamodb": true,
+    "**/node_modules": true,
+    "**/tmp": true,
+    "**/.open-next": true,
+  },
+  "files.exclude": {
+    "**/.postgres-data": true,
+    "**/.dynamodb": true,
+    "**/tmp": true,
+  }
+}

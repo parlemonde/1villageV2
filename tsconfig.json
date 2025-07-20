@@ -22,6 +22,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "drizzle.config.ts",
+    "next-env.d.ts",
+    "next.config.ts",
+    "src/**/*.html",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.txt",
+    "src/image-loader.js",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
