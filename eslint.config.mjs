@@ -76,7 +76,7 @@ export default eslintTS.config(
                 {
                     pathGroups: [
                         {
-                            pattern: 'src/**',
+                            pattern: '@/**',
                             group: 'sibling',
                         },
                     ],
