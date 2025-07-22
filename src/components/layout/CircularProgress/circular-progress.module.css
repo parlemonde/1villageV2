@@ -1,0 +1,54 @@
+.progressRoot {
+    display: inline-block;
+    padding: 0;
+}
+
+.progressIndicator {
+    width: 100%;
+    height: 100%;
+    transform: rotate(0deg);
+    animation: 1.4s linear infinite rotate360;
+}
+
+.progressIndicator > svg {
+    width: 100%;
+    height: 100%;
+    stroke-dasharray: 115px, 115px;
+    stroke-dashoffset: -125px;
+    animation: 1.4s ease-in-out infinite stroke-anim;
+}
+
+.progressIndicator--primary > svg {
+    stroke: var(--primary-color);
+}
+.progressIndicator--secondary > svg {
+    stroke: var(--secondary-color);
+}
+.progressIndicator--grey > svg {
+    stroke: rgba(0, 0, 0, 0.26);
+}
+
+@keyframes stroke-anim {
+    0% {
+        stroke-dasharray: 1px, 115px;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 100px, 115px;
+        stroke-dashoffset: -15px;
+    }
+    100% {
+        stroke-dasharray: 115px, 115px;
+        stroke-dashoffset: -115px;
+    }
+}
+
+@keyframes rotate360 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
