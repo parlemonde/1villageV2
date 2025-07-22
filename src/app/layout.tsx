@@ -3,9 +3,6 @@ import 'normalize.css/normalize.css';
 import './globals.css';
 import { Tooltip } from 'radix-ui';
 
-import { UserProvider } from '@/contexts/userContext';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
-
 const APP_URL = process.env.HOST_URL || '';
 const APP_NAME = '1Village';
 const APP_DESCRIPTION = "Application d'échanges entre classes de différents pays";
@@ -48,22 +45,19 @@ export const viewport: Viewport = {
     width: 'device-width',
     initialScale: 1,
     minimumScale: 1,
-    themeColor: '#000000', // TODO: change to the correct color
+    themeColor: '#4c3ed9',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const user = await getCurrentUser();
     return (
         <html lang="fr">
             <body>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
-                <Tooltip.Provider delayDuration={0}>
-                    <UserProvider initialUser={user}>{children}</UserProvider>
-                </Tooltip.Provider>
+                <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
             </body>
         </html>
     );
