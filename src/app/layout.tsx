@@ -1,7 +1,10 @@
+import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
+import { Tooltip } from 'radix-ui';
 import 'normalize.css/normalize.css';
 import './globals.css';
-import { Tooltip } from 'radix-ui';
+
+import { openSansFont, alegreyaSansFont } from '@/fonts';
 
 const APP_URL = process.env.HOST_URL || '';
 const APP_NAME = '1Village';
@@ -55,7 +58,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr">
-            <body>
+            <body className={classNames(openSansFont.className, openSansFont.variable, alegreyaSansFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
                 <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
             </body>

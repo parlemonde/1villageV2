@@ -1,0 +1,36 @@
+.rootLayout {
+    /* position */
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh; /* for mobile */
+
+    /* display */
+    padding: 84px 20px 0 20px; /* 8px + 60px + 16px = 84px (header height + margin) */
+    position: relative;
+    box-sizing: border-box;
+    gap: 16px;
+}
+
+@media (max-width: 850px) {
+    .rootLayout {
+        width: 100%;
+        margin: 0;
+        padding: 76px 0 0 0; /* 60px + 16px = 76px (header height + margin) */
+    }
+}
+
+.content {
+    flex: 1 1 0;
+    /* min-height: 100%; */
+    gap: 16px;
+}
+
+.main {
+    background-color: white;
+    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    flex: 1 1 0;
+}

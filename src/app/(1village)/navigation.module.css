@@ -1,0 +1,31 @@
+.navigationWrapper {
+    width: 300px;
+    position: relative;
+}
+.test {
+    position: sticky;
+    top: 84px;
+}
+.navigationCard {
+    background-color: white;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+    border-radius: 10px;
+    padding: 8px 16px;
+}
+
+.navigationCardTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 38px;
+}
+
+@media (max-width: 850px) {
+    .navigationWrapper {
+        display: none;
+    }
+}

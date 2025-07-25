@@ -1,5 +1,10 @@
 import { redirect } from 'next/navigation';
 
+import { Header } from './Header';
+import { Navigation } from './Navigation';
+import { Phases } from './Phases';
+import styles from './layout.module.css';
+import { Flex } from '@/components/layout/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
@@ -14,9 +19,14 @@ export default async function RootLayout({
     }
     return (
         <UserProvider initialUser={user}>
-            <header>header</header>
-            <nav>nav</nav>
-            <main>{children}</main>
+            <Header />
+            <Flex justifyContent="flex-start" alignItems="stretch" className={styles.rootLayout}>
+                <Navigation />
+                <Flex isFullWidth flexDirection="column" alignItems="stretch" justifyContent="flex-start" className={styles.content}>
+                    <Phases />
+                    <main className={styles.main}>{children}</main>
+                </Flex>
+            </Flex>
         </UserProvider>
     );
 }
