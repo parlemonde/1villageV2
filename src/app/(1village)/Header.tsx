@@ -3,6 +3,7 @@
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import React, { useState } from 'react';
 
+import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
 import { BackDrop } from '@/components/layout/BackDrop';
 import { IconButton } from '@/components/layout/Button';
@@ -32,9 +33,7 @@ export const Header = () => {
             </header>
             {isOpen && (
                 <BackDrop onClick={() => setIsOpen(false)}>
-                    <div style={{ width: '400px', maxWidth: '100%', height: '100%', backgroundColor: 'white' }} onClick={(e) => e.stopPropagation()}>
-                        Navigation (TODO)
-                    </div>
+                    <NavigationMobileMenu onClose={() => setIsOpen(false)} />
                 </BackDrop>
             )}
         </div>

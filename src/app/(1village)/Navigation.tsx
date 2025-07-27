@@ -57,3 +57,67 @@ export const Navigation = () => {
         </div>
     );
 };
+
+interface NavigationMobileMenuProps {
+    onClose: () => void;
+}
+export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
+    const pathname = usePathname();
+    const firstPath = pathname.split('/')[1];
+
+    return (
+        <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
+            <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
+                <strong>Village-monde</strong>
+                <CountryFlag country="fr" />
+                <CountryFlag isMystery />
+            </div>
+            <NavigationMenu.Root orientation="vertical">
+                <NavigationMenu.List className={classNames(styles.navigationMenuList, styles.navigationMenuListMobile)}>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild active={firstPath === ''}>
+                            <Link
+                                href="/"
+                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
+                                onClick={() => {
+                                    onClose();
+                                }}
+                            >
+                                <HomeIcon className={styles.navigationMenuItemIcon} />
+                                Accueil
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild active={firstPath === 'ma-classe'}>
+                            <Link
+                                href="/ma-classe"
+                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
+                                onClick={() => {
+                                    onClose();
+                                }}
+                            >
+                                <AvatarIcon className={styles.navigationMenuItemIcon} />
+                                Notre classe et nos activités
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild active={firstPath === 'contenu-libre'}>
+                            <Link
+                                href="/contenu-libre"
+                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
+                                onClick={() => {
+                                    onClose();
+                                }}
+                            >
+                                <FreeContentIcon className={styles.navigationMenuItemIcon} />
+                                Publier un contenu libre
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+                </NavigationMenu.List>
+            </NavigationMenu.Root>
+        </div>
+    );
+};

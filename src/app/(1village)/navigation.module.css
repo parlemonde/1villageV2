@@ -22,6 +22,10 @@
     gap: 8px;
     height: 38px;
 }
+.navigationCardTitleMobile {
+    height: 60px;
+    border-bottom: 1px solid #e0e0e0;
+}
 
 @media (max-width: 850px) {
     .navigationWrapper {
@@ -65,4 +69,24 @@
 .navigationMenuItemIcon {
     width: 24px;
     height: auto;
+}
+
+.navigationMobileMenu {
+    width: 340px;
+    max-width: 100%;
+    height: 100%;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 0;
+}
+.navigationMenuListMobile {
+    gap: 0;
+}
+.navigationMenuItemMobile {
+    height: 48px;
+    border: none;
+    border-radius: 0;
+}
+.navigationMenuItem[data-active].navigationMenuItemMobile {
+    width: 100%;
 }
