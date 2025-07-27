@@ -1,10 +1,20 @@
+'use client';
+
+import { AvatarIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { NavigationMenu } from 'radix-ui';
 import React from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
+import FreeContentIcon from '@/svg/navigation/free-content.svg';
+import HomeIcon from '@/svg/navigation/home.svg';
 
 export const Navigation = () => {
+    const pathname = usePathname();
+    const firstPath = pathname.split('/')[1];
     return (
         <div className={styles.navigationWrapper}>
             <div className={styles.test}>
@@ -14,7 +24,34 @@ export const Navigation = () => {
                     <CountryFlag isMystery />
                 </div>
                 <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
-                    <nav>foo</nav>
+                    <NavigationMenu.Root orientation="vertical">
+                        <NavigationMenu.List className={styles.navigationMenuList}>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link asChild active={firstPath === ''}>
+                                    <Link href="/" className={styles.navigationMenuItem}>
+                                        <HomeIcon className={styles.navigationMenuItemIcon} />
+                                        Accueil
+                                    </Link>
+                                </NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link asChild active={firstPath === 'ma-classe'}>
+                                    <Link href="/ma-classe" className={styles.navigationMenuItem}>
+                                        <AvatarIcon className={styles.navigationMenuItemIcon} />
+                                        Notre classe et nos activités
+                                    </Link>
+                                </NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <NavigationMenu.Link asChild active={firstPath === 'contenu-libre'}>
+                                    <Link href="/contenu-libre" className={styles.navigationMenuItem}>
+                                        <FreeContentIcon className={styles.navigationMenuItemIcon} />
+                                        Publier un contenu libre
+                                    </Link>
+                                </NavigationMenu.Link>
+                            </NavigationMenu.Item>
+                        </NavigationMenu.List>
+                    </NavigationMenu.Root>
                 </div>
             </div>
         </div>
