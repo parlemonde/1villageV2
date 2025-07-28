@@ -1,6 +1,7 @@
 'use client';
 
 import { AvatarIcon } from '@radix-ui/react-icons';
+import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,6 +10,8 @@ import React from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
+import { IconButton } from '@/components/layout/Button';
+import { Flex } from '@/components/layout/Flex';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';
 import HomeIcon from '@/svg/navigation/home.svg';
 
@@ -67,11 +70,14 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
-            <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
-                <strong>Village-monde</strong>
-                <CountryFlag country="fr" />
-                <CountryFlag isMystery />
-            </div>
+            <Flex isFullWidth justifyContent="flex-start" className={styles.navigationMobileMenuHeader}>
+                <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
+                    <strong>Village-monde</strong>
+                    <CountryFlag country="fr" />
+                    <CountryFlag isMystery />
+                </div>
+                <IconButton icon={Cross1Icon} onClick={onClose} />
+            </Flex>
             <NavigationMenu.Root orientation="vertical">
                 <NavigationMenu.List className={classNames(styles.navigationMenuList, styles.navigationMenuListMobile)}>
                     <NavigationMenu.Item>
