@@ -1,9 +1,11 @@
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
 import { Tooltip } from 'radix-ui';
-import 'normalize.css/normalize.css';
-import './globals.css';
 
+import 'normalize.css/normalize.css';
+import 'nprogress/nprogress.css';
+import './globals.css';
+import { NProgressDone } from '@/components/NProgress';
 import { openSansFont, alegreyaSansFont } from '@/fonts';
 
 const APP_URL = process.env.HOST_URL || '';
@@ -61,6 +63,7 @@ export default function RootLayout({
             <body className={classNames(openSansFont.className, openSansFont.variable, alegreyaSansFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
                 <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
+                <NProgressDone />
             </body>
         </html>
     );

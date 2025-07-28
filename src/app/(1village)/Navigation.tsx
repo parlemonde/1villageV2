@@ -3,13 +3,13 @@
 import { AvatarIcon } from '@radix-ui/react-icons';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavigationMenu } from 'radix-ui';
 import React from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
+import { Link } from '@/components/Link';
 import { IconButton } from '@/components/layout/Button';
 import { Flex } from '@/components/layout/Flex';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';

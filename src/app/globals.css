@@ -30,3 +30,9 @@ p {
     margin: 0;
     padding: 0;
 }
+
+#nprogress .bar {
+    z-index: 2000;
+    background-color: var(--primary-color);
+    height: 1px;
+}
