@@ -24,7 +24,6 @@
 }
 .navigationCardTitleMobile {
     height: 59px;
-    border-bottom: 1px solid #e0e0e0;
     flex: 1 1 0;
 }
 
@@ -76,6 +75,7 @@
     gap: 16px;
     padding: 0 16px;
     box-sizing: border-box;
+    border-bottom: 1px solid #e0e0e0;
 }
 .navigationMobileMenu {
     width: 340px;
