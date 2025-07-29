@@ -37,4 +37,7 @@
         width: unset;
         height: 1px;
     }
+    .Icon {
+        width: 130px;
+    }
 }

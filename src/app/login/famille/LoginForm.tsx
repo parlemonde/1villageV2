@@ -1,0 +1,52 @@
+'use client';
+
+import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+
+import { Button } from '@/components/layout/Button';
+import { IconButton } from '@/components/layout/Button/IconButton';
+import { Field, Form, Input } from '@/components/layout/Form';
+
+export const LoginForm = () => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    return (
+        <Form
+            preventSubmit
+            onSubmit={(event) => {
+                // eslint-disable-next-line no-console
+                console.log(event);
+            }}
+            marginY="lg"
+            style={{ width: '350px', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'stretch' }}
+        >
+            <Field name="email" label="Email" input={<Input id="email" isFullWidth required placeholder="Entrez votre adresse email" />} />
+            <Field
+                name="password"
+                label="Mot de passe"
+                input={
+                    <Input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        isFullWidth
+                        required
+                        placeholder="Entrez votre mot de passe"
+                        iconAdornment={
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                    setShowPassword(!showPassword);
+                                }}
+                                variant="borderless"
+                                icon={showPassword ? EyeNoneIcon : EyeOpenIcon}
+                                iconProps={{ style: { color: 'rgba(0, 0, 0, 0.54)', height: 24, width: 24 } }}
+                            ></IconButton>
+                        }
+                        iconAdornmentProps={{ position: 'right' }}
+                    />
+                }
+            />
+            <Button label="Se connecter" type="submit" color="primary" />
+        </Form>
+    );
+};

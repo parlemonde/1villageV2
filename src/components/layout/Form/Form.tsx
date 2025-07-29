@@ -14,14 +14,15 @@ export const Form = ({ children, preventSubmit, style = {}, ...props }: React.Pr
     const { marginAndPaddingProps, otherProps } = getMarginAndPaddingProps(props);
     return (
         <form
+            {...otherProps}
             onSubmit={
                 preventSubmit
                     ? (event) => {
                           event.preventDefault();
+                          otherProps.onSubmit?.(event);
                       }
-                    : undefined
+                    : otherProps.onSubmit
             }
-            {...otherProps}
             style={{ ...style, ...getMarginAndPaddingStyle(marginAndPaddingProps) }}
         >
             {children}
