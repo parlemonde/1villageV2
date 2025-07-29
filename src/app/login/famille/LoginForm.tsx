@@ -1,32 +1,36 @@
 'use client';
 
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/layout/Button';
 import { IconButton } from '@/components/layout/Button/IconButton';
 import { Field, Form, Input } from '@/components/layout/Form';
+import { login } from '@/server-actions/authentication/login';
 
 export const LoginForm = () => {
+    const [message, formAction] = useActionState(login, '');
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <Form
-            preventSubmit
-            onSubmit={(event) => {
-                // eslint-disable-next-line no-console
-                console.log(event);
-            }}
+            action={formAction}
             marginY="lg"
             style={{ width: '350px', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'stretch' }}
         >
-            <Field name="email" label="Email" input={<Input id="email" isFullWidth required placeholder="Entrez votre adresse email" />} />
+            {message && <p style={{ color: 'var(--error-color)', textAlign: 'center' }}>{message}</p>}
+            <Field
+                name="email"
+                label="Email"
+                input={<Input id="email" name="email" isFullWidth required placeholder="Entrez votre adresse email" />}
+            />
             <Field
                 name="password"
                 label="Mot de passe"
                 input={
                     <Input
                         id="password"
+                        name="password"
                         type={showPassword ? 'text' : 'password'}
                         isFullWidth
                         required

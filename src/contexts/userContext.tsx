@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import type { User } from '@/server-functions/getCurrentUser';
+import type { User } from '@/database/schemas/users';
 
 export const UserContext = React.createContext<{
     user: User;
@@ -12,6 +12,7 @@ export const UserContext = React.createContext<{
         id: 0,
         name: '',
         email: '',
+        role: 'teacher',
     },
     setUser: () => {},
 });
