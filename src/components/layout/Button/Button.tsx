@@ -6,6 +6,7 @@ import styles from './button.module.css';
 import { CircularProgress } from '../CircularProgress';
 import type { MarginProps } from '../css-styles';
 import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '../css-styles';
+import { Link } from '@/components/navigation/Link';
 
 export type ButtonProps = {
     as?: 'button' | 'a' | 'label';
@@ -46,32 +47,31 @@ const ButtonWithRef = (
     ref: React.ForwardedRef<HTMLButtonElement | HTMLAnchorElement>,
 ) => {
     const { marginAndPaddingProps, otherProps } = getMarginAndPaddingProps(props);
-    return React.createElement(
-        as || 'button',
-        {
-            ...otherProps,
-            type,
-            disabled: isLoading || otherProps.disabled,
-            className: classNames(
-                styles.button,
-                styles[`button--color-${color}`],
-                styles[`button--variant-${variant}`],
-                styles[`button--${size}`],
-                className,
-                {
-                    [styles[`button--is-full-width`]]: isFullWidth,
-                    [styles[`button--is-uppercase`]]: isUpperCase,
-                    [styles[`button--hidden`]]: isVisuallyHidden,
-                    [styles[`button--mobile-only`]]: isMobileOnly,
-                    [styles[`button--tablet-up-only`]]: isTabletUpOnly,
-                },
-            ),
-            style: {
-                ...getMarginAndPaddingStyle(marginAndPaddingProps),
-                ...style,
+    const buttonProps = {
+        ...otherProps,
+        type,
+        disabled: isLoading || otherProps.disabled,
+        className: classNames(
+            styles.button,
+            styles[`button--color-${color}`],
+            styles[`button--variant-${variant}`],
+            styles[`button--${size}`],
+            className,
+            {
+                [styles[`button--is-full-width`]]: isFullWidth,
+                [styles[`button--is-uppercase`]]: isUpperCase,
+                [styles[`button--hidden`]]: isVisuallyHidden,
+                [styles[`button--mobile-only`]]: isMobileOnly,
+                [styles[`button--tablet-up-only`]]: isTabletUpOnly,
             },
-            ref,
+        ),
+        style: {
+            ...getMarginAndPaddingStyle(marginAndPaddingProps),
+            ...style,
         },
+        ref,
+    };
+    const children = (
         <>
             {isLoading ? (
                 <span style={{ display: 'inline-flex', marginRight: 8 }}>
@@ -82,8 +82,16 @@ const ButtonWithRef = (
             )}
             {label}
             {!isLoading && rightIcon}
-        </>,
+        </>
     );
+    if (as === 'a' && buttonProps.href?.startsWith('/')) {
+        return (
+            <Link {...buttonProps} ref={buttonProps.ref as React.Ref<HTMLAnchorElement>} href={buttonProps.href as string}>
+                {children}
+            </Link>
+        );
+    }
+    return React.createElement(as || 'button', buttonProps, children);
 };
 
 export const Button = React.forwardRef(ButtonWithRef);

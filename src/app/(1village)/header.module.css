@@ -54,6 +54,7 @@
 .logo {
     width: 40px;
     height: 40px;
+    color: var(--primary-color);
 }
 
 .title {

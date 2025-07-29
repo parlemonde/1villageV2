@@ -35,6 +35,7 @@ export const Flex = ({
         flexDirection,
         justifyContent,
         alignItems,
+        boxSizing: 'border-box',
     };
     if (isFullHeight) {
         flexStyle.height = '100%';

@@ -5,7 +5,7 @@ import { Tooltip } from 'radix-ui';
 import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
-import { NProgressDone } from '@/components/NProgress';
+import { NProgressDone } from '@/components/navigation/NProgress';
 import { openSansFont, alegreyaSansFont } from '@/fonts';
 
 const APP_URL = process.env.HOST_URL || '';

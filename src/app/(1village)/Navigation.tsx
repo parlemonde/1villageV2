@@ -9,9 +9,9 @@ import React from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
-import { Link } from '@/components/Link';
 import { IconButton } from '@/components/layout/Button';
 import { Flex } from '@/components/layout/Flex';
+import { Link } from '@/components/navigation/Link';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';
 import HomeIcon from '@/svg/navigation/home.svg';
 
