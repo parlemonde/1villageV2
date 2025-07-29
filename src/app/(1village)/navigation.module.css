@@ -57,6 +57,7 @@
     font-size: 15px;
     font-weight: 500;
     gap: 8px;
+    transition: width 150ms ease-in-out;
 }
 .navigationMenuItem:hover {
     background-color: var(--primary-color-light);

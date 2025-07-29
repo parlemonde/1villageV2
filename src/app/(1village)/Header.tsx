@@ -8,6 +8,7 @@ import styles from './header.module.css';
 import { BackDrop } from '@/components/layout/BackDrop';
 import { IconButton } from '@/components/layout/Button';
 import { Flex } from '@/components/layout/Flex';
+import { logout } from '@/server-actions/authentication/logout';
 import CogIcon from '@/svg/cogIcon.svg';
 import LogoSVG from '@/svg/logo.svg';
 
@@ -29,7 +30,7 @@ export const Header = () => {
                     <LogoSVG className={styles.logo} />
                     <span className={styles.title}>1Village</span>
                 </Flex>
-                <IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />
+                <IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly onClick={() => logout()} />
             </header>
             {isOpen && (
                 <BackDrop onClick={() => setIsOpen(false)}>
