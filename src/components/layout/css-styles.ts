@@ -20,7 +20,7 @@ export type PaddingProps = {
     padding?: Size | number | 'none';
 };
 
-const SIZES: Record<Size, number> = {
+export const SIZES: Record<Size, number> = {
     xs: 4,
     sm: 8,
     md: 16,

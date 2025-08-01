@@ -7,6 +7,8 @@ import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
 import { BackDrop } from '@/components/layout/BackDrop';
 import { IconButton } from '@/components/layout/Button';
+import { Dropdown } from '@/components/layout/Dropdown';
+import { DropdownMenuItem } from '@/components/layout/Dropdown/DropdownMenuItem';
 import { Flex } from '@/components/layout/Flex';
 import { logout } from '@/server-actions/authentication/logout';
 import CogIcon from '@/svg/cogIcon.svg';
@@ -30,7 +32,10 @@ export const Header = () => {
                     <LogoSVG className={styles.logo} />
                     <span className={styles.title}>1Village</span>
                 </Flex>
-                <IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly onClick={() => logout()} />
+                <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
+                    <DropdownMenuItem label="Mon compte" />
+                    <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" />
+                </Dropdown>
             </header>
             {isOpen && (
                 <BackDrop onClick={() => setIsOpen(false)}>

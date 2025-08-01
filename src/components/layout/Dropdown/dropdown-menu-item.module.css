@@ -1,0 +1,19 @@
+.DropdownMenuItem {
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+}
+.DropdownMenuItem:hover,
+.DropdownMenuItem:focus {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.color-primary {
+    color: var(--primary-color);
+}
+.color-secondary {
+    color: var(--secondary-color);
+}
+.color-danger {
+    color: var(--error-color);
+}
