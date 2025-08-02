@@ -6,6 +6,8 @@ import { Phases } from './Phases';
 import styles from './layout.module.css';
 import { Flex } from '@/components/layout/Flex';
 import { UserProvider } from '@/contexts/userContext';
+import { VillageProvider } from '@/contexts/villageContext';
+import { getUserClassroomAndVillage } from '@/server-functions/get-user-classroom-and-village';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
 export default async function RootLayout({
@@ -17,16 +19,19 @@ export default async function RootLayout({
     if (!user) {
         redirect('/login');
     }
+    const { classroom, village } = await getUserClassroomAndVillage(user.id);
     return (
-        <UserProvider initialUser={user}>
-            <Header />
-            <Flex justifyContent="flex-start" alignItems="stretch" className={styles.rootLayout}>
-                <Navigation />
-                <Flex isFullWidth flexDirection="column" alignItems="stretch" justifyContent="flex-start" className={styles.content}>
-                    <Phases />
-                    <main className={styles.main}>{children}</main>
+        <UserProvider initialUser={user} classroom={classroom}>
+            <VillageProvider village={village}>
+                <Header />
+                <Flex justifyContent="flex-start" alignItems="stretch" className={styles.rootLayout}>
+                    {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
+                    <Flex isFullWidth flexDirection="column" alignItems="stretch" justifyContent="flex-start" className={styles.content}>
+                        <Phases />
+                        <main className={styles.main}>{children}</main>
+                    </Flex>
                 </Flex>
-            </Flex>
+            </VillageProvider>
         </UserProvider>
     );
 }

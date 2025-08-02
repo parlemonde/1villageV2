@@ -2,9 +2,9 @@ import { sql } from 'drizzle-orm';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { boolean, smallint, integer, pgTable, varchar, serial, timestamp, jsonb } from 'drizzle-orm/pg-core';
 
-import { classrooms } from './classroom';
+import { classrooms } from './classrooms';
 import { users } from './users';
-import { villages } from './village';
+import { villages } from './villages';
 
 const ACTIVITY_TYPES_ENUM = ['libre', 'jeu', 'enigme'] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES_ENUM)[number];

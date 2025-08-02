@@ -5,17 +5,24 @@ import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
 import { NavigationMenu } from 'radix-ui';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
 import { IconButton } from '@/components/layout/Button';
 import { Flex } from '@/components/layout/Flex';
 import { Link } from '@/components/navigation/Link';
+import { UserContext } from '@/contexts/userContext';
+import { VillageContext } from '@/contexts/villageContext';
+import type { Village } from '@/database/schemas/villages';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';
 import HomeIcon from '@/svg/navigation/home.svg';
 
-export const Navigation = () => {
+interface NavigationProps {
+    village: Village;
+    classroomCountryCode?: string;
+}
+export const Navigation = ({ village, classroomCountryCode }: NavigationProps) => {
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
     return (
@@ -23,8 +30,16 @@ export const Navigation = () => {
             <div className={styles.test}>
                 <div className={classNames(styles.navigationCard, styles.navigationCardTitle)}>
                     <strong>Village-monde</strong>
-                    <CountryFlag country="fr" />
-                    <CountryFlag isMystery />
+                    {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
+                    {village.countries
+                        .filter((country) => country !== classroomCountryCode)
+                        .map((country, index) => (
+                            <CountryFlag
+                                key={village.activePhase === 1 ? `mistery-${index}` : country}
+                                country={country}
+                                isMystery={village.activePhase === 1}
+                            />
+                        ))}
                 </div>
                 <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
                     <NavigationMenu.Root orientation="vertical">
@@ -65,6 +80,9 @@ interface NavigationMobileMenuProps {
     onClose: () => void;
 }
 export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
+    const { classroom } = useContext(UserContext);
+    const classroomCountryCode = classroom?.countryCode;
+    const { village } = useContext(VillageContext);
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
 
@@ -73,8 +91,16 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
             <Flex isFullWidth justifyContent="flex-start" className={styles.navigationMobileMenuHeader}>
                 <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
                     <strong>Village-monde</strong>
-                    <CountryFlag country="fr" />
-                    <CountryFlag isMystery />
+                    {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
+                    {village?.countries
+                        .filter((country) => country !== classroomCountryCode)
+                        .map((country, index) => (
+                            <CountryFlag
+                                key={village.activePhase === 1 ? `mistery-${index}` : country}
+                                country={country}
+                                isMystery={village.activePhase === 1}
+                            />
+                        ))}
                 </div>
                 <IconButton icon={Cross1Icon} onClick={onClose} />
             </Flex>

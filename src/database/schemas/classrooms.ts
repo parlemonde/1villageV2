@@ -1,7 +1,7 @@
 import { pgTable, serial, varchar, integer } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
-import { villages } from './village';
+import { villages } from './villages';
 
 export const classrooms = pgTable('classrooms', {
     id: serial('id').primaryKey(),
