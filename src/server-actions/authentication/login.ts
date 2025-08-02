@@ -15,7 +15,7 @@ export async function login(_previousState: string, formData: FormData): Promise
     const password = getStringValue(formData.get('password'));
 
     const user = await db.query.users.findFirst({
-        columns: { id: true, passwordHash: true, accountRegistration: true },
+        columns: { id: true, role: true, passwordHash: true, accountRegistration: true },
         where: eq(users.email, email),
     });
 
@@ -63,5 +63,5 @@ export async function login(_previousState: string, formData: FormData): Promise
         expires: new Date(Date.now() + 604800000),
         sameSite: 'strict',
     });
-    redirect(`/`, RedirectType.push);
+    redirect(user.role === 'admin' ? '/admin' : '/', RedirectType.push);
 }

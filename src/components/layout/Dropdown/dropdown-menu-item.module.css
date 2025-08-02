@@ -2,6 +2,11 @@
     padding: 8px 12px;
     outline: none;
     cursor: pointer;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    color: var(--text-color);
+    text-decoration: none;
 }
 .DropdownMenuItem:hover,
 .DropdownMenuItem:focus {

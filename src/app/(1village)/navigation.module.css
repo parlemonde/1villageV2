@@ -2,7 +2,7 @@
     width: 300px;
     position: relative;
 }
-.test {
+.stickyContent {
     position: sticky;
     top: 84px;
 }
@@ -33,45 +33,6 @@
     }
 }
 
-.navigationMenuList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.navigationMenuItem {
-    width: 100%;
-    height: 38px;
-    border-radius: 10px;
-    box-sizing: border-box;
-    border: 1px solid var(--primary-color);
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    text-decoration: none;
-    padding: 0 8px;
-    font-size: 15px;
-    font-weight: 500;
-    gap: 8px;
-    transition: width 150ms ease-in-out;
-}
-.navigationMenuItem:hover {
-    background-color: var(--primary-color-light);
-}
-.navigationMenuItem[data-active] {
-    background-color: var(--primary-color);
-    color: white;
-    width: calc(100% + 16px);
-}
-.navigationMenuItemIcon {
-    width: 24px;
-    height: auto;
-}
-
 .navigationMobileMenuHeader {
     gap: 16px;
     padding: 0 16px;
@@ -85,15 +46,4 @@
     background-color: white;
     box-sizing: border-box;
     padding: 0;
-}
-.navigationMenuListMobile {
-    gap: 0;
-}
-.navigationMenuItemMobile {
-    height: 48px;
-    border: none;
-    border-radius: 0;
-}
-.navigationMenuItem[data-active].navigationMenuItemMobile {
-    width: 100%;
 }

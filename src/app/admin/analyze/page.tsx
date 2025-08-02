@@ -1,9 +1,9 @@
 import { Title } from '@/components/layout/Title';
 
-export default function AdminHomePage() {
+export default function AdminAnalyzePage() {
     return (
         <>
-            <Title>Créer</Title>
+            <Title>Analyser</Title>
         </>
     );
 }

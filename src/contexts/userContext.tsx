@@ -22,7 +22,7 @@ export const UserContext = React.createContext<{
 
 interface UserProviderProps {
     initialUser: User;
-    classroom: Classroom | undefined;
+    classroom?: Classroom;
 }
 export const UserProvider = ({ initialUser, classroom, children }: React.PropsWithChildren<UserProviderProps>) => {
     const [user, setUser] = React.useState<User>(initialUser);

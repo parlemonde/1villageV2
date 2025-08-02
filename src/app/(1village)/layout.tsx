@@ -27,7 +27,7 @@ export default async function RootLayout({
                 <Flex justifyContent="flex-start" alignItems="stretch" className={styles.rootLayout}>
                     {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
                     <Flex isFullWidth flexDirection="column" alignItems="stretch" justifyContent="flex-start" className={styles.content}>
-                        <Phases />
+                        {village && <Phases />}
                         <main className={styles.main}>{children}</main>
                     </Flex>
                 </Flex>

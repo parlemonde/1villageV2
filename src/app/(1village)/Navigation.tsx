@@ -4,19 +4,43 @@ import { AvatarIcon } from '@radix-ui/react-icons';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
-import { NavigationMenu } from 'radix-ui';
 import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
 import { IconButton } from '@/components/layout/Button';
 import { Flex } from '@/components/layout/Flex';
-import { Link } from '@/components/navigation/Link';
+import { Menu, MobileMenu } from '@/components/navigation/Menu';
+import type { MenuItem } from '@/components/navigation/Menu/Menu';
 import { UserContext } from '@/contexts/userContext';
 import { VillageContext } from '@/contexts/villageContext';
 import type { Village } from '@/database/schemas/villages';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';
 import HomeIcon from '@/svg/navigation/home.svg';
+
+const getMenuItems = (firstPath: string, onClick?: () => void): MenuItem[] => [
+    {
+        icon: <HomeIcon />,
+        label: 'Accueil',
+        href: '/',
+        isActive: firstPath === '',
+        onClick,
+    },
+    {
+        icon: <AvatarIcon />,
+        label: 'Notre classe et nos activités',
+        href: '/ma-classe',
+        isActive: firstPath === 'ma-classe',
+        onClick,
+    },
+    {
+        icon: <FreeContentIcon />,
+        label: 'Publier un contenu libre',
+        href: '/contenu-libre',
+        isActive: firstPath === 'contenu-libre',
+        onClick,
+    },
+];
 
 interface NavigationProps {
     village: Village;
@@ -27,7 +51,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const firstPath = pathname.split('/')[1];
     return (
         <div className={styles.navigationWrapper}>
-            <div className={styles.test}>
+            <div className={styles.stickyContent}>
                 <div className={classNames(styles.navigationCard, styles.navigationCardTitle)}>
                     <strong>Village-monde</strong>
                     {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
@@ -42,34 +66,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         ))}
                 </div>
                 <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
-                    <NavigationMenu.Root orientation="vertical">
-                        <NavigationMenu.List className={styles.navigationMenuList}>
-                            <NavigationMenu.Item>
-                                <NavigationMenu.Link asChild active={firstPath === ''}>
-                                    <Link href="/" className={styles.navigationMenuItem}>
-                                        <HomeIcon className={styles.navigationMenuItemIcon} />
-                                        Accueil
-                                    </Link>
-                                </NavigationMenu.Link>
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <NavigationMenu.Link asChild active={firstPath === 'ma-classe'}>
-                                    <Link href="/ma-classe" className={styles.navigationMenuItem}>
-                                        <AvatarIcon className={styles.navigationMenuItemIcon} />
-                                        Notre classe et nos activités
-                                    </Link>
-                                </NavigationMenu.Link>
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <NavigationMenu.Link asChild active={firstPath === 'contenu-libre'}>
-                                    <Link href="/contenu-libre" className={styles.navigationMenuItem}>
-                                        <FreeContentIcon className={styles.navigationMenuItemIcon} />
-                                        Publier un contenu libre
-                                    </Link>
-                                </NavigationMenu.Link>
-                            </NavigationMenu.Item>
-                        </NavigationMenu.List>
-                    </NavigationMenu.Root>
+                    <Menu items={getMenuItems(firstPath)} />
                 </div>
             </div>
         </div>
@@ -104,52 +101,11 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                 </div>
                 <IconButton icon={Cross1Icon} onClick={onClose} />
             </Flex>
-            <NavigationMenu.Root orientation="vertical">
-                <NavigationMenu.List className={classNames(styles.navigationMenuList, styles.navigationMenuListMobile)}>
-                    <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild active={firstPath === ''}>
-                            <Link
-                                href="/"
-                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
-                                onClick={() => {
-                                    onClose();
-                                }}
-                            >
-                                <HomeIcon className={styles.navigationMenuItemIcon} />
-                                Accueil
-                            </Link>
-                        </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-                    <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild active={firstPath === 'ma-classe'}>
-                            <Link
-                                href="/ma-classe"
-                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
-                                onClick={() => {
-                                    onClose();
-                                }}
-                            >
-                                <AvatarIcon className={styles.navigationMenuItemIcon} />
-                                Notre classe et nos activités
-                            </Link>
-                        </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-                    <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild active={firstPath === 'contenu-libre'}>
-                            <Link
-                                href="/contenu-libre"
-                                className={classNames(styles.navigationMenuItem, styles.navigationMenuItemMobile)}
-                                onClick={() => {
-                                    onClose();
-                                }}
-                            >
-                                <FreeContentIcon className={styles.navigationMenuItemIcon} />
-                                Publier un contenu libre
-                            </Link>
-                        </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-                </NavigationMenu.List>
-            </NavigationMenu.Root>
+            <MobileMenu
+                items={getMenuItems(firstPath, () => {
+                    onClose();
+                })}
+            />
         </div>
     );
 };

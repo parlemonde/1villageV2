@@ -13,7 +13,7 @@ export default async function RootLayout({
 }>) {
     const user = await getCurrentUser();
     if (user) {
-        redirect('/');
+        redirect(user.role === 'admin' ? '/admin' : '/');
     }
     return (
         <main className={styles.loginLayout}>
