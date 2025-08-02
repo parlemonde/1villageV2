@@ -1,13 +1,13 @@
-import { json as postgresqlJson } from 'drizzle-orm/pg-core';
-import type { PgJsonBuilder } from 'drizzle-orm/pg-core';
+import { jsonb } from 'drizzle-orm/pg-core';
+import type { PgJsonbBuilder } from 'drizzle-orm/pg-core';
 
-export type CustomMySqlJsonBuilderInitial<TName extends string, DataType = unknown> = PgJsonBuilder<{
+export type CustomMySqlJsonBuilderInitial<TName extends string, DataType = unknown> = PgJsonbBuilder<{
     name: TName;
     dataType: 'json';
-    columnType: 'PgJson';
+    columnType: 'PgJsonb';
     data: DataType;
     driverParam: unknown;
     enumValues: undefined;
 }>;
 
-export const json = postgresqlJson as <TName extends string, DataType = unknown>(name: TName) => CustomMySqlJsonBuilderInitial<TName, DataType>;
+export const json = jsonb as <TName extends string, DataType = unknown>(name: TName) => CustomMySqlJsonBuilderInitial<TName, DataType>;

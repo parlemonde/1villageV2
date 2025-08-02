@@ -1,8 +1,7 @@
 import { pgTable, serial, varchar, char, smallint, integer } from 'drizzle-orm/pg-core';
 
-const ROLES_ENUM = ['admin', 'teacher', 'student', 'parent'] as const;
-
-export type Role = (typeof ROLES_ENUM)[number];
+const ROLES_ENUM = ['admin', 'mediator', 'teacher', 'student', 'parent'] as const;
+export type UserRole = (typeof ROLES_ENUM)[number];
 
 export const users = pgTable('users', {
     id: serial('id').primaryKey(),
@@ -14,7 +13,6 @@ export const users = pgTable('users', {
     accountRegistration: smallint('accountRegistration').notNull().default(0),
     role: varchar('role', { length: 20, enum: ROLES_ENUM }).notNull().default('teacher'),
 });
-
 type FullUser = typeof users.$inferSelect;
 export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role'> & {
     useSSO?: boolean;
