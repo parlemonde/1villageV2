@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { Header } from './Header';
@@ -7,8 +8,17 @@ import styles from './layout.module.css';
 import { Flex } from '@/components/layout/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { VillageProvider } from '@/contexts/villageContext';
-import { getUserClassroomAndVillage } from '@/server-functions/get-user-classroom-and-village';
+import { getTeacherClassroom } from '@/server-functions/classrooms/getTeacherClassroom';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
+import { getVillage } from '@/server-functions/villages/getVillage';
+
+const getNumber = (value: string | undefined) => {
+    const n = Number(value);
+    if (!isNaN(n) && isFinite(n)) {
+        return n;
+    }
+    return undefined;
+};
 
 export default async function RootLayout({
     children,
@@ -16,10 +26,13 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     const user = await getCurrentUser();
+    const cookieStore = await cookies();
     if (!user) {
         redirect('/login');
     }
-    const { classroom, village } = await getUserClassroomAndVillage(user.id);
+    const classroom = user.role === 'teacher' ? await getTeacherClassroom(user.id) : undefined;
+    const villageId = classroom?.villageId ?? getNumber(cookieStore.get('villageId')?.value);
+    const village = villageId ? await getVillage(villageId) : undefined;
     return (
         <UserProvider initialUser={user} classroom={classroom}>
             <VillageProvider village={village}>

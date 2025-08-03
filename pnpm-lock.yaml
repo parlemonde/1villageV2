@@ -47,6 +47,9 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
+      react-remove-scroll:
+        specifier: ^2.7.1
+        version: 2.7.1(@types/react@19.1.8)(react@19.1.0)
     devDependencies:
       '@dotenvx/dotenvx':
         specifier: 1.48.1
