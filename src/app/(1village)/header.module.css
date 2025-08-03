@@ -20,6 +20,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 16px;
     background-color: white;
     padding: 0 16px;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
@@ -35,6 +36,13 @@
     display: none;
 }
 
+.logoContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+}
+
 @media (max-width: 850px) {
     .headerContainer {
         height: 60px;
@@ -44,10 +52,12 @@
         border-radius: 0;
         box-shadow: none;
         border-bottom: 1px solid #e0e0e0;
-        justify-content: center;
     }
     .menuButton {
         display: block;
+    }
+    .logoContainer {
+        justify-content: center;
     }
 }
 
