@@ -1,9 +1,9 @@
 import { Title } from '@/components/layout/Title';
 
-export default function FreeContent() {
+export default function MyAccount() {
     return (
         <>
-            <Title>Publier un contenu libre</Title>
+            <Title>Mon compte</Title>
         </>
     );
 }

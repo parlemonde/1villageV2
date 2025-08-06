@@ -25,6 +25,7 @@
     transform: translate(-50%, -50%);
     max-width: calc(100vw - 32px);
     max-height: calc(100vh - 32px);
+    outline: none;
 }
 .modalContent--is-full-width {
     width: 100%;

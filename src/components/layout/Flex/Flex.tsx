@@ -1,13 +1,14 @@
 import React, { type JSX } from 'react';
 
-import type { MarginProps, PaddingProps } from '../css-styles';
-import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '../css-styles';
+import type { MarginProps, PaddingProps, Size } from '../css-styles';
+import { getMarginAndPaddingProps, getMarginAndPaddingStyle, SIZES } from '../css-styles';
 
 type FlexProps = {
     flexDirection?: React.CSSProperties['flexDirection'];
     flexWrap?: React.CSSProperties['flexWrap'];
     justifyContent?: React.CSSProperties['justifyContent'];
     alignItems?: React.CSSProperties['alignItems'];
+    gap?: React.CSSProperties['gap'] | Size;
     isInline?: boolean;
     isFullWidth?: boolean;
     isFullHeight?: boolean;
@@ -21,6 +22,7 @@ export const Flex = ({
     flexWrap = 'nowrap',
     justifyContent = 'flex-start',
     alignItems = 'center',
+    gap,
     isInline = false,
     isFullHeight = false,
     isFullWidth = false,
@@ -42,6 +44,9 @@ export const Flex = ({
     }
     if (isFullWidth) {
         flexStyle.width = '100%';
+    }
+    if (gap) {
+        flexStyle.gap = typeof gap === 'string' ? SIZES[gap as Size] || gap : gap;
     }
 
     return (

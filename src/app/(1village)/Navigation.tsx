@@ -1,10 +1,10 @@
 'use client';
 
-import { AvatarIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
@@ -15,6 +15,7 @@ import type { MenuItem } from '@/components/navigation/Menu/Menu';
 import { UserContext } from '@/contexts/userContext';
 import { VillageContext } from '@/contexts/villageContext';
 import type { Village } from '@/database/schemas/villages';
+import { logout } from '@/server-actions/authentication/logout';
 import FreeContentIcon from '@/svg/navigation/free-content.svg';
 import HomeIcon from '@/svg/navigation/home.svg';
 
@@ -47,8 +48,10 @@ interface NavigationProps {
     classroomCountryCode?: string;
 }
 export const Navigation = ({ village, classroomCountryCode }: NavigationProps) => {
+    const { user } = useContext(UserContext);
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+
     return (
         <div className={styles.navigationWrapper}>
             <div className={styles.stickyContent}>
@@ -61,7 +64,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                             <CountryFlag
                                 key={village.activePhase === 1 ? `mistery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1}
+                                isMystery={village.activePhase === 1 && user?.role !== 'admin' && user?.role !== 'mediator'}
                             />
                         ))}
                 </div>
@@ -77,6 +80,7 @@ interface NavigationMobileMenuProps {
     onClose: () => void;
 }
 export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
+    const { user } = useContext(UserContext);
     const { classroom } = useContext(UserContext);
     const classroomCountryCode = classroom?.countryCode;
     const { village } = useContext(VillageContext);
@@ -95,16 +99,51 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             <CountryFlag
                                 key={village.activePhase === 1 ? `mistery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1}
+                                isMystery={village.activePhase === 1 && user?.role !== 'admin' && user?.role !== 'mediator'}
                             />
                         ))}
                 </div>
                 <IconButton icon={Cross1Icon} onClick={onClose} />
             </Flex>
             <MobileMenu
-                items={getMenuItems(firstPath, () => {
-                    onClose();
-                })}
+                items={[
+                    ...getMenuItems(firstPath, () => {
+                        onClose();
+                    }),
+                    ...(user?.role === 'admin'
+                        ? [
+                              {
+                                  hasSeparatorTop: true,
+                                  icon: <GearIcon />,
+                                  label: 'Admin',
+                                  href: '/admin',
+                                  isActive: firstPath === 'admin',
+                                  onClick: () => {
+                                      onClose();
+                                  },
+                              },
+                          ]
+                        : []),
+                    {
+                        hasSeparatorTop: user?.role !== 'admin',
+                        icon: <AvatarIcon />,
+                        label: 'Mon compte',
+                        href: '/mon-compte',
+                        isActive: firstPath === 'mon-compte',
+                        onClick: () => {
+                            onClose();
+                        },
+                    },
+                    {
+                        hasSeparatorTop: true,
+                        label: 'Se déconnecter',
+                        textAlign: 'center',
+                        color: 'danger',
+                        onClick: () => {
+                            logout().catch();
+                        },
+                    },
+                ]}
             />
         </div>
     );

@@ -16,6 +16,7 @@ type ModalProps = {
     hasTopSeparator?: boolean;
     hasCloseButton?: boolean;
     hasCancelButton?: boolean;
+    hasFooter?: boolean;
     cancelLabel?: string;
     cancelLevel?: 'primary' | 'secondary' | 'error';
     confirmLabel?: string;
@@ -31,6 +32,7 @@ export const Modal = ({
     onClose,
     onConfirm,
     title,
+    hasFooter = true,
     hasTopSeparator = true,
     hasCloseButton = true,
     hasCancelButton = true,
@@ -82,20 +84,21 @@ export const Modal = ({
                         )}
                     </Dialog.Title>
                     <div className={styles.content}>{children}</div>
-                    <div className={styles.footer}>
-                        {hasCancelButton && <Button label={cancelLabel} onClick={onClose} color={cancelLevel} variant="outlined"></Button>}
-                        {onConfirm && (
-                            <Button
-                                label={confirmLabel}
-                                onClick={onConfirm}
-                                color={confirmLevel}
-                                variant="contained"
-                                disabled={isConfirmDisabled}
-                                marginLeft="sm"
-                            ></Button>
-                        )}
-                    </div>
-
+                    {hasFooter && (
+                        <div className={styles.footer}>
+                            {hasCancelButton && <Button label={cancelLabel} onClick={onClose} color={cancelLevel} variant="outlined"></Button>}
+                            {onConfirm && (
+                                <Button
+                                    label={confirmLabel}
+                                    onClick={onConfirm}
+                                    color={confirmLevel}
+                                    variant="contained"
+                                    disabled={isConfirmDisabled}
+                                    marginLeft="sm"
+                                ></Button>
+                            )}
+                        </div>
+                    )}
                     {isLoading && (
                         <div className={styles.loader}>
                             <CircularProgress color="primary" />

@@ -13,10 +13,12 @@ body {
     --primary-color-light: #e9eafc;
     --primary-color-light-2: #b3b5fc;
     --secondary-color: #80cbc4;
+    --secondary-color-light: #e0f7f5;
     --help-color: #e1c7d1;
     --help-color-darker: #cfbac3;
     --success-color: #008000;
     --error-color: #d93939;
+    --error-color-light: #f5e3e3;
     --warning-color: #ab721c;
     --background-color: #f5f5f5;
     --font-color: #2e343b;

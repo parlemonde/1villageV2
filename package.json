@@ -31,7 +31,8 @@
     "radix-ui": "^1.4.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-remove-scroll": "^2.7.1"
+    "react-remove-scroll": "^2.7.1",
+    "swr": "^2.3.4"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.48.1",

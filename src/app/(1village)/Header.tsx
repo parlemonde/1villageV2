@@ -2,20 +2,25 @@
 
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import React, { useContext, useState } from 'react';
+import useSWR from 'swr';
 
 import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
 import { BackDrop } from '@/components/layout/BackDrop';
 import { Button } from '@/components/layout/Button';
 import { IconButton } from '@/components/layout/Button';
+import { CircularProgress } from '@/components/layout/CircularProgress';
 import { Dropdown } from '@/components/layout/Dropdown';
 import { DropdownMenuItem } from '@/components/layout/Dropdown/DropdownMenuItem';
-import { FlexItem } from '@/components/layout/Flex';
+import { Flex, FlexItem } from '@/components/layout/Flex';
 import { Field } from '@/components/layout/Form';
 import { Select } from '@/components/layout/Form/Select';
 import { Modal } from '@/components/layout/Modal';
+import { Title } from '@/components/layout/Title';
 import { UserContext } from '@/contexts/userContext';
 import { VillageContext } from '@/contexts/villageContext';
+import type { Village } from '@/database/schemas/villages';
+import { jsonFetcher } from '@/lib/json-fetcher';
 import { logout } from '@/server-actions/authentication/logout';
 import { setVillage } from '@/server-actions/set-village';
 import CogIcon from '@/svg/cogIcon.svg';
@@ -45,7 +50,7 @@ export const Header = () => {
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label="Admin" href="/admin" />}
-                    <DropdownMenuItem label="Mon compte" />
+                    <DropdownMenuItem label="Mon compte" href="/mon-compte" />
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" />
                 </Dropdown>
             </header>
@@ -62,6 +67,9 @@ const VillageSelector = () => {
     const { village } = useContext(VillageContext);
     const [isModalOpen, setIsModalOpen] = useState(village === undefined);
     const [villageId, setVillageId] = useState(village?.id);
+
+    const { data, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
+
     return (
         <>
             <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
@@ -72,39 +80,69 @@ const VillageSelector = () => {
                         setIsModalOpen(false);
                     }
                 }}
-                hasCloseButton={village !== undefined}
-                hasCancelButton={false}
-                onConfirm={async () => {
-                    if (!villageId) {
-                        return;
-                    }
-                    try {
-                        await setVillage(villageId);
-                    } catch {
-                        // TODO: handle error
-                    }
-                    setIsModalOpen(false);
-                }}
-                confirmLabel="Choisir"
-                isConfirmDisabled={!villageId}
                 title="Sélectionner un village"
+                hasCloseButton={village !== undefined}
+                hasFooter={false}
+                isConfirmDisabled={!villageId || isLoading}
             >
-                <Field
-                    name="village"
-                    label="Village"
-                    input={
-                        <Select
-                            isFullWidth
-                            value={villageId ? `${villageId}` : undefined}
-                            onChange={(value) => setVillageId(Number(value))}
-                            placeholder="Sélectionner un village"
-                            options={[
-                                { label: 'Village 1', value: '1' },
-                                { label: 'Village 2', value: '2' },
-                            ]}
+                {isLoading ? (
+                    <Flex justifyContent="center" alignItems="center" isFullWidth padding="md">
+                        <CircularProgress />
+                    </Flex>
+                ) : (
+                    <>
+                        <Field
+                            name="village"
+                            label="Village"
+                            input={
+                                <Select
+                                    isFullWidth
+                                    value={villageId ? `${villageId}` : undefined}
+                                    onChange={(value) => setVillageId(Number(value))}
+                                    placeholder="Sélectionner un village"
+                                    options={(data || []).map((village) => ({
+                                        label: village.name,
+                                        value: `${village.id}`,
+                                    }))}
+                                />
+                            }
                         />
-                    }
-                />
+                        <div style={{ width: '100%', textAlign: 'right', marginTop: '16px' }}>
+                            <Button
+                                label="Choisir"
+                                onClick={async () => {
+                                    if (!villageId) {
+                                        return;
+                                    }
+                                    try {
+                                        await setVillage(villageId);
+                                    } catch {
+                                        // TODO: handle error
+                                    }
+                                    setIsModalOpen(false);
+                                }}
+                                disabled={!villageId || isLoading}
+                            />
+                        </div>
+                        {village === undefined && (
+                            <>
+                                <div style={{ width: '100%', borderTop: '1px solid #e0e0e0', margin: '32px 0 10px 0', textAlign: 'center' }}>
+                                    <Title
+                                        variant="h3"
+                                        color="inherit"
+                                        paddingX="md"
+                                        style={{ display: 'inline', position: 'relative', top: '-15px', backgroundColor: 'white' }}
+                                    >
+                                        OU
+                                    </Title>
+                                </div>
+                                <div style={{ width: '100%', textAlign: 'center' }}>
+                                    <Button as="a" href="/admin" color="secondary" variant="contained" label="Aller à l'interface Admin" />
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
             </Modal>
         </>
     );
