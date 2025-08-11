@@ -1,0 +1,35 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0px;
+
+    margin: 16px 0;
+    font-size: 15px;
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-weight: 400;
+}
+.thead {
+    font-weight: 700;
+    border-bottom: 1px solid var(--primary-color);
+}
+.headerCell {
+    padding: 8px;
+    max-width: 0;
+}
+.row {
+    vertical-align: middle;
+    outline: 0px;
+    background-color: white;
+}
+.row:hover {
+    background-color: #f5f6fd;
+}
+.cell {
+    padding: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 300;
+    max-width: 300px;
+}

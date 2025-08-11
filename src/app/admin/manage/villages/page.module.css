@@ -1,0 +1,13 @@
+.breadcrumbs {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary-color);
+}
+.breadcrumbsLink {
+    text-decoration: none;
+    color: inherit;
+}
+.breadcrumbsLink:hover {
+    text-decoration: underline;
+}
