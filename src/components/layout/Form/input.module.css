@@ -8,7 +8,7 @@
 }
 
 .input {
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: var(--font-roboto), Arial, sans-serif;
     font-weight: 400;
     min-width: 0;
     box-sizing: border-box;
@@ -43,10 +43,10 @@
     padding: 8px 8px;
 }
 .input--sm.input--with-left-icon {
-    padding-left: 40px;
+    padding-left: 30px;
 }
 .input--sm.input--with-right-icon {
-    padding-right: 40px;
+    padding-right: 30px;
 }
 .input--md {
     font-size: 16px;
@@ -54,10 +54,10 @@
     padding: 10px 8px;
 }
 .input--md.input--with-left-icon {
-    padding-left: 50px;
+    padding-left: 40px;
 }
 .input--md.input--with-right-icon {
-    padding-right: 50px;
+    padding-right: 40px;
 }
 .input--lg {
     font-size: 18px;
@@ -114,7 +114,7 @@ textarea.input {
     word-break: break-word;
     visibility: hidden;
     grid-area: 1/1/2/2;
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: var(--font-roboto), Arial, sans-serif;
     font-weight: 400;
     min-width: 0;
     width: 100%;

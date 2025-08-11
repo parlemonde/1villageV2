@@ -6,7 +6,7 @@ import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
 import { NProgressDone } from '@/components/navigation/NProgress';
-import { openSansFont, alegreyaSansFont } from '@/fonts';
+import { alegreyaSansFont, robotoFont } from '@/fonts';
 
 const APP_URL = process.env.HOST_URL || '';
 const APP_NAME = '1Village';
@@ -60,7 +60,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="fr">
-            <body className={classNames(openSansFont.className, openSansFont.variable, alegreyaSansFont.variable)}>
+            <body className={classNames(alegreyaSansFont.variable, robotoFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
                 <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
                 <NProgressDone />

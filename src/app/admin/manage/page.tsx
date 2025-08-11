@@ -1,3 +1,4 @@
+import { Button } from '@/components/layout/Button';
 import { Title } from '@/components/layout/Title';
 
 export default function AdminManagePage() {
@@ -8,6 +9,7 @@ export default function AdminManagePage() {
                 C&apos;est dans cet espace, que les administrateurs et administratrices du site vont pouvoir gérer les droits d&apos;accès, la
                 composition des villages-mondes et accéder à la liste complète des utilisateurs.
             </p>
+            <Button label="Gérer les villages-mondes" as="a" href="/admin/manage/villages" />
         </>
     );
 }

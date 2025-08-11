@@ -8,12 +8,13 @@
     user-select: none;
     appearance: none;
     text-decoration: none;
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: var(--font-roboto), Arial, sans-serif;
     font-weight: 500;
     min-width: 0;
     box-sizing: border-box;
     border: none;
     border-radius: 10px;
+    gap: 8px;
     -webkit-tap-highlight-color: transparent;
 }
 .button--variant-outlined {
