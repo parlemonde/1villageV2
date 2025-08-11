@@ -1,55 +1,36 @@
 'use client';
 
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import React, { Fragment } from 'react';
+import useSWR from 'swr';
 
 import styles from './villages-table.module.css';
+import { CountryFlag } from '@/components/CountryFlag';
+import { IconButton } from '@/components/layout/Button';
+import { CircularProgress } from '@/components/layout/CircularProgress';
+import { Flex } from '@/components/layout/Flex';
 import { Input } from '@/components/layout/Form';
+import { Select } from '@/components/layout/Form/Select';
 import type { Village } from '@/database/schemas/villages';
-
-const villages: Village[] = [
-    {
-        id: 1,
-        plmId: 1,
-        name: 'Village-monde France - Belgique',
-        countries: ['FR', 'BE'],
-        activePhase: 1,
-        phaseStartDates: {
-            1: '2021-01-01',
-        },
-    },
-    {
-        id: 2,
-        plmId: 2,
-        name: 'Village-monde France - Allemagne',
-        countries: ['FR', 'DE'],
-        activePhase: 1,
-        phaseStartDates: {
-            1: '2021-01-01',
-        },
-    },
-    {
-        id: 3,
-        plmId: 3,
-        name: 'Village-monde France - Espagne',
-        countries: ['FR', 'ES'],
-        activePhase: 1,
-        phaseStartDates: {
-            1: '2021-01-01',
-        },
-    },
-    {
-        id: 4,
-        plmId: 4,
-        name: 'Village-monde France - Italie',
-        countries: ['FR', 'IT'],
-        activePhase: 1,
-        phaseStartDates: {
-            1: '2021-01-01',
-        },
-    },
-];
+import { COUNTRIES } from '@/lib/iso-3166-countries-french';
+import { jsonFetcher } from '@/lib/json-fetcher';
 
 export function VillagesTable() {
+    const [search, setSearch] = React.useState('');
+    const [limit, setLimit] = React.useState(10);
+    const [page, setPage] = React.useState(1);
+
+    const { data: villages, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
+
+    const filteredVillages = (villages || []).filter((v) => v.name.toLowerCase().includes(search.toLowerCase()));
+    const total = filteredVillages.length;
+    const paginatedVillages = filteredVillages.slice((page - 1) * limit, page * limit);
+
+    // Reset page if it's out of bounds
+    if (page !== 1 && page > Math.ceil(total / limit)) {
+        setPage(1);
+    }
+
     return (
         <div>
             <Input
@@ -59,6 +40,11 @@ export function VillagesTable() {
                 }}
                 isFullWidth
                 placeholder="Rechercher un village-monde..."
+                size="sm"
+                value={search}
+                onChange={(e) => {
+                    setSearch(e.target.value);
+                }}
             />
             <table className={styles.table}>
                 <colgroup>
@@ -67,7 +53,7 @@ export function VillagesTable() {
                     <col style={{ width: '140px' }} />
                     <col style={{ width: '150px' }} />
                     <col style={{ width: '140px' }} />
-                    <col style={{ width: '80px' }} />
+                    <col style={{ width: '100px' }} />
                 </colgroup>
                 <thead className={styles.thead}>
                     <tr>
@@ -80,30 +66,108 @@ export function VillagesTable() {
                         <th className={styles.headerCell}>Phase active</th>
                         <th className={styles.headerCell}>Nombre de classes</th>
                         <th className={styles.headerCell}>Nombre de posts</th>
-                        <th className={styles.headerCell} align="right">
+                        <th className={styles.headerCell} align="right" style={{ paddingRight: 16 }}>
                             Actions
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {villages.map((village) => (
-                        <tr key={village.id} className={styles.row}>
-                            <td className={styles.cell}>{village.name}</td>
-                            <td className={styles.cell}>{village.countries.join(', ')}</td>
-                            <td className={styles.cell} align="center">
-                                {village.activePhase}
-                            </td>
-                            <td className={styles.cell} align="center">
-                                0
-                            </td>
-                            <td className={styles.cell} align="center">
-                                0
-                            </td>
-                            <td className={styles.cell} align="right">
-                                plop
+                    {isLoading && villages === undefined ? (
+                        <tr>
+                            <td colSpan={6} align="center" style={{ padding: '32px 0' }}>
+                                <CircularProgress size={25} />
                             </td>
                         </tr>
-                    ))}
+                    ) : (
+                        paginatedVillages.map((village) => (
+                            <tr key={village.id} className={styles.row}>
+                                <td className={styles.cell}>{village.name}</td>
+                                <td className={styles.cell}>
+                                    <Flex isInline alignItems="center" gap="sm">
+                                        {village.countries.map((countryCode, index) => {
+                                            const country = COUNTRIES[countryCode];
+                                            return (
+                                                <Fragment key={countryCode}>
+                                                    <CountryFlag country={countryCode} />
+                                                    {country || countryCode}
+                                                    {index < village.countries.length - 1 && <span>&middot;</span>}
+                                                </Fragment>
+                                            );
+                                        })}
+                                    </Flex>
+                                </td>
+                                <td className={styles.cell} align="center">
+                                    {village.activePhase}
+                                </td>
+                                <td className={styles.cell} align="center">
+                                    0
+                                </td>
+                                <td className={styles.cell} align="center">
+                                    0
+                                </td>
+                                <td className={styles.cell} align="right" style={{ padding: '0 8px' }}>
+                                    <IconButton icon={Pencil1Icon} variant="borderless" color="primary" />
+                                    <IconButton icon={TrashIcon} variant="borderless" color="error" />
+                                </td>
+                            </tr>
+                        ))
+                    )}
+                    <tr style={{ backgroundColor: 'white' }}>
+                        <th colSpan={6} align="right">
+                            <Flex isInline alignItems="center" gap="sm">
+                                <span style={{ marginRight: 16 }}>Lignes par pages:</span>
+                                <Select
+                                    value={`${limit}`}
+                                    onChange={(value) => {
+                                        setLimit(Number(value));
+                                    }}
+                                    options={[
+                                        { label: '5', value: '5' },
+                                        { label: '10', value: '10' },
+                                        { label: '25', value: '25' },
+                                        { label: '50', value: '50' },
+                                        { label: '100', value: '100' },
+                                    ]}
+                                    style={{
+                                        borderTop: 'none',
+                                        borderLeft: 'none',
+                                        borderRight: 'none',
+                                        borderRadius: 0,
+                                        padding: '4px',
+                                        fontWeight: 400,
+                                        fontSize: '14px',
+                                        lineHeight: '20px',
+                                        width: '60px',
+                                    }}
+                                />
+                                <span style={{ margin: '0 16px' }}>
+                                    {total === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(total, page * limit)} sur {total}
+                                </span>
+                                <IconButton
+                                    marginY="xs"
+                                    marginLeft="sm"
+                                    aria-label="previous"
+                                    onClick={() => {
+                                        setPage(page - 1);
+                                    }}
+                                    variant="borderless"
+                                    disabled={page === 1}
+                                    icon={ChevronLeftIcon}
+                                ></IconButton>
+                                <IconButton
+                                    marginY="xs"
+                                    marginRight="sm"
+                                    aria-label="next"
+                                    onClick={() => {
+                                        setPage(page + 1);
+                                    }}
+                                    disabled={page * limit >= total}
+                                    variant="borderless"
+                                    icon={ChevronRightIcon}
+                                ></IconButton>
+                            </Flex>
+                        </th>
+                    </tr>
                 </tbody>
             </table>
         </div>

@@ -23,8 +23,8 @@ export default function AdminManageVillagesPage() {
                         <span>Villages-mondes</span>
                     </Title>
                 </FlexItem>
-                <Button variant="contained" color="light-grey" leftIcon={<DownloadIcon />} label="Importer les villages-mondes" />
-                <Button variant="contained" color="primary" leftIcon={<PlusIcon />} label="Nouveau village-monde" />
+                <Button variant="contained" color="primary" leftIcon={<DownloadIcon />} label="Importer les villages-mondes" />
+                <Button variant="contained" color="secondary" leftIcon={<PlusIcon />} label="Nouveau village-monde" />
             </Flex>
             <VillagesTable />
         </>

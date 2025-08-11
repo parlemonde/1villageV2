@@ -16,6 +16,7 @@ interface SelectProps extends MarginProps {
     color?: 'primary' | 'secondary';
     isFullWidth?: boolean;
     placeholder?: string;
+    style?: React.CSSProperties;
 }
 
 export const Select = ({
@@ -27,6 +28,7 @@ export const Select = ({
     color = 'primary',
     isFullWidth = false,
     placeholder = 'Choisir une option',
+    style = {},
     ...marginProps
 }: SelectProps) => {
     return (
@@ -36,7 +38,7 @@ export const Select = ({
                     [styles[`isFullWidth`]]: isFullWidth,
                 })}
                 aria-label="Food"
-                style={getMarginAndPaddingStyle(marginProps)}
+                style={{ ...getMarginAndPaddingStyle(marginProps), ...style }}
             >
                 <span className={styles.SelectValue}>
                     <RadixSelect.Value placeholder={placeholder} />
