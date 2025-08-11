@@ -22,7 +22,7 @@
     background-color: white;
 }
 .row:hover {
-    background-color: #f5f6fd;
+    background-color: var(--primary-color-light-2);
 }
 .cell {
     padding: 8px;

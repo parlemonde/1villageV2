@@ -2,30 +2,27 @@ body {
     font-size: 16px;
     font-family: var(--font-roboto), 'Times New Roman', Times, serif;
     font-weight: 400;
-    color: var(--font-color, #2e343b);
-    background-color: var(--background-color, #f5f5f5);
+    color: #2e343b; /* fallback */
+    color: var(--font-color);
+    background-color: #f5f5f5; /* fallback */
+    background-color: var(--background-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
 
     /* Color variables */
     --primary-color: #4c3ed9;
-    --primary-color-light: #e9eafc;
-    --primary-color-light-2: #b3b5fc;
-    --secondary-color: #80cbc4;
-    --secondary-color-light: #e0f7f5;
-    --help-color: #e1c7d1;
-    --help-color-darker: #cfbac3;
-    --success-color: #008000;
+    --primary-color-light: #b3b5fc; /* secondary background color */
+    --primary-color-light-2: #ebe9fa; /* hover color */
+    --secondary-color: #80cbc4; /* background only color (font should be dark) */
+    --secondary-color-dark: #36827c; /* font color */
+    --secondary-color-light: #dbf0ee; /* hover color */
     --error-color: #d93939;
-    --error-color-light: #f5e3e3;
-    --warning-color: #ab721c;
+    --error-color-light: #f7d4d4; /* background hover color */
+    --warning-color: #a76700;
     --background-color: #f5f5f5;
     --font-color: #2e343b;
-    --font-white: #fff;
-    --font-black: #000;
-    --font-detail: #666666;
-    --font-secondary-color: #6aaca5;
+    --font-detail-color: #666666;
 }
 
 p {
@@ -35,6 +32,7 @@ p {
 
 #nprogress .bar {
     z-index: 2000;
+    background-color: #4c3ed9; /* fallback */
     background-color: var(--primary-color);
     height: 1px;
 }

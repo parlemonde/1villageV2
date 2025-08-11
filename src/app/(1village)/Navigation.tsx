@@ -4,7 +4,7 @@ import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';

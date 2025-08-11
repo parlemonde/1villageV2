@@ -27,7 +27,7 @@
     background-color: white;
 }
 .menuItem:hover {
-    background-color: var(--primary-color-light);
+    background-color: var(--primary-color-light-2);
 }
 .menuItem.color-secondary:hover {
     background-color: var(--secondary-color-light);
@@ -62,7 +62,7 @@
 }
 
 .color-secondary {
-    color: var(--secondary-color);
+    color: var(--secondary-color-dark);
     border-color: var(--secondary-color);
 }
 .color-danger {

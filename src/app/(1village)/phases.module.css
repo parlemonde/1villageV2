@@ -22,10 +22,10 @@
     cursor: pointer;
 }
 .phaseContainer:hover > .phase {
-    background-color: var(--primary-color-light);
+    background-color: var(--primary-color-light-2);
 }
 .phaseContainer:hover > .phaseArrow {
-    color: var(--primary-color-light);
+    color: var(--primary-color-light-2);
 }
 
 .phaseContainerActive > .phase,
