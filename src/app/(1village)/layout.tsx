@@ -5,7 +5,6 @@ import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Phases } from './Phases';
 import styles from './layout.module.css';
-import { Flex } from '@/components/ui/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { VillageProvider } from '@/contexts/villageContext';
 import { getTeacherClassroom } from '@/server-functions/classrooms/getTeacherClassroom';
@@ -37,13 +36,13 @@ export default async function RootLayout({
         <UserProvider initialUser={user} classroom={classroom}>
             <VillageProvider village={village}>
                 <Header />
-                <Flex justifyContent="flex-start" alignItems="stretch" className={styles.rootLayout}>
+                <div className={styles.rootLayout}>
                     {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
-                    <Flex isFullWidth flexDirection="column" alignItems="stretch" justifyContent="flex-start" className={styles.content}>
+                    <div className={styles.content}>
                         {village && <Phases />}
                         <main className={styles.main}>{children}</main>
-                    </Flex>
-                </Flex>
+                    </div>
+                </div>
             </VillageProvider>
         </UserProvider>
     );

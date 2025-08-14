@@ -5,7 +5,7 @@ import { useActionState, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/Button/IconButton';
-import { Field, Form, Input } from '@/components/ui/Form';
+import { Field, Input } from '@/components/ui/Form';
 import { login } from '@/server-actions/authentication/login';
 
 export const LoginForm = () => {
@@ -13,10 +13,17 @@ export const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     return (
-        <Form
+        <form
             action={formAction}
-            marginY="lg"
-            style={{ width: '350px', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '24px', alignItems: 'stretch' }}
+            style={{
+                width: '350px',
+                maxWidth: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '24px',
+                alignItems: 'stretch',
+                padding: '24px 0',
+            }}
         >
             {message && <p style={{ color: 'var(--error-color)', textAlign: 'center' }}>{message}</p>}
             <Field
@@ -51,6 +58,6 @@ export const LoginForm = () => {
                 }
             />
             <Button label="Se connecter" type="submit" color="primary" />
-        </Form>
+        </form>
     );
 };

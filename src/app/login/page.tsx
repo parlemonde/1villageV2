@@ -1,14 +1,13 @@
 import styles from './page.module.css';
-import { Button } from '@/components/ui/Button';
-import { Flex } from '@/components/ui/Flex';
-import { Title } from '@/components/ui/Title';
 import { Link } from '@/components/navigation/Link';
+import { Button } from '@/components/ui/Button';
+import { Title } from '@/components/ui/Title';
 import FamilyIcon from '@/svg/login/family.svg';
 import EducationIcon from '@/svg/login/school.svg';
 
 export default function LoginPage() {
     return (
-        <Flex isFullWidth flexDirection="column" alignItems="center" justifyContent="center" padding="md">
+        <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
             <Title variant="h2" color="inherit">
                 Vous êtes :
             </Title>
@@ -40,6 +39,6 @@ export default function LoginPage() {
                     />
                 </div>
             </div>
-        </Flex>
+        </div>
     );
 }

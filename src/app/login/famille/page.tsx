@@ -1,11 +1,10 @@
 import { LoginForm } from './LoginForm';
-import { Flex } from '@/components/ui/Flex';
-import { Title } from '@/components/ui/Title';
 import { Link } from '@/components/navigation/Link';
+import { Title } from '@/components/ui/Title';
 
 export default function FamilyLoginPage() {
     return (
-        <Flex isFullWidth flexDirection="column" alignItems="center" justifyContent="center" padding="md">
+        <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
             <Title variant="h2" color="inherit" marginY="md">
                 Famille
             </Title>
@@ -19,6 +18,6 @@ export default function FamilyLoginPage() {
                     Créer un compte
                 </Link>
             </span>
-        </Flex>
+        </div>
     );
 }

@@ -60,8 +60,8 @@ export const Modal = ({
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content
                     className={classNames(styles.modalContent, {
-                        [styles[`modalContent--${width}`]]: width,
-                        [styles['modalContent--is-full-width']]: isFullWidth,
+                        [styles[`width-${width}`]]: width,
+                        [styles.isFullWidth]: isFullWidth,
                     })}
                     onOpenAutoFocus={
                         onOpenAutoFocus
@@ -73,13 +73,13 @@ export const Modal = ({
                 >
                     <Dialog.Title
                         className={classNames(styles.title, {
-                            [styles['title--has-top-separator']]: hasTopSeparator,
+                            [styles.hasTopSeparator]: hasTopSeparator,
                         })}
                     >
                         {title}
                         {hasCloseButton && (
                             <Dialog.Close asChild>
-                                <IconButton icon={Cross2Icon} className={styles.closeButton} variant="borderless" />
+                                <IconButton icon={Cross2Icon} variant="borderless" />
                             </Dialog.Close>
                         )}
                     </Dialog.Title>

@@ -29,7 +29,7 @@ export const Title = ({
                 ...style,
                 ...getMarginAndPaddingStyle(marginAndPaddingProps),
             },
-            className: classNames(className, styles[`title-${variant}`], { [styles[`title--${color}`]]: color !== 'inherit' }),
+            className: classNames(className, styles[`title-${variant}`], { [styles[`color-${color}`]]: color !== 'inherit' }),
             id,
         },
         children,

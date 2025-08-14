@@ -51,7 +51,7 @@
     .header {
         border-radius: 0;
         box-shadow: none;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid var(--grey-200);
     }
     .menuButton {
         display: block;

@@ -1,12 +1,11 @@
-import { Flex } from '@/components/ui/Flex';
 import { Title } from '@/components/ui/Title';
 
 export default function EducationLoginPage() {
     return (
-        <Flex isFullWidth flexDirection="column" alignItems="center" justifyContent="center" padding="md">
+        <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
             <Title variant="h2" color="inherit">
                 Education
             </Title>
-        </Flex>
+        </div>
     );
 }

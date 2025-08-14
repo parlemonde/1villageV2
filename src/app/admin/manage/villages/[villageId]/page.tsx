@@ -42,9 +42,7 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
                     },
                 ]}
             />
-            <Title marginY="md">
-                <span>{village.name}</span>
-            </Title>
+            <Title marginY="md">{village.name}</Title>
             {villageId}
         </>
     );

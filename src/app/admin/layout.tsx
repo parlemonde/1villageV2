@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { AdminNavigation } from './Navigation';
 import styles from './layout.module.css';
 import { Button } from '@/components/ui/Button';
-import { Flex } from '@/components/ui/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
 import LogoSVG from '@/svg/logo.svg';
@@ -24,10 +23,8 @@ export default async function RootLayout({
         <UserProvider initialUser={user}>
             <div className={styles.adminLayout}>
                 <header className={styles.adminHeader}>
-                    <Flex alignItems="center">
-                        <LogoSVG className={styles.logo} />
-                        <span className={styles.title}>1Village - Admin</span>
-                    </Flex>
+                    <LogoSVG className={styles.logo} />
+                    <span className={styles.title}>1Village - Admin</span>
                     <Button as="a" href="/" isUpperCase={false} label="Aller au village" variant="outlined" size="sm" color="primary" />
                 </header>
                 <div className={styles.adminSidebar}>

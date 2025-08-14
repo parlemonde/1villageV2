@@ -18,14 +18,14 @@
     animation: 1.4s ease-in-out infinite stroke-anim;
 }
 
-.progressIndicator--primary > svg {
+.progressIndicator-primary > svg {
     stroke: var(--primary-color);
 }
-.progressIndicator--secondary > svg {
+.progressIndicator-secondary > svg {
     stroke: var(--secondary-color);
 }
-.progressIndicator--grey > svg {
-    stroke: rgba(0, 0, 0, 0.26);
+.progressIndicator-grey > svg {
+    stroke: var(--grey-400);
 }
 
 @keyframes stroke-anim {

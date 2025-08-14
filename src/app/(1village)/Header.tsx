@@ -12,7 +12,6 @@ import { IconButton } from '@/components/ui/Button';
 import { CircularProgress } from '@/components/ui/CircularProgress';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { DropdownMenuItem } from '@/components/ui/Dropdown/DropdownMenuItem';
-import { Flex, FlexItem } from '@/components/ui/Flex';
 import { Field } from '@/components/ui/Form';
 import { Select } from '@/components/ui/Form/Select';
 import { Modal } from '@/components/ui/Modal';
@@ -41,12 +40,12 @@ export const Header = () => {
                         onClick={() => setIsOpen(!isOpen)}
                     />
                 </div>
-                <FlexItem flexGrow={1} flexShrink={1} flexBasis="0">
+                <div style={{ flex: '1 1 0' }}>
                     <div className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </div>
-                </FlexItem>
+                </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label="Admin" href="/admin" />}
@@ -86,9 +85,9 @@ const VillageSelector = () => {
                 isConfirmDisabled={!villageId || isLoading}
             >
                 {isLoading ? (
-                    <Flex justifyContent="center" alignItems="center" isFullWidth padding="md">
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', padding: '16px' }}>
                         <CircularProgress />
-                    </Flex>
+                    </div>
                 ) : (
                     <>
                         <Field

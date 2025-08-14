@@ -22,10 +22,10 @@
     padding: 0;
 }
 
-.title--primary {
+.color-primary {
     color: var(--primary-color);
 }
 
-.title--secondary {
+.color-secondary {
     color: var(--secondary-500);
 }

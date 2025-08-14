@@ -3,7 +3,7 @@
     position: relative;
     width: 300px;
 }
-.inputContainer--is-full-width {
+.isFullWidth {
     width: 100%;
 }
 
@@ -20,54 +20,54 @@
 .input:hover {
     border-color: rgba(0, 0, 0, 0.87);
 }
-.input--primary:focus {
+.color-primary:focus {
     border-color: var(--primary-color);
     box-shadow: inset 0px 0px 0px 1px var(--primary-color);
 }
-.input--secondary:focus {
+.color-secondary:focus {
     border-color: var(--secondary-color);
     box-shadow: inset 0px 0px 0px 1px var(--secondary-color);
 }
-.input--has-error,
-.input--has-error:hover,
-.input--has-error:focus {
+.hasError,
+.hasError:hover,
+.hasError:focus {
     animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     border-color: rgb(211, 47, 47);
 }
-.input--has-error:focus {
+.hasError:focus {
     box-shadow: inset 0px 0px 0px 1px rgb(211, 47, 47);
 }
-.input--sm {
+.size-sm {
     font-size: 14px;
     line-height: 18px;
     padding: 8px 8px;
 }
-.input--sm.input--with-left-icon {
+.size-sm.withLeftIcon {
     padding-left: 30px;
 }
-.input--sm.input--with-right-icon {
+.size-sm.withRightIcon {
     padding-right: 30px;
 }
-.input--md {
+.size-md {
     font-size: 16px;
     line-height: 20px;
     padding: 10px 8px;
 }
-.input--md.input--with-left-icon {
+.size-md.withLeftIcon {
     padding-left: 40px;
 }
-.input--md.input--with-right-icon {
+.size-md.withRightIcon {
     padding-right: 40px;
 }
-.input--lg {
+.size-lg {
     font-size: 18px;
     line-height: 22px;
     padding: 12px 8px;
 }
-.input--lg.input--with-left-icon {
+.size-lg.withLeftIcon {
     padding-left: 56px;
 }
-.input--lg.input--with-right-icon {
+.size-lg.withRightIcon {
     padding-right: 56px;
 }
 
@@ -79,23 +79,23 @@
     align-items: center;
     justify-content: center;
 }
-.inputIcon--right {
+.iconAdornment-right {
     right: 2px;
 }
-.inputIcon--left {
+.iconAdornment-left {
     left: 2px;
 }
-.inputIcon--sm {
+.iconAdornment-sm {
     width: 32px;
 }
-.inputIcon--md {
+.iconAdornment-md {
     width: 42px;
 }
-.inputIcon--lg {
+.iconAdornment-lg {
     width: 48px;
 }
 
-textarea.input {
+.textareaInput {
     width: 100%;
     resize: none;
     overflow: hidden;
@@ -123,17 +123,17 @@ textarea.input {
     outline: 0;
     border: 1px solid;
 }
-.growWrap--sm::after {
+.growWrap-size-sm::after {
     font-size: 14px;
     line-height: 18px;
     padding: 8px 8px;
 }
-.growWrap--md::after {
+.growWrap-size-md::after {
     font-size: 16px;
     line-height: 20px;
     padding: 12px 8px;
 }
-.growWrap--lg::after {
+.growWrap-size-lg::after {
     font-size: 18px;
     line-height: 22px;
     padding: 14px 8px;

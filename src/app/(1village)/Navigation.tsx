@@ -11,7 +11,6 @@ import { CountryFlag } from '@/components/CountryFlag';
 import { Menu, MobileMenu } from '@/components/navigation/Menu';
 import type { MenuItem } from '@/components/navigation/Menu/Menu';
 import { IconButton } from '@/components/ui/Button';
-import { Flex } from '@/components/ui/Flex';
 import { UserContext } from '@/contexts/userContext';
 import { VillageContext } from '@/contexts/villageContext';
 import type { Village } from '@/database/schemas/villages';
@@ -89,7 +88,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
-            <Flex isFullWidth justifyContent="flex-start" className={styles.navigationMobileMenuHeader}>
+            <div className={styles.navigationMobileMenuHeader}>
                 <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
                     <strong>Village-monde</strong>
                     {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
@@ -104,7 +103,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                         ))}
                 </div>
                 <IconButton icon={Cross1Icon} onClick={onClose} />
-            </Flex>
+            </div>
             <MobileMenu
                 items={[
                     ...getMenuItems(firstPath, () => {

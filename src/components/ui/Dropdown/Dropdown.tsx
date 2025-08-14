@@ -24,7 +24,7 @@ export const Dropdown = ({ trigger, offset = 'sm', children, side = 'bottom', al
                     onCloseAutoFocus={(event) => {
                         event.preventDefault();
                     }}
-                    className={styles.DropdownMenuContent}
+                    className={styles.dropdownMenuContent}
                     sideOffset={SIZES[offset]}
                     collisionPadding={16}
                     side={side}

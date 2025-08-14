@@ -1,21 +1,26 @@
 import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
 
 import { VillagesTable } from './VillagesTable';
-import { Button } from '@/components/ui/Button';
-import { Flex, FlexItem } from '@/components/ui/Flex';
-import { Title } from '@/components/ui/Title';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Button } from '@/components/ui/Button';
+import { Title } from '@/components/ui/Title';
 
 export default function AdminManageVillagesPage() {
     return (
         <>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Villages-mondes' }]} />
-            <Flex isFullWidth alignItems="center" justifyContent="flex-start" flex-direction="row" gap="md" marginY="md">
-                <FlexItem flexGrow={1} flexShrink={0} flexBasis="0">
-                    <Title>
-                        <span>Villages-mondes</span>
-                    </Title>
-                </FlexItem>
+            <div
+                style={{
+                    display: 'flex',
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                    gap: '16px',
+                    margin: '16px 0',
+                }}
+            >
+                <Title style={{ flex: '1 1 0' }}>Villages-mondes</Title>
                 <Button variant="contained" color="primary" leftIcon={<DownloadIcon />} label="Importer les villages-mondes" />
                 <Button
                     as="a"
@@ -25,7 +30,7 @@ export default function AdminManageVillagesPage() {
                     leftIcon={<PlusIcon />}
                     label="Nouveau village-monde"
                 />
-            </Flex>
+            </div>
             <VillagesTable />
         </>
     );

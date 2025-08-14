@@ -8,7 +8,6 @@ import styles from './villages-table.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
 import { IconButton } from '@/components/ui/Button';
 import { CircularProgress } from '@/components/ui/CircularProgress';
-import { Flex } from '@/components/ui/Flex';
 import { Input } from '@/components/ui/Form';
 import { Select } from '@/components/ui/Form/Select';
 import { Modal } from '@/components/ui/Modal';
@@ -88,7 +87,7 @@ export function VillagesTable() {
                             <tr key={village.id} className={styles.row}>
                                 <td className={styles.cell}>{village.name}</td>
                                 <td className={styles.cell}>
-                                    <Flex isInline alignItems="center" gap="sm">
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                         {village.countries.map((countryCode, index) => {
                                             const country = COUNTRIES[countryCode];
                                             return (
@@ -99,7 +98,7 @@ export function VillagesTable() {
                                                 </Fragment>
                                             );
                                         })}
-                                    </Flex>
+                                    </div>
                                 </td>
                                 <td className={styles.cell} align="center">
                                     {village.activePhase}
@@ -134,7 +133,7 @@ export function VillagesTable() {
                     )}
                     <tr style={{ backgroundColor: 'white' }}>
                         <th colSpan={6} align="right">
-                            <Flex isInline alignItems="center" gap="sm">
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                 <span style={{ marginRight: 16 }}>Lignes par pages:</span>
                                 <Select
                                     value={`${limit}`}
@@ -185,7 +184,7 @@ export function VillagesTable() {
                                     variant="borderless"
                                     icon={ChevronRightIcon}
                                 ></IconButton>
-                            </Flex>
+                            </div>
                         </th>
                     </tr>
                 </tbody>

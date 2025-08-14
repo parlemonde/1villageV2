@@ -1,7 +1,8 @@
+import classNames from 'clsx';
 import * as React from 'react';
 
-import { Flex } from '../Flex';
-import type { MarginProps, PaddingProps } from '../css-styles';
+import { getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '../css-styles';
+import styles from './field.module.css';
 
 type FieldProps = {
     name?: string;
@@ -13,34 +14,16 @@ type FieldProps = {
     style?: React.CSSProperties;
 } & MarginProps &
     PaddingProps;
-export const Field = ({ name, label, input, className, style, helperText, helperTextStyle = {}, ...marginAndPaddingProps }: FieldProps) => {
+export const Field = ({ name, label, input, className, style = {}, helperText, helperTextStyle = {}, ...marginAndPaddingProps }: FieldProps) => {
     return (
-        <Flex
-            {...marginAndPaddingProps}
-            flexDirection="column"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            className={className}
-            style={style}
-        >
+        <div className={classNames(styles.field, className)} style={{ ...style, ...getMarginAndPaddingStyle(marginAndPaddingProps) }}>
             {label && <label htmlFor={name}>{label}</label>}
             {input}
             {helperText && (
-                <p
-                    style={{
-                        color: 'rgba(0, 0, 0, 0.6)',
-                        fontSize: 12,
-                        textAlign: 'right',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        marginTop: '4px',
-                        padding: '0 8px',
-                        ...helperTextStyle,
-                    }}
-                >
+                <p className={styles.helperText} style={helperTextStyle}>
                     {helperText}
                 </p>
             )}
-        </Flex>
+        </div>
     );
 };

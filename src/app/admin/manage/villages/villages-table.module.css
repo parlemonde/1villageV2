@@ -29,6 +29,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--grey-200);
     font-weight: 300;
 }

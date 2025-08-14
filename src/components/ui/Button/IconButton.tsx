@@ -27,7 +27,7 @@ const IconButtonWithRef = (
             label={<Icon width={iconSize[size]} height={iconSize[size]} {...iconProps} />}
             {...props}
             ref={ref}
-            className={classNames(props.className, styles.iconButton, styles[`iconButton--${size}`])}
+            className={classNames(props.className, styles.iconButton, styles[`iconButton-${size}`])}
         />
     );
 };

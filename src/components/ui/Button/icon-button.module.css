@@ -1,11 +1,9 @@
-button.iconButton,
-a.iconButton {
+.iconButton {
     border-radius: 50%;
     padding: 5px;
     font-size: 18px;
 }
-button.iconButton--sm,
-a.iconButton--sm {
+.iconButton-sm {
     padding: 2px;
     font-size: 10px;
 }

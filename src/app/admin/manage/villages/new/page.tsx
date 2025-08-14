@@ -1,5 +1,5 @@
-import { Title } from '@/components/ui/Title';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Title } from '@/components/ui/Title';
 
 export default async function AdminManageVillageNewPage() {
     return (
@@ -13,9 +13,7 @@ export default async function AdminManageVillageNewPage() {
                     },
                 ]}
             />
-            <Title marginY="md">
-                <span>Nouveau village-monde</span>
-            </Title>
+            <Title marginY="md">Nouveau village-monde</Title>
         </>
     );
 }

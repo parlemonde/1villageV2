@@ -38,19 +38,21 @@ const InputComponent = (
 
     const inputIconPosition = iconAdornmentProps.position || 'left';
     const inputIcon = iconAdornment ? (
-        <div className={classNames(styles.inputIcon, styles[`inputIcon--${size}`], styles[`inputIcon--${inputIconPosition}`])}>{iconAdornment}</div>
+        <div className={classNames(styles.inputIcon, styles[`iconAdornment-${size}`], styles[`iconAdornment-${inputIconPosition}`])}>
+            {iconAdornment}
+        </div>
     ) : null;
 
     return (
-        <div className={classNames(styles.inputContainer, { [styles[`inputContainer--is-full-width`]]: isFullWidth })}>
+        <div className={classNames(styles.inputContainer, { [styles.isFullWidth]: isFullWidth })}>
             {inputIconPosition === 'left' && inputIcon}
             <input
                 ref={ref}
                 {...otherProps}
-                className={classNames(styles.input, styles[`input--${color}`], styles[`input--${size}`], className, {
-                    [styles['input--has-error']]: hasError || isInvalid,
-                    [styles['input--with-left-icon']]: iconAdornment && inputIconPosition === 'left',
-                    [styles['input--with-right-icon']]: iconAdornment && inputIconPosition === 'right',
+                className={classNames(styles.input, styles[`color-${color}`], styles[`size-${size}`], className, {
+                    [styles.hasError]: hasError || isInvalid,
+                    [styles.withLeftIcon]: iconAdornment && inputIconPosition === 'left',
+                    [styles.withRightIcon]: iconAdornment && inputIconPosition === 'right',
                 })}
                 style={{ ...style, ...getMarginAndPaddingStyle(marginAndPaddingProps) }}
                 onInvalid={() => {

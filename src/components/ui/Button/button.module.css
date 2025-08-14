@@ -94,7 +94,7 @@
 }
 .variant-outlined.color-secondary {
     border: 1px solid var(--secondary-color);
-    color: var(--secondary-600);
+    color: var(--secondary-500);
 }
 .variant-outlined.color-secondary:hover,
 .variant-outlined.color-secondary:focus-visible {
@@ -137,7 +137,7 @@
     background-color: var(--primary-100);
 }
 .variant-borderless.color-secondary {
-    color: var(--secondary-600);
+    color: var(--secondary-500);
 }
 .variant-borderless.color-secondary:hover,
 .variant-borderless.color-secondary:focus-visible {

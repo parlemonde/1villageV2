@@ -14,13 +14,13 @@ interface DropdownMenuItemProps {
 export const DropdownMenuItem = ({ label, href, onClick, color }: DropdownMenuItemProps) => {
     if (href) {
         return (
-            <DropdownMenu.Item asChild className={classNames(styles.DropdownMenuItem, { [styles[`color-${color}`]]: color !== undefined })}>
+            <DropdownMenu.Item asChild className={classNames(styles.dropdownMenuItem, { [styles[`color-${color}`]]: color !== undefined })}>
                 <Link href={href}>{label}</Link>
             </DropdownMenu.Item>
         );
     }
     return (
-        <DropdownMenu.Item className={classNames(styles.DropdownMenuItem, { [styles[`color-${color}`]]: color !== undefined })} onClick={onClick}>
+        <DropdownMenu.Item className={classNames(styles.dropdownMenuItem, { [styles[`color-${color}`]]: color !== undefined })} onClick={onClick}>
             {label}
         </DropdownMenu.Item>
     );
