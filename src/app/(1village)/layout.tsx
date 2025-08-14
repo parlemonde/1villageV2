@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Phases } from './Phases';
 import styles from './layout.module.css';
-import { Flex } from '@/components/layout/Flex';
+import { Flex } from '@/components/ui/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { VillageProvider } from '@/contexts/villageContext';
 import { getTeacherClassroom } from '@/server-functions/classrooms/getTeacherClassroom';

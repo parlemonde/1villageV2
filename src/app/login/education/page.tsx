@@ -1,5 +1,5 @@
-import { Flex } from '@/components/layout/Flex';
-import { Title } from '@/components/layout/Title';
+import { Flex } from '@/components/ui/Flex';
+import { Title } from '@/components/ui/Title';
 
 export default function EducationLoginPage() {
     return (

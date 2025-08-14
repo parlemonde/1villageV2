@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
-import { Title } from '@/components/layout/Title';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Title } from '@/components/ui/Title';
 import { db } from '@/database';
 import { villages } from '@/database/schemas/villages';
 

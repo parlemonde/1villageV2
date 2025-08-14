@@ -8,10 +8,10 @@ import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 import { CountryFlag } from '@/components/CountryFlag';
-import { IconButton } from '@/components/layout/Button';
-import { Flex } from '@/components/layout/Flex';
 import { Menu, MobileMenu } from '@/components/navigation/Menu';
 import type { MenuItem } from '@/components/navigation/Menu/Menu';
+import { IconButton } from '@/components/ui/Button';
+import { Flex } from '@/components/ui/Flex';
 import { UserContext } from '@/contexts/userContext';
 import { VillageContext } from '@/contexts/villageContext';
 import type { Village } from '@/database/schemas/villages';

@@ -1,5 +1,5 @@
-import { Button } from '@/components/layout/Button';
-import { Title } from '@/components/layout/Title';
+import { Button } from '@/components/ui/Button';
+import { Title } from '@/components/ui/Title';
 
 export default function AdminManagePage() {
     return (

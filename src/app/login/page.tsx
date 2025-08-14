@@ -1,7 +1,7 @@
 import styles from './page.module.css';
-import { Button } from '@/components/layout/Button';
-import { Flex } from '@/components/layout/Flex';
-import { Title } from '@/components/layout/Title';
+import { Button } from '@/components/ui/Button';
+import { Flex } from '@/components/ui/Flex';
+import { Title } from '@/components/ui/Title';
 import { Link } from '@/components/navigation/Link';
 import FamilyIcon from '@/svg/login/family.svg';
 import EducationIcon from '@/svg/login/school.svg';

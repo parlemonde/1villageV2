@@ -1,4 +1,4 @@
-import { Title } from '@/components/layout/Title';
+import { Title } from '@/components/ui/Title';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
 
 export default async function AdminManageVillageNewPage() {

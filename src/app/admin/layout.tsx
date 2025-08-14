@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 
 import { AdminNavigation } from './Navigation';
 import styles from './layout.module.css';
-import { Button } from '@/components/layout/Button';
-import { Flex } from '@/components/layout/Flex';
+import { Button } from '@/components/ui/Button';
+import { Flex } from '@/components/ui/Flex';
 import { UserProvider } from '@/contexts/userContext';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
 import LogoSVG from '@/svg/logo.svg';

@@ -1,4 +1,4 @@
-import { Title } from '@/components/layout/Title';
+import { Title } from '@/components/ui/Title';
 
 export default function AdminMediasPage() {
     return (

@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { BackButton } from './BackButton';
 import styles from './layout.module.css';
-import { Flex } from '@/components/layout/Flex';
+import { Flex } from '@/components/ui/Flex';
 import { getCurrentUser } from '@/server-functions/getCurrentUser';
 import LogoSVG from '@/svg/logo.svg';
 

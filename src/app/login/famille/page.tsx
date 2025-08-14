@@ -1,6 +1,6 @@
 import { LoginForm } from './LoginForm';
-import { Flex } from '@/components/layout/Flex';
-import { Title } from '@/components/layout/Title';
+import { Flex } from '@/components/ui/Flex';
+import { Title } from '@/components/ui/Title';
 import { Link } from '@/components/navigation/Link';
 
 export default function FamilyLoginPage() {

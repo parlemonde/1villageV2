@@ -3,9 +3,9 @@
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useActionState, useState } from 'react';
 
-import { Button } from '@/components/layout/Button';
-import { IconButton } from '@/components/layout/Button/IconButton';
-import { Field, Form, Input } from '@/components/layout/Form';
+import { Button } from '@/components/ui/Button';
+import { IconButton } from '@/components/ui/Button/IconButton';
+import { Field, Form, Input } from '@/components/ui/Form';
 import { login } from '@/server-actions/authentication/login';
 
 export const LoginForm = () => {

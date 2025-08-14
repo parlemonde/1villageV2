@@ -4,7 +4,7 @@ import { Flex } from '../Flex';
 import type { MarginProps, PaddingProps } from '../css-styles';
 
 type FieldProps = {
-    name: string;
+    name?: string;
     label?: React.ReactNode;
     input: React.ReactNode;
     helperText?: string;

@@ -1,9 +1,9 @@
 import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
 
 import { VillagesTable } from './VillagesTable';
-import { Button } from '@/components/layout/Button';
-import { Flex, FlexItem } from '@/components/layout/Flex';
-import { Title } from '@/components/layout/Title';
+import { Button } from '@/components/ui/Button';
+import { Flex, FlexItem } from '@/components/ui/Flex';
+import { Title } from '@/components/ui/Title';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
 
 export default function AdminManageVillagesPage() {
