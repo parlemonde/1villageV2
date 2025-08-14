@@ -1,10 +1,12 @@
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
 import { Tooltip } from 'radix-ui';
+import { Suspense } from 'react';
 
 import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
+
 import { NProgressDone } from '@/components/navigation/NProgress';
 import { alegreyaSansFont, robotoFont } from '@/fonts';
 
@@ -63,7 +65,9 @@ export default function RootLayout({
             <body className={classNames(alegreyaSansFont.variable, robotoFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
                 <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
-                <NProgressDone />
+                <Suspense>
+                    <NProgressDone />
+                </Suspense>
             </body>
         </html>
     );

@@ -11,14 +11,19 @@ import { CircularProgress } from '@/components/layout/CircularProgress';
 import { Flex } from '@/components/layout/Flex';
 import { Input } from '@/components/layout/Form';
 import { Select } from '@/components/layout/Form/Select';
+import { Modal } from '@/components/layout/Modal';
+import { Tooltip } from '@/components/layout/Tooltip/Tooltip';
 import type { Village } from '@/database/schemas/villages';
 import { COUNTRIES } from '@/lib/iso-3166-countries-french';
 import { jsonFetcher } from '@/lib/json-fetcher';
+import { deleteVillage } from '@/server-actions/villages/delete-village';
 
 export function VillagesTable() {
     const [search, setSearch] = React.useState('');
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1);
+    const [isDeletingVillage, setIsDeletingVillage] = React.useState(false);
+    const [deleteVillageIndex, setDeleteVillageIndex] = React.useState<number | null>(null);
 
     const { data: villages, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
 
@@ -79,7 +84,7 @@ export function VillagesTable() {
                             </td>
                         </tr>
                     ) : (
-                        paginatedVillages.map((village) => (
+                        paginatedVillages.map((village, index) => (
                             <tr key={village.id} className={styles.row}>
                                 <td className={styles.cell}>{village.name}</td>
                                 <td className={styles.cell}>
@@ -106,8 +111,23 @@ export function VillagesTable() {
                                     0
                                 </td>
                                 <td className={styles.cell} align="right" style={{ padding: '0 8px' }}>
-                                    <IconButton icon={Pencil1Icon} variant="borderless" color="primary" />
-                                    <IconButton icon={TrashIcon} variant="borderless" color="error" />
+                                    <Tooltip content="Modifier le village" hasArrow>
+                                        <IconButton
+                                            as="a"
+                                            href={`/admin/manage/villages/${village.id}`}
+                                            icon={Pencil1Icon}
+                                            variant="borderless"
+                                            color="primary"
+                                        />
+                                    </Tooltip>
+                                    <Tooltip content="Supprimer le village" hasArrow>
+                                        <IconButton
+                                            icon={TrashIcon}
+                                            variant="borderless"
+                                            color="error"
+                                            onClick={() => setDeleteVillageIndex(index)}
+                                        />
+                                    </Tooltip>
                                 </td>
                             </tr>
                         ))
@@ -170,6 +190,33 @@ export function VillagesTable() {
                     </tr>
                 </tbody>
             </table>
+            <Modal
+                isOpen={deleteVillageIndex !== null}
+                onClose={() => setDeleteVillageIndex(null)}
+                title="Supprimer le village"
+                confirmLabel="Supprimer"
+                confirmLevel="error"
+                onConfirm={async () => {
+                    if (deleteVillageIndex === null) {
+                        return;
+                    }
+                    try {
+                        setIsDeletingVillage(true);
+                        await deleteVillage(paginatedVillages[deleteVillageIndex].id);
+                    } catch (error) {
+                        console.error(error);
+                    } finally {
+                        setIsDeletingVillage(false);
+                    }
+                }}
+                isLoading={isDeletingVillage}
+            >
+                {deleteVillageIndex !== null && (
+                    <p>
+                        Êtes-vous sûr de vouloir supprimer le village <strong>{paginatedVillages[deleteVillageIndex]?.name}</strong> ?
+                    </p>
+                )}
+            </Modal>
         </div>
     );
 }

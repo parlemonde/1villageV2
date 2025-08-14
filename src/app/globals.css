@@ -9,20 +9,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
-
-    /* Color variables */
-    --primary-color: #4c3ed9;
-    --primary-color-light: #b3b5fc; /* secondary background color */
-    --primary-color-light-2: #ebe9fa; /* hover color */
-    --secondary-color: #80cbc4; /* background only color (font should be dark) */
-    --secondary-color-dark: #36827c; /* font color */
-    --secondary-color-light: #dbf0ee; /* hover color */
-    --error-color: #d93939;
-    --error-color-light: #f7d4d4; /* background hover color */
-    --warning-color: #a76700;
-    --background-color: #f5f5f5;
-    --font-color: #2e343b;
-    --font-detail-color: #666666;
 }
 
 p {
@@ -35,4 +21,55 @@ p {
     background-color: #4c3ed9; /* fallback */
     background-color: var(--primary-color);
     height: 1px;
+}
+
+:root {
+    --font-color: #2e343b;
+    --font-detail-color: #666666;
+    --background-color: #f5f5f5;
+
+    --primary-color: #4c3ed9;
+    --primary-100: #e7e5fa;
+    --primary-200: #dad7f7;
+    --primary-300: #cbc7f4;
+    --primary-400: #9d96ea;
+    --primary-500: #796fe3;
+    --primary-600: #4c3ed9; /* (primary color) */
+    --primary-700: #3426c2;
+    /* --primary-800: #1e166f; */
+
+    --secondary-color: #80cbc4;
+    --secondary-100: #d3ecea;
+    --secondary-200: #b9e2df;
+    --secondary-300: #80cbc4; /* (secondary color) */
+    --secondary-400: #49afa8;
+    --secondary-500: #3a8b85;
+    --secondary-600: #2d6b66;
+    --secondary-700: #204c49;
+
+    --error-color: #d93939;
+    --error-100: #f9e2e2;
+    --error-200: #f6d1d1;
+    --error-300: #f3bfbf;
+    --error-400: #e78383;
+    --error-500: #d93939; /* (error color) */
+    --error-600: #bb2424;
+    --error-700: #871a1a;
+
+    --warning-color: #a76700;
+    --warning-100: #fbe4c1;
+    --warning-200: #f8d59d;
+    --warning-300: #f5c474;
+    --warning-400: #de8e10; /* (warning color) */
+    --warning-500: #b0710d;
+    --warning-600: #87570a;
+    --warning-700: #613e07;
+
+    --grey-100: #e6e7eb;
+    --grey-200: #d9dae0;
+    --grey-300: #cacbd4;
+    --grey-400: #9c9faf;
+    --grey-500: #7a7d93;
+    --grey-600: #5d6073;
+    --grey-700: #424552;
 }

@@ -22,7 +22,7 @@ import { VillageContext } from '@/contexts/villageContext';
 import type { Village } from '@/database/schemas/villages';
 import { jsonFetcher } from '@/lib/json-fetcher';
 import { logout } from '@/server-actions/authentication/logout';
-import { setVillage } from '@/server-actions/set-village';
+import { setVillage } from '@/server-actions/villages/set-village';
 import CogIcon from '@/svg/cogIcon.svg';
 import LogoSVG from '@/svg/logo.svg';
 
@@ -109,6 +109,8 @@ const VillageSelector = () => {
                         />
                         <div style={{ width: '100%', textAlign: 'right', marginTop: '16px' }}>
                             <Button
+                                color="secondary"
+                                variant={village === undefined ? 'outlined' : 'contained'}
                                 label="Choisir"
                                 onClick={async () => {
                                     if (!villageId) {

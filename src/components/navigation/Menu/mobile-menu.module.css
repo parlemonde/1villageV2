@@ -27,13 +27,13 @@
     border-top: 1px solid #e0e0e0;
 }
 .mobileMenuItem:hover {
-    background-color: var(--primary-color-light-2);
+    background-color: var(--primary-100);
 }
 .mobileMenuItem.color-secondary:hover {
-    background-color: var(--secondary-color-light);
+    background-color: var(--secondary-100);
 }
 .mobileMenuItem.color-danger:hover {
-    background-color: var(--error-color-light);
+    background-color: var(--error-100);
 }
 .mobileMenuItem[data-active] {
     background-color: var(--primary-color);
@@ -60,7 +60,7 @@
 }
 
 .color-secondary {
-    color: var(--secondary-color-dark);
+    color: var(--secondary-500);
 }
 .color-danger {
     color: var(--error-color);

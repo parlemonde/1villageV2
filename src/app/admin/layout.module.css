@@ -1,5 +1,5 @@
 body:has(.adminLayout) {
-    background-color: var(--primary-color-light-2);
+    background-color: var(--primary-100);
 }
 
 .adminHeader {

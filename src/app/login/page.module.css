@@ -19,7 +19,7 @@
 .separator {
     flex: 0 0 auto;
     width: 1px;
-    background-color: var(--primary-color-light);
+    background-color: var(--primary-200);
 }
 
 .Icon {

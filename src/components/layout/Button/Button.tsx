@@ -13,7 +13,7 @@ export type ButtonProps = {
     label: string | React.ReactNode;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
-    color?: 'default' | 'primary' | 'secondary' | 'error' | 'light-grey';
+    color?: 'primary' | 'secondary' | 'warning' | 'error' | 'grey';
     variant?: 'outlined' | 'contained' | 'borderless';
     size?: 'sm' | 'md' | 'lg';
     isFullWidth?: boolean;
@@ -28,7 +28,7 @@ const ButtonWithRef = (
     {
         as,
         label,
-        color = 'default',
+        color = 'grey',
         variant = 'outlined',
         type = 'button',
         size = 'md',
@@ -51,20 +51,13 @@ const ButtonWithRef = (
         ...otherProps,
         type,
         disabled: isLoading || otherProps.disabled,
-        className: classNames(
-            styles.button,
-            styles[`button--color-${color}`],
-            styles[`button--variant-${variant}`],
-            styles[`button--${size}`],
-            className,
-            {
-                [styles[`button--is-full-width`]]: isFullWidth,
-                [styles[`button--is-uppercase`]]: isUpperCase,
-                [styles[`button--hidden`]]: isVisuallyHidden,
-                [styles[`button--mobile-only`]]: isMobileOnly,
-                [styles[`button--tablet-up-only`]]: isTabletUpOnly,
-            },
-        ),
+        className: classNames(styles.button, styles[`color-${color}`], styles[`variant-${variant}`], styles[`size-${size}`], className, {
+            [styles[`isFullWidth`]]: isFullWidth,
+            [styles[`isUpperCase`]]: isUpperCase,
+            [styles[`isVisuallyHidden`]]: isVisuallyHidden,
+            [styles[`isMobileOnly`]]: isMobileOnly,
+            [styles[`isTabletUpOnly`]]: isTabletUpOnly,
+        }),
         style: {
             ...getMarginAndPaddingStyle(marginAndPaddingProps),
             ...style,
