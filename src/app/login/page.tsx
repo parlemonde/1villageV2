@@ -1,5 +1,4 @@
 import styles from './page.module.css';
-import { Link } from '@/components/navigation/Link';
 import { Button } from '@/components/ui/Button';
 import { Title } from '@/components/ui/Title';
 import FamilyIcon from '@/svg/login/family.svg';
@@ -16,19 +15,15 @@ export default function LoginPage() {
                     <Title variant="h3" color="inherit">
                         Professionnel de l&apos;éducation
                     </Title>
-                    <Link href="/login/education">
-                        <EducationIcon className={styles.Icon} />
-                    </Link>
-                    <Button color="primary" as="a" label="1Village en classe" isUpperCase={false} href="/login/education" />
+                    <EducationIcon className={styles.Icon} />
+                    <Button color="primary" label="1Village en classe" isUpperCase={false} />
                 </div>
                 <div className={styles.separator} />
                 <div className={styles.variant}>
                     <Title variant="h3" color="inherit">
                         Famille
                     </Title>
-                    <Link href="/login/famille">
-                        <FamilyIcon className={styles.Icon} />
-                    </Link>
+                    <FamilyIcon className={styles.Icon} />
                     <Button
                         color="primary"
                         as="a"
