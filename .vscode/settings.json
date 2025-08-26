@@ -15,5 +15,7 @@
     "**/.postgres-data": true,
     "**/.dynamodb": true,
     "**/tmp": true,
+    "**/.open-next": true,
+    "**/.next": true,
   }
 }

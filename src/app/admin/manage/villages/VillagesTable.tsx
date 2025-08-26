@@ -104,7 +104,7 @@ export function VillagesTable() {
                                     {village.activePhase}
                                 </td>
                                 <td className={styles.cell} align="center">
-                                    0
+                                    {Object.values(village.classroomCount).reduce((acc, count) => acc + count, 0)}
                                 </td>
                                 <td className={styles.cell} align="center">
                                     0

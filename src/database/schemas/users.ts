@@ -1,6 +1,6 @@
 import { pgTable, serial, varchar, char, smallint, integer } from 'drizzle-orm/pg-core';
 
-const ROLES_ENUM = ['admin', 'mediator', 'teacher', 'student', 'parent'] as const;
+const ROLES_ENUM = ['admin', 'mediator', 'teacher', 'parent'] as const;
 export type UserRole = (typeof ROLES_ENUM)[number];
 
 export const users = pgTable('users', {

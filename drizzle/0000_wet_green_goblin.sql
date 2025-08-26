@@ -47,6 +47,7 @@ CREATE TABLE "villages" (
 	"countries" jsonb NOT NULL,
 	"activePhase" smallint NOT NULL,
 	"phaseStartDates" jsonb NOT NULL,
+	"classroomCount" jsonb NOT NULL,
 	CONSTRAINT "villages_plmId_unique" UNIQUE("plmId")
 );
 --> statement-breakpoint

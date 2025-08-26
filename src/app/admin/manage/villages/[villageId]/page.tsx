@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
+import { VillageForm } from './VillageForm';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
 import { Title } from '@/components/ui/Title';
 import { db } from '@/database';
@@ -20,15 +21,17 @@ const getVillageId = (param: string) => {
 };
 
 export default async function AdminManageVillageEditPage({ params }: ServerPageProps) {
-    const villageId = getVillageId((await params).villageId);
+    const villageIdParam = (await params).villageId;
+    const isNew = villageIdParam === 'new';
+    const villageId = isNew ? null : getVillageId(villageIdParam);
     const village = villageId
         ? await db.query.villages.findFirst({
               where: eq(villages.id, villageId),
           })
         : undefined;
 
-    if (!village) {
-        redirect('/admin/manage/villages');
+    if (!village && !isNew) {
+        notFound();
     }
 
     return (
@@ -38,12 +41,12 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
                     { label: 'Gérer', href: '/admin/manage' },
                     { label: 'Villages-mondes', href: '/admin/manage/villages' },
                     {
-                        label: village.name,
+                        label: village ? village.name : 'Nouveau village-monde',
                     },
                 ]}
             />
-            <Title marginY="md">{village.name}</Title>
-            {villageId}
+            <Title marginY="md">{village ? village.name : 'Ajouter un village-monde'}</Title>
+            <VillageForm village={village} isNew={isNew} />
         </>
     );
 }

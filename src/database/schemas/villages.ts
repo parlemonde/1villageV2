@@ -9,5 +9,6 @@ export const villages = pgTable('villages', {
     countries: json<string, string[]>('countries').notNull(),
     activePhase: smallint('activePhase').notNull(),
     phaseStartDates: json<string, Record<number, string>>('phaseStartDates').notNull(),
+    classroomCount: json<string, Record<string, number>>('classroomCount').notNull(),
 });
 export type Village = typeof villages.$inferSelect;

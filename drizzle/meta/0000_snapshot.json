@@ -1,5 +1,5 @@
 {
-  "id": "c8a0a774-838b-41f7-8e49-cc884ce41f91",
+  "id": "a4f4deb4-0d2e-403d-ab77-2b7aa0e8a127",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -366,6 +366,12 @@
         },
         "phaseStartDates": {
           "name": "phaseStartDates",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "classroomCount": {
+          "name": "classroomCount",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true

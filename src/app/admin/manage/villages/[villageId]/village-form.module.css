@@ -1,0 +1,39 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin: 32px 0;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.countryOptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.countrySelect {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.countryFlag {
+    width: 30px;
+    text-align: center;
+}
+
+.deleteButton {
+    flex-shrink: 0;
+}

@@ -9,7 +9,6 @@ import { getMarginAndPaddingStyle, type MarginProps } from '../css-styles';
 import ArrowDownIcon from '@/svg/arrowDown.svg';
 
 interface SelectProps extends MarginProps {
-    defaultValue?: string;
     value?: string;
     onChange?: (value: string) => void;
     options: { label: React.ReactNode; value: string }[];
@@ -20,22 +19,24 @@ interface SelectProps extends MarginProps {
     style?: React.CSSProperties;
 }
 
-export const Select = ({
-    defaultValue,
-    value,
-    onChange,
-    options,
-    size = 'md',
-    color = 'primary',
-    isFullWidth = false,
-    placeholder = 'Choisir une option',
-    style = {},
-    ...marginProps
-}: SelectProps) => {
+export const Select = (props: SelectProps) => {
+    const {
+        value,
+        onChange,
+        options,
+        size = 'md',
+        color = 'primary',
+        isFullWidth = false,
+        placeholder = 'Choisir une option',
+        style = {},
+        ...marginProps
+    } = props;
+
+    const isControlled = 'value' in props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
 
-    if (selectedValue !== value && value !== undefined) {
+    if (selectedValue !== value && isControlled) {
         setSelectedValue(value);
     }
 
@@ -43,7 +44,6 @@ export const Select = ({
 
     return (
         <RadixSelect.Root
-            defaultValue={defaultValue}
             value={value}
             onValueChange={(newValue) => {
                 setSelectedValue(newValue);
