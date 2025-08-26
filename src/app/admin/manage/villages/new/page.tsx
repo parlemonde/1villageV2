@@ -1,3 +1,4 @@
+import { NewVillageForm } from './NewVillageForm';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
 import { Title } from '@/components/ui/Title';
 
@@ -13,7 +14,8 @@ export default async function AdminManageVillageNewPage() {
                     },
                 ]}
             />
-            <Title marginY="md">Nouveau village-monde</Title>
+            <Title marginY="md">Ajouter un village-monde</Title>
+            <NewVillageForm />
         </>
     );
 }

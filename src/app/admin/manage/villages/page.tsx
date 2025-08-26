@@ -1,4 +1,4 @@
-import { DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
 
 import { VillagesTable } from './VillagesTable';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
@@ -32,6 +32,15 @@ export default function AdminManageVillagesPage() {
                 />
             </div>
             <VillagesTable />
+            <Button
+                as="a"
+                color="primary"
+                variant="outlined"
+                label="Retour"
+                href="/admin/manage"
+                marginTop="lg"
+                leftIcon={<ChevronLeftIcon width={18} height={18} />}
+            />
         </>
     );
 }

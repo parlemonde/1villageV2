@@ -14,7 +14,7 @@ const isLoginData = (data: unknown): data is LoginData => {
 
 const APP_SECRET = new TextEncoder().encode(process.env.APP_SECRET || '');
 
-const getUserById = cache(async (userId: number): Promise<User | undefined> => {
+const getUserById = async (userId: number): Promise<User | undefined> => {
     const maybeUser = await db.query.users.findFirst({
         columns: { id: true, name: true, email: true, role: true, accountRegistration: true },
         where: eq(users.id, userId),
@@ -27,9 +27,9 @@ const getUserById = cache(async (userId: number): Promise<User | undefined> => {
         ...user,
         useSSO: accountRegistration === 10,
     };
-});
+};
 
-export const getCurrentUser = async (): Promise<User | undefined> => {
+export const getCurrentUser = cache(async (): Promise<User | undefined> => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('access-token')?.value;
     if (!accessToken) {
@@ -44,4 +44,4 @@ export const getCurrentUser = async (): Promise<User | undefined> => {
         // do nothing
     }
     return undefined;
-};
+});

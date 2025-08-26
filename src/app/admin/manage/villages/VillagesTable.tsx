@@ -24,7 +24,7 @@ export function VillagesTable() {
     const [isDeletingVillage, setIsDeletingVillage] = React.useState(false);
     const [deleteVillageIndex, setDeleteVillageIndex] = React.useState<number | null>(null);
 
-    const { data: villages, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
+    const { data: villages, isLoading, mutate } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
 
     const filteredVillages = (villages || []).filter((v) => v.name.toLowerCase().includes(search.toLowerCase()));
     const total = filteredVillages.length;
@@ -92,7 +92,7 @@ export function VillagesTable() {
                                             const country = COUNTRIES[countryCode];
                                             return (
                                                 <Fragment key={countryCode}>
-                                                    <CountryFlag country={countryCode} />
+                                                    <CountryFlag country={countryCode} size="small" />
                                                     {country || countryCode}
                                                     {index < village.countries.length - 1 && <span>&middot;</span>}
                                                 </Fragment>
@@ -202,10 +202,12 @@ export function VillagesTable() {
                     try {
                         setIsDeletingVillage(true);
                         await deleteVillage(paginatedVillages[deleteVillageIndex].id);
+                        await mutate(); // refresh the villages list
                     } catch (error) {
                         console.error(error);
                     } finally {
                         setIsDeletingVillage(false);
+                        setDeleteVillageIndex(null);
                     }
                 }}
                 isLoading={isDeletingVillage}
