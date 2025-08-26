@@ -1,5 +1,5 @@
 .navigationWrapper {
-    width: 300px;
+    width: 320px;
     position: relative;
 }
 .stickyContent {
@@ -12,7 +12,7 @@
     box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
     border-radius: 10px;
-    padding: 8px;
+    padding: 16px 8px;
 }
 
 .navigationCardTitle {

@@ -1,20 +1,29 @@
 .table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0px;
-
+    table-layout: fixed;
     margin: 16px 0;
+    width: 100%;
+    box-sizing: border-box;
     font-size: 15px;
     font-family: var(--font-roboto), Arial, sans-serif;
     font-weight: 400;
 }
-.thead {
-    font-weight: 700;
-    border-bottom: 1px solid var(--primary-color);
-}
 .headerCell {
+    font-weight: 700;
     padding: 8px;
     max-width: 0;
+    border-top: 1px solid var(--grey-300);
+    border-bottom: 1px solid var(--primary-500);
+}
+.headerCell:first-child {
+    border-top-left-radius: 4px;
+    border-left: 1px solid var(--grey-300);
+}
+.headerCell:last-child {
+    border-top-right-radius: 4px;
+    border-right: 1px solid var(--grey-300);
 }
 .row {
     vertical-align: middle;
@@ -31,4 +40,21 @@
     white-space: nowrap;
     border-bottom: 1px solid var(--grey-200);
     font-weight: 300;
+}
+.cell:first-child {
+    border-left: 1px solid var(--grey-300);
+}
+.cell:last-child {
+    border-right: 1px solid var(--grey-300);
+}
+
+/* second last child (last is the footer) */
+.row:nth-last-child(2) .cell {
+    border-color: var(--grey-300);
+}
+.row:nth-last-child(2) .cell:first-child {
+    border-bottom-left-radius: 4px;
+}
+.row:nth-last-child(2) .cell:last-child {
+    border-bottom-right-radius: 4px;
 }

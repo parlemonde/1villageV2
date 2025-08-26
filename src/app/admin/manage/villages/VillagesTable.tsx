@@ -51,15 +51,15 @@ export function VillagesTable() {
                 }}
             />
             <table className={styles.table}>
-                <colgroup>
-                    <col />
-                    <col />
-                    <col style={{ width: '140px' }} />
-                    <col style={{ width: '150px' }} />
-                    <col style={{ width: '140px' }} />
-                    <col style={{ width: '100px' }} />
-                </colgroup>
-                <thead className={styles.thead}>
+                {/* <colgroup>
+                    <col style={{ width: '0px' }} />
+                    <col style={{ width: '0px' }} />
+                    <col style={{ minWidth: '140px' }} />
+                    <col style={{ minWidth: '150px' }} />
+                    <col style={{ minWidth: '140px' }} />
+                    <col style={{ minWidth: '100px' }} />
+                </colgroup> */}
+                <thead>
                     <tr>
                         <th className={styles.headerCell} align="left">
                             Nom du village
@@ -67,10 +67,20 @@ export function VillagesTable() {
                         <th className={styles.headerCell} align="left">
                             Pays
                         </th>
-                        <th className={styles.headerCell}>Phase active</th>
-                        <th className={styles.headerCell}>Nombre de classes</th>
-                        <th className={styles.headerCell}>Nombre de posts</th>
-                        <th className={styles.headerCell} align="right" style={{ paddingRight: 16 }}>
+                        <th className={styles.headerCell} style={{ minWidth: '110px', width: '110px', boxSizing: 'border-box' }}>
+                            Phase active
+                        </th>
+                        <th className={styles.headerCell} style={{ minWidth: '150px', width: '150px', boxSizing: 'border-box' }}>
+                            Nombre de classes
+                        </th>
+                        <th className={styles.headerCell} style={{ minWidth: '140px', width: '140px', boxSizing: 'border-box' }}>
+                            Nombre de posts
+                        </th>
+                        <th
+                            className={styles.headerCell}
+                            align="right"
+                            style={{ paddingRight: 16, minWidth: '90px', width: '90px', boxSizing: 'border-box' }}
+                        >
                             Actions
                         </th>
                     </tr>

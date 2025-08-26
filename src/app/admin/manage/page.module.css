@@ -1,0 +1,20 @@
+.link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+    box-sizing: border-box;
+    padding: 16px;
+    border-radius: 10px;
+    background-color: var(--grey-100);
+    border: 1px solid var(--grey-200);
+    margin-bottom: 16px;
+    &:hover {
+        background-color: var(--grey-200);
+        border-color: var(--grey-300);
+    }
+}

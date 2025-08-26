@@ -2,6 +2,7 @@ body {
     font-size: 16px;
     font-family: var(--font-roboto), 'Times New Roman', Times, serif;
     font-weight: 400;
+    line-height: 1.5;
     color: #2e343b; /* fallback */
     color: var(--font-color);
     background-color: #f5f5f5; /* fallback */
@@ -29,7 +30,7 @@ p {
     --background-color: #f5f5f5;
 
     --primary-color: #4c3ed9;
-    --primary-100: #e7e5fa;
+    --primary-100: #eceaf9;
     --primary-200: #dad7f7;
     --primary-300: #cbc7f4;
     --primary-400: #9d96ea;
@@ -64,7 +65,7 @@ p {
     --warning-600: #87570a;
     --warning-700: #613e07;
 
-    --grey-100: #e6e7eb;
+    --grey-100: #f0f1f5;
     --grey-200: #d9dae0;
     --grey-300: #cacbd4;
     --grey-400: #9c9faf;
