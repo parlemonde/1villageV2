@@ -1,14 +1,12 @@
-import { pgTable, serial, varchar, integer, smallint } from 'drizzle-orm/pg-core';
-
-import { json } from '../lib/custom-json';
+import { pgTable, serial, varchar, integer, smallint, jsonb } from 'drizzle-orm/pg-core';
 
 export const villages = pgTable('villages', {
     id: serial('id').primaryKey(),
     plmId: integer('plmId').unique(),
     name: varchar('name', { length: 150 }).notNull(),
-    countries: json<string, string[]>('countries').notNull(),
+    countries: jsonb('countries').$type<string[]>().notNull(),
     activePhase: smallint('activePhase').notNull(),
-    phaseStartDates: json<string, Record<number, string>>('phaseStartDates').notNull(),
-    classroomCount: json<string, Record<string, number>>('classroomCount').notNull(),
+    phaseStartDates: jsonb('phaseStartDates').$type<Record<number, string>>().notNull(),
+    classroomCount: jsonb('classroomCount').$type<Record<string, number>>().notNull(),
 });
 export type Village = typeof villages.$inferSelect;

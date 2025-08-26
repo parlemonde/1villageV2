@@ -42,7 +42,7 @@ const CountryField = ({ index, value, onChange, onDelete }: CountryFieldProps) =
     return (
         <div className={styles.countrySelect}>
             <Select
-                value={value.isoCode === null ? undefined : value.isoCode} // use undefined to display the placeholder
+                value={value.isoCode === null ? '' : value.isoCode} // use undefined to display the placeholder
                 onChange={(newIsoCode) => onChange({ isoCode: newIsoCode, classroomCount: value.classroomCount })}
                 color="secondary"
                 isFullWidth
@@ -51,6 +51,7 @@ const CountryField = ({ index, value, onChange, onDelete }: CountryFieldProps) =
             />
             <Input
                 isFullWidth
+                color="secondary"
                 value={value.classroomCount === null ? '' : value.classroomCount}
                 onChange={(e) => {
                     const newCount = Number(e.target.value);
@@ -144,7 +145,7 @@ export const VillageForm = ({ village, isNew }: VillageFormProps) => {
                     <div style={{ width: '100%' }}>
                         {countries.map((country, index) => (
                             <CountryField
-                                key={country.isoCode ? `${country.isoCode}-${index}` : `select-country-${index}`}
+                                key={`select-country-${index}`}
                                 index={index}
                                 value={country}
                                 onChange={(value) => {

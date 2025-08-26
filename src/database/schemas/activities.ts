@@ -20,11 +20,10 @@ export const activities = pgTable('activities', {
     }), // Activity owned by a classroom
     userId: integer('userId').references(() => users.id, {
         onDelete: 'cascade',
-    }), // Activity owned by a user (for example a mediator)
+    }), // User who created the activity
     villageId: integer('villageId').references(() => villages.id, {
         onDelete: 'cascade',
-    }), // If null => global activity from admin (pelico)
-    countryCode: varchar('countryCode', { length: 2 }).notNull(),
+    }), // If null => global activity from admin
     createDate: timestamp('createDate', { mode: 'string' }).notNull().defaultNow(),
     publishDate: timestamp('publishDate', { mode: 'string' }),
     updateDate: timestamp('updateDate', { mode: 'string' })
@@ -37,8 +36,8 @@ export const activities = pgTable('activities', {
     parentActivityId: integer('parentActivityId').references((): AnyPgColumn => activities.id, {
         onDelete: 'cascade',
     }),
-    // responseActivityId
-    // isVisibleToParent
-    // isDisplayed
+    responseActivityId: integer('responseActivityId').references((): AnyPgColumn => activities.id, {
+        onDelete: 'cascade',
+    }),
 });
 export type Activity = typeof activities.$inferSelect;
