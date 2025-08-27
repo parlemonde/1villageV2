@@ -11,6 +11,7 @@
     font-weight: 400;
 }
 .headerCell {
+    box-sizing: border-box;
     font-weight: 700;
     padding: 8px;
     max-width: 0;
@@ -49,12 +50,12 @@
 }
 
 /* second last child (last is the footer) */
-.row:nth-last-child(2) .cell {
+.lastCell {
     border-color: var(--grey-300);
 }
-.row:nth-last-child(2) .cell:first-child {
+.lastCell:first-child {
     border-bottom-left-radius: 4px;
 }
-.row:nth-last-child(2) .cell:last-child {
+.lastCell:last-child {
     border-bottom-right-radius: 4px;
 }
