@@ -111,7 +111,7 @@ export function VillagesTable() {
                         cellPadding: '0 8px',
                     },
                 ]}
-                isLoading={isLoading}
+                isLoading={isLoading && villages === undefined}
                 emptyState={
                     (villages || []).length > 0 ? (
                         'Aucun village trouvé !'

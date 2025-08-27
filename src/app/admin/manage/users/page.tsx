@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 
+import { UsersTable } from './UsersTable';
 import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
 import { Button } from '@/components/ui/Button';
 import { Title } from '@/components/ui/Title';
@@ -20,8 +21,16 @@ export default function AdminManageUsersPage() {
                 }}
             >
                 <Title style={{ flex: '1 1 0' }}>Utilisateurs</Title>
-                <Button variant="contained" color="secondary" leftIcon={<PlusIcon />} label="Nouvel utilisateur" disabled />
+                <Button
+                    as="a"
+                    href="/admin/manage/users/new"
+                    variant="contained"
+                    color="secondary"
+                    leftIcon={<PlusIcon />}
+                    label="Ajouter un utilisateur"
+                />
             </div>
+            <UsersTable />
             <Button
                 as="a"
                 color="primary"

@@ -99,7 +99,12 @@ export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }:
             <tbody>
                 {isLoading ? (
                     <tr>
-                        <td className={classNames(styles.cell, styles.lastCell)} colSpan={6} align="center" style={{ padding: '32px 0' }}>
+                        <td
+                            className={classNames(styles.cell, styles.lastCell)}
+                            colSpan={columns.length}
+                            align="center"
+                            style={{ padding: '32px 0' }}
+                        >
                             <CircularProgress size={25} />
                         </td>
                     </tr>
@@ -139,7 +144,7 @@ export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }:
                 )}
                 {data.length > 0 && !isLoading && (
                     <tr style={{ backgroundColor: 'white' }}>
-                        <th colSpan={6} align="right">
+                        <th colSpan={columns.length} align="right">
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                                 <span style={{ marginRight: 16 }}>Lignes par pages:</span>
                                 <Select
