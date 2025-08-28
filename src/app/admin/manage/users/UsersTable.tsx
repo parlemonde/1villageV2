@@ -60,17 +60,21 @@ export function UsersTable() {
                         id: 'name',
                         header: 'Nom',
                         accessor: 'name',
+                        isSortable: true,
                     },
                     {
                         id: 'email',
                         header: 'Email',
                         accessor: 'email',
+                        isSortable: true,
                     },
                     {
                         id: 'role',
                         header: 'Rôle',
                         accessor: (user) => ROLE_LABELS[user.role],
                         width: '150px',
+                        isSortable: true,
+                        getSortValue: (user) => ROLE_LABELS[user.role],
                     },
                     {
                         id: 'actions',

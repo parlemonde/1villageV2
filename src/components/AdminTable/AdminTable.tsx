@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { ArrowDownIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import React from 'react';
 
@@ -15,6 +15,7 @@ export interface AdminTableColumn<T> {
     width?: string | number; // default to auto
     align?: 'left' | 'center' | 'right' | 'justify'; // default to left
     isSortable?: boolean; // default to false
+    getSortValue?: (row: T, index: number) => string | number;
     cellPadding?: string | number; // default to 8px
 }
 
@@ -71,9 +72,31 @@ const CellAccessor = <T,>({ column, row, index }: CellAccessorProps<T>): React.R
 export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }: AdminTableProps<T>) => {
     const [pageSize, setPageSize] = React.useState(10);
     const [pageIndex, setPageIndex] = React.useState(1);
+    const [sortColumn, setSortColumn] = React.useState<string | null>(null);
+    const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc' | null>(null);
 
     const total = data.length;
-    const paginatedData = data.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
+    const columnToSort = columns.find((column) => column.id === sortColumn);
+    const sortedData = columnToSort
+        ? data.sort((a, b) => {
+              let aValue: unknown;
+              let bValue: unknown;
+              if (columnToSort.getSortValue) {
+                  aValue = columnToSort.getSortValue?.(a, 0);
+                  bValue = columnToSort.getSortValue?.(b, 0);
+              } else if (typeof columnToSort.accessor === 'string') {
+                  aValue = get(a, columnToSort.accessor);
+                  bValue = get(b, columnToSort.accessor);
+              }
+              if (typeof aValue === 'number' && typeof bValue === 'number') {
+                  return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+              } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+                  return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+              }
+              return 0;
+          })
+        : data;
+    const paginatedData = sortedData.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
 
     // Reset page if it's out of bounds
     if (pageIndex !== 1 && pageIndex > Math.ceil(total / pageSize)) {
@@ -84,16 +107,54 @@ export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }:
         <table className={styles.table}>
             <thead>
                 <tr>
-                    {columns.map((column) => (
-                        <th
-                            key={column.id}
-                            className={styles.headerCell}
-                            align={column.align || 'left'}
-                            style={{ width: column.width, minWidth: column.width }}
-                        >
-                            {column.header}
-                        </th>
-                    ))}
+                    {columns.map((column) =>
+                        column.isSortable ? (
+                            <th
+                                key={column.id}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => {
+                                    if (sortColumn === column.id) {
+                                        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+                                    } else {
+                                        setSortColumn(column.id);
+                                        setSortDirection('asc');
+                                    }
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        if (sortColumn === column.id) {
+                                            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+                                        } else {
+                                            setSortColumn(column.id);
+                                            setSortDirection('asc');
+                                        }
+                                    }
+                                }}
+                                className={classNames(styles.headerCell, styles.sortableHeaderCell)}
+                                align={column.align || 'left'}
+                                style={{ width: column.width, minWidth: column.width }}
+                            >
+                                <div className={styles.headerCellContent}>
+                                    <span>{column.header}</span>
+                                    {sortColumn === column.id && sortDirection === 'desc' ? (
+                                        <ArrowDownIcon />
+                                    ) : (
+                                        <ArrowUpIcon className={classNames({ [styles.hiddenSortIcon]: sortColumn !== column.id })} />
+                                    )}
+                                </div>
+                            </th>
+                        ) : (
+                            <th
+                                key={column.id}
+                                className={classNames(styles.headerCell)}
+                                align={column.align || 'left'}
+                                style={{ width: column.width, minWidth: column.width }}
+                            >
+                                {column.header}
+                            </th>
+                        ),
+                    )}
                 </tr>
             </thead>
             <tbody>

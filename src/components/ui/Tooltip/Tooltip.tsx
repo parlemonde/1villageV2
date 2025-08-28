@@ -14,6 +14,7 @@ type TooltipProps = {
     className?: string;
     isEnabled?: boolean;
     sideOffset?: number;
+    delay?: number;
     content: React.ReactNode;
 };
 export const Tooltip = ({
@@ -22,6 +23,7 @@ export const Tooltip = ({
     align = 'center',
     maxWidth = '300px',
     sideOffset = 6,
+    delay = 0,
     className,
     content,
     hasArrow,
@@ -31,7 +33,7 @@ export const Tooltip = ({
         return <>{children}</>;
     }
     return (
-        <RadixTooltip.Root>
+        <RadixTooltip.Root delayDuration={delay}>
             <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
             <RadixTooltip.Portal>
                 <RadixTooltip.Content

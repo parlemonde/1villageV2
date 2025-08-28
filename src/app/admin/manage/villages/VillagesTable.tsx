@@ -1,12 +1,12 @@
 'use client';
 
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import React, { Fragment } from 'react';
 import useSWR from 'swr';
 
 import { AdminTable } from '@/components/AdminTable';
 import { CountryFlag } from '@/components/CountryFlag';
+import { Link } from '@/components/navigation/Link';
 import { IconButton } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Form';
 import { Modal } from '@/components/ui/Modal';
@@ -47,6 +47,7 @@ export function VillagesTable() {
                         id: 'name',
                         header: 'Nom du village',
                         accessor: 'name',
+                        isSortable: true,
                     },
                     {
                         id: 'countries',
@@ -65,27 +66,34 @@ export function VillagesTable() {
                                 })}
                             </div>
                         ),
+                        isSortable: true,
+                        getSortValue: (village) => village.countries.join(','),
                     },
                     {
                         id: 'activePhase',
                         header: 'Phase active',
                         accessor: 'activePhase',
                         align: 'center',
-                        width: 110,
+                        width: 125,
+                        isSortable: true,
                     },
                     {
                         id: 'classroomCount',
                         header: 'Nombre de classes',
                         accessor: (village) => Object.values(village.classroomCount).reduce((acc, count) => acc + count, 0),
                         align: 'center',
-                        width: 150,
+                        width: 165,
+                        isSortable: true,
+                        getSortValue: (village) => Object.values(village.classroomCount).reduce((acc, count) => acc + count, 0),
                     },
                     {
                         id: 'postCount',
                         header: 'Nombre de posts',
                         accessor: () => 0,
                         align: 'center',
-                        width: 140,
+                        width: 155,
+                        isSortable: true,
+                        getSortValue: () => 0,
                     },
                     {
                         id: 'actions',
