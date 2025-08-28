@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "typecheck": "tsc --noEmit -p .",
-    "db:migrate": "dotenvx run -- tsx src/database/migrate.ts",
+    "db:migrate": "dotenvx run -- tsx src/server/database/migrate.ts",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio"
   },
