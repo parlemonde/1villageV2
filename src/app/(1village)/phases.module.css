@@ -42,7 +42,6 @@
     flex: 1 1 0;
     height: 100%;
     background-color: white;
-    box-sizing: border-box;
     overflow: hidden;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
     border-top-left-radius: 10px;

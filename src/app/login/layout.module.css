@@ -14,7 +14,6 @@
     width: 1200px;
     max-width: calc(100% - 32px);
     padding: 16px 0;
-    box-sizing: border-box;
 }
 
 .loginHeader {
@@ -26,7 +25,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px;
-    box-sizing: border-box;
 }
 
 .loginContent {

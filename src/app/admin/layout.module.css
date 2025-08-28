@@ -14,7 +14,6 @@ body:has(.adminLayout) {
     align-items: center;
     justify-content: flex-start;
     padding: 0 48px;
-    box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
 }
 
@@ -31,7 +30,6 @@ body:has(.adminLayout) {
     background-color: white;
     border-radius: 10px;
     padding: 16px 8px;
-    box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
 }
 
@@ -45,7 +43,6 @@ body:has(.adminLayout) {
     background-color: white;
     border-radius: 10px;
     padding: 32px;
-    box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
 }
 

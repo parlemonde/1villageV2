@@ -4,7 +4,6 @@
     cursor: pointer;
     display: block;
     width: 100%;
-    box-sizing: border-box;
     color: var(--text-color);
     text-decoration: none;
 }

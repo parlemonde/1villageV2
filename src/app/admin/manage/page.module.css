@@ -7,7 +7,6 @@
     text-decoration: none;
     color: inherit;
     font-weight: 600;
-    box-sizing: border-box;
     padding: 16px;
     border-radius: 10px;
     background-color: var(--grey-100);

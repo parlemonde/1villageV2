@@ -24,6 +24,16 @@ p {
     height: 1px;
 }
 
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
 :root {
     --font-color: #2e343b;
     --font-detail-color: #666666;

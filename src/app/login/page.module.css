@@ -3,7 +3,6 @@
     flex-direction: row;
     width: 100%;
     align-items: stretch;
-    box-sizing: border-box;
     margin: 16px 0;
 }
 
