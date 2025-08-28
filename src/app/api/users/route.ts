@@ -1,8 +1,7 @@
+import { db } from '@server/database';
+import { users } from '@server/database/schemas/users';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { NextResponse } from 'next/server';
-
-import { db } from '@/database';
-import { users } from '@/database/schemas/users';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
 export const GET = async () => {
     const user = await getCurrentUser();

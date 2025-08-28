@@ -1,8 +1,7 @@
 'use client';
 
+import { Menu } from '@frontend/components/navigation/Menu';
 import { usePathname } from 'next/navigation';
-
-import { Menu } from '@/components/navigation/Menu';
 
 export const AdminNavigation = () => {
     const pathname = usePathname();

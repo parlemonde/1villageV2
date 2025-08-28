@@ -1,3 +1,5 @@
+import { NProgressDone } from '@frontend/components/navigation/NProgress';
+import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
 import { Tooltip } from 'radix-ui';
@@ -6,9 +8,6 @@ import { Suspense } from 'react';
 import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
-
-import { NProgressDone } from '@/components/navigation/NProgress';
-import { alegreyaSansFont, robotoFont } from '@/fonts';
 
 const APP_URL = process.env.HOST_URL || '';
 const APP_NAME = '1Village';

@@ -1,9 +1,8 @@
 'use client';
 
+import type { Classroom } from '@server/database/schemas/classrooms';
+import type { User } from '@server/database/schemas/users';
 import React from 'react';
-
-import type { Classroom } from '@/database/schemas/classrooms';
-import type { User } from '@/database/schemas/users';
 
 export const UserContext = React.createContext<{
     user: User;

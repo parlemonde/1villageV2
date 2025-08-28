@@ -1,19 +1,19 @@
 'use client';
 
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { Button, IconButton } from '@frontend/components/ui/Button';
+import { Field, Input } from '@frontend/components/ui/Form';
+import { Select } from '@frontend/components/ui/Form/Select';
+import { Loader } from '@frontend/components/ui/Loader';
+import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
+import type { Village } from '@server/database/schemas/villages';
+import { createVillage } from '@server-actions/villages/create-village';
+import { updateVillage } from '@server-actions/villages/update-village';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import styles from './village-form.module.css';
-import { CountryFlag } from '@/components/CountryFlag';
-import { Button, IconButton } from '@/components/ui/Button';
-import { Field, Input } from '@/components/ui/Form';
-import { Select } from '@/components/ui/Form/Select';
-import { Loader } from '@/components/ui/Loader';
-import type { Village } from '@/database/schemas/villages';
-import { COUNTRIES } from '@/lib/iso-3166-countries-french';
-import { createVillage } from '@/server-actions/villages/create-village';
-import { updateVillage } from '@/server-actions/villages/update-village';
 
 const countryOptions = Object.entries(COUNTRIES).map(([key, value]) => ({
     label: (

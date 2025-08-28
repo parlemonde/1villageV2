@@ -1,54 +1,44 @@
+import { Link } from '@frontend/components/navigation/Link';
 import classNames from 'clsx';
 import { NavigationMenu } from 'radix-ui';
 import React from 'react';
 
-import styles from './menu.module.css';
-import { Link } from '@/components/navigation/Link';
+import type { MenuItem } from './Menu';
+import styles from './mobile-menu.module.css';
 
-export interface MenuItem {
-    icon?: React.ReactNode;
-    label: string;
-    href?: string;
-    onClick?: () => void;
-    isActive?: boolean;
-    hasSeparatorTop?: boolean;
-    textAlign?: 'left' | 'center' | 'right';
-    color?: 'primary' | 'secondary' | 'danger';
-}
-interface MenuProps {
+interface MobileMenuProps {
     items: MenuItem[];
 }
-export const Menu = ({ items }: MenuProps) => {
+export const MobileMenu = ({ items }: MobileMenuProps) => {
     return (
         <NavigationMenu.Root orientation="vertical">
-            <NavigationMenu.List className={styles.menuList}>
+            <NavigationMenu.List className={styles.mobileMenuList}>
                 {items.map((item) => (
                     <NavigationMenu.Item key={item.href || item.label}>
                         <NavigationMenu.Link asChild active={item.isActive}>
                             {item.href ? (
                                 <Link
                                     href={item.href}
-                                    className={classNames(styles.menuItem, {
+                                    className={classNames(styles.mobileMenuItem, {
                                         [styles[`text-${item.textAlign}`]]: item.textAlign,
                                         [styles[`color-${item.color}`]]: item.color && item.color !== 'primary',
                                         [styles.withTopSeparator]: item.hasSeparatorTop,
                                     })}
                                     onClick={item.onClick}
                                 >
-                                    {item.icon && <div className={styles.menuItemIcon}>{item.icon}</div>}
+                                    {item.icon && <div className={styles.mobileMenuItemIcon}>{item.icon}</div>}
                                     {item.label}
                                 </Link>
                             ) : (
                                 <button
-                                    tabIndex={0}
-                                    className={classNames(styles.menuItem, {
+                                    className={classNames(styles.mobileMenuItem, {
                                         [styles[`text-${item.textAlign}`]]: item.textAlign,
                                         [styles[`color-${item.color}`]]: item.color && item.color !== 'primary',
                                         [styles.withTopSeparator]: item.hasSeparatorTop,
                                     })}
                                     onClick={item.onClick}
                                 >
-                                    {item.icon && <div className={styles.menuItemIcon}>{item.icon}</div>}
+                                    {item.icon && <div className={styles.mobileMenuItemIcon}>{item.icon}</div>}
                                     {item.label}
                                 </button>
                             )}

@@ -1,8 +1,9 @@
+import { Button } from '@frontend/components/ui/Button';
+import { Title } from '@frontend/components/ui/Title';
+import FamilyIcon from '@frontend/svg/login/family.svg';
+import EducationIcon from '@frontend/svg/login/school.svg';
+
 import styles from './page.module.css';
-import { Button } from '@/components/ui/Button';
-import { Title } from '@/components/ui/Title';
-import FamilyIcon from '@/svg/login/family.svg';
-import EducationIcon from '@/svg/login/school.svg';
 
 export default function LoginPage() {
     return (

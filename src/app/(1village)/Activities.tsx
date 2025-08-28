@@ -1,8 +1,7 @@
 'use client';
 
+import { VillageContext } from '@frontend/contexts/villageContext';
 import { useContext } from 'react';
-
-import { VillageContext } from '@/contexts/villageContext';
 
 export const Activities = () => {
     const { village, phase } = useContext(VillageContext);

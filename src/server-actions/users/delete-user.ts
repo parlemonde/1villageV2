@@ -1,10 +1,9 @@
 'use server';
 
+import { db } from '@server/database';
+import { users } from '@server/database/schemas/users';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
-
-import { db } from '@/database';
-import { users } from '@/database/schemas/users';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
 export const deleteUser = async (userId: number): Promise<void> => {
     const currentUser = await getCurrentUser();

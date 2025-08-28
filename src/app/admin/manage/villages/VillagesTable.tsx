@@ -1,20 +1,19 @@
 'use client';
 
+import { AdminTable } from '@frontend/components/AdminTable';
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { Link } from '@frontend/components/navigation/Link';
+import { IconButton } from '@frontend/components/ui/Button';
+import { Input } from '@frontend/components/ui/Form';
+import { Modal } from '@frontend/components/ui/Modal';
+import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
+import { COUNTRIES } from '@lib/iso-3166-countries-french';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import type { Village } from '@server/database/schemas/villages';
+import { deleteVillage } from '@server-actions/villages/delete-village';
 import React, { Fragment } from 'react';
 import useSWR from 'swr';
-
-import { AdminTable } from '@/components/AdminTable';
-import { CountryFlag } from '@/components/CountryFlag';
-import { Link } from '@/components/navigation/Link';
-import { IconButton } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Form';
-import { Modal } from '@/components/ui/Modal';
-import { Tooltip } from '@/components/ui/Tooltip/Tooltip';
-import type { Village } from '@/database/schemas/villages';
-import { COUNTRIES } from '@/lib/iso-3166-countries-french';
-import { jsonFetcher } from '@/lib/json-fetcher';
-import { deleteVillage } from '@/server-actions/villages/delete-village';
 
 export function VillagesTable() {
     const [search, setSearch] = React.useState('');

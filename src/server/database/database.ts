@@ -1,3 +1,4 @@
+import { registerService } from '@server/lib/register-service';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
@@ -8,7 +9,6 @@ import { sessions } from './schemas/sessions';
 import { students } from './schemas/students';
 import { users } from './schemas/users';
 import { villages } from './schemas/villages';
-import { registerService } from '@/lib/register-service';
 
 const ssl = process.env.DATABASE_URL?.includes('localhost') ? false : 'verify-full';
 const queryClient = postgres(process.env.DATABASE_URL || '', { max: 10, ssl });

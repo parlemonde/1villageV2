@@ -1,22 +1,22 @@
 'use client';
 
-import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { Menu, MobileMenu } from '@frontend/components/navigation/Menu';
+import type { MenuItem } from '@frontend/components/navigation/Menu/Menu';
+import { IconButton } from '@frontend/components/ui/Button';
+import { UserContext } from '@frontend/contexts/userContext';
+import { VillageContext } from '@frontend/contexts/villageContext';
+import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
+import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { Cross1Icon } from '@radix-ui/react-icons';
+import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
+import type { Village } from '@server/database/schemas/villages';
+import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
 import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
-import { CountryFlag } from '@/components/CountryFlag';
-import { Menu, MobileMenu } from '@/components/navigation/Menu';
-import type { MenuItem } from '@/components/navigation/Menu/Menu';
-import { IconButton } from '@/components/ui/Button';
-import { UserContext } from '@/contexts/userContext';
-import { VillageContext } from '@/contexts/villageContext';
-import type { Village } from '@/database/schemas/villages';
-import { logout } from '@/server-actions/authentication/logout';
-import FreeContentIcon from '@/svg/navigation/free-content.svg';
-import HomeIcon from '@/svg/navigation/home.svg';
 
 const getMenuItems = (firstPath: string, onClick?: () => void): MenuItem[] => [
     {

@@ -1,10 +1,9 @@
 'use server';
 
+import { db } from '@server/database';
+import { villages } from '@server/database/schemas/villages';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
-
-import { db } from '@/database';
-import { villages } from '@/database/schemas/villages';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
 interface UpdateVillageArgs {
     id: number;

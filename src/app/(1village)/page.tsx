@@ -1,5 +1,6 @@
+import { Title } from '@frontend/components/ui/Title';
+
 import { Activities } from './Activities';
-import { Title } from '@/components/ui/Title';
 
 export default function Home() {
     return (

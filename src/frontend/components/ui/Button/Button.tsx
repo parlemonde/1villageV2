@@ -1,3 +1,4 @@
+import { Link } from '@frontend/components/navigation/Link';
 import classNames from 'clsx';
 import * as React from 'react';
 import type { JSX } from 'react';
@@ -6,7 +7,6 @@ import styles from './button.module.css';
 import { CircularProgress } from '../CircularProgress';
 import type { MarginProps } from '../css-styles';
 import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '../css-styles';
-import { Link } from '@/components/navigation/Link';
 
 export type ButtonProps = {
     as?: 'button' | 'a' | 'label';

@@ -1,12 +1,11 @@
 'use client';
 
+import { Button } from '@frontend/components/ui/Button';
+import { IconButton } from '@frontend/components/ui/Button/IconButton';
+import { Field, Input } from '@frontend/components/ui/Form';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { login } from '@server-actions/authentication/login';
 import { useActionState, useState } from 'react';
-
-import { Button } from '@/components/ui/Button';
-import { IconButton } from '@/components/ui/Button/IconButton';
-import { Field, Input } from '@/components/ui/Form';
-import { login } from '@/server-actions/authentication/login';
 
 export const LoginForm = () => {
     const [message, formAction] = useActionState(login, '');

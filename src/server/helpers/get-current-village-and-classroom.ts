@@ -1,11 +1,10 @@
+import type { Classroom } from '@server/database/schemas/classrooms';
+import type { User } from '@server/database/schemas/users';
+import type { Village } from '@server/database/schemas/villages';
+import { getTeacherClassroom } from '@server/entities/classrooms/get-teacher-classroom';
+import { getVillage } from '@server/entities/villages/get-village';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-
-import { getTeacherClassroom } from './classrooms/getTeacherClassroom';
-import { getVillage } from './villages/getVillage';
-import type { Classroom } from '@/database/schemas/classrooms';
-import type { User } from '@/database/schemas/users';
-import type { Village } from '@/database/schemas/villages';
 
 const getNumber = (value: string | undefined) => {
     const n = Number(value);

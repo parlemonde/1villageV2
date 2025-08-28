@@ -1,9 +1,9 @@
+import { Breadcrumbs } from '@frontend/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Button } from '@frontend/components/ui/Button';
+import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 
 import { UsersTable } from './UsersTable';
-import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
-import { Button } from '@/components/ui/Button';
-import { Title } from '@/components/ui/Title';
 
 export default function AdminManageUsersPage() {
     return (

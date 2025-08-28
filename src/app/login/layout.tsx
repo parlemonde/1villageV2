@@ -1,9 +1,9 @@
+import LogoSVG from '@frontend/svg/logo.svg';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { redirect } from 'next/navigation';
 
 import { BackButton } from './BackButton';
 import styles from './layout.module.css';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
-import LogoSVG from '@/svg/logo.svg';
 
 export default async function RootLayout({
     children,

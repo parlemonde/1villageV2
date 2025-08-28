@@ -1,7 +1,6 @@
+import { db } from '@server/database';
+import { villages } from '@server/database/schemas/villages';
 import { eq } from 'drizzle-orm';
-
-import { db } from '@/database';
-import { villages } from '@/database/schemas/villages';
 
 export const getVillage = async (villageId: number) => {
     const village = await db.query.villages.findFirst({

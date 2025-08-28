@@ -1,8 +1,8 @@
+import { Link } from '@frontend/components/navigation/Link';
+import { Title } from '@frontend/components/ui/Title';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 import styles from './page.module.css';
-import { Link } from '@/components/navigation/Link';
-import { Title } from '@/components/ui/Title';
 
 export default function AdminManagePage() {
     return (

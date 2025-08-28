@@ -1,8 +1,7 @@
 'use server';
 
+import { getVillage } from '@server/entities/villages/get-village';
 import { cookies } from 'next/headers';
-
-import { getVillage } from '@/server-functions/villages/getVillage';
 
 export const setVillage = async (villageId: number): Promise<void> => {
     const village = await getVillage(villageId);

@@ -1,13 +1,13 @@
+import { UserProvider } from '@frontend/contexts/userContext';
+import { VillageProvider } from '@frontend/contexts/villageContext';
+import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { redirect } from 'next/navigation';
 
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Phases } from './Phases';
 import styles from './layout.module.css';
-import { UserProvider } from '@/contexts/userContext';
-import { VillageProvider } from '@/contexts/villageContext';
-import { getCurrentVillageAndClassroomForUser } from '@/server-functions/get-current-village-and-classroom';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
 
 export default async function RootLayout({
     children,

@@ -1,4 +1,4 @@
-import { Title } from '@/components/ui/Title';
+import { Title } from '@frontend/components/ui/Title';
 
 export default function MyClassroom() {
     return (

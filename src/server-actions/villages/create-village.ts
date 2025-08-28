@@ -1,8 +1,8 @@
 'use server';
 
-import { db } from '@/database';
-import { villages } from '@/database/schemas/villages';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
+import { db } from '@server/database';
+import { villages } from '@server/database/schemas/villages';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 
 interface CreateVillageArgs {
     name: string;

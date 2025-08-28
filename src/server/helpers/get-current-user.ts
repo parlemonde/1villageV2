@@ -1,12 +1,11 @@
+import { db } from '@server/database';
+import type { User } from '@server/database/schemas/users';
+import { users } from '@server/database/schemas/users';
+import type { LoginData } from '@server/helpers/get-access-token';
 import { eq } from 'drizzle-orm';
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
-
-import { db } from '@/database';
-import type { User } from '@/database/schemas/users';
-import { users } from '@/database/schemas/users';
-import type { LoginData } from '@/server-functions/get-access-token';
 
 const isLoginData = (data: unknown): data is LoginData => {
     return typeof data === 'object' && data !== null && 'userId' in data && typeof data.userId === 'number';

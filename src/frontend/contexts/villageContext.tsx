@@ -1,8 +1,7 @@
 'use client';
 
+import type { Village } from '@server/database/schemas/villages';
 import { createContext, useMemo, useState } from 'react';
-
-import type { Village } from '@/database/schemas/villages';
 
 export const VillageContext = createContext<{
     village: Village | undefined;

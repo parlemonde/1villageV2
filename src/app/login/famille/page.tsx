@@ -1,6 +1,7 @@
+import { Link } from '@frontend/components/navigation/Link';
+import { Title } from '@frontend/components/ui/Title';
+
 import { LoginForm } from './LoginForm';
-import { Link } from '@/components/navigation/Link';
-import { Title } from '@/components/ui/Title';
 
 export default function FamilyLoginPage() {
     return (

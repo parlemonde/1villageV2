@@ -1,9 +1,8 @@
 'use client';
 
+import { Link } from '@frontend/components/navigation/Link';
+import BackIcon from '@frontend/svg/backIcon.svg';
 import { usePathname } from 'next/navigation';
-
-import { Link } from '@/components/navigation/Link';
-import BackIcon from '@/svg/backIcon.svg';
 
 export function BackButton() {
     const pathname = usePathname();

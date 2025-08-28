@@ -1,13 +1,13 @@
 'use client';
 
+import { VillageContext } from '@frontend/contexts/villageContext';
+import Jumelles from '@frontend/svg/phases/jumelles.svg';
+import Puzzle from '@frontend/svg/phases/puzzle.svg';
+import Step2 from '@frontend/svg/phases/step2.svg';
 import classNames from 'clsx';
 import { useContext } from 'react';
 
 import styles from './phases.module.css';
-import { VillageContext } from '@/contexts/villageContext';
-import Jumelles from '@/svg/phases/jumelles.svg';
-import Puzzle from '@/svg/phases/puzzle.svg';
-import Step2 from '@/svg/phases/step2.svg';
 
 export const Phases = () => {
     const { phase, setPhase } = useContext(VillageContext);

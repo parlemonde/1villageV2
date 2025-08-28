@@ -1,6 +1,5 @@
+import MysteryFlag from '@frontend/svg/mysteryFlag.svg';
 import React from 'react';
-
-import MysteryFlag from '@/svg/mysteryFlag.svg';
 
 const sizes = {
     small: 12,

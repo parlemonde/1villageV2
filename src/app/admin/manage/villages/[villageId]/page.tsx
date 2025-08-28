@@ -1,11 +1,11 @@
+import { Breadcrumbs } from '@frontend/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Title } from '@frontend/components/ui/Title';
+import { db } from '@server/database';
+import { villages } from '@server/database/schemas/villages';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import { VillageForm } from './VillageForm';
-import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
-import { Title } from '@/components/ui/Title';
-import { db } from '@/database';
-import { villages } from '@/database/schemas/villages';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

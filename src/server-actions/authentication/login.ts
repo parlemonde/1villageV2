@@ -1,14 +1,13 @@
 'use server';
 
 import { verify } from '@node-rs/argon2';
+import { db } from '@server/database';
+import { users } from '@server/database/schemas/users';
+import { getAccessToken } from '@server/helpers/get-access-token';
+import { getStringValue } from '@server/lib/get-string-value';
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
-
-import { db } from '@/database';
-import { users } from '@/database/schemas/users';
-import { getAccessToken } from '@/server-functions/get-access-token';
-import { getStringValue } from '@/server-functions/get-string-value';
 
 export async function login(_previousState: string, formData: FormData): Promise<string> {
     const email = getStringValue(formData.get('email'));

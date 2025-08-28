@@ -1,8 +1,8 @@
+import { Link } from '@frontend/components/navigation/Link';
 import classNames from 'clsx';
 import { DropdownMenu } from 'radix-ui';
 
 import styles from './dropdown-menu-item.module.css';
-import { Link } from '@/components/navigation/Link';
 
 interface DropdownMenuItemProps {
     label: string;

@@ -1,29 +1,29 @@
 'use client';
 
+import { BackDrop } from '@frontend/components/ui/BackDrop';
+import { Button } from '@frontend/components/ui/Button';
+import { IconButton } from '@frontend/components/ui/Button';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
+import { Dropdown } from '@frontend/components/ui/Dropdown';
+import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuItem';
+import { Field } from '@frontend/components/ui/Form';
+import { Select } from '@frontend/components/ui/Form/Select';
+import { Modal } from '@frontend/components/ui/Modal';
+import { Title } from '@frontend/components/ui/Title';
+import { UserContext } from '@frontend/contexts/userContext';
+import { VillageContext } from '@frontend/contexts/villageContext';
+import CogIcon from '@frontend/svg/cogIcon.svg';
+import LogoSVG from '@frontend/svg/logo.svg';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import type { Village } from '@server/database/schemas/villages';
+import { logout } from '@server-actions/authentication/logout';
+import { setVillage } from '@server-actions/villages/set-village';
 import React, { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
-import { BackDrop } from '@/components/ui/BackDrop';
-import { Button } from '@/components/ui/Button';
-import { IconButton } from '@/components/ui/Button';
-import { CircularProgress } from '@/components/ui/CircularProgress';
-import { Dropdown } from '@/components/ui/Dropdown';
-import { DropdownMenuItem } from '@/components/ui/Dropdown/DropdownMenuItem';
-import { Field } from '@/components/ui/Form';
-import { Select } from '@/components/ui/Form/Select';
-import { Modal } from '@/components/ui/Modal';
-import { Title } from '@/components/ui/Title';
-import { UserContext } from '@/contexts/userContext';
-import { VillageContext } from '@/contexts/villageContext';
-import type { Village } from '@/database/schemas/villages';
-import { jsonFetcher } from '@/lib/json-fetcher';
-import { logout } from '@/server-actions/authentication/logout';
-import { setVillage } from '@/server-actions/villages/set-village';
-import CogIcon from '@/svg/cogIcon.svg';
-import LogoSVG from '@/svg/logo.svg';
 
 export const Header = () => {
     const { user } = useContext(UserContext);

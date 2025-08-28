@@ -1,7 +1,6 @@
+import { db } from '@server/database';
+import { classrooms } from '@server/database/schemas/classrooms';
 import { eq } from 'drizzle-orm';
-
-import { db } from '@/database';
-import { classrooms } from '@/database/schemas/classrooms';
 
 export const getTeacherClassroom = async (userId: number) => {
     const classroom = await db.query.classrooms.findFirst({

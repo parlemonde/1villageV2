@@ -1,11 +1,11 @@
+import { Button } from '@frontend/components/ui/Button';
+import { UserProvider } from '@frontend/contexts/userContext';
+import LogoSVG from '@frontend/svg/logo.svg';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { redirect } from 'next/navigation';
 
 import { AdminNavigation } from './Navigation';
 import styles from './layout.module.css';
-import { Button } from '@/components/ui/Button';
-import { UserProvider } from '@/contexts/userContext';
-import { getCurrentUser } from '@/server-functions/getCurrentUser';
-import LogoSVG from '@/svg/logo.svg';
 
 export default async function RootLayout({
     children,

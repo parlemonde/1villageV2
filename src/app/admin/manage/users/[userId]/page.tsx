@@ -1,10 +1,9 @@
+import { Breadcrumbs } from '@frontend/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Title } from '@frontend/components/ui/Title';
+import { db } from '@server/database';
+import { users } from '@server/database/schemas/users';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-
-import { Breadcrumbs } from '@/components/navigation/Breadcrumbs/Breadcrumbs';
-import { Title } from '@/components/ui/Title';
-import { db } from '@/database';
-import { users } from '@/database/schemas/users';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

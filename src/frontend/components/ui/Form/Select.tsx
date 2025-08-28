@@ -1,12 +1,12 @@
 'use client';
 
+import ArrowDownIcon from '@frontend/svg/arrowDown.svg';
 import classNames from 'clsx';
 import { Select as RadixSelect, ScrollArea } from 'radix-ui';
 import { useState } from 'react';
 
 import styles from './select.module.css';
 import { getMarginAndPaddingStyle, type MarginProps } from '../css-styles';
-import ArrowDownIcon from '@/svg/arrowDown.svg';
 
 interface SelectProps extends MarginProps {
     value?: string;
