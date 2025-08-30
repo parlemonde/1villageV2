@@ -23,6 +23,7 @@
     align-items: stretch;
     justify-content: flex-start;
     gap: 16px;
+    overflow-x: hidden;
 }
 
 .main {

@@ -57,6 +57,8 @@ html {
     --secondary-600: #2d6b66;
     --secondary-700: #204c49;
 
+    --success-color: #008000;
+
     --error-color: #d93939;
     --error-100: #f9e2e2;
     --error-200: #f6d1d1;
@@ -66,11 +68,11 @@ html {
     --error-600: #bb2424;
     --error-700: #871a1a;
 
-    --warning-color: #a76700;
+    --warning-color: #ca8621;
     --warning-100: #fbe4c1;
     --warning-200: #f8d59d;
     --warning-300: #f5c474;
-    --warning-400: #de8e10; /* (warning color) */
+    --warning-400: #ca8621; /* (warning color) */
     --warning-500: #b0710d;
     --warning-600: #87570a;
     --warning-700: #613e07;

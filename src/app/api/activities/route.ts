@@ -4,7 +4,7 @@ import { activities } from '@server/database/schemas/activities';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, eq, ilike, inArray, isNull, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { parseAsBoolean, createLoader, parseAsArrayOf, parseAsString, parseAsInteger, parseAsStringEnum } from 'nuqs/server';
@@ -34,6 +34,8 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
+                isNotNull(activities.publishDate),
+                isNull(activities.deleteDate),
                 search !== null
                     ? or(
                           ilike(activities.type, `%${search}%`),

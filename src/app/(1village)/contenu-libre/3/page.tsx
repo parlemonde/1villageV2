@@ -1,0 +1,59 @@
+'use client';
+
+import { Steps } from '@frontend/components/1Village/Steps';
+import { Button } from '@frontend/components/ui/Button';
+import { Loader } from '@frontend/components/ui/Loader';
+import { Title } from '@frontend/components/ui/Title';
+import { UserContext } from '@frontend/contexts/userContext';
+import { VillageContext } from '@frontend/contexts/villageContext';
+import { useCurrentActivity } from '@frontend/hooks/useCurrentActivity';
+import { publishActivity } from '@server-actions/activities/publish-activity';
+import { useContext, useState } from 'react';
+
+import { isFreeActivityContent } from '../1/FreeContentStep1Form';
+
+export default function FreeContentStep3() {
+    const { classroom } = useContext(UserContext);
+    const { village } = useContext(VillageContext);
+    const { activity } = useCurrentActivity({ activityType: 'libre' });
+    const [isPublishing, setIsPublishing] = useState(false);
+
+    const freeContent = isFreeActivityContent(activity?.content) ? activity?.content : { text: '', title: '', extract: '' };
+
+    const isFirstStepDone = freeContent.text;
+    const isSecondStepDone = freeContent.title;
+
+    const isValid = isFirstStepDone && isSecondStepDone;
+
+    const onSubmit = async () => {
+        if (!village) {
+            return;
+        }
+        setIsPublishing(true);
+        await publishActivity({ ...activity, classroomId: classroom?.id ?? null, villageId: village.id, phase: village.activePhase });
+        setIsPublishing(false);
+    };
+
+    return (
+        <div style={{ padding: '16px 32px' }}>
+            <Steps
+                steps={[
+                    { label: 'Contenu', href: '/contenu-libre/1', status: isFirstStepDone ? 'success' : 'warning' },
+                    { label: 'Forme', href: '/contenu-libre/2', status: isSecondStepDone ? 'success' : 'warning' },
+                    { label: 'Pré-visualiser', href: '/contenu-libre/3' },
+                ]}
+                activeStep={3}
+                marginTop="xl"
+                marginBottom="md"
+            />
+            <Title variant="h2" marginBottom="md">
+                Pré-visualisez votre publication
+            </Title>
+            {JSON.stringify(activity?.content)}
+            <div style={{ textAlign: 'center' }}>
+                <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
+            </div>
+            {isPublishing && <Loader isLoading={isPublishing} />}
+        </div>
+    );
+}

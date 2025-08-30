@@ -1,0 +1,87 @@
+.steps {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.step {
+    flex: 1 1 0;
+    height: 100%;
+    text-decoration: none;
+}
+
+.stepNumberWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.stepNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+.step:hover .stepNumber {
+    background-color: var(--primary-100);
+}
+.stepNumberActive {
+    background-color: var(--primary-color);
+    color: white;
+}
+.step:hover .stepNumberActive {
+    background-color: var(--primary-700);
+}
+.stepWarning .stepNumber {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: white;
+}
+.stepWarning:hover .stepNumber {
+    background-color: var(--warning-500);
+}
+.stepSuccess .stepNumber {
+    background-color: white;
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+.stepSuccess:hover .stepNumber {
+    background-color: #dcf0dc;
+}
+
+.stepNumberLine {
+    flex: 1 1 0;
+    height: 1px;
+    background-color: var(--primary-300);
+}
+.stepNumberLineActive {
+    background-color: var(--primary-color);
+}
+.stepNumberLineHidden {
+    visibility: hidden;
+}
+
+.stepLabel {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 4px;
+}
+.step:hover .stepLabel {
+    text-decoration: underline;
+}
+.stepSuccess .stepLabel {
+    color: var(--success-color);
+}
+.stepWarning .stepLabel {
+    color: var(--warning-600);
+}
