@@ -2,9 +2,9 @@ import { NProgressDone } from '@frontend/components/navigation/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Tooltip } from 'radix-ui';
 import { Suspense } from 'react';
-
 import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
@@ -63,7 +63,9 @@ export default function RootLayout({
         <html lang="fr">
             <body className={classNames(alegreyaSansFont.variable, robotoFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
-                <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
+                <NuqsAdapter>
+                    <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
+                </NuqsAdapter>
                 <Suspense>
                     <NProgressDone />
                 </Suspense>

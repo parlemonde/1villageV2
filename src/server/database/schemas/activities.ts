@@ -6,7 +6,7 @@ import { classrooms } from './classrooms';
 import { users } from './users';
 import { villages } from './villages';
 
-const ACTIVITY_TYPES_ENUM = ['libre', 'jeu', 'enigme'] as const;
+export const ACTIVITY_TYPES_ENUM = ['libre', 'jeu', 'enigme'] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES_ENUM)[number];
 
 export const activities = pgTable('activities', {

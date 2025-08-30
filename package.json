@@ -27,6 +27,7 @@
     "next": "15.4.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
+    "nuqs": "^2.5.1",
     "postgres": "^3.4.7",
     "radix-ui": "^1.4.2",
     "react": "19.1.0",

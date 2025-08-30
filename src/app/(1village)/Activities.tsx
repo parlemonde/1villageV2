@@ -1,13 +1,37 @@
 'use client';
 
 import { VillageContext } from '@frontend/contexts/villageContext';
+import { usePhase } from '@frontend/hooks/usePhase';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import type { Activity } from '@server/database/schemas/activities';
 import { useContext } from 'react';
+import useSWR from 'swr';
 
-export const Activities = () => {
-    const { village, phase } = useContext(VillageContext);
+const Filters = () => {
     return (
         <div>
-            Activities. Phase {phase}. Village: {village?.name}
+            <strong>Filtres:</strong>
+        </div>
+    );
+};
+
+export const Activities = () => {
+    const { village } = useContext(VillageContext);
+    const [phase] = usePhase();
+    const { data: activities } = useSWR<Activity[]>(
+        village
+            ? `/api/activities${serializeToQueryUrl({
+                  phase,
+                  villageId: village.id,
+              })}`
+            : null,
+        jsonFetcher,
+    );
+    return (
+        <div>
+            <Filters />
+            {JSON.stringify(activities)}
         </div>
     );
 };
