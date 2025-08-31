@@ -4,21 +4,21 @@ import { Steps } from '@frontend/components/1Village/Steps';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
 import { Title } from '@frontend/components/ui/Title';
-import { UserContext } from '@frontend/contexts/userContext';
-import { VillageContext } from '@frontend/contexts/villageContext';
-import { useCurrentActivity } from '@frontend/hooks/useCurrentActivity';
-import { publishActivity } from '@server-actions/activities/publish-activity';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
-import { isFreeActivityContent } from '../1/FreeContentStep1Form';
+import { isFreeActivityContent } from '../1/page';
 
 export default function FreeContentStep3() {
-    const { classroom } = useContext(UserContext);
-    const { village } = useContext(VillageContext);
-    const { activity } = useCurrentActivity({ activityType: 'libre' });
+    const router = useRouter();
+    const { activity, onPublishActivity } = useContext(ActivityContext);
     const [isPublishing, setIsPublishing] = useState(false);
+    if (!activity || activity.type !== 'libre') {
+        return null;
+    }
 
-    const freeContent = isFreeActivityContent(activity?.content) ? activity?.content : { text: '', title: '', extract: '' };
+    const freeContent = isFreeActivityContent(activity.content) ? activity.content : { text: '', title: '', extract: '' };
 
     const isFirstStepDone = freeContent.text;
     const isSecondStepDone = freeContent.title;
@@ -26,12 +26,16 @@ export default function FreeContentStep3() {
     const isValid = isFirstStepDone && isSecondStepDone;
 
     const onSubmit = async () => {
-        if (!village) {
-            return;
-        }
         setIsPublishing(true);
-        await publishActivity({ ...activity, classroomId: classroom?.id ?? null, villageId: village.id, phase: village.activePhase });
-        setIsPublishing(false);
+        try {
+            await onPublishActivity();
+            router.push('/contenu-libre/success');
+        } catch (error) {
+            // TODO: show error toast
+            console.error(error);
+        } finally {
+            setIsPublishing(false);
+        }
     };
 
     return (

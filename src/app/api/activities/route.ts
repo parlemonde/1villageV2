@@ -39,7 +39,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 search !== null
                     ? or(
                           ilike(activities.type, `%${search}%`),
-                          sql`jsonb_path_exists("activities"."content", ${`$.** ? (@.type() == "string" && @ like_regex "${search}")`})`,
+                          sql`jsonb_path_exists("activities"."content", ${`$.** ? (@.type() == "string" && @ like_regex "(?i)${search}")`})`,
                       )
                     : undefined,
                 type !== null ? eq(activities.type, type) : undefined,

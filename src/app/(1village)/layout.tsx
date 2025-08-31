@@ -9,7 +9,7 @@ import { Navigation } from './Navigation';
 import { Phases } from './Phases';
 import styles from './layout.module.css';
 
-export default async function RootLayout({
+export default async function VillageLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;

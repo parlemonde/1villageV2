@@ -4,14 +4,19 @@ import { Steps } from '@frontend/components/1Village/Steps';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Title } from '@frontend/components/ui/Title';
-import { useCurrentActivity } from '@frontend/hooks/useCurrentActivity';
+import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { useContext } from 'react';
 
-import { isFreeActivityContent } from '../1/FreeContentStep1Form';
+import { isFreeActivityContent } from '../1/page';
 
 export default function FreeContentStep2() {
-    const { activity, setActivity } = useCurrentActivity({ activityType: 'libre' });
-    const freeContent = isFreeActivityContent(activity?.content) ? activity?.content : { text: '', title: '', extract: '' };
+    const { activity, setActivity } = useContext(ActivityContext);
+    if (!activity || activity.type !== 'libre') {
+        return null;
+    }
+
+    const freeContent = isFreeActivityContent(activity.content) ? activity.content : { text: '', title: '', extract: '' };
     return (
         <div style={{ padding: '16px 32px' }}>
             <Steps

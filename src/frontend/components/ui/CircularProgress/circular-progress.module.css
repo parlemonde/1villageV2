@@ -27,6 +27,9 @@
 .progressIndicator-grey > svg {
     stroke: var(--grey-400);
 }
+.progressIndicator-inherit > svg {
+    stroke: currentColor;
+}
 
 @keyframes stroke-anim {
     0% {
