@@ -10,7 +10,7 @@ import type { NextRequest } from 'next/server';
 import { createLoader, parseAsStringEnum } from 'nuqs/server';
 
 const draftActivitySearchParams = {
-    type: parseAsStringEnum<ActivityType>(ACTIVITY_TYPES_ENUM as unknown as ActivityType[]),
+    type: parseAsStringEnum<ActivityType>(ACTIVITY_TYPES_ENUM),
 };
 const loadSearchParams = createLoader(draftActivitySearchParams);
 

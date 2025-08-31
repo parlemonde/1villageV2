@@ -8,20 +8,22 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext } from 'react';
 
-import { isFreeActivityContent } from '../1/page';
-
 export default function FreeContentStep2() {
     const { activity, setActivity } = useContext(ActivityContext);
     if (!activity || activity.type !== 'libre') {
         return null;
     }
+    const content = activity.content || {
+        text: '',
+        title: '',
+        extract: '',
+    };
 
-    const freeContent = isFreeActivityContent(activity.content) ? activity.content : { text: '', title: '', extract: '' };
     return (
         <div style={{ padding: '16px 32px' }}>
             <Steps
                 steps={[
-                    { label: 'Contenu', href: '/contenu-libre/1', status: freeContent.text ? 'success' : 'warning' },
+                    { label: 'Contenu', href: '/contenu-libre/1', status: content.text ? 'success' : 'warning' },
                     { label: 'Forme', href: '/contenu-libre/2' },
                     { label: 'Pré-visualiser', href: '/contenu-libre/3' },
                 ]}
@@ -41,8 +43,8 @@ export default function FreeContentStep2() {
                         name="title"
                         isFullWidth
                         placeholder="Entrez le titre de votre publication"
-                        value={freeContent.title}
-                        onChange={(e) => setActivity({ ...activity, content: { ...freeContent, title: e.target.value } })}
+                        value={content.title}
+                        onChange={(e) => setActivity({ ...activity, content: { ...content, title: e.target.value } })}
                     />
                 }
                 marginBottom="md"
@@ -56,8 +58,8 @@ export default function FreeContentStep2() {
                         name="extract"
                         isFullWidth
                         placeholder="Entrez l'extrait de votre publication"
-                        value={freeContent.extract}
-                        onChange={(e) => setActivity({ ...activity, content: { ...freeContent, extract: e.target.value } })}
+                        value={content.extract}
+                        onChange={(e) => setActivity({ ...activity, content: { ...content, extract: e.target.value } })}
                     />
                 }
                 marginBottom="md"

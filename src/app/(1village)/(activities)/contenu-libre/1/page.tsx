@@ -11,31 +11,16 @@ import { useContext } from 'react';
 
 import styles from './page.module.css';
 
-interface FreeActivityContent {
-    text: string;
-    title: string;
-    extract: string;
-}
-export const isFreeActivityContent = (content: unknown): content is FreeActivityContent => {
-    return (
-        typeof content === 'object' &&
-        content !== null &&
-        'text' in content &&
-        typeof content.text === 'string' &&
-        'title' in content &&
-        typeof content.title === 'string' &&
-        'extract' in content &&
-        typeof content.extract === 'string'
-    );
-};
-
 export default function FreeContentStep1() {
     const { activity, setActivity } = useContext(ActivityContext);
     if (!activity || activity.type !== 'libre') {
         return null;
     }
-
-    const freeContent = isFreeActivityContent(activity.content) ? activity.content : { text: '', title: '', extract: '' };
+    const content = activity.content || {
+        text: '',
+        title: '',
+        extract: '',
+    };
 
     return (
         <div className={styles.page} style={{ padding: '16px 32px' }}>
@@ -61,12 +46,12 @@ export default function FreeContentStep1() {
             </p>
             <div style={{ marginTop: '16px' }}>
                 <TextArea
-                    value={freeContent.text}
+                    value={content.text}
                     onChange={(e) =>
                         setActivity({
                             ...activity,
                             content: {
-                                ...freeContent,
+                                ...content,
                                 text: e.target.value,
                             },
                         })

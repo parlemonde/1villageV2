@@ -12,7 +12,7 @@ import { parseAsBoolean, createLoader, parseAsArrayOf, parseAsString, parseAsInt
 const activitiesSearchParams = {
     search: parseAsString,
     phase: parseAsInteger,
-    type: parseAsStringEnum<ActivityType>(ACTIVITY_TYPES_ENUM as unknown as ActivityType[]),
+    type: parseAsStringEnum<ActivityType>(ACTIVITY_TYPES_ENUM),
     villageId: parseAsInteger, // -1 will mean null village activities
     isPelico: parseAsBoolean,
     countries: parseAsArrayOf(parseAsString),

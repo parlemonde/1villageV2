@@ -1,5 +1,6 @@
 'use client';
 
+import { ActivityCard } from '@frontend/activities/ActivityCard';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
@@ -31,7 +32,9 @@ export const Activities = () => {
     return (
         <div>
             <Filters />
-            {JSON.stringify(activities)}
+            {activities?.map((activity) => (
+                <ActivityCard key={activity.id} activity={activity} />
+            ))}
         </div>
     );
 };

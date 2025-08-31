@@ -8,8 +8,6 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
-import { isFreeActivityContent } from '../1/page';
-
 export default function FreeContentStep3() {
     const router = useRouter();
     const { activity, onPublishActivity } = useContext(ActivityContext);
@@ -17,11 +15,14 @@ export default function FreeContentStep3() {
     if (!activity || activity.type !== 'libre') {
         return null;
     }
+    const content = activity.content || {
+        text: '',
+        title: '',
+        extract: '',
+    };
 
-    const freeContent = isFreeActivityContent(activity.content) ? activity.content : { text: '', title: '', extract: '' };
-
-    const isFirstStepDone = freeContent.text;
-    const isSecondStepDone = freeContent.title;
+    const isFirstStepDone = content.text;
+    const isSecondStepDone = content.title;
 
     const isValid = isFirstStepDone && isSecondStepDone;
 
@@ -53,7 +54,7 @@ export default function FreeContentStep3() {
             <Title variant="h2" marginBottom="md">
                 Pré-visualisez votre publication
             </Title>
-            {JSON.stringify(activity?.content)}
+            {JSON.stringify(content)}
             <div style={{ textAlign: 'center' }}>
                 <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
             </div>
