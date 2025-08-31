@@ -18,7 +18,7 @@ export const FreeContentCard = ({ activity }: ActivityContentCardProps) => {
                     href={`/activities/${activity.id}`}
                     color="primary"
                     variant="outlined"
-                    label={activity.isPelico ? 'Voir le message de Pélico' : 'Voir la publication'}
+                    label={activity.isPelico ? 'Voir le message de Pélico' : 'Voir le message'}
                 />
             </div>
         </div>

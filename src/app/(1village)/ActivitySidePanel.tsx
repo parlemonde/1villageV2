@@ -11,5 +11,5 @@ export const ActivitySidePanel = () => {
         return null;
     }
 
-    return <div>ActivitySidePanel</div>;
+    return <div style={{ width: '300px' }}>ActivitySidePanel</div>;
 };

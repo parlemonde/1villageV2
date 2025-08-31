@@ -1,0 +1,27 @@
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 300;
+    margin-bottom: 16px;
+}
+
+.homeBreadcrumbItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--primary-200);
+    padding: 1px 8px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--font-color);
+}
+.homeBreadcrumbItem:hover {
+    background-color: var(--primary-400);
+}
+
+.activityBreadcrumbItem {
+    background-color: var(--primary-400);
+    padding: 1px 8px;
+    border-radius: 12px;
+}

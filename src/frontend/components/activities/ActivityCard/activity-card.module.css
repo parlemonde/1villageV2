@@ -5,25 +5,7 @@
 }
 
 .activityCardHeader {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     padding: 4px;
-    gap: 4px;
-}
-
-.activityCardHeaderText {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.activityCardHeaderInfo {
-    display: flex;
-    flex-direction: row;
-    font-size: 14px;
-    line-height: 16px;
-    align-items: center;
 }
 
 .activityCardBody {

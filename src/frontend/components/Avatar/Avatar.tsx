@@ -24,7 +24,7 @@ const SIZES: Record<SIZE, number> = {
 };
 
 interface AvatarProps {
-    user: User;
+    user?: User;
     isPelico?: boolean;
     classroom?: Classroom;
     size?: SIZE | number;
@@ -55,10 +55,13 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
             </div>
         );
     }
-    const imgSrc = user.avatarUrl || getGravatarUrl(user.email, dimension);
-    return (
-        <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-            <Image alt="Avatar" src={imgSrc} width={dimension} height={dimension} unoptimized={imgSrc.startsWith('https')} />
-        </div>
-    );
+    if (user) {
+        const imgSrc = user.avatarUrl || getGravatarUrl(user.email, dimension);
+        return (
+            <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
+                <Image alt="Avatar" src={imgSrc} width={dimension} height={dimension} unoptimized={imgSrc.startsWith('https')} />
+            </div>
+        );
+    }
+    return <div className={styles.avatar} style={{ width: dimension, height: dimension }}></div>;
 };
