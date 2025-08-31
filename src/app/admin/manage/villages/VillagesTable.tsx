@@ -1,5 +1,6 @@
 'use client';
 
+import type { StatisticsResponse } from '@app/api/statistics/route';
 import { AdminTable } from '@frontend/components/AdminTable';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { Link } from '@frontend/components/navigation/Link';
@@ -20,7 +21,8 @@ export function VillagesTable() {
     const [isDeletingVillage, setIsDeletingVillage] = React.useState(false);
     const [deleteVillageId, setDeleteVillageId] = React.useState<number | null>(null);
 
-    const { data: villages, isLoading, mutate } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
+    const { data: villages, isLoading, mutate } = useSWR<Village[]>('/api/villages', jsonFetcher);
+    const { data: statistics, isLoading: isLoadingStatistics } = useSWR<StatisticsResponse>('/api/statistics', jsonFetcher);
 
     const filteredVillages = (villages || []).filter((v) => v.name.toLowerCase().includes(search.toLowerCase()));
 
@@ -88,11 +90,11 @@ export function VillagesTable() {
                     {
                         id: 'postCount',
                         header: 'Nombre de posts',
-                        accessor: () => 0,
+                        accessor: (village) => (isLoadingStatistics ? '' : statistics?.postsCountPerVillage[village.id] || 0),
                         align: 'center',
                         width: 155,
-                        isSortable: true,
-                        getSortValue: () => 0,
+                        isSortable: !isLoadingStatistics,
+                        getSortValue: (village) => statistics?.postsCountPerVillage[village.id] || 0,
                     },
                     {
                         id: 'actions',
