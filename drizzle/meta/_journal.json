@@ -8,6 +8,27 @@
       "when": 1756235359518,
       "tag": "0000_known_absorbing_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1756636311094,
+      "tag": "0001_smiling_fantastic_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756640531602,
+      "tag": "0002_free_black_bolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756644289263,
+      "tag": "0003_dapper_the_anarchist",
+      "breakpoints": true
     }
   ]
 }

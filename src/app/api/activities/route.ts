@@ -4,7 +4,7 @@ import { activities } from '@server/database/schemas/activities';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, eq, ilike, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, isNotNull, isNull, or, sql, desc } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { parseAsBoolean, createLoader, parseAsArrayOf, parseAsString, parseAsInteger, parseAsStringEnum } from 'nuqs/server';
@@ -26,6 +26,12 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     }
 
     const { search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
+
+    // Users should only access their own village activities
+    if ((villageId === null || villageId === -1) && user.role !== 'admin') {
+        return new NextResponse(null, { status: 403 });
+    }
+
     const result = await db
         .select({
             activity: activities,
@@ -48,7 +54,8 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 isPelico !== null ? eq(activities.isPelico, isPelico) : undefined,
                 countries !== null ? or(inArray(classrooms.countryCode, countries), isNull(activities.classroomId)) : undefined,
             ),
-        );
+        )
+        .orderBy(desc(activities.publishDate));
     const allActivities = result.map(({ activity }) => activity);
     return NextResponse.json(allActivities);
 };

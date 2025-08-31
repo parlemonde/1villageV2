@@ -18,7 +18,7 @@ interface AudioMetadata {
 
 export const medias = pgTable('medias', {
     id: uuid().primaryKey().defaultRandom(),
-    createDate: timestamp('createDate', { mode: 'string' }).notNull().defaultNow(),
+    createDate: timestamp('createDate', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
     userId: integer('userId')
         .references(() => users.id, {
             onDelete: 'cascade',

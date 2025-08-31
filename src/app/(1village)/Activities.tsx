@@ -18,7 +18,7 @@ const Filters = () => {
 };
 
 export const Activities = () => {
-    const { village } = useContext(VillageContext);
+    const { village, usersMap, classroomsMap } = useContext(VillageContext);
     const [phase] = usePhase();
     const { data: activities } = useSWR<Activity[]>(
         village
@@ -29,12 +29,20 @@ export const Activities = () => {
             : null,
         jsonFetcher,
     );
+
     return (
         <div>
             <Filters />
-            {activities?.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {activities?.map((activity) => (
+                    <ActivityCard
+                        key={activity.id}
+                        activity={activity}
+                        user={usersMap[activity.userId]}
+                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

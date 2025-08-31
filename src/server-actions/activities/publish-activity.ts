@@ -4,7 +4,7 @@ import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 export const publishActivity = async (activity: Partial<Activity>) => {
     const user = await getCurrentUser();
@@ -18,7 +18,7 @@ export const publishActivity = async (activity: Partial<Activity>) => {
             .update(activities)
             .set({
                 ...rest,
-                publishDate: new Date().toISOString(),
+                publishDate: sql`now()`,
             })
             .where(eq(activities.id, activity.id));
     } else {
@@ -29,9 +29,10 @@ export const publishActivity = async (activity: Partial<Activity>) => {
         await db.insert(activities).values([
             {
                 ...rest,
+                userId: user.id,
                 type,
                 phase,
-                publishDate: new Date().toISOString(),
+                publishDate: sql`now()`,
             },
         ]);
     }

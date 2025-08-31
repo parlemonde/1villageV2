@@ -25,19 +25,21 @@ export const activities = pgTable('activities', {
     classroomId: integer('classroomId').references(() => classrooms.id, {
         onDelete: 'cascade',
     }), // Activity owned by a classroom
-    userId: integer('userId').references(() => users.id, {
-        onDelete: 'cascade',
-    }), // User who created the activity
+    userId: integer('userId')
+        .references(() => users.id, {
+            onDelete: 'cascade',
+        })
+        .notNull(), // User who created the activity
     villageId: integer('villageId').references(() => villages.id, {
         onDelete: 'cascade',
     }), // If null => global activity from admin
-    createDate: timestamp('createDate', { mode: 'string' }).notNull().defaultNow(),
-    publishDate: timestamp('publishDate', { mode: 'string' }),
-    updateDate: timestamp('updateDate', { mode: 'string' })
+    createDate: timestamp('createDate', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
+    publishDate: timestamp('publishDate', { mode: 'string', withTimezone: true }),
+    updateDate: timestamp('updateDate', { mode: 'string', withTimezone: true })
         .notNull()
         .defaultNow()
         .$onUpdate(() => sql`now()`),
-    deleteDate: timestamp('deleteDate', { mode: 'string' }),
+    deleteDate: timestamp('deleteDate', { mode: 'string', withTimezone: true }),
     content: jsonb('content'),
     draftUrl: varchar('draftUrl', { length: 300 }),
     parentActivityId: integer('parentActivityId').references((): AnyPgColumn => activities.id, {

@@ -1,5 +1,6 @@
 'use client';
 
+import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { Menu, MobileMenu } from '@frontend/components/navigation/Menu';
 import type { MenuItem } from '@frontend/components/navigation/Menu/Menu';
@@ -18,7 +19,7 @@ import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 
-const getMenuItems = (firstPath: string, onClick?: () => void): MenuItem[] => [
+const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode): MenuItem[] => [
     {
         icon: <HomeIcon />,
         label: 'Accueil',
@@ -27,7 +28,7 @@ const getMenuItems = (firstPath: string, onClick?: () => void): MenuItem[] => [
         onClick,
     },
     {
-        icon: <AvatarIcon />,
+        icon: avatar || <AvatarIcon />,
         label: 'Notre classe et nos activités',
         href: '/ma-classe',
         isActive: firstPath === 'ma-classe',
@@ -47,9 +48,11 @@ interface NavigationProps {
     classroomCountryCode?: string;
 }
 export const Navigation = ({ village, classroomCountryCode }: NavigationProps) => {
-    const { user } = useContext(UserContext);
+    const { user, classroom } = useContext(UserContext);
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+
+    const avatar = <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" />;
 
     return (
         <div className={styles.navigationWrapper}>
@@ -68,7 +71,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         ))}
                 </div>
                 <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
-                    <Menu items={getMenuItems(firstPath)} />
+                    <Menu items={getMenuItems(firstPath, undefined, avatar)} />
                 </div>
             </div>
         </div>
@@ -79,12 +82,13 @@ interface NavigationMobileMenuProps {
     onClose: () => void;
 }
 export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
-    const { user } = useContext(UserContext);
-    const { classroom } = useContext(UserContext);
+    const { user, classroom } = useContext(UserContext);
     const classroomCountryCode = classroom?.countryCode;
     const { village } = useContext(VillageContext);
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+
+    const avatar = <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" />;
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
@@ -106,9 +110,13 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
             </div>
             <MobileMenu
                 items={[
-                    ...getMenuItems(firstPath, () => {
-                        onClose();
-                    }),
+                    ...getMenuItems(
+                        firstPath,
+                        () => {
+                            onClose();
+                        },
+                        avatar,
+                    ),
                     ...(user?.role === 'admin'
                         ? [
                               {
