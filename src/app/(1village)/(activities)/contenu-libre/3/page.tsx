@@ -18,7 +18,7 @@ export default function FreeContentStep3() {
     const content = activity.content || {
         text: '',
         title: '',
-        extract: '',
+        resume: '',
     };
 
     const isFirstStepDone = content.text;

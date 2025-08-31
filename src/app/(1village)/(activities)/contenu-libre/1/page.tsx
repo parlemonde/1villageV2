@@ -19,7 +19,7 @@ export default function FreeContentStep1() {
     const content = activity.content || {
         text: '',
         title: '',
-        extract: '',
+        resume: '',
     };
 
     return (

@@ -11,7 +11,9 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import { useContext } from 'react';
 
+import { FreeContentCard } from './FreeContentCard';
 import styles from './activity-card.module.css';
+import type { ActivityContentCardProps } from './activity-card.types';
 
 const TITLES: Record<ActivityType, string> = {
     libre: 'envoyé un message à ses Pélicopains',
@@ -20,9 +22,15 @@ const TITLES: Record<ActivityType, string> = {
 };
 
 const ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
-    libre: GameIcon,
+    libre: null,
     jeu: GameIcon,
     enigme: KeyIcon,
+};
+
+const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = {
+    libre: FreeContentCard,
+    jeu: () => null,
+    enigme: () => null,
 };
 
 const toDate = (date: string | null): string => {
@@ -58,6 +66,7 @@ export const ActivityCard = ({ activity, user, classroom }: ActivityCardProps) =
         return null;
     }
     const Icon = ICONS[activity.type];
+    const ContentCard = CONTENT_CARDS[activity.type] || (() => null);
     return (
         <div className={styles.activityCard}>
             <div className={styles.activityCardHeader}>
@@ -86,7 +95,7 @@ export const ActivityCard = ({ activity, user, classroom }: ActivityCardProps) =
                 </div>
                 <span style={{ marginRight: 8 }}>{Icon && <Icon width={20} height="auto" fill="var(--primary-color)" />}</span>
             </div>
-            <div className={styles.activityCardBody}>{activity.type === 'libre' ? activity.content?.text : ''}</div>
+            <div className={styles.activityCardBody}>{<ContentCard activity={activity} />}</div>
         </div>
     );
 };

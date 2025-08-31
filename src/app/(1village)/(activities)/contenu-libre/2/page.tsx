@@ -16,7 +16,7 @@ export default function FreeContentStep2() {
     const content = activity.content || {
         text: '',
         title: '',
-        extract: '',
+        resume: '',
     };
 
     return (
@@ -58,8 +58,8 @@ export default function FreeContentStep2() {
                         name="extract"
                         isFullWidth
                         placeholder="Entrez l'extrait de votre publication"
-                        value={content.extract}
-                        onChange={(e) => setActivity({ ...activity, content: { ...content, extract: e.target.value } })}
+                        value={content.resume}
+                        onChange={(e) => setActivity({ ...activity, content: { ...content, resume: e.target.value } })}
                     />
                 }
                 marginBottom="md"

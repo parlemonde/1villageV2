@@ -28,19 +28,24 @@ interface AvatarProps {
     isPelico?: boolean;
     classroom?: Classroom;
     size?: SIZE | number;
+    isLink?: boolean;
 }
-export const Avatar = ({ user, classroom, isPelico, size = 'md' }: AvatarProps) => {
+export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }: AvatarProps) => {
     const dimension = typeof size === 'string' ? SIZES[size] : size;
     if (isPelico) {
-        return (
+        return isLink ? (
             <Link href={`/pelico`} className={styles.avatar} style={{ width: dimension, height: dimension }}>
                 <PelicoSouriant width="80%" height="auto" />
             </Link>
+        ) : (
+            <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
+                <PelicoSouriant width="80%" height="auto" />
+            </div>
         );
     }
     if (classroom) {
         const imgSrc = classroom.avatarUrl || getGravatarUrl(`classroom-${classroom.id}@parlemonde.org`, dimension);
-        return classroom.mascotteId ? (
+        return classroom.mascotteId && isLink ? (
             <Link href={`/activities/${classroom.mascotteId}`} className={styles.avatar} style={{ width: dimension, height: dimension }}>
                 <Image alt="Avatar" src={imgSrc} width={dimension} height={dimension} />
             </Link>

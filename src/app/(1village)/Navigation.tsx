@@ -52,7 +52,14 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
 
-    const avatar = <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" />;
+    // Do not display navigation on activity page
+    if (pathname.startsWith('/activities/')) {
+        return null;
+    }
+
+    const avatar = (
+        <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
+    );
 
     return (
         <div className={styles.navigationWrapper}>
@@ -88,7 +95,9 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
 
-    const avatar = <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" />;
+    const avatar = (
+        <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
+    );
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>

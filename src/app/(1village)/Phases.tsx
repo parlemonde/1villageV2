@@ -5,19 +5,25 @@ import Jumelles from '@frontend/svg/phases/jumelles.svg';
 import Puzzle from '@frontend/svg/phases/puzzle.svg';
 import Step2 from '@frontend/svg/phases/step2.svg';
 import classNames from 'clsx';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 
 import styles from './phases.module.css';
 
-const DisplayedPhases = () => {
+interface DisplayedPhasesProps {
+    isOnRootPage?: boolean;
+}
+const DisplayedPhases = ({ isOnRootPage }: DisplayedPhasesProps) => {
+    const router = useRouter();
     const [phase, setPhase] = usePhase();
     return (
         <div className={styles.phases}>
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 1 })}
                 onClick={() => {
-                    if (phase !== 1) {
+                    if (!isOnRootPage) {
+                        router.push(`/?phase=1`);
+                    } else if (phase !== 1) {
                         setPhase(1);
                     }
                 }}
@@ -32,7 +38,9 @@ const DisplayedPhases = () => {
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 2 })}
                 onClick={() => {
-                    if (phase !== 2) {
+                    if (!isOnRootPage) {
+                        router.push(`/?phase=2`);
+                    } else if (phase !== 2) {
                         setPhase(2);
                     }
                 }}
@@ -47,7 +55,9 @@ const DisplayedPhases = () => {
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 3 })}
                 onClick={() => {
-                    if (phase !== 3) {
+                    if (!isOnRootPage) {
+                        router.push(`/?phase=3`);
+                    } else if (phase !== 3) {
                         setPhase(3);
                     }
                 }}
@@ -71,5 +81,5 @@ export const Phases = () => {
     if (!isOnRouteWithPhases) {
         return null;
     }
-    return <DisplayedPhases />;
+    return <DisplayedPhases isOnRootPage={pathname === '/'} />;
 };

@@ -3,7 +3,7 @@ type FreeActivity = {
     content: {
         text: string;
         title: string;
-        extract: string;
+        resume: string;
     } | null;
 };
 

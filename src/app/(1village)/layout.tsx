@@ -4,6 +4,7 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { redirect } from 'next/navigation';
 
+import { ActivitySidePanel } from './ActivitySidePanel';
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Phases } from './Phases';
@@ -29,6 +30,7 @@ export default async function VillageLayout({
                         {village && <Phases />}
                         <main className={styles.main}>{children}</main>
                     </div>
+                    <ActivitySidePanel />
                 </div>
             </VillageProvider>
         </UserProvider>

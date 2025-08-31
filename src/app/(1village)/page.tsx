@@ -15,7 +15,7 @@ export default function Home() {
                     overflow: 'hidden',
                 }}
             ></div>
-            <div style={{ margin: '8px 16px' }}>
+            <div style={{ margin: '8px 16px 32px 16px' }}>
                 <Title>Dernières activités</Title>
                 <Activities />
             </div>

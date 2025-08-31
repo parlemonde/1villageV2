@@ -1,6 +1,6 @@
 'use client';
 
-import { ActivityCard } from '@frontend/activities/ActivityCard';
+import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
