@@ -6,7 +6,9 @@
   "license": "GPL-3.0-or-later",
   "homepage": "https://1v.parlemonde.org",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev:next": "next dev --turbopack",
+    "dev:services": "docker compose up",
+    "dev": "concurrently \"pnpm run dev:next\" \"pnpm run dev:services\"",
     "build": "next build",
     "build:lambda": "rm -rf .open-next && open-next build --config-path ./open-next/open-next.config.ts && node ./open-next/install-deps.mjs",
     "start": "next start",
@@ -52,6 +54,7 @@
     "@types/nprogress": "^0.2.3",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
+    "concurrently": "^9.2.1",
     "drizzle-kit": "0.31.4",
     "eslint": "9.31.0",
     "eslint-config-next": "15.4.2",
