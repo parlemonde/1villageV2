@@ -1,5 +1,5 @@
-import isEqual from 'fast-deep-equal/es6';
 import * as React from 'react';
+import isEqual from 'react-fast-compare';
 
 export const useDeepMemo = <T>(value: T): T => {
     const [memoizedValue, setMemoizedValue] = React.useState(value);

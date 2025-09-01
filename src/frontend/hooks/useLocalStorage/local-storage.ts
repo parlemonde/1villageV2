@@ -1,6 +1,6 @@
 'use client';
 
-import isEqual from 'fast-deep-equal/es6';
+import isEqual from 'react-fast-compare';
 
 export const UPDATE_EVENT_NAME = 'local-storage-update';
 
