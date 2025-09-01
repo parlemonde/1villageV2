@@ -14,6 +14,7 @@ export const UserContext = React.createContext<{
         name: '',
         email: '',
         role: 'teacher',
+        avatarUrl: null,
     },
     setUser: () => {},
     classroom: undefined,

@@ -12,7 +12,7 @@ export const FreeContentView = ({ activity }: ActivityContentViewProps) => {
                 <Title variant="h3" marginY="md">
                     {activity.content?.title}
                 </Title>
-                <span>{activity.content?.text}</span>
+                <span>{JSON.stringify(activity.content?.text, null, 2)}</span>
             </div>
         </div>
     );

@@ -15,7 +15,7 @@ const APP_SECRET = new TextEncoder().encode(process.env.APP_SECRET || '');
 
 const getUserById = async (userId: number): Promise<User | undefined> => {
     const maybeUser = await db.query.users.findFirst({
-        columns: { id: true, name: true, email: true, role: true, accountRegistration: true },
+        columns: { id: true, name: true, email: true, role: true, accountRegistration: true, avatarUrl: true },
         where: eq(users.id, userId),
     });
     if (!maybeUser) {
