@@ -9,6 +9,7 @@ import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 import * as React from 'react';
 import isEqual from 'react-fast-compare';
 
+import { Toolbar } from './Toolbar';
 import styles from './html-editor.module.css';
 import { schema } from './schema';
 
@@ -25,6 +26,10 @@ const getDoc = (content?: unknown): Node => {
     }
 };
 
+const getNewState = (doc: Node, placeholder: string) => {
+    return EditorState.create({ doc, schema, plugins: [keymap(baseKeymap), placeholderPlugin(placeholder || '')] });
+};
+
 function placeholderPlugin(text: string) {
     return new Plugin({
         props: {
@@ -32,7 +37,11 @@ function placeholderPlugin(text: string) {
                 const doc = state.doc;
                 if (
                     doc.childCount === 0 ||
-                    (doc.childCount === 1 && doc.firstChild !== null && doc.firstChild.isTextblock && doc.firstChild.content.size == 0)
+                    (doc.childCount === 1 &&
+                        doc.firstChild !== null &&
+                        doc.firstChild.isTextblock &&
+                        doc.firstChild.type.name === 'paragraph' &&
+                        doc.firstChild.content.size == 0)
                 ) {
                     const placeholderSpan = document.createElement('span');
                     placeholderSpan.classList.add(styles.placeholder);
@@ -52,22 +61,16 @@ interface HtmlEditorProps {
 }
 
 export const HtmlEditor = (props: HtmlEditorProps) => {
-    const { content, onChange, color = 'primary', placeholder } = props;
+    const { content, onChange, color = 'primary', placeholder = '' } = props;
     const parentDoc = getDoc(content);
 
-    const [state, setState] = React.useState<EditorState>(
-        EditorState.create({ doc: parentDoc, schema, plugins: [keymap(baseKeymap), placeholderPlugin(placeholder || '')] }),
-    );
+    const [state, setState] = React.useState<EditorState>(getNewState(parentDoc, placeholder));
     const viewRef = React.useRef<EditorView | null>(null);
-    const containerRef = React.useRef<HTMLDivElement>(null);
 
     // Keep the state in sync with the content if the editor is controlled
     if ('content' in props && !parentDoc.eq(state.doc)) {
-        const newState = EditorState.create({
-            doc: parentDoc,
-            schema,
-            plugins: [keymap(baseKeymap), placeholderPlugin(placeholder || '')],
-        });
+        const newState = getNewState(parentDoc, placeholder);
+        newState.selection = state.selection; // Keep the selection
         setState(newState);
         viewRef.current?.updateState(newState);
     }
@@ -85,34 +88,36 @@ export const HtmlEditor = (props: HtmlEditorProps) => {
     }, [onChange]);
 
     // Initialize the editor
-    React.useEffect(() => {
-        if (viewRef.current || !containerRef.current) {
-            return;
-        }
-        const view = new EditorView(containerRef.current, {
-            state,
-            dispatchTransaction(transaction) {
-                const newState = view.state.apply(transaction);
-                view.updateState(newState);
-                setState(newState);
-                // Avoid re-rendering when the content is the same
-                // Also use JSON.parse(JSON.stringify()) to avoid some reference issues
-                const newContent = JSON.parse(JSON.stringify(newState.doc.toJSON()));
-                if (!isEqual(newContent, contentRef.current)) {
-                    onChangeRef.current?.(newContent);
-                }
-            },
-        });
-        viewRef.current = view;
-    }, [state]);
+    const onContainerRef = React.useCallback(
+        (container: HTMLDivElement | null) => {
+            if (container === null) {
+                viewRef.current?.destroy();
+                viewRef.current = null;
+            } else {
+                const view = new EditorView(container, {
+                    state: getNewState(getDoc(contentRef.current), placeholder),
+                    dispatchTransaction(transaction) {
+                        const newState = view.state.apply(transaction);
+                        view.updateState(newState);
+                        setState(newState);
+                        // Avoid re-rendering when the content is the same
+                        // Also use JSON.parse(JSON.stringify()) to avoid some reference issues
+                        const newContent = JSON.parse(JSON.stringify(newState.doc.toJSON()));
+                        if (!isEqual(newContent, contentRef.current)) {
+                            onChangeRef.current?.(newContent);
+                        }
+                    },
+                });
+                viewRef.current = view;
+            }
+        },
+        [placeholder],
+    );
 
-    // On unmount destroy the editor
-    React.useEffect(() => {
-        return () => {
-            viewRef.current?.destroy();
-            viewRef.current = null;
-        };
-    }, []);
-
-    return <div ref={containerRef} className={classNames(styles.htmlEditor, styles[`color-${color}`])}></div>;
+    return (
+        <>
+            <Toolbar state={state} viewRef={viewRef} />
+            <div ref={onContainerRef} className={classNames(styles.htmlEditor, styles[`color-${color}`])}></div>
+        </>
+    );
 };
