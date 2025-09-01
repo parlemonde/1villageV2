@@ -1,0 +1,64 @@
+.htmlEditor > div {
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    padding: 10px 8px;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--font-color);
+    min-height: 62px; /* 2 * rows + padding */
+}
+.htmlEditor > div:hover {
+    border-color: var(--grey-500);
+}
+.htmlEditor > div:focus {
+    outline: none;
+}
+.color-primary > div:focus {
+    border-color: var(--primary-color);
+    box-shadow: inset 0px 0px 0px 1px var(--primary-color);
+}
+.color-secondary > div:focus {
+    border-color: var(--secondary-color);
+    box-shadow: inset 0px 0px 0px 1px var(--secondary-color);
+}
+
+.placeholder {
+    color: var(--font-detail-color);
+}
+
+
+
+.htmlEditor h1,
+.htmlEditor h2,
+.htmlEditor h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.htmlEditor h1 {
+    font-size: 32px;
+    font-family: sans-serif;
+    font-weight: bold;
+    line-height: 38px;
+    color: var(--primary-color);
+}
+
+.htmlEditor h2 {
+    font-size: 24px;
+    font-family: sans-serif;
+    font-weight: normal;
+    line-height: 30px;
+    color: var(--primary-color);
+}
+
+.htmlEditor h3 {
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: normal;
+    line-height: 26px;
+}
+
+.htmlEditor a {
+    color: inherit;
+    text-decoration: underline;
+}

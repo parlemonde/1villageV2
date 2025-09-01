@@ -17,7 +17,7 @@ export default function FreeContentSuccess() {
                 }}
             >
                 <Title variant="h3">Votre publication a été publiée avec succès !</Title>
-                <PelicoSouriant width={160} height="auto" />
+                <PelicoSouriant style={{ width: '160px', height: 'auto' }} />
             </div>
             <Button as="a" href="/" color="primary" label="Retour à l'accueil" />
         </div>

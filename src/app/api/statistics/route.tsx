@@ -1,7 +1,7 @@
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { count } from 'drizzle-orm';
+import { count, and, isNotNull } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 export interface StatisticsResponse {
@@ -23,6 +23,7 @@ export const GET = async () => {
             villageId: activities.villageId,
         })
         .from(activities)
+        .where(and(isNotNull(activities.publishDate), isNotNull(activities.villageId)))
         .groupBy(activities.villageId);
 
     const response: StatisticsResponse = {

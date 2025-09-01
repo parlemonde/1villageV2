@@ -1,15 +1,30 @@
 'use client';
 
 import { Steps } from '@frontend/components/1Village/Steps';
+import { HtmlEditor } from '@frontend/components/HtmlEditor';
 import { Link } from '@frontend/components/navigation/Link';
 import { Button } from '@frontend/components/ui/Button';
-import { TextArea } from '@frontend/components/ui/Form';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+// import { Node } from 'prosemirror-model';
+// import { DOMSerializer } from 'prosemirror-model';
+// import { schema } from 'prosemirror-schema-basic';
 import { useContext } from 'react';
 
 import styles from './page.module.css';
+
+// const serializer = DOMSerializer.fromSchema(schema);
+
+// const toHtml = (content: unknown) => {
+//     try {
+//         const doc = Node.fromJSON(schema, content);
+//         return serializer.serializeFragment(doc.content);
+//     } catch (error) {
+//         console.error(error);
+//         return null;
+//     }
+// };
 
 export default function FreeContentStep1() {
     const { activity, setActivity } = useContext(ActivityContext);
@@ -17,7 +32,6 @@ export default function FreeContentStep1() {
         return null;
     }
     const content = activity.content || {
-        text: '',
         title: '',
         resume: '',
     };
@@ -38,26 +52,18 @@ export default function FreeContentStep1() {
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Ecrivez le contenu de votre publication
+                Écrivez le contenu de votre publication
             </Title>
             <p>
                 Utilisez l&apos;éditeur de bloc pour définir le contenu de votre publication. Dans l&apos;étape 2 vous pourrez définir l&apos;aspect
                 de la carte résumée de votre publication.
             </p>
             <div style={{ marginTop: '16px' }}>
-                <TextArea
-                    value={content.text}
-                    onChange={(e) =>
-                        setActivity({
-                            ...activity,
-                            content: {
-                                ...content,
-                                text: e.target.value,
-                            },
-                        })
-                    }
+                <HtmlEditor
+                    content={content.text}
+                    onChange={(text) => setActivity({ ...activity, content: { ...content, text } })}
                     color="secondary"
-                    placeholder="Ecrivez le contenu de votre publication"
+                    placeholder="Écrivez le contenu de votre publication"
                 />
                 <div style={{ textAlign: 'right', marginTop: '16px' }}>
                     <Button as="a" href="/contenu-libre/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>

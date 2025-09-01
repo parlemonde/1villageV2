@@ -1,7 +1,7 @@
 type FreeActivity = {
     type: 'libre';
     content: {
-        text: string;
+        text?: unknown;
         title: string;
         resume: string;
     } | null;

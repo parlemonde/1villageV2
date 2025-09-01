@@ -29,7 +29,7 @@ export function VillagesTable() {
     return (
         <div>
             <Input
-                iconAdornment={<MagnifyingGlassIcon width={20} height="auto" fill="currentColor" />}
+                iconAdornment={<MagnifyingGlassIcon style={{ width: '20px', height: 'auto' }} fill="currentColor" />}
                 iconAdornmentProps={{
                     position: 'left',
                 }}

@@ -13,6 +13,7 @@ type ModalProps = {
     onClose: () => void;
     onConfirm?: () => void | Promise<void>;
     title: string;
+    description?: string;
     hasTopSeparator?: boolean;
     hasCloseButton?: boolean;
     hasCancelButton?: boolean;
@@ -32,6 +33,7 @@ export const Modal = ({
     onClose,
     onConfirm,
     title,
+    description,
     hasFooter = true,
     hasTopSeparator = true,
     hasCloseButton = true,
@@ -71,6 +73,7 @@ export const Modal = ({
                               }
                     }
                 >
+                    <Dialog.Description>{description}</Dialog.Description>
                     <Dialog.Title
                         className={classNames(styles.title, {
                             [styles.hasTopSeparator]: hasTopSeparator,

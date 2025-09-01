@@ -35,11 +35,11 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
     if (isPelico) {
         return isLink ? (
             <Link href={`/pelico`} className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <PelicoSouriant width="80%" height="auto" />
+                <PelicoSouriant style={{ width: '80%', height: 'auto' }} />
             </Link>
         ) : (
             <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <PelicoSouriant width="80%" height="auto" />
+                <PelicoSouriant style={{ width: '80%', height: 'auto' }} />
             </div>
         );
     }

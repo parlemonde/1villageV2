@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
+import 'prosemirror-view/style/prosemirror.css';
 
 const APP_URL = process.env.HOST_URL || '';
 const APP_NAME = '1Village';

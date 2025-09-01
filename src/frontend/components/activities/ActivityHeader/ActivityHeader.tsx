@@ -70,7 +70,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     {activity.isPelico && (
                         <>
                             <span>&nbsp;&middot;&nbsp;</span>
-                            <PelicoNeutre width={18} height="auto" />
+                            <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
                         </>
                     )}
                     {classroom && (
@@ -83,7 +83,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
             </div>
             {Icon && (
                 <span style={{ marginRight: 8 }}>
-                    <Icon width={20} height="auto" fill="var(--primary-color)" />
+                    <Icon style={{ width: '20px', height: 'auto' }} fill="var(--primary-color)" />
                 </span>
             )}
         </div>

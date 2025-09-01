@@ -17,7 +17,7 @@ export default function Activity404() {
                 }}
             >
                 <Title variant="h3">Activité non trouvée !</Title>
-                <PelicoSearching width={160} height="auto" />
+                <PelicoSearching style={{ width: '160px', height: 'auto' }} />
             </div>
             <Button as="a" href="/" color="primary" label="Retour à l'accueil" />
         </div>
