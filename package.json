@@ -8,7 +8,7 @@
   "scripts": {
     "dev:next": "next dev --turbopack",
     "dev:services": "docker compose up",
-    "dev": "concurrently \"pnpm run dev:next\" \"pnpm run dev:services\"",
+    "dev": "concurrently --names nextjs,docker -c green,blue --kill-others-on-fail \"pnpm run dev:next\" \"pnpm run dev:services\"",
     "build": "next build",
     "build:lambda": "rm -rf .open-next && open-next build --config-path ./open-next/open-next.config.ts && node ./open-next/install-deps.mjs",
     "start": "next start",
