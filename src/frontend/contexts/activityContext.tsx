@@ -9,7 +9,7 @@ import type { Activity, ActivityType } from '@server/database/schemas/activities
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
 import { usePathname } from 'next/navigation';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserContext } from './userContext';
 import { VillageContext } from './villageContext';
@@ -59,6 +59,12 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
 
     const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
 
+    // Use a following ref for the activity to use in callbacks and effects without causing re-renders
+    const localActivityRef = useRef<Partial<Activity> | undefined>(undefined);
+    useEffect(() => {
+        localActivityRef.current = localActivity;
+    }, [localActivity]);
+
     // Auto save draft after an update (using a debounced function)
     const onUpdateActivity = useCallback(
         (newActivity: Partial<Activity>) => {
@@ -67,7 +73,10 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                 onSaveDraftDebounced(
                     { ...newActivity, draftUrl: pathname },
                     (id) => {
-                        setLocalActivity({ ...newActivity, id });
+                        if (localActivityRef.current) {
+                            // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
+                            setLocalActivity({ ...localActivityRef.current, id });
+                        }
                     },
                     setDraftStep,
                 );

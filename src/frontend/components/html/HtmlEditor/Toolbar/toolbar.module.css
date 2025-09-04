@@ -1,0 +1,69 @@
+.toolbarRoot {
+    position: relative;
+    overflow: hidden;
+}
+
+.toolbarRoot:focus-within,
+.visible {
+    overflow: visible;
+}
+
+.toolbar {
+    position: absolute;
+    top: 0;
+    transform: translateY(calc(-100% - 4px));
+    z-index: 100;
+    display: inline-flex;
+    max-width: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    background-color: white;
+    padding: 4px;
+    gap: 4px;
+    border-radius: 4px;
+    border: 1px solid var(--grey-300);
+    box-shadow: 0 2px 10px 0 var(--grey-300);
+}
+
+.toolbarSeparator {
+	width: 1px;
+	background-color: var(--grey-300);
+    margin: 4px 0;
+}
+
+.toolbarGroup {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.toggleItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    outline: 0;
+    background-color: white;
+    border-radius: 4px;
+    border: none;
+    font-size: 15px;
+}
+
+.toggleItem:hover {
+    background-color: var(--grey-100);
+}
+
+.toggleItem:focus-visible {
+    background-color: var(--grey-100);
+    outline: 1px solid var(--primary-color);
+}
+
+.toggleItem[data-state="on"],
+.active {
+	background-color: var(--grey-100);
+}

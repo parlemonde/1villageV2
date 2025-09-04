@@ -1,30 +1,15 @@
 'use client';
 
 import { Steps } from '@frontend/components/1Village/Steps';
-import { HtmlEditor } from '@frontend/components/HtmlEditor';
+import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import { Link } from '@frontend/components/navigation/Link';
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-// import { Node } from 'prosemirror-model';
-// import { DOMSerializer } from 'prosemirror-model';
-// import { schema } from 'prosemirror-schema-basic';
 import { useContext } from 'react';
 
 import styles from './page.module.css';
-
-// const serializer = DOMSerializer.fromSchema(schema);
-
-// const toHtml = (content: unknown) => {
-//     try {
-//         const doc = Node.fromJSON(schema, content);
-//         return serializer.serializeFragment(doc.content);
-//     } catch (error) {
-//         console.error(error);
-//         return null;
-//     }
-// };
 
 export default function FreeContentStep1() {
     const { activity, setActivity } = useContext(ActivityContext);

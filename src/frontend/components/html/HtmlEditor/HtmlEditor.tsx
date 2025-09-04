@@ -56,14 +56,17 @@ function placeholderPlugin(text: string) {
 interface HtmlEditorProps {
     content?: unknown;
     color?: 'primary' | 'secondary';
+    variant?: 'default' | 'borderless';
     placeholder?: string;
+    className?: string;
     onChange?: (content: unknown) => void;
 }
 
 export const HtmlEditor = (props: HtmlEditorProps) => {
-    const { content, onChange, color = 'primary', placeholder = '' } = props;
+    const { content, onChange, color = 'primary', variant = 'default', placeholder = '', className } = props;
     const parentDoc = getDoc(content);
 
+    const [isFocused, setIsFocused] = React.useState(false);
     const [state, setState] = React.useState<EditorState>(getNewState(parentDoc, placeholder));
     const viewRef = React.useRef<EditorView | null>(null);
 
@@ -116,8 +119,17 @@ export const HtmlEditor = (props: HtmlEditorProps) => {
 
     return (
         <>
-            <Toolbar state={state} viewRef={viewRef} />
-            <div ref={onContainerRef} className={classNames(styles.htmlEditor, styles[`color-${color}`])}></div>
+            <Toolbar state={state} viewRef={viewRef} isVisible={isFocused} />
+            <div
+                ref={onContainerRef}
+                className={classNames(styles.htmlEditor, styles[`color-${color}`], styles[`variant-${variant}`], className)}
+                onFocus={() => {
+                    setIsFocused(true);
+                }}
+                onBlur={() => {
+                    setIsFocused(false);
+                }}
+            ></div>
         </>
     );
 };

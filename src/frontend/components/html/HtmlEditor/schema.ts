@@ -25,7 +25,7 @@ export const schema = new Schema({
                     ? [
                           'p',
                           {
-                              style: `text-align: ${node.attrs.align};`,
+                              style: node.attrs.align !== 'left' ? `text-align: ${node.attrs.align};` : undefined,
                           },
                           0,
                       ]
@@ -34,17 +34,24 @@ export const schema = new Schema({
         heading: {
             group: 'block',
             content: 'inline*',
-            attrs: { level: { default: 1, validate: 'number' } },
+            attrs: { level: { default: 1, validate: 'number' }, align: { default: 'left', validate: 'string' } },
             defining: true,
+            marks: '', // No marks allowed for heading
             parseDOM: [
-                { tag: 'h1', attrs: { level: 1 } },
-                { tag: 'h2', attrs: { level: 2 } },
-                { tag: 'h3', attrs: { level: 3 } },
-                { tag: 'h4', attrs: { level: 4 } },
-                { tag: 'h5', attrs: { level: 5 } },
-                { tag: 'h6', attrs: { level: 6 } },
+                {
+                    tag: 'h2',
+                    getAttrs(dom: HTMLElement) {
+                        return { level: 2, align: dom.style.textAlign || DEFAULT_ALIGN };
+                    },
+                },
+                {
+                    tag: 'h3',
+                    getAttrs(dom: HTMLElement) {
+                        return { level: 3, align: dom.style.textAlign || DEFAULT_ALIGN };
+                    },
+                },
             ],
-            toDOM: (node) => [`h${node.attrs.level}`, 0],
+            toDOM: (node) => [`h${node.attrs.level}`, { style: node.attrs.align !== 'left' ? `text-align: ${node.attrs.align};` : undefined }, 0],
         },
         text: {
             group: 'inline',
@@ -76,7 +83,7 @@ export const schema = new Schema({
                     },
                 },
             ],
-            toDOM: (node) => ['a', { href: node.attrs.href }, 0],
+            toDOM: (node) => ['a', { href: node.attrs.href, target: '_blank' }, 0],
         },
         color: {
             attrs: {

@@ -1,6 +1,7 @@
 'use client';
 
 import { Steps } from '@frontend/components/1Village/Steps';
+import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
 import { Title } from '@frontend/components/ui/Title';
@@ -16,7 +17,6 @@ export default function FreeContentStep3() {
         return null;
     }
     const content = activity.content || {
-        text: '',
         title: '',
         resume: '',
     };
@@ -54,7 +54,7 @@ export default function FreeContentStep3() {
             <Title variant="h2" marginBottom="md">
                 Pré-visualisez votre publication
             </Title>
-            {JSON.stringify(content)}
+            <HtmlViewer content={content.text} />
             <div style={{ textAlign: 'center' }}>
                 <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
             </div>

@@ -1,0 +1,45 @@
+.htmlViewer {
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--font-color);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: break-spaces;
+    -webkit-font-variant-ligatures: none;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.htmlViewer h2,
+.htmlViewer h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.htmlViewer h2 {
+    font-size: 24px;
+    font-family: sans-serif;
+    font-weight: normal;
+    line-height: 30px;
+    color: var(--primary-color);
+}
+
+.htmlViewer h3 {
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: normal;
+    line-height: 26px;
+}
+
+.htmlViewer a {
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.htmlViewer pre {
+    white-space: pre-wrap;
+}
+.htmlViewer li {
+    position: relative;
+}
