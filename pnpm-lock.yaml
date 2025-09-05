@@ -74,6 +74,9 @@ importers:
       swr:
         specifier: ^2.3.4
         version: 2.3.4(react@19.1.0)
+      uuid:
+        specifier: ^12.0.0
+        version: 12.0.0
     devDependencies:
       '@dotenvx/dotenvx':
         specifier: 1.48.1
@@ -5407,6 +5410,10 @@ packages:
   utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+
+  uuid@12.0.0:
+    resolution: {integrity: sha512-USe1zesMYh4fjCA8ZH5+X5WIVD0J4V1Jksm1bFTVBX2F/cwSXt0RO5w/3UXbdLKmZX65MiWV+hwhSS8p6oBTGA==}
+    hasBin: true
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
@@ -11944,6 +11951,8 @@ snapshots:
       react: 19.1.0
 
   utils-merge@1.0.1: {}
+
+  uuid@12.0.0: {}
 
   uuid@9.0.1: {}
 

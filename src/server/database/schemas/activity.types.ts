@@ -1,22 +1,24 @@
+import type { AnyContent } from '@frontend/components/content/content.types';
+
 type FreeActivity = {
     type: 'libre';
-    content: {
-        text?: unknown;
-        title: string;
-        resume: string;
+    data: {
+        title?: string;
+        resume?: string;
+        content?: AnyContent[];
     } | null;
 };
 
 type GameActivity = {
     type: 'jeu';
-    content: {
+    data: {
         gameId: string;
     } | null;
 };
 
 type PuzzleActivity = {
     type: 'enigme';
-    content: {
+    data: {
         text: string;
     } | null;
 };

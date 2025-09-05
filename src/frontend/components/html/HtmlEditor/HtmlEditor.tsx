@@ -118,7 +118,7 @@ export const HtmlEditor = (props: HtmlEditorProps) => {
     );
 
     return (
-        <>
+        <div className={styles.htmlEditorWrapper}>
             <Toolbar state={state} viewRef={viewRef} isVisible={isFocused} />
             <div
                 ref={onContainerRef}
@@ -130,6 +130,6 @@ export const HtmlEditor = (props: HtmlEditorProps) => {
                     setIsFocused(false);
                 }}
             ></div>
-        </>
+        </div>
     );
 };

@@ -1,4 +1,4 @@
-import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
+import { ContentViewer } from '@frontend/components/content/ContentViewer';
 
 import type { ActivityContentViewProps } from './activity-view.types';
 
@@ -7,8 +7,10 @@ export const FreeContentView = ({ activity }: ActivityContentViewProps) => {
         return null;
     }
     return (
-        <div style={{ padding: '32px 0' }}>
-            <HtmlViewer content={activity.content?.text} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '32px 0' }}>
+            {(activity.data?.content || []).map((content, index) => (
+                <ContentViewer key={index} content={content} />
+            ))}
         </div>
     );
 };

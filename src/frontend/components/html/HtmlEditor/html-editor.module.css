@@ -1,14 +1,14 @@
-.htmlEditor {
-    --padding: 10px 8px;
-    --min-height: 62px; /* 2 * rows + padding */
+.htmlEditorWrapper {
+    position: relative;
+    width: 100%;
 }
 
 .htmlEditor > div {
-    padding: var(--padding);
+    padding: 10px 8px;
     font-size: 16px;
     line-height: 20px;
     color: var(--font-color);
-    min-height: var(--min-height);
+    min-height: 62px; /* 2 * rows + padding */
 }
 .variant-default.htmlEditor > div:hover {
     border-color: var(--grey-500);

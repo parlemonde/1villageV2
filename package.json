@@ -41,7 +41,8 @@
     "react-dom": "19.1.0",
     "react-fast-compare": "^3.2.2",
     "react-remove-scroll": "^2.7.1",
-    "swr": "^2.3.4"
+    "swr": "^2.3.4",
+    "uuid": "^12.0.0"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.48.1",

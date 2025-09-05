@@ -1,8 +1,8 @@
 'use client';
 
-import { Steps } from '@frontend/components/1Village/Steps';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
+import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -13,17 +13,12 @@ export default function FreeContentStep2() {
     if (!activity || activity.type !== 'libre') {
         return null;
     }
-    const content = activity.content || {
-        text: '',
-        title: '',
-        resume: '',
-    };
 
     return (
         <div style={{ padding: '16px 32px' }}>
             <Steps
                 steps={[
-                    { label: 'Contenu', href: '/contenu-libre/1', status: content.text ? 'success' : 'warning' },
+                    { label: 'Contenu', href: '/contenu-libre/1', status: (activity.data?.content || []).length > 0 ? 'success' : 'warning' },
                     { label: 'Forme', href: '/contenu-libre/2' },
                     { label: 'Pré-visualiser', href: '/contenu-libre/3' },
                 ]}
@@ -43,8 +38,8 @@ export default function FreeContentStep2() {
                         name="title"
                         isFullWidth
                         placeholder="Entrez le titre de votre publication"
-                        value={content.title}
-                        onChange={(e) => setActivity({ ...activity, content: { ...content, title: e.target.value } })}
+                        value={activity.data?.title || ''}
+                        onChange={(e) => setActivity({ ...activity, data: { ...activity.data, title: e.target.value } })}
                     />
                 }
                 marginBottom="md"
@@ -58,8 +53,8 @@ export default function FreeContentStep2() {
                         name="extract"
                         isFullWidth
                         placeholder="Entrez l'extrait de votre publication"
-                        value={content.resume}
-                        onChange={(e) => setActivity({ ...activity, content: { ...content, resume: e.target.value } })}
+                        value={activity.data?.resume || ''}
+                        onChange={(e) => setActivity({ ...activity, data: { ...activity.data, resume: e.target.value } })}
                     />
                 }
                 marginBottom="md"

@@ -1,9 +1,9 @@
 'use client';
 
-import { Steps } from '@frontend/components/1Village/Steps';
-import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
+import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
+import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { useRouter } from 'next/navigation';
@@ -16,13 +16,9 @@ export default function FreeContentStep3() {
     if (!activity || activity.type !== 'libre') {
         return null;
     }
-    const content = activity.content || {
-        title: '',
-        resume: '',
-    };
 
-    const isFirstStepDone = content.text;
-    const isSecondStepDone = content.title;
+    const isFirstStepDone = (activity.data?.content || []).length > 0;
+    const isSecondStepDone = !!activity.data?.title;
 
     const isValid = isFirstStepDone && isSecondStepDone;
 
@@ -54,7 +50,11 @@ export default function FreeContentStep3() {
             <Title variant="h2" marginBottom="md">
                 Pré-visualisez votre publication
             </Title>
-            <HtmlViewer content={content.text} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {(activity.data?.content || []).map((content, index) => (
+                    <ContentViewer key={index} content={content} />
+                ))}
+            </div>
             <div style={{ textAlign: 'center' }}>
                 <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
             </div>

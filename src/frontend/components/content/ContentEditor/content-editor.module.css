@@ -1,0 +1,49 @@
+.contentEditor {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    position: relative;
+}
+
+.DragHandle {
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    cursor: grab;
+    user-select: none;
+}
+
+.TrashButton {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.contentHtmlEditor {
+    flex: 1 1 0;
+    width: 100%;
+}
+.hasDottedBorder > div {
+    border: 1px dashed var(--primary-color);
+}
+div.contentHtmlEditor.hasDottedBorder:hover > div {
+    border: 1px solid var(--primary-color);
+}
+.hasDottedBorder > div:focus {
+    border-style: solid;
+}
+.hasContinuousLeftBorder > div {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-style: solid;
+    border-left-color: var(--primary-color);
+}
+div.contentHtmlEditor.hasContinuousLeftBorder:hover > div {
+    border-left-color: var(--primary-color);
+}
+.hasRightPadding > div {
+    padding-right: 40px;
+}

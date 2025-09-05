@@ -40,7 +40,7 @@ export const activities = pgTable('activities', {
         .defaultNow()
         .$onUpdate(() => sql`now()`),
     deleteDate: timestamp('deleteDate', { mode: 'string', withTimezone: true }),
-    content: jsonb('content'),
+    data: jsonb('data'),
     draftUrl: varchar('draftUrl', { length: 300 }),
     parentActivityId: integer('parentActivityId').references((): AnyPgColumn => activities.id, {
         onDelete: 'cascade',
