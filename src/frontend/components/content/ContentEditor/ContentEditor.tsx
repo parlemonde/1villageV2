@@ -39,5 +39,10 @@ export const ContentEditor = ({ content, setContent, htmlEditorPlaceholder, hasD
             </div>
         );
     }
-    return null;
+    return (
+        <div className={styles.contentEditor}>
+            {content.type}
+            {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
+        </div>
+    );
 };

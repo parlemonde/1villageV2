@@ -4,18 +4,22 @@ type HtmlContent = {
 };
 type ImageContent = {
     type: 'image';
-    image: string;
+    imageUrl: string;
 };
 type AudioContent = {
     type: 'audio';
-    audio: string;
+    audioUrl: string;
 };
 type VideoContent = {
     type: 'video';
-    video: string;
+    videoUrl: string;
+};
+type DocumentContent = {
+    type: 'document';
+    documentUrl: string;
 };
 type H5pContent = {
     type: 'h5p';
-    h5p: string;
+    h5pId: string;
 };
-export type AnyContent = HtmlContent | ImageContent | AudioContent | VideoContent | H5pContent;
+export type AnyContent = HtmlContent | ImageContent | AudioContent | VideoContent | DocumentContent | H5pContent;

@@ -1,6 +1,6 @@
 import { Schema } from 'prosemirror-model';
 
-const ALIGN_VALUES = new Set(['center', 'right', 'justify']);
+export const ALIGN_VALUES = new Set(['center', 'right', 'justify']);
 const DEFAULT_ALIGN = 'left';
 
 export const schema = new Schema({

@@ -1,5 +1,6 @@
 'use client';
 
+import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { Link } from '@frontend/components/navigation/Link';
@@ -8,7 +9,7 @@ import { Modal } from '@frontend/components/ui/Modal';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
 import isEqual from 'react-fast-compare';
 import { v4 } from 'uuid';
@@ -70,47 +71,43 @@ export default function FreeContentStep1() {
             <div style={{ marginTop: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {contentWithIds.map(({ id, content }, index) => (
-                        <div key={id}>
-                            {content.type === 'html' && (
-                                <ContentEditor
-                                    content={content}
-                                    setContent={(newContent) => {
-                                        const newContentArray = [...contentWithIds];
-                                        newContentArray[index].content = newContent;
-                                        setContentWithIds(newContentArray);
-                                        setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                                    }}
-                                    hasDottedBorder
-                                    isDraggable
-                                    htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
-                                    onDelete={() => {
-                                        const isEmptyContent = content.type === 'html' && !content.html;
-                                        if (isEmptyContent) {
-                                            const newContentArray = [...contentWithIds];
-                                            newContentArray.splice(index, 1);
-                                            setContentWithIds(newContentArray);
-                                            setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                                        } else {
-                                            setDeleteIndex(index);
-                                        }
-                                    }}
-                                />
-                            )}
-                        </div>
+                        <ContentEditor
+                            key={id}
+                            content={content}
+                            setContent={(newContent) => {
+                                const newContentArray = [...contentWithIds];
+                                newContentArray[index].content = newContent;
+                                setContentWithIds(newContentArray);
+                                setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            }}
+                            hasDottedBorder
+                            isDraggable
+                            htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
+                            onDelete={() => {
+                                const isEmptyContent = content.type === 'html' && !content.html;
+                                if (isEmptyContent) {
+                                    const newContentArray = [...contentWithIds];
+                                    newContentArray.splice(index, 1);
+                                    setContentWithIds(newContentArray);
+                                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                                } else {
+                                    setDeleteIndex(index);
+                                }
+                            }}
+                        />
                     ))}
                 </div>
-                <Button
-                    color="primary"
-                    marginTop="md"
-                    label="Ajouter un bloc"
-                    leftIcon={<PlusIcon />}
-                    onClick={() => {
-                        const newContentArray = [...contentWithIds];
-                        newContentArray.push({ id: v4(), content: { type: 'html', html: '' } });
-                        setContentWithIds(newContentArray);
-                        setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    }}
-                />
+                <div style={{ margin: '32px 0', width: '100%', textAlign: 'center' }}>
+                    <AddContentCard
+                        addContentLabel="Ajouter à votre publication :"
+                        onAddContent={(newContent) => {
+                            const newContentArray = [...contentWithIds];
+                            newContentArray.push({ id: v4(), content: newContent });
+                            setContentWithIds(newContentArray);
+                            setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                        }}
+                    />
+                </div>
                 <div style={{ textAlign: 'right', marginTop: '16px' }}>
                     <Button as="a" href="/contenu-libre/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>

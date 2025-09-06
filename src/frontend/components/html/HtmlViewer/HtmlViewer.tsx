@@ -5,7 +5,7 @@ import { DOMSerializer } from 'prosemirror-model';
 import { useSyncExternalStore } from 'react';
 
 import styles from './html-viewer.module.css';
-import { schema } from '../HtmlEditor/schema';
+import { ALIGN_VALUES, schema } from '../HtmlEditor/schema';
 
 // Use a custom view schema to override the default behavior of the paragraph node to DOM
 const viewSchema = new Schema({
@@ -14,10 +14,15 @@ const viewSchema = new Schema({
         paragraph: {
             ...schema.spec.nodes.get('paragraph'),
             toDOM(node) {
+                const alignStyle = ALIGN_VALUES.has(node.attrs.align)
+                    ? {
+                          style: node.attrs.align !== 'left' ? `text-align: ${node.attrs.align};` : undefined,
+                      }
+                    : {};
                 if (!node.content.size) {
-                    return ['p', ['br']];
+                    return ['p', alignStyle, ['br']];
                 }
-                return ['p', 0];
+                return ['p', alignStyle, 0];
             },
         },
     },
