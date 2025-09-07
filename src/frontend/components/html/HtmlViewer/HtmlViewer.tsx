@@ -37,8 +37,8 @@ const toHtml = (content: unknown) => {
         const divElement = document.createElement('div');
         divElement.appendChild(element);
         return divElement.innerHTML;
-    } catch (error) {
-        console.error(error);
+    } catch {
+        // ignore
         return null;
     }
 };

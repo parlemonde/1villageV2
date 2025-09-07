@@ -1,0 +1,1 @@
+ALTER TABLE "medias" ADD COLUMN "isPelico" boolean DEFAULT false NOT NULL;

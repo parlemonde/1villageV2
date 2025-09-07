@@ -1,4 +1,4 @@
-import { pgTable, uuid, timestamp, integer, char, varchar, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp, integer, char, varchar, jsonb, boolean } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
 
@@ -19,6 +19,7 @@ interface AudioMetadata {
 export const medias = pgTable('medias', {
     id: uuid().primaryKey().defaultRandom(),
     createDate: timestamp('createDate', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
+    isPelico: boolean('isPelico').notNull().default(false),
     userId: integer('userId')
         .references(() => users.id, {
             onDelete: 'cascade',

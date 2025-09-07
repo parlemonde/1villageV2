@@ -16,7 +16,7 @@ const CURSOR_MAP: Partial<Record<string, string>> = {
     s: 'ns-resize',
     w: 'ew-resize',
 };
-const RATIO = 4 / 3;
+const RATIO = 16 / 9;
 
 export interface CropperRef {
     onCrop: () => Promise<Blob>;
@@ -238,9 +238,9 @@ export const Cropper = ({ imageUrl, cropperRef }: CropperProps) => {
     }));
 
     return (
-        <AspectRatio.Root ratio={RATIO} style={{ backgroundColor: 'var(--grey-300)', padding: '20px', userSelect: 'none' }}>
+        <AspectRatio.Root ratio={RATIO} style={{ backgroundColor: 'var(--grey-100)', padding: '20px', userSelect: 'none' }}>
             <div
-                style={{ width: '100%', height: '100%', position: 'relative', backgroundColor: 'var(--grey-300)', boxSizing: 'border-box' }}
+                style={{ width: '100%', height: '100%', position: 'relative', backgroundColor: 'var(--grey-100)', boxSizing: 'border-box' }}
                 id={canvasId}
                 ref={onCanvasRef}
             >

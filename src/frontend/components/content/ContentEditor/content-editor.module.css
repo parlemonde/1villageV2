@@ -16,6 +16,11 @@
     user-select: none;
 }
 
+.EditButton {
+    position: absolute;
+    right: 44px;
+    top: 5px;
+}
 .TrashButton {
     position: absolute;
     right: 5px;
@@ -26,16 +31,16 @@
     flex: 1 1 0;
     width: 100%;
 }
-.hasDottedBorder > div {
+.contentHtmlEditor.hasDottedBorder > div {
     border: 1px dashed var(--primary-color);
 }
 div.contentHtmlEditor.hasDottedBorder:hover > div {
     border: 1px solid var(--primary-color);
 }
-.hasDottedBorder > div:focus {
+.contentHtmlEditor.hasDottedBorder > div:focus {
     border-style: solid;
 }
-.hasContinuousLeftBorder > div {
+.contentHtmlEditor.hasContinuousLeftBorder > div {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left-style: solid;
@@ -46,4 +51,24 @@ div.contentHtmlEditor.hasContinuousLeftBorder:hover > div {
 }
 .hasRightPadding > div {
     padding-right: 40px;
+}
+
+.mediaContent {
+    flex: 1 1 0;
+    /* min-height: 62px; */
+    padding: 40px 16px 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+}
+.mediaContent.hasDottedBorder {
+    border: 1px dashed var(--primary-color);
+}
+.mediaContent.hasContinuousLeftBorder {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-style: solid;
+    border-left-color: var(--primary-color);
 }

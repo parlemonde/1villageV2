@@ -1,5 +1,6 @@
 'use client';
 
+import { UploadImageModal } from '@frontend/components/UploadImageModal';
 import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import type { AnyContent } from '@frontend/components/content/content.types';
@@ -27,6 +28,7 @@ export default function FreeContentStep1() {
     const { activity, setActivity } = useContext(ActivityContext);
     const data = activity?.type === 'libre' ? activity.data : undefined;
 
+    const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
         (data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })),
     );
@@ -45,6 +47,13 @@ export default function FreeContentStep1() {
     ) {
         setContentWithIds((data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })));
     }
+
+    const uploadImageModalInitialImageUrl =
+        uploadImageModalContentIndex !== null &&
+        uploadImageModalContentIndex !== -1 &&
+        contentWithIds[uploadImageModalContentIndex]?.content.type === 'image'
+            ? contentWithIds[uploadImageModalContentIndex]?.content.imageUrl
+            : null;
 
     return (
         <div className={styles.page} style={{ padding: '16px 32px' }}>
@@ -83,6 +92,9 @@ export default function FreeContentStep1() {
                             hasDottedBorder
                             isDraggable
                             htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
+                            onEdit={() => {
+                                setUploadImageModalContentIndex(index);
+                            }}
                             onDelete={() => {
                                 const isEmptyContent = content.type === 'html' && !content.html;
                                 if (isEmptyContent) {
@@ -101,10 +113,14 @@ export default function FreeContentStep1() {
                     <AddContentCard
                         addContentLabel="Ajouter à votre publication :"
                         onAddContent={(newContent) => {
-                            const newContentArray = [...contentWithIds];
-                            newContentArray.push({ id: v4(), content: newContent });
-                            setContentWithIds(newContentArray);
-                            setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            if (newContent.type === 'image') {
+                                setUploadImageModalContentIndex(-1);
+                            } else {
+                                const newContentArray = [...contentWithIds];
+                                newContentArray.push({ id: v4(), content: newContent });
+                                setContentWithIds(newContentArray);
+                                setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            }
                         }}
                     />
                 </div>
@@ -112,6 +128,26 @@ export default function FreeContentStep1() {
                     <Button as="a" href="/contenu-libre/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>
             </div>
+            <UploadImageModal
+                isOpen={uploadImageModalContentIndex !== null}
+                initialImageUrl={uploadImageModalInitialImageUrl}
+                onClose={() => setUploadImageModalContentIndex(null)}
+                onNewImage={(imageUrl) => {
+                    if (uploadImageModalContentIndex === null) {
+                        return;
+                    }
+                    const newContentArray = [...contentWithIds];
+                    // New content
+                    if (uploadImageModalContentIndex === -1) {
+                        newContentArray.push({ id: v4(), content: { type: 'image', imageUrl } });
+                    } else if (newContentArray[uploadImageModalContentIndex].content.type === 'image') {
+                        newContentArray[uploadImageModalContentIndex].content.imageUrl = imageUrl;
+                    }
+                    setContentWithIds(newContentArray);
+                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                    setUploadImageModalContentIndex(null);
+                }}
+            />
             <Modal
                 isOpen={deleteIndex !== null}
                 onClose={() => setDeleteIndex(null)}

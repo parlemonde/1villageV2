@@ -11,10 +11,13 @@ import { CircularProgress } from '../CircularProgress';
 type ModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    onCancel?: () => void;
     onConfirm?: () => void | Promise<void>;
     title: string;
     description?: string;
     hasTopSeparator?: boolean;
+    hasBottomSeparator?: boolean;
+    hasPadding?: boolean;
     hasCloseButton?: boolean;
     hasCancelButton?: boolean;
     hasFooter?: boolean;
@@ -31,11 +34,14 @@ type ModalProps = {
 export const Modal = ({
     isOpen,
     onClose,
+    onCancel,
     onConfirm,
     title,
     description,
     hasFooter = true,
     hasTopSeparator = true,
+    hasBottomSeparator = false,
+    hasPadding = true,
     hasCloseButton = true,
     hasCancelButton = true,
     cancelLabel = 'Annuler',
@@ -86,10 +92,19 @@ export const Modal = ({
                             </Dialog.Close>
                         )}
                     </Dialog.Title>
-                    <div className={styles.content}>{children}</div>
+                    <div className={classNames(styles.content, { [styles.hasPadding]: hasPadding })}>{children}</div>
                     {hasFooter && (
-                        <div className={styles.footer}>
-                            {hasCancelButton && <Button label={cancelLabel} onClick={onClose} color={cancelLevel} variant="outlined"></Button>}
+                        <div className={classNames(styles.footer, { [styles.hasBottomSeparator]: hasBottomSeparator })}>
+                            {hasCancelButton && (
+                                <Button
+                                    label={cancelLabel}
+                                    onClick={() => {
+                                        (onCancel || onClose)();
+                                    }}
+                                    color={cancelLevel}
+                                    variant="outlined"
+                                ></Button>
+                            )}
                             {onConfirm && (
                                 <Button
                                     label={confirmLabel}

@@ -36,6 +36,13 @@
       "when": 1757090374453,
       "tag": "0004_striped_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757260132831,
+      "tag": "0005_next_mysterio",
+      "breakpoints": true
     }
   ]
 }
