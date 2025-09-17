@@ -56,7 +56,7 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
         );
     }
     if (user) {
-        const imgSrc = user.avatarUrl || getGravatarUrl(user.email, dimension);
+        const imgSrc = user.image || getGravatarUrl(user.email, dimension);
         return (
             <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
                 <Image alt="Avatar" src={imgSrc} width={dimension} height={dimension} unoptimized={imgSrc.startsWith('https')} />

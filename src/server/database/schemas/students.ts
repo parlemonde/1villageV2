@@ -1,17 +1,17 @@
-import { pgTable, serial, varchar, integer } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, text, uuid } from 'drizzle-orm/pg-core';
 
 import { classrooms } from './classrooms';
 import { users } from './users';
 
 export const students = pgTable('students', {
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 150 }).notNull(),
-    teacherId: integer('teacherId')
+    name: text('name').notNull(),
+    teacherId: uuid('teacherId')
         .references(() => users.id, {
             onDelete: 'cascade',
         })
         .notNull(),
-    parentId: integer('parentId').references(() => users.id, {
+    parentId: uuid('parentId').references(() => users.id, {
         onDelete: 'set null',
     }),
     classroomId: integer('classroomId')
@@ -19,7 +19,7 @@ export const students = pgTable('students', {
             onDelete: 'cascade',
         })
         .notNull(),
-    inviteCode: varchar('inviteCode', { length: 20 }),
+    inviteCode: text('inviteCode'),
 });
 
 export type Student = typeof students.$inferSelect;

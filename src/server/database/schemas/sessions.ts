@@ -5,7 +5,7 @@ import { users } from './users';
 export const sessions = pgTable('sessions', {
     id: uuid().primaryKey().defaultRandom(),
     date: timestamp('date', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
-    userId: integer('userId')
+    userId: uuid('userId')
         .references(() => users.id, {
             onDelete: 'cascade',
         })

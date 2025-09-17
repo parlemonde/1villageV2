@@ -9,8 +9,8 @@ export const FreeContentCard = ({ activity }: ActivityContentCardProps) => {
     return (
         <div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '4px' }}>
-                <span style={{ fontWeight: 500 }}>{activity.content?.title}</span>
-                <p style={{ fontSize: '15px' }}>{activity.content?.resume}</p>
+                <span style={{ fontWeight: 500 }}>{activity.data?.title}</span>
+                <p style={{ fontSize: '15px' }}>{activity.data?.resume}</p>
             </div>
             <div style={{ textAlign: 'right' }}>
                 <Button

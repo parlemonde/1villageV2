@@ -10,11 +10,11 @@ export const UserContext = React.createContext<{
     classroom: Classroom | undefined;
 }>({
     user: {
-        id: 0,
+        id: '',
         name: '',
         email: '',
         role: 'teacher',
-        avatarUrl: null,
+        image: null,
     },
     setUser: () => {},
     classroom: undefined,

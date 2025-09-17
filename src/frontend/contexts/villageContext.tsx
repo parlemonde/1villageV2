@@ -10,7 +10,7 @@ import useSWR from 'swr';
 
 export const VillageContext = createContext<{
     village: Village | undefined;
-    usersMap: Partial<Record<number, User>>;
+    usersMap: Partial<Record<string, User>>;
     classroomsMap: Partial<Record<number, Classroom>>;
 }>({
     village: undefined,
@@ -27,7 +27,7 @@ export const VillageProvider = ({ village, children }: React.PropsWithChildren<V
         village ? `/api/classrooms${serializeToQueryUrl({ villageId: village.id })}` : null,
         jsonFetcher,
     );
-    const usersMap: Partial<Record<number, User>> = Object.fromEntries(users?.map((user) => [user.id, user]) ?? []);
+    const usersMap: Partial<Record<string, User>> = Object.fromEntries(users?.map((user) => [user.id, user]) ?? []);
     const classroomsMap: Partial<Record<number, Classroom>> = Object.fromEntries(classrooms?.map((classroom) => [classroom.id, classroom]) ?? []);
 
     const value = useMemo(() => ({ village, usersMap, classroomsMap }), [village, usersMap, classroomsMap]);

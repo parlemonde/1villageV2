@@ -26,7 +26,7 @@ const ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps
     enigme: KeyIcon,
 };
 
-const toDate = (date: string | null): string => {
+const toFormattedDate = (date: string | null): string => {
     return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';
 };
 
@@ -66,7 +66,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     <strong>{TITLES[activity.type]}</strong>
                 </span>
                 <div className={styles.activityHeaderInfo}>
-                    <span>Publié le {toDate(activity.publishDate)}</span>
+                    <span>Publié le {toFormattedDate(activity.publishDate)}</span>
                     {activity.isPelico && (
                         <>
                             <span>&nbsp;&middot;&nbsp;</span>

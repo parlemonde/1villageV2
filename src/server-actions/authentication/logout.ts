@@ -1,13 +1,10 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RedirectType, redirect } from 'next/navigation';
+import { auth } from '@server/lib/auth';
+import { headers } from 'next/headers';
+import { redirect, RedirectType } from 'next/navigation';
 
 export async function logout(redirectTo?: string) {
-    const cookieStore = await cookies();
-    cookieStore.delete('access-token');
-
-    revalidatePath('/', 'layout');
+    await auth.api.signOut({ headers: await headers() });
     redirect(`${redirectTo || '/'}`, RedirectType.push);
 }

@@ -23,7 +23,7 @@ const ROLE_LABELS: Record<User['role'], string> = {
 export function UsersTable() {
     const { user: currentUser } = useContext(UserContext);
 
-    const [userToDeleteId, setUserToDeleteId] = useState<number | null>(null);
+    const [userToDeleteId, setUserToDeleteId] = useState<string | null>(null);
     const [isDeletingUser, setIsDeletingUser] = useState(false);
     const [search, setSearch] = useState('');
 

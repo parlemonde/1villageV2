@@ -10,24 +10,14 @@ interface ServerPageProps {
     params: Promise<{ [key: string]: string }>;
 }
 
-const getUserId = (param: string) => {
-    const userId = Number(param);
-    if (isNaN(userId) || !isFinite(userId) || !Number.isInteger(userId)) {
-        return null;
-    }
-    return userId;
-};
-
 export default async function AdminManageVillageEditPage({ params }: ServerPageProps) {
-    const userIdParam = (await params).userId;
-    const isNew = userIdParam === 'new';
-    const userId = isNew ? null : getUserId(userIdParam);
-    const user = userId
-        ? await db.query.users.findFirst({
+    const userId = (await params).userId;
+    const isNew = userId === 'new';
+    const user = isNew
+        ? undefined
+        : await db.query.users.findFirst({
               where: eq(users.id, userId),
-          })
-        : undefined;
-
+          });
     if (!user && !isNew) {
         notFound();
     }

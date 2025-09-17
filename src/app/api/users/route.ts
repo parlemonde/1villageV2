@@ -1,10 +1,10 @@
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
-import type { User } from '@server/database/schemas/users';
 import { users } from '@server/database/schemas/users';
+import type { User } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq, and, isNull, sql } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -18,9 +18,9 @@ const userColumns = {
     id: users.id,
     email: users.email,
     name: users.name,
-    useSSO: sql<boolean>`case when "accountRegistration" >= 10 then true else false end`,
+    // useSSO: sql<boolean>`case when "accountRegistration" >= 10 then true else false end`,
     role: users.role,
-    avatarUrl: users.avatarUrl,
+    image: users.image,
 };
 
 const getVillageUsers = async (villageId: number): Promise<User[]> => {
@@ -41,7 +41,7 @@ const getVillageUsers = async (villageId: number): Promise<User[]> => {
 
     // Merge the two arrays and deduplicate
     const allUsers = [...classroomsUsers, ...activitiesUsers].map(({ user }) => user);
-    const ids = new Set<number>();
+    const ids = new Set<string>();
     return allUsers.filter(({ id }) => {
         if (ids.has(id)) {
             return false;
@@ -52,7 +52,7 @@ const getVillageUsers = async (villageId: number): Promise<User[]> => {
 };
 
 const getAllUsers = async (): Promise<User[]> => {
-    return await db.select(userColumns).from(users).orderBy(users.id);
+    return (await db.select(userColumns).from(users).orderBy(users.id)) as User[];
 };
 
 export const GET = async ({ nextUrl }: NextRequest) => {

@@ -52,7 +52,7 @@ export async function uploadS3File(key: string, filedata: Buffer, contentType?: 
         const awsClient = getAwsClient();
         await awsClient.fetch(getS3FileUrl(key), {
             method: 'PUT',
-            body: filedata,
+            body: filedata as unknown as BodyInit,
             headers: {
                 'Content-Length': filedata.length.toString(),
                 'Content-Type': contentType || 'binary/octet-stream',

@@ -1,18 +1,18 @@
-import { pgTable, serial, varchar, integer, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, jsonb, text, uuid } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
 import { villages } from './villages';
 
 export const classrooms = pgTable('classrooms', {
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 150 }).notNull(),
-    address: varchar('address', { length: 300 }).notNull(),
-    level: varchar('level', { length: 150 }), // Used to display the classroom name
-    city: varchar('city', { length: 150 }).notNull(), // Used to display the classroom name
+    name: text('name').notNull(),
+    address: text('address').notNull(),
+    level: text('level'), // Used to display the classroom name
+    city: text('city').notNull(), // Used to display the classroom name
     coordinates: jsonb('coordinates').$type<{ latitude: number; longitude: number }>(),
-    avatarUrl: varchar('avatarUrl', { length: 300 }),
+    avatarUrl: text('avatarUrl'),
     mascotteId: integer('mascotteId'),
-    teacherId: integer('teacherId')
+    teacherId: uuid('teacherId')
         .references(() => users.id, {
             onDelete: 'cascade',
         })

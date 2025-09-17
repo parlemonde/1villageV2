@@ -1,1 +1,0 @@
-ALTER TABLE "activities" RENAME COLUMN "content" TO "data";
