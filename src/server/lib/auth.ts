@@ -4,18 +4,20 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 
+import { ssoPlugin } from './parlemonde-sso-plugin';
+
 export const auth = registerService('auth', () =>
     betterAuth({
         database: drizzleAdapter(db, {
             provider: 'pg',
         }),
-        plugins: [nextCookies()], // make sure `nextCookies()` is the last plugin in the array
+        plugins: ssoPlugin ? [ssoPlugin, nextCookies()] : [nextCookies()], // make sure `nextCookies()` is the last plugin in the array
         emailAndPassword: {
             enabled: true,
         },
         advanced: {
             database: {
-                generateId: false,
+                generateId: false, // Done by database directly
             },
         },
         user: {

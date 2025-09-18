@@ -17,11 +17,9 @@ export const classrooms = pgTable('classrooms', {
             onDelete: 'cascade',
         })
         .notNull(),
-    villageId: integer('villageId')
-        .references(() => villages.id, {
-            onDelete: 'cascade',
-        })
-        .notNull(),
+    villageId: integer('villageId').references(() => villages.id, {
+        onDelete: 'cascade',
+    }),
     countryCode: varchar('countryCode', { length: 2 }).notNull(),
 });
 export type Classroom = typeof classrooms.$inferSelect;

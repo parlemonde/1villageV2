@@ -1,3 +1,9 @@
+/**
+ * User fields are managed by better-auth.
+ * Do not modify default fields: id, name, email, emailVerified, image, createdAt and updatedAt.
+ *
+ * Additional fields can be added. Ex: 'role'. In this case, add them to the `additionalFields` object in the `auth` service.
+ */
 import { sql } from 'drizzle-orm';
 import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
 
