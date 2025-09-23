@@ -7,7 +7,7 @@ export const FreeContentView = ({ activity }: ActivityContentViewProps) => {
         return null;
     }
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '32px 0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', margin: '32px 0' }}>
             {(activity.data?.content || []).map((content, index) => (
                 <ContentViewer key={index} content={content} />
             ))}

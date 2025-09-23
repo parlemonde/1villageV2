@@ -50,7 +50,7 @@ export default function FreeContentStep3() {
             <Title variant="h2" marginBottom="md">
                 Pré-visualisez votre publication
             </Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', margin: '32px 0' }}>
                 {(activity.data?.content || []).map((content, index) => (
                     <ContentViewer key={index} content={content} />
                 ))}
