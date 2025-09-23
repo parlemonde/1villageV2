@@ -1,4 +1,4 @@
-import { NProgressDone } from '@frontend/components/navigation/NProgress';
+import { NProgressDone } from '@frontend/components/ui/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import classNames from 'clsx';
