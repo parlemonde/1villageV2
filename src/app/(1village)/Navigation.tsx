@@ -2,9 +2,9 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { Menu, MobileMenu } from '@frontend/components/navigation/Menu';
-import type { MenuItem } from '@frontend/components/navigation/Menu/Menu';
 import { IconButton } from '@frontend/components/ui/Button';
+import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
+import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';

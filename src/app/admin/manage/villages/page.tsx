@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@frontend/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon, DownloadIcon, PlusIcon } from '@radix-ui/react-icons';

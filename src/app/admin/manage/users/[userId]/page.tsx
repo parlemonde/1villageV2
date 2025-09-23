@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@frontend/components/navigation/Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Title } from '@frontend/components/ui/Title';
 import { db } from '@server/database';
 import { users } from '@server/database/schemas/users';
