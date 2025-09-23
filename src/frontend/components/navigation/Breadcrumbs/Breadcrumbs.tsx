@@ -1,8 +1,8 @@
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { Fragment } from 'react';
 
-import { Link } from '../Link';
 import styles from './breadcrumbs.module.css';
+import { Link } from '../../ui/Link';
 
 interface Breadcrumb {
     label: string;

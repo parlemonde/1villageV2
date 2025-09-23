@@ -7,7 +7,7 @@ import crypto from 'crypto';
 import Image from 'next/image';
 
 import styles from './avatar.module.css';
-import { Link } from '../navigation/Link';
+import { Link } from '../ui/Link';
 
 const getGravatarUrl = (email: string, size: number) => {
     const hash = crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex');

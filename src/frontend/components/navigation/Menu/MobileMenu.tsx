@@ -1,4 +1,4 @@
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import classNames from 'clsx';
 import { NavigationMenu } from 'radix-ui';
 import React from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import BackIcon from '@frontend/svg/backIcon.svg';
 import { usePathname } from 'next/navigation';
 

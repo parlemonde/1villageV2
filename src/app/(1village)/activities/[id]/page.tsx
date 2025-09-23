@@ -1,5 +1,5 @@
 import { ActivityView } from '@frontend/components/activities/ActivityView';
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';

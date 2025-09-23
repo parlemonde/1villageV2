@@ -1,4 +1,4 @@
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import { Title } from '@frontend/components/ui/Title';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 

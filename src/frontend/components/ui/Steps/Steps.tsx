@@ -1,4 +1,4 @@
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import type { MarginProps } from '@frontend/components/ui/css-styles';
 import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import { CheckIcon } from '@radix-ui/react-icons';

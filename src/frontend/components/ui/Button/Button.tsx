@@ -1,4 +1,4 @@
-import { Link } from '@frontend/components/navigation/Link';
+import { Link } from '@frontend/components/ui/Link';
 import classNames from 'clsx';
 import * as React from 'react';
 import type { JSX } from 'react';

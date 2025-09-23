@@ -3,9 +3,9 @@
 import type { StatisticsResponse } from '@app/api/statistics/route';
 import { AdminTable } from '@frontend/components/AdminTable';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { Link } from '@frontend/components/navigation/Link';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
+import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
