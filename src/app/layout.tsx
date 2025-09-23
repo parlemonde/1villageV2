@@ -1,5 +1,6 @@
 import { NProgressDone } from '@frontend/components/navigation/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
@@ -10,7 +11,7 @@ import 'nprogress/nprogress.css';
 import './globals.css';
 import 'prosemirror-view/style/prosemirror.css';
 
-const APP_URL = process.env.HOST_URL || '';
+const APP_URL = getEnvVariable('HOST_URL');
 const APP_NAME = '1Village';
 const APP_DESCRIPTION = "Application d'échanges entre classes de différents pays";
 

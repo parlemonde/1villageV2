@@ -9,6 +9,7 @@ import { genericOAuth } from 'better-auth/plugins';
 import { eq, inArray } from 'drizzle-orm';
 import stringSimilarity from 'string-similarity';
 
+import { getEnvVariable } from './get-env-variable';
 import { registerService } from './register-service';
 
 interface PLMUser {
@@ -30,8 +31,8 @@ interface PLMUser {
 }
 
 export const PARLEMONDE_SSO_PROVIDER_ID = 'parlemonde-sso';
-const CLIENT_ID = process.env.CLIENT_ID || '';
-const CLIENT_SECRET = process.env.CLIENT_SECRET || '';
+const CLIENT_ID = getEnvVariable('CLIENT_ID');
+const CLIENT_SECRET = getEnvVariable('CLIENT_SECRET');
 
 export const isParlemondeSSOPluginEnabled = CLIENT_ID !== '' && CLIENT_SECRET !== '';
 
@@ -41,7 +42,7 @@ export const ssoPlugin = registerService('parlemonde-sso-plugin', () =>
               config: [
                   {
                       providerId: PARLEMONDE_SSO_PROVIDER_ID,
-                      redirectURI: `${process.env.HOST_URL || ''}/login`,
+                      redirectURI: `${getEnvVariable('HOST_URL')}/login`,
                       responseType: 'code',
                       clientId: CLIENT_ID,
                       clientSecret: CLIENT_SECRET,

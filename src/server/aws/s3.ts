@@ -1,10 +1,11 @@
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import type { ReadableStream } from 'node:stream/web';
 import { Readable } from 'stream';
 
 import { getAwsClient } from './aws-client';
 import type { FileData } from '../files/files.types';
 
-const S3_BASE_URL = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`;
+const S3_BASE_URL = `https://${getEnvVariable('S3_BUCKET_NAME')}.s3.${getEnvVariable('AWS_REGION')}.amazonaws.com`;
 export function getS3FileUrl(key: string): string {
     return `${S3_BASE_URL}/${key}`;
 }

@@ -2,6 +2,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import FamilyIcon from '@frontend/svg/login/family.svg';
 import EducationIcon from '@frontend/svg/login/school.svg';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { isParlemondeSSOPluginEnabled, PARLEMONDE_SSO_PROVIDER_ID } from '@server/lib/parlemonde-sso-plugin';
 import { redirect } from 'next/navigation';
 
@@ -20,7 +21,7 @@ export default async function LoginPage({ searchParams }: ServerPageProps) {
 
     // Handle SSO callback.
     if (searchParamsData.code && searchParamsData.state) {
-        redirect(`${process.env.HOST_URL || ''}/api/auth/callback/${ssoProvider}?code=${searchParamsData.code}&state=${searchParamsData.state}`);
+        redirect(`${getEnvVariable('HOST_URL')}/api/auth/callback/${ssoProvider}?code=${searchParamsData.code}&state=${searchParamsData.state}`);
     }
 
     return (

@@ -1,3 +1,4 @@
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { registerService } from '@server/lib/register-service';
 import { AwsClient } from 'aws4fetch';
 
@@ -8,10 +9,10 @@ export function getAwsClient(): AwsClient {
             'aws-client',
             () =>
                 new AwsClient({
-                    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'local',
-                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'local',
-                    sessionToken: process.env.AWS_SESSION_TOKEN || undefined,
-                    region: process.env.AWS_REGION,
+                    accessKeyId: getEnvVariable('AWS_ACCESS_KEY_ID'),
+                    secretAccessKey: getEnvVariable('AWS_SECRET_ACCESS_KEY'),
+                    sessionToken: getEnvVariable('AWS_SESSION_TOKEN'),
+                    region: getEnvVariable('AWS_REGION'),
                 }),
         );
     }

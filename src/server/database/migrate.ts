@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { eq } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
@@ -8,7 +9,7 @@ import { auth } from '../lib/auth';
 import { auth_sessions } from './schemas/auth-schemas';
 import { users } from './schemas/users';
 
-const DATABASE_URL = process.env.DATABASE_URL || '';
+const DATABASE_URL = getEnvVariable('DATABASE_URL');
 
 async function createDatabase(): Promise<void> {
     if (!DATABASE_URL.includes('localhost')) {
@@ -28,16 +29,15 @@ async function createDatabase(): Promise<void> {
 }
 
 async function createAdminUser(): Promise<void> {
-    const adminName = process.env.ADMIN_NAME;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = getEnvVariable('ADMIN_PASSWORD');
+    const adminEmail = getEnvVariable('ADMIN_EMAIL');
 
-    if (!adminName || !adminPassword || !adminEmail) {
+    if (!adminPassword || !adminEmail) {
         return;
     }
 
     try {
-        const results = await db.select().from(users).where(eq(users.name, adminName)).limit(1);
+        const results = await db.select().from(users).where(eq(users.email, adminEmail)).limit(1);
         if (results.length > 0) {
             return;
         }
@@ -45,7 +45,7 @@ async function createAdminUser(): Promise<void> {
             body: {
                 email: adminEmail,
                 password: adminPassword,
-                name: adminName,
+                name: 'Admin',
             },
         });
         await db

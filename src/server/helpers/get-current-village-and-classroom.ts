@@ -21,7 +21,7 @@ export const getCurrentVillageAndClassroomForUser = cache(
                 const classroom = await getTeacherClassroom(user.id);
                 if (classroom) {
                     return {
-                        village: await getVillage(classroom.villageId),
+                        village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
                         classroom,
                     };
                 }
