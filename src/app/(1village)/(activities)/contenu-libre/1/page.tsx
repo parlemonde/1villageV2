@@ -1,6 +1,5 @@
 'use client';
 
-import { UploadImageModal } from '@frontend/components/UploadImageModal';
 import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import type { AnyContent } from '@frontend/components/content/content.types';
@@ -9,6 +8,8 @@ import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
+import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal/UploadSoundModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
@@ -29,6 +30,7 @@ export default function FreeContentStep1() {
     const data = activity?.type === 'libre' ? activity.data : undefined;
 
     const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
+    const [uploadSoundModalContentIndex, setUploadSoundModalContentIndex] = useState<number | null>(null);
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
         (data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })),
     );
@@ -53,6 +55,12 @@ export default function FreeContentStep1() {
         uploadImageModalContentIndex !== -1 &&
         contentWithIds[uploadImageModalContentIndex]?.content.type === 'image'
             ? contentWithIds[uploadImageModalContentIndex]?.content.imageUrl
+            : null;
+    const uploadSoundModalInitialSoundUrl =
+        uploadSoundModalContentIndex !== null &&
+        uploadSoundModalContentIndex !== -1 &&
+        contentWithIds[uploadSoundModalContentIndex]?.content.type === 'audio'
+            ? contentWithIds[uploadSoundModalContentIndex]?.content.audioUrl
             : null;
 
     return (
@@ -115,6 +123,8 @@ export default function FreeContentStep1() {
                         onAddContent={(newContent) => {
                             if (newContent.type === 'image') {
                                 setUploadImageModalContentIndex(-1);
+                            } else if (newContent.type === 'audio') {
+                                setUploadSoundModalContentIndex(-1);
                             } else {
                                 const newContentArray = [...contentWithIds];
                                 newContentArray.push({ id: v4(), content: newContent });
@@ -146,6 +156,26 @@ export default function FreeContentStep1() {
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
                     setUploadImageModalContentIndex(null);
+                }}
+            />
+            <UploadSoundModal
+                isOpen={uploadSoundModalContentIndex !== null}
+                initialSoundUrl={uploadSoundModalInitialSoundUrl}
+                onClose={() => setUploadSoundModalContentIndex(null)}
+                onNewSound={(soundUrl) => {
+                    if (uploadSoundModalContentIndex === null) {
+                        return;
+                    }
+                    const newContentArray = [...contentWithIds];
+                    // New content
+                    if (uploadSoundModalContentIndex === -1) {
+                        newContentArray.push({ id: v4(), content: { type: 'audio', audioUrl: soundUrl } });
+                    } else if (newContentArray[uploadSoundModalContentIndex].content.type === 'audio') {
+                        newContentArray[uploadSoundModalContentIndex].content.audioUrl = soundUrl;
+                    }
+                    setContentWithIds(newContentArray);
+                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                    setUploadSoundModalContentIndex(null);
                 }}
             />
             <Modal

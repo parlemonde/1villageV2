@@ -1,7 +1,6 @@
+import { Button } from '@frontend/components/ui/Button';
+import { Field, Input } from '@frontend/components/ui/Form';
 import { UploadIcon } from '@radix-ui/react-icons';
-
-import { Button } from '../ui/Button';
-import { Field, Input } from '../ui/Form';
 
 export const isValidImageUrl = (url: string) => {
     return url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:') || url.startsWith('/media/images');

@@ -1,9 +1,9 @@
+import type { CropperRef } from '@frontend/components/Cropper';
+import { Cropper } from '@frontend/components/Cropper';
 import { Modal } from '@frontend/components/ui/Modal';
 import { useRef, useState, useMemo } from 'react';
 
 import { isValidImageUrl, UploadImageForm } from './UploadImageForm';
-import type { CropperRef } from '../Cropper';
-import { Cropper } from '../Cropper';
 import { uploadImage } from './upload-image';
 
 interface UploadImageModalProps {
@@ -104,6 +104,7 @@ export const UploadImageModal = ({ isOpen, initialImageUrl = null, isPelicoImage
                         .catch()
                         .finally(() => {
                             onClose();
+                            setIsSubmitting(false);
                         });
                 }
             }}

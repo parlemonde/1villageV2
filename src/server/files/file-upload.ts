@@ -5,7 +5,7 @@ import type { FileData } from './files.types';
 import { deleteLocalFile, getLocalFile, getLocalFileData, uploadLocalFile } from './local';
 import { deleteS3File, getS3File, getS3FileData, uploadS3File } from '../aws/s3';
 
-export const USE_S3 = getEnvVariable('S3_BUCKET_NAME') !== undefined;
+export const USE_S3 = getEnvVariable('AWS_ACCESS_KEY_ID') !== 'local';
 
 export async function uploadFile(fileName: string, fileData: Buffer, contentType?: string): Promise<void> {
     if (!fileName) {

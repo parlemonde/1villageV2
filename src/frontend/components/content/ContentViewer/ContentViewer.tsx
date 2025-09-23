@@ -26,5 +26,21 @@ export const ContentViewer = ({ content }: ContentViewerProps) => {
             </div>
         );
     }
+    if (content.type === 'audio') {
+        return (
+            <div
+                style={{
+                    width: '100%',
+                    maxWidth: 400,
+                    maxHeight: 300,
+                    margin: '0 auto',
+                    overflow: 'hidden',
+                    textAlign: 'center',
+                }}
+            >
+                <audio src={content.audioUrl} controls />
+            </div>
+        );
+    }
     return null;
 };
