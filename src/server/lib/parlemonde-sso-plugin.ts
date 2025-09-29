@@ -7,7 +7,7 @@ import { users } from '@server/database/schemas/users';
 import { villages } from '@server/database/schemas/villages';
 import { genericOAuth } from 'better-auth/plugins';
 import { eq, inArray } from 'drizzle-orm';
-import stringSimilarity from 'string-similarity';
+import FuzzySet from 'fuzzyset.js';
 
 import { getEnvVariable } from './get-env-variable';
 import { registerService } from './register-service';
@@ -105,12 +105,10 @@ export const ssoPlugin = registerService('parlemonde-sso-plugin', () =>
                                   let countryCode: string = 'FR';
                                   if (plmUser.country) {
                                       const matchs = village?.countries || Object.keys(COUNTRIES);
-                                      const c = stringSimilarity.findBestMatch(
-                                          plmUser.country?.trim().toLowerCase(),
-                                          matchs.map((c) => COUNTRIES[c]?.toLowerCase()).filter((c) => c !== undefined),
-                                      );
-                                      if (c.bestMatch.rating > 0.55) {
-                                          countryCode = matchs[c.bestMatchIndex];
+                                      const fuzzySet = FuzzySet(matchs.map((c) => COUNTRIES[c]?.toLowerCase()).filter((c) => c !== undefined));
+                                      const c = fuzzySet.get(plmUser.country?.trim().toLowerCase())?.[0];
+                                      if (c && c[0] > 0.55 && typeof c[1] === 'string') {
+                                          countryCode = Object.keys(COUNTRIES).find((key) => COUNTRIES[key]?.toLowerCase() === c[1]) || 'FR';
                                       }
                                   }
                                   if (village && !village.countries.includes(countryCode)) {
