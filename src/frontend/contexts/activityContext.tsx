@@ -26,28 +26,48 @@ export const ActivityContext = createContext<{
     onPublishActivity: () => Promise.resolve(),
 });
 
-let draftTimeout: number | undefined;
-const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
+let onCancelPreviousPromise: () => void = () => {};
+const onSaveDraft = async (activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
     if (activity.publishDate !== undefined && activity.publishDate !== null) {
         return;
     }
-    setDraftStep(1);
-    saveDraft(activity)
-        .then((id) => {
-            if (id !== undefined) {
-                getSavedId(id);
-            }
-        })
-        .catch()
-        .finally(() => {
-            setDraftStep(2);
-            if (draftTimeout) {
-                clearTimeout(draftTimeout);
-            }
-            draftTimeout = window.setTimeout(() => {
-                setDraftStep(0);
-            }, 2000);
-        });
+    onCancelPreviousPromise(); // Cancel previous promise
+    let cancelled = false;
+    onCancelPreviousPromise = () => {
+        cancelled = true;
+    };
+    try {
+        setDraftStep(1); // Display circular progress
+        const now = Date.now();
+        const newId = await saveDraft(activity);
+        if (newId !== undefined) {
+            getSavedId(newId);
+        }
+        // Wait for minimum 2s to show a pending state
+        const minDuration = 2000 - (Date.now() - now);
+        if (minDuration > 0) {
+            await new Promise((resolve) => setTimeout(resolve, minDuration));
+        }
+        if (cancelled) {
+            return;
+        }
+        setDraftStep(2); // Display "save done" message
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        if (cancelled) {
+            return;
+        }
+        setDraftStep(0); // Reset to idle
+    } catch {
+        if (cancelled) {
+            return;
+        }
+        setDraftStep(0); // Reset to idle
+    }
+    onCancelPreviousPromise = () => {};
+};
+
+const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
+    onSaveDraft(activity, getSavedId, setDraftStep).catch();
 }, 2000);
 
 export const ActivityProvider = ({ children }: { children: React.ReactNode }) => {
