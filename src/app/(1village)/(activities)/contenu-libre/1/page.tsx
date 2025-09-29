@@ -8,8 +8,9 @@ import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { UploadDocumentModal } from '@frontend/components/upload/UploadDocumentModal';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
-import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal/UploadSoundModal';
+import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
@@ -31,6 +32,7 @@ export default function FreeContentStep1() {
 
     const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
     const [uploadSoundModalContentIndex, setUploadSoundModalContentIndex] = useState<number | null>(null);
+    const [uploadDocumentModalContentIndex, setUploadDocumentModalContentIndex] = useState<number | null>(null);
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
         (data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })),
     );
@@ -61,6 +63,12 @@ export default function FreeContentStep1() {
         uploadSoundModalContentIndex !== -1 &&
         contentWithIds[uploadSoundModalContentIndex]?.content.type === 'audio'
             ? contentWithIds[uploadSoundModalContentIndex]?.content.audioUrl
+            : null;
+    const uploadDocumentModalInitialDocumentUrl =
+        uploadDocumentModalContentIndex !== null &&
+        uploadDocumentModalContentIndex !== -1 &&
+        contentWithIds[uploadDocumentModalContentIndex]?.content.type === 'document'
+            ? contentWithIds[uploadDocumentModalContentIndex]?.content.documentUrl
             : null;
 
     return (
@@ -101,7 +109,13 @@ export default function FreeContentStep1() {
                             isDraggable
                             htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
                             onEdit={() => {
-                                setUploadImageModalContentIndex(index);
+                                if (content.type === 'image') {
+                                    setUploadImageModalContentIndex(index);
+                                } else if (content.type === 'audio') {
+                                    setUploadSoundModalContentIndex(index);
+                                } else if (content.type === 'document') {
+                                    setUploadDocumentModalContentIndex(index);
+                                }
                             }}
                             onDelete={() => {
                                 const isEmptyContent = content.type === 'html' && !content.html;
@@ -125,6 +139,8 @@ export default function FreeContentStep1() {
                                 setUploadImageModalContentIndex(-1);
                             } else if (newContent.type === 'audio') {
                                 setUploadSoundModalContentIndex(-1);
+                            } else if (newContent.type === 'document') {
+                                setUploadDocumentModalContentIndex(-1);
                             } else {
                                 const newContentArray = [...contentWithIds];
                                 newContentArray.push({ id: v4(), content: newContent });
@@ -176,6 +192,26 @@ export default function FreeContentStep1() {
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
                     setUploadSoundModalContentIndex(null);
+                }}
+            />
+            <UploadDocumentModal
+                isOpen={uploadDocumentModalContentIndex !== null}
+                initialDocumentUrl={uploadDocumentModalInitialDocumentUrl}
+                onClose={() => setUploadDocumentModalContentIndex(null)}
+                onNewDocument={(documentUrl) => {
+                    if (uploadDocumentModalContentIndex === null) {
+                        return;
+                    }
+                    const newContentArray = [...contentWithIds];
+                    // New content
+                    if (uploadDocumentModalContentIndex === -1) {
+                        newContentArray.push({ id: v4(), content: { type: 'document', documentUrl } });
+                    } else if (newContentArray[uploadDocumentModalContentIndex].content.type === 'document') {
+                        newContentArray[uploadDocumentModalContentIndex].content.documentUrl = documentUrl;
+                    }
+                    setContentWithIds(newContentArray);
+                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                    setUploadDocumentModalContentIndex(null);
                 }}
             />
             <Modal

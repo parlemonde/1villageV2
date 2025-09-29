@@ -2,7 +2,7 @@ import { pgTable, uuid, timestamp, char, jsonb, boolean, text } from 'drizzle-or
 
 import { users } from './users';
 
-const MEDIA_TYPES_ENUM = ['image', 'video', 'audio', 'h5p'] as const;
+const MEDIA_TYPES_ENUM = ['image', 'video', 'audio', 'h5p', 'pdf'] as const;
 export type MediaType = (typeof MEDIA_TYPES_ENUM)[number];
 
 interface ImageMetadata {

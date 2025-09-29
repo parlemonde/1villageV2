@@ -104,6 +104,36 @@ export const ContentEditor = ({ content, setContent, htmlEditorPlaceholder, hasD
             </div>
         );
     }
+    if (content.type === 'document') {
+        return (
+            <div className={styles.contentEditor}>
+                {isDraggable && (
+                    <span className={styles.DragHandle}>
+                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
+                    </span>
+                )}
+                <div
+                    className={classNames(styles.mediaContent, {
+                        [styles.hasDottedBorder]: hasDottedBorder,
+                        [styles.hasContinuousLeftBorder]: isDraggable,
+                    })}
+                >
+                    <iframe
+                        src={content.documentUrl}
+                        style={{
+                            width: '100%',
+                            height: '80vh',
+                            maxWidth: 800,
+                            margin: '0 auto',
+                            border: '2px solid black',
+                        }}
+                    />
+                </div>
+                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
+                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
+            </div>
+        );
+    }
     return (
         <div className={styles.contentEditor}>
             {content.type}

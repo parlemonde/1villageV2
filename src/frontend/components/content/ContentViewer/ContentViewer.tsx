@@ -42,5 +42,19 @@ export const ContentViewer = ({ content }: ContentViewerProps) => {
             </div>
         );
     }
+    if (content.type === 'document') {
+        return (
+            <iframe
+                src={content.documentUrl}
+                style={{
+                    width: '100%',
+                    height: '80vh',
+                    maxWidth: 800,
+                    margin: '0 auto',
+                    border: '2px solid black',
+                }}
+            />
+        );
+    }
     return null;
 };
