@@ -5,9 +5,10 @@ import type { AnyContent } from '../content.types';
 
 interface ContentViewerProps {
     content: AnyContent;
+    activityId?: number;
 }
 
-export const ContentViewer = ({ content }: ContentViewerProps) => {
+export const ContentViewer = ({ content, activityId }: ContentViewerProps) => {
     if (content.type === 'html') {
         return <HtmlViewer content={content.html} />;
     }
@@ -68,7 +69,7 @@ export const ContentViewer = ({ content }: ContentViewerProps) => {
                     overflow: 'hidden',
                 }}
             >
-                <H5pPlayer contentId={content.h5pId} />
+                <H5pPlayer contentId={content.h5pId} contextId={`activity-${activityId}`} />
             </div>
         );
     }

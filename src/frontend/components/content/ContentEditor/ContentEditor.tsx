@@ -15,9 +15,19 @@ interface ContentEditorProps {
     isDraggable?: boolean;
     onDelete?: () => void;
     onEdit?: () => void;
+    activityId?: number;
 }
 
-export const ContentEditor = ({ content, setContent, htmlEditorPlaceholder, hasDottedBorder, isDraggable, onEdit, onDelete }: ContentEditorProps) => {
+export const ContentEditor = ({
+    content,
+    setContent,
+    htmlEditorPlaceholder,
+    hasDottedBorder,
+    isDraggable,
+    onEdit,
+    onDelete,
+    activityId,
+}: ContentEditorProps) => {
     if (content.type === 'html') {
         return (
             <div className={styles.contentEditor}>
@@ -158,7 +168,7 @@ export const ContentEditor = ({ content, setContent, htmlEditorPlaceholder, hasD
                             overflow: 'hidden',
                         }}
                     >
-                        <H5pPlayer contentId={content.h5pId} />
+                        <H5pPlayer contentId={content.h5pId} contextId={`activity-${activityId}`} />
                     </div>
                 </div>
                 {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}

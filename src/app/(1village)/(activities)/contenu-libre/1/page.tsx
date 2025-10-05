@@ -105,6 +105,7 @@ export default function FreeContentStep1() {
                         <ContentEditor
                             key={id}
                             content={content}
+                            activityId={activity.id}
                             setContent={(newContent) => {
                                 const newContentArray = [...contentWithIds];
                                 newContentArray[index].content = newContent;

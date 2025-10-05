@@ -10,7 +10,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Media } from '@server/database/schemas/medias';
-import { useContext, useState } from 'react';
+import { useContext, useId, useState } from 'react';
 import useSWR from 'swr';
 
 interface SelectH5pModalProps {
@@ -21,6 +21,7 @@ interface SelectH5pModalProps {
 }
 
 export const SelectH5pModal = ({ isOpen, onClose, initialContentId = null, onSelect }: SelectH5pModalProps) => {
+    const id = useId();
     const { user } = useContext(UserContext);
     const [contentId, setContentId] = useState<string | null>(initialContentId);
 
@@ -128,7 +129,9 @@ export const SelectH5pModal = ({ isOpen, onClose, initialContentId = null, onSel
                     }}
                 >
                     <strong>Aperçu</strong>
-                    <div style={{ width: '100%', height: '55vh', overflow: 'hidden' }}>{contentId && <H5pPlayer contentId={contentId} />}</div>
+                    <div style={{ width: '100%', height: '55vh', overflow: 'hidden' }}>
+                        {contentId && <H5pPlayer contentId={contentId} contextId={`preview-${id}`} />}
+                    </div>
                 </div>
             </div>
         </Modal>
