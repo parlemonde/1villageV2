@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UploadIcon } from '@radix-ui/react-icons';

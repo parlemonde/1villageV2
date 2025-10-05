@@ -8,6 +8,7 @@ import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
 import { UploadDocumentModal } from '@frontend/components/upload/UploadDocumentModal';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal';
@@ -33,6 +34,7 @@ export default function FreeContentStep1() {
     const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
     const [uploadSoundModalContentIndex, setUploadSoundModalContentIndex] = useState<number | null>(null);
     const [uploadDocumentModalContentIndex, setUploadDocumentModalContentIndex] = useState<number | null>(null);
+    const [selectH5pModalContentIndex, setSelectH5pModalContentIndex] = useState<number | null>(null);
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
         (data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })),
     );
@@ -69,6 +71,10 @@ export default function FreeContentStep1() {
         uploadDocumentModalContentIndex !== -1 &&
         contentWithIds[uploadDocumentModalContentIndex]?.content.type === 'document'
             ? contentWithIds[uploadDocumentModalContentIndex]?.content.documentUrl
+            : null;
+    const selectH5pModalInitialContentId =
+        selectH5pModalContentIndex !== null && selectH5pModalContentIndex !== -1 && contentWithIds[selectH5pModalContentIndex]?.content.type === 'h5p'
+            ? contentWithIds[selectH5pModalContentIndex]?.content.h5pId
             : null;
 
     return (
@@ -115,6 +121,8 @@ export default function FreeContentStep1() {
                                     setUploadSoundModalContentIndex(index);
                                 } else if (content.type === 'document') {
                                     setUploadDocumentModalContentIndex(index);
+                                } else if (content.type === 'h5p') {
+                                    setSelectH5pModalContentIndex(index);
                                 }
                             }}
                             onDelete={() => {
@@ -141,6 +149,8 @@ export default function FreeContentStep1() {
                                 setUploadSoundModalContentIndex(-1);
                             } else if (newContent.type === 'document') {
                                 setUploadDocumentModalContentIndex(-1);
+                            } else if (newContent.type === 'h5p') {
+                                setSelectH5pModalContentIndex(-1);
                             } else {
                                 const newContentArray = [...contentWithIds];
                                 newContentArray.push({ id: v4(), content: newContent });
@@ -212,6 +222,25 @@ export default function FreeContentStep1() {
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
                     setUploadDocumentModalContentIndex(null);
+                }}
+            />
+            <SelectH5pModal
+                isOpen={selectH5pModalContentIndex !== null}
+                initialContentId={selectH5pModalInitialContentId}
+                onClose={() => setSelectH5pModalContentIndex(null)}
+                onSelect={(contentId) => {
+                    if (selectH5pModalContentIndex === null) {
+                        return;
+                    }
+                    const newContentArray = [...contentWithIds];
+                    if (selectH5pModalContentIndex === -1) {
+                        newContentArray.push({ id: v4(), content: { type: 'h5p', h5pId: contentId } });
+                    } else if (newContentArray[selectH5pModalContentIndex].content.type === 'h5p') {
+                        newContentArray[selectH5pModalContentIndex].content.h5pId = contentId;
+                    }
+                    setContentWithIds(newContentArray);
+                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                    setSelectH5pModalContentIndex(null);
                 }}
             />
             <Modal

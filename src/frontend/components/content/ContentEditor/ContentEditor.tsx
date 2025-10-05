@@ -1,3 +1,4 @@
+import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import { IconButton } from '@frontend/components/ui/Button';
 import { DragHandleDots2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
@@ -128,6 +129,37 @@ export const ContentEditor = ({ content, setContent, htmlEditorPlaceholder, hasD
                             border: '2px solid black',
                         }}
                     />
+                </div>
+                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
+                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
+            </div>
+        );
+    }
+    if (content.type === 'h5p') {
+        return (
+            <div className={styles.contentEditor}>
+                {isDraggable && (
+                    <span className={styles.DragHandle}>
+                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
+                    </span>
+                )}
+                <div
+                    className={classNames(styles.mediaContent, {
+                        [styles.hasDottedBorder]: hasDottedBorder,
+                        [styles.hasContinuousLeftBorder]: isDraggable,
+                    })}
+                >
+                    <div
+                        style={{
+                            width: '100%',
+                            maxHeight: '75vh',
+                            maxWidth: 500,
+                            margin: '0 auto',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        <H5pPlayer contentId={content.h5pId} />
+                    </div>
                 </div>
                 {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
                 {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}

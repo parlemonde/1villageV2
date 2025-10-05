@@ -1,3 +1,4 @@
+import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
 
 import type { AnyContent } from '../content.types';
@@ -54,6 +55,21 @@ export const ContentViewer = ({ content }: ContentViewerProps) => {
                     border: '2px solid black',
                 }}
             />
+        );
+    }
+    if (content.type === 'h5p') {
+        return (
+            <div
+                style={{
+                    width: '100%',
+                    maxHeight: '75vh',
+                    maxWidth: 500,
+                    margin: '0 auto',
+                    overflow: 'hidden',
+                }}
+            >
+                <H5pPlayer contentId={content.h5pId} />
+            </div>
         );
     }
     return null;

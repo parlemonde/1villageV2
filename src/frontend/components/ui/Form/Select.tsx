@@ -9,6 +9,8 @@ import styles from './select.module.css';
 import { getMarginAndPaddingStyle, type MarginProps } from '../css-styles';
 
 interface SelectProps extends MarginProps {
+    name?: string;
+    id?: string;
     value?: string;
     onChange?: (value: string) => void;
     options: { label: React.ReactNode; value: string }[];
@@ -21,6 +23,8 @@ interface SelectProps extends MarginProps {
 
 export const Select = (props: SelectProps) => {
     const {
+        name,
+        id,
         value,
         onChange,
         options,
@@ -53,6 +57,8 @@ export const Select = (props: SelectProps) => {
             onOpenChange={setIsOpen}
         >
             <RadixSelect.Trigger
+                name={name}
+                id={id}
                 className={classNames(styles.selectTrigger, styles[`size-${size}`], styles[`color-${color}`], {
                     [styles[`isFullWidth`]]: isFullWidth,
                 })}

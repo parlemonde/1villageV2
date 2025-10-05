@@ -1,3 +1,5 @@
+'use client';
+
 import type { CropperRef } from '@frontend/components/Cropper';
 import { Cropper } from '@frontend/components/Cropper';
 import { Modal } from '@frontend/components/ui/Modal';

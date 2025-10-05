@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
