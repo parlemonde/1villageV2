@@ -1,13 +1,13 @@
 import { getEnvVariable } from '@server/lib/get-env-variable';
-import type { Readable } from 'node:stream';
+import type { Readable, Stream } from 'node:stream';
 
 import type { FileData } from './files.types';
-import { deleteLocalFile, getLocalFile, getLocalFileData, uploadLocalFile } from './local';
-import { deleteS3File, getS3File, getS3FileData, uploadS3File } from '../aws/s3';
+import { deleteLocalFile, getLocalFile, getLocalFileData, listLocalFiles, uploadLocalFile } from './local';
+import { deleteS3File, getS3File, getS3FileData, listS3Files, uploadS3File } from '../aws/s3';
 
 export const USE_S3 = getEnvVariable('AWS_ACCESS_KEY_ID') !== 'local';
 
-export async function uploadFile(fileName: string, fileData: Buffer, contentType?: string): Promise<void> {
+export async function uploadFile(fileName: string, fileData: Buffer | Readable | Stream, contentType?: string): Promise<void> {
     if (!fileName) {
         return;
     }
@@ -48,5 +48,21 @@ export async function deleteFile(fileName: string): Promise<void> {
         return deleteS3File(fileName);
     } else {
         return deleteLocalFile(fileName);
+    }
+}
+
+export async function listFiles(
+    prefix: string,
+    continuationToken?: string,
+): Promise<{
+    files: string[];
+    nextContinuationToken?: string;
+}> {
+    if (USE_S3) {
+        return listS3Files(prefix, continuationToken);
+    } else {
+        return {
+            files: await listLocalFiles(prefix),
+        };
     }
 }

@@ -15,6 +15,10 @@ interface VideoMetadata {
 interface AudioMetadata {
     duration: number;
 }
+interface H5pMetadata {
+    title: string;
+    library: string;
+}
 
 export const medias = pgTable('medias', {
     id: uuid().primaryKey().defaultRandom(),
@@ -27,7 +31,7 @@ export const medias = pgTable('medias', {
         .notNull(),
     type: char('type', { length: 5, enum: MEDIA_TYPES_ENUM }).notNull(),
     url: text('url').notNull(),
-    metadata: jsonb('metadata').$type<ImageMetadata | VideoMetadata | AudioMetadata>(),
+    metadata: jsonb('metadata').$type<ImageMetadata | VideoMetadata | AudioMetadata | H5pMetadata>(),
 });
 
 export type Media = typeof medias.$inferSelect;

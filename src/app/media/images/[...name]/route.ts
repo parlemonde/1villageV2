@@ -94,7 +94,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ name:
         return response;
     } else if (width) {
         const resizedImage = await getResizedImageBuffer(readable, width, Math.max(Math.min(quality, 100), 1), contentType.slice(6));
-        const response = new Response(resizedImage, {
+        const response = new Response(resizedImage as unknown as BodyInit, {
             status: 200,
             headers,
         });

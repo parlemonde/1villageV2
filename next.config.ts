@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
     outputFileTracingExcludes: {
         '/*': ['./tmp/**/*'],
     },
+    serverExternalPackages: ['@lumieducation/h5p-server'],
     images: {
         loader: 'custom',
         loaderFile: './src/image-loader.js',

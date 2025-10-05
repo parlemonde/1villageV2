@@ -1,4 +1,7 @@
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import { getBuffer } from '@server/lib/get-buffer';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import type Stream from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
 import { Readable } from 'stream';
 
@@ -48,14 +51,15 @@ export async function getS3FileData(key: string): Promise<FileData | null> {
     }
 }
 
-export async function uploadS3File(key: string, filedata: Buffer, contentType?: string): Promise<void> {
+export async function uploadS3File(key: string, filedata: Buffer | Readable | Stream, contentType?: string): Promise<void> {
     try {
+        const buffer = await getBuffer(filedata);
         const awsClient = getAwsClient();
         await awsClient.fetch(getS3FileUrl(key), {
             method: 'PUT',
-            body: filedata as unknown as BodyInit,
+            body: buffer as unknown as BodyInit,
             headers: {
-                'Content-Length': filedata.length.toString(),
+                'Content-Length': buffer.length.toString(),
                 'Content-Type': contentType || 'binary/octet-stream',
             },
         });
@@ -72,5 +76,35 @@ export async function deleteS3File(key: string): Promise<void> {
         });
     } catch (e) {
         console.error(e);
+    }
+}
+
+export async function listS3Files(
+    prefix: string,
+    continuationToken?: string,
+): Promise<{
+    files: string[];
+    nextContinuationToken?: string;
+}> {
+    try {
+        const awsClient = getAwsClient();
+        const response = await awsClient.fetch(
+            `${S3_BASE_URL}/${serializeToQueryUrl({
+                'list-type': '2',
+                prefix,
+                'continuation-token': continuationToken,
+            })}`,
+            {
+                method: 'GET',
+            },
+        );
+        const data = await response.json();
+        return {
+            files: data.Contents.map((c: { Key: string }) => c.Key),
+            nextContinuationToken: data.IsTruncated ? data['NextContinuationToken'] : undefined,
+        };
+    } catch (e) {
+        console.error(e);
+        return { files: [] };
     }
 }
