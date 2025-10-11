@@ -1,11 +1,12 @@
-import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import { IconButton } from '@frontend/components/ui/Button';
+import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { DragHandleDots2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 
 import type { AnyContent } from '../content.types';
 import styles from './content-editor.module.css';
+import { ContentViewer } from '../ContentViewer/ContentViewer';
 
 interface ContentEditorProps {
     content: AnyContent;
@@ -28,14 +29,14 @@ export const ContentEditor = ({
     onDelete,
     activityId,
 }: ContentEditorProps) => {
-    if (content.type === 'html') {
-        return (
-            <div className={styles.contentEditor}>
-                {isDraggable && (
-                    <span className={styles.DragHandle}>
-                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
-                    </span>
-                )}
+    return (
+        <div className={styles.contentEditor}>
+            {isDraggable && (
+                <span className={styles.DragHandle}>
+                    <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
+                </span>
+            )}
+            {content.type === 'html' ? (
                 <HtmlEditor
                     content={content.html}
                     onChange={(html) => setContent({ ...content, html })}
@@ -47,139 +48,26 @@ export const ContentEditor = ({
                         [styles.hasRightPadding]: onDelete !== undefined,
                     })}
                 />
-                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
-            </div>
-        );
-    }
-    if (content.type === 'image') {
-        return (
-            <div className={styles.contentEditor}>
-                {isDraggable && (
-                    <span className={styles.DragHandle}>
-                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
-                    </span>
-                )}
+            ) : (
                 <div
                     className={classNames(styles.mediaContent, {
                         [styles.hasDottedBorder]: hasDottedBorder,
                         [styles.hasContinuousLeftBorder]: isDraggable,
                     })}
                 >
-                    <div
-                        style={{
-                            width: '100%',
-                            maxWidth: 400,
-                            maxHeight: 300,
-                            margin: '0 auto',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={content.imageUrl} alt="Image" style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: '300px' }} />
-                    </div>
+                    <ContentViewer content={content} activityId={activityId} />
                 </div>
-                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
-                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
-            </div>
-        );
-    }
-    if (content.type === 'audio') {
-        return (
-            <div className={styles.contentEditor}>
-                {isDraggable && (
-                    <span className={styles.DragHandle}>
-                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
-                    </span>
-                )}
-                <div
-                    className={classNames(styles.mediaContent, {
-                        [styles.hasDottedBorder]: hasDottedBorder,
-                        [styles.hasContinuousLeftBorder]: isDraggable,
-                    })}
-                >
-                    <div
-                        style={{
-                            width: '100%',
-                            maxWidth: 400,
-                            maxHeight: 300,
-                            margin: '0 auto',
-                            overflow: 'hidden',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <audio src={content.audioUrl} controls />
-                    </div>
-                </div>
-                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
-                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
-            </div>
-        );
-    }
-    if (content.type === 'document') {
-        return (
-            <div className={styles.contentEditor}>
-                {isDraggable && (
-                    <span className={styles.DragHandle}>
-                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
-                    </span>
-                )}
-                <div
-                    className={classNames(styles.mediaContent, {
-                        [styles.hasDottedBorder]: hasDottedBorder,
-                        [styles.hasContinuousLeftBorder]: isDraggable,
-                    })}
-                >
-                    <iframe
-                        src={content.documentUrl}
-                        style={{
-                            width: '100%',
-                            height: '80vh',
-                            maxWidth: 800,
-                            margin: '0 auto',
-                            border: '2px solid black',
-                        }}
-                    />
-                </div>
-                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
-                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
-            </div>
-        );
-    }
-    if (content.type === 'h5p') {
-        return (
-            <div className={styles.contentEditor}>
-                {isDraggable && (
-                    <span className={styles.DragHandle}>
-                        <DragHandleDots2Icon style={{ height: '24px', width: 'auto' }} />
-                    </span>
-                )}
-                <div
-                    className={classNames(styles.mediaContent, {
-                        [styles.hasDottedBorder]: hasDottedBorder,
-                        [styles.hasContinuousLeftBorder]: isDraggable,
-                    })}
-                >
-                    <div
-                        style={{
-                            width: '100%',
-                            maxHeight: '75vh',
-                            maxWidth: 500,
-                            margin: '0 auto',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <H5pPlayer contentId={content.h5pId} contextId={`activity-${activityId}`} />
-                    </div>
-                </div>
-                {onEdit && <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />}
-                {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
-            </div>
-        );
-    }
-    return (
-        <div className={styles.contentEditor}>
-            {content.type}
-            {onDelete && <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />}
+            )}
+            {onEdit && content.type !== 'html' && (
+                <Tooltip content="Modifier">
+                    <IconButton icon={Pencil1Icon} variant="outlined" color="primary" className={styles.EditButton} onClick={onEdit} />
+                </Tooltip>
+            )}
+            {onDelete && (
+                <Tooltip content="Supprimer">
+                    <IconButton icon={TrashIcon} variant="outlined" color="error" className={styles.TrashButton} onClick={onDelete} />
+                </Tooltip>
+            )}
         </div>
     );
 };

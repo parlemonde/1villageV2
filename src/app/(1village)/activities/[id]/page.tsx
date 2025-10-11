@@ -5,7 +5,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { Activity, ActivityType } from '@server/database/schemas/activities';
-import { eq } from 'drizzle-orm';
+import { eq, isNotNull, and } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -34,7 +34,7 @@ export default async function ActivityPage({ params }: ServerPageProps) {
     const activity =
         activityId !== null
             ? ((await db.query.activities.findFirst({
-                  where: eq(activities.id, activityId),
+                  where: and(eq(activities.id, activityId), isNotNull(activities.publishDate)),
               })) as Activity | undefined)
             : undefined;
 

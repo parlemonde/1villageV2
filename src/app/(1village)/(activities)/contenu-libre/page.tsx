@@ -3,11 +3,13 @@
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 
 export default function FreeContent() {
+    const { user } = useContext(UserContext);
     const { onCreateActivity } = useContext(ActivityContext);
     const router = useRouter();
 
@@ -24,7 +26,7 @@ export default function FreeContent() {
                     label="Étape suivante"
                     rightIcon={<ChevronRightIcon />}
                     onClick={() => {
-                        onCreateActivity('libre');
+                        onCreateActivity('libre', user.role === 'admin' || user.role === 'teacher');
                         router.push('/contenu-libre/1');
                     }}
                 ></Button>

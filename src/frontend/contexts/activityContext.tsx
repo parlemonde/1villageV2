@@ -5,6 +5,7 @@ import { Modal } from '@frontend/components/ui/Modal';
 import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
 import { debounce } from '@frontend/lib/debounce';
 import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity, ActivityType } from '@server/database/schemas/activities';
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
@@ -17,7 +18,7 @@ import { VillageContext } from './villageContext';
 export const ActivityContext = createContext<{
     activity: Partial<Activity> | undefined;
     setActivity: (activity: Partial<Activity>) => void;
-    onCreateActivity: (activityType: ActivityType) => void;
+    onCreateActivity: (activityType: ActivityType, isPelico?: boolean) => void;
     onPublishActivity: () => Promise<void>;
 }>({
     activity: undefined,
@@ -106,9 +107,9 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     );
 
     const onCreateActivity = useCallback(
-        (activityType: ActivityType) => {
-            setLocalActivity({ type: activityType, phase: village?.activePhase, villageId: village?.id, classroomId: classroom?.id });
-            jsonFetcher<Activity>(`/api/activities/draft?type=${activityType}`)
+        (activityType: ActivityType, isPelico?: boolean) => {
+            setLocalActivity({ type: activityType, phase: village?.activePhase, villageId: village?.id, classroomId: classroom?.id, isPelico });
+            jsonFetcher<Activity>(`/api/activities/draft${serializeToQueryUrl({ type: activityType })}`)
                 .then(setDraftActivity)
                 .catch(() => {
                     setDraftActivity(undefined);

@@ -5,6 +5,7 @@ import { CountryFlag } from '@frontend/components/CountryFlag';
 import { UserContext } from '@frontend/contexts/userContext';
 import KeyIcon from '@frontend/svg/activities/enigme.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
+import PinnedIcon from '@frontend/svg/activities/pinned.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
 import type { Activity, ActivityType } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -49,13 +50,16 @@ const ActivityDisplayName = ({ user, classroom, isPelico }: ActivityDisplayNameP
 };
 
 interface ActivityHeaderProps {
-    activity: Activity;
+    activity: Partial<Activity>;
     user?: User;
     classroom?: Classroom;
     className?: string;
 }
 export const ActivityHeader = ({ user, classroom, activity, className }: ActivityHeaderProps) => {
-    const Icon = ICONS[activity.type];
+    if (!activity.type) {
+        return null;
+    }
+    const Icon = activity.isPinned ? PinnedIcon : ICONS[activity.type];
     return (
         <div className={classNames(styles.activityHeader, className)}>
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
@@ -66,7 +70,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     <strong>{TITLES[activity.type]}</strong>
                 </span>
                 <div className={styles.activityHeaderInfo}>
-                    <span>Publié le {toFormattedDate(activity.publishDate)}</span>
+                    <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>
                     {activity.isPelico && (
                         <>
                             <span>&nbsp;&middot;&nbsp;</span>
@@ -81,11 +85,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     )}
                 </div>
             </div>
-            {Icon && (
-                <span style={{ marginRight: 8 }}>
-                    <Icon style={{ width: '20px', height: 'auto' }} fill="var(--primary-color)" />
-                </span>
-            )}
+            {Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
         </div>
     );
 };

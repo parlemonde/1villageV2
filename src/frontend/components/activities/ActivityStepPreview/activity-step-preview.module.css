@@ -1,0 +1,23 @@
+.status-success > .stepName {
+    color: var(--success-color);
+}
+.status-success > .activityStepPreviewContent {
+    border-color: var(--success-color);
+}
+.status-warning > .stepName {
+    color: var(--warning-color);
+}
+.status-warning > .activityStepPreviewContent {
+    border-color: var(--warning-color);
+}
+.activityStepPreviewContent {
+    position: relative;
+    padding: 42px 16px 16px 16px;
+    border: 1px dashed var(--grey-300);
+    border-radius: 4px;
+}
+.EditButton {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}

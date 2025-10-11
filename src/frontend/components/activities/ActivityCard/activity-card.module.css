@@ -3,7 +3,9 @@
     background-color: white;
     border: 1px solid var(--grey-300);
 }
-
+.isPinned {
+    border: 2px solid var(--primary-color);
+}
 .activityCardHeader {
     padding: 4px;
 }

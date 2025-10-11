@@ -1,17 +1,23 @@
 'use client';
 
-import { ContentViewer } from '@frontend/components/content/ContentViewer';
+import { ActivityCard } from '@frontend/components/activities/ActivityCard';
+import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
+import { FreeContentView } from '@frontend/components/activities/ActivityView/FreeContentView';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 export default function FreeContentStep3() {
     const router = useRouter();
     const { activity, onPublishActivity } = useContext(ActivityContext);
+    const { user: currentUser } = useContext(UserContext);
+    const currentDate = useMemo(() => new Date(), []);
     const [isPublishing, setIsPublishing] = useState(false);
     if (!activity || activity.type !== 'libre') {
         return null;
@@ -48,14 +54,27 @@ export default function FreeContentStep3() {
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Pré-visualisez votre publication
+                Pré-visualisez votre publication et publiez-la
             </Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', margin: '32px 0' }}>
-                {(activity.data?.content || []).map((content, index) => (
-                    <ContentViewer key={index} content={content} />
-                ))}
-            </div>
-            <div style={{ textAlign: 'center' }}>
+            <p>Relisez votre publication une dernière fois avant de la publier !</p>
+            <ActivityStepPreview
+                stepName="Contenu"
+                href="/contenu-libre/1"
+                status={isFirstStepDone ? 'success' : 'warning'}
+                style={{ margin: '16px 0' }}
+            >
+                <FreeContentView activity={activity} />
+            </ActivityStepPreview>
+            <ActivityStepPreview
+                stepName="Forme"
+                href="/contenu-libre/2"
+                status={isSecondStepDone ? 'success' : 'warning'}
+                style={{ margin: '16px 0' }}
+            >
+                <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldHideButtons />
+            </ActivityStepPreview>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
+                <Button as="a" href="/contenu-libre/2" color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
                 <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
             </div>
             {isPublishing && <Loader isLoading={isPublishing} />}

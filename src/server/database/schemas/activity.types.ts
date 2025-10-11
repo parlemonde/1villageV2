@@ -5,6 +5,7 @@ type FreeActivity = {
     data: {
         title?: string;
         resume?: string;
+        cardImageUrl?: string;
         content?: AnyContent[];
     } | null;
 };

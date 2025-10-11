@@ -1,15 +1,24 @@
 'use client';
 
+import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
+import { Switch } from '@frontend/components/ui/Form/Switch';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useContext } from 'react';
+import { useMemo, useContext, useState } from 'react';
 
 export default function FreeContentStep2() {
+    const { user: currentUser } = useContext(UserContext);
     const { activity, setActivity } = useContext(ActivityContext);
+    const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
+
+    const currentDate = useMemo(() => new Date(), []);
+
     if (!activity || activity.type !== 'libre') {
         return null;
     }
@@ -59,7 +68,49 @@ export default function FreeContentStep2() {
                 }
                 marginBottom="md"
             />
-            <div style={{ textAlign: 'right' }}>
+            <Switch
+                id="isPinned"
+                name="isPinned"
+                label="Épingler la publication ?"
+                isChecked={activity.isPinned || false}
+                onChange={(checked) => setActivity({ ...activity, isPinned: checked })}
+                marginBottom="md"
+            />
+            <div style={{ marginBottom: '16px' }}>
+                <label>Image principale de votre publication</label>
+                <Button
+                    marginLeft="sm"
+                    label={activity.data?.cardImageUrl ? 'Changer' : 'Choisir une image'}
+                    color="primary"
+                    size="sm"
+                    onClick={() => setIsUploadImageModalOpen(true)}
+                />
+                {activity.data?.cardImageUrl && (
+                    <Button
+                        marginLeft="sm"
+                        label="Supprimer"
+                        color="error"
+                        size="sm"
+                        onClick={() => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: undefined } })}
+                    />
+                )}
+                <UploadImageModal
+                    isOpen={isUploadImageModalOpen}
+                    onClose={() => setIsUploadImageModalOpen(false)}
+                    initialImageUrl={activity.data?.cardImageUrl}
+                    onNewImage={(imageUrl) => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: imageUrl } })}
+                />
+            </div>
+            {activity.data?.cardImageUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={activity.data.cardImageUrl} alt="Image principale de la publication" style={{ width: 'auto', height: '150px' }} />
+            )}
+            <Title variant="h2" marginBottom="md" marginTop="lg">
+                Aperçu de votre publication
+            </Title>
+            <p style={{ marginBottom: '16px' }}>Voilà à quoi ressemblera votre publication dans le fil d&apos;activité</p>
+            <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldDisableButtons />
+            <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Button as="a" href="/contenu-libre/3" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
             </div>
         </div>

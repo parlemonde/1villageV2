@@ -60,7 +60,7 @@ div.contentHtmlEditor.hasContinuousLeftBorder:hover > div {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--grey-300);
+    border: 1px solid var(--primary-color);
     border-radius: 4px;
 }
 .mediaContent.hasDottedBorder {

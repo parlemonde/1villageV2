@@ -68,12 +68,12 @@ html {
     --error-600: #bb2424;
     --error-700: #871a1a;
 
-    --warning-color: #ca8621;
+    --warning-color: #b0710d;
     --warning-100: #fbe4c1;
     --warning-200: #f8d59d;
     --warning-300: #f5c474;
-    --warning-400: #ca8621; /* (warning color) */
-    --warning-500: #b0710d;
+    --warning-400: #ca8621; 
+    --warning-500: #b0710d; /* (warning color) */
     --warning-600: #87570a;
     --warning-700: #613e07;
 
