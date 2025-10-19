@@ -10,6 +10,9 @@ import { Readable } from 'stream';
 const notFoundResponse = () => {
     return new NextResponse(null, {
         status: 404,
+        headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        },
     });
 };
 const getContentTypeFromFileName = (filename: string): string | null => mime.lookup(filename) || null;

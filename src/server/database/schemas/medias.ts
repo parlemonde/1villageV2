@@ -10,7 +10,7 @@ interface ImageMetadata {
     height: number;
 }
 interface VideoMetadata {
-    duration: number;
+    originalFilePath: string;
 }
 interface AudioMetadata {
     duration: number;

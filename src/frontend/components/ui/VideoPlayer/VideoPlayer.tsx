@@ -1,10 +1,30 @@
 'use client';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { AspectRatio } from 'radix-ui';
 import React, { useEffect, useRef } from 'react';
+import useSWR from 'swr';
 import videojs from 'video.js';
 import 'videojs-hls-quality-selector'; // Should be loaded after video.js
 import 'videojs-youtube'; // Should be loaded after video.js
 import type Player from 'video.js/dist/types/player';
+
+import { CircularProgress } from '../CircularProgress';
+
+const isHlsReady = async (src: string) =>
+    fetch(
+        `/api/videos/ready${serializeToQueryUrl({
+            videoUrl: src.startsWith('/') ? src.slice(1) : src,
+        })}`,
+    )
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            return response.json();
+        })
+        .then<boolean>((data) => {
+            return data.isReady;
+        });
 
 interface Source {
     src: string;
@@ -32,8 +52,22 @@ interface VideoPlayerProps {
 export const VideoPlayer = ({ src = '', mimeType = null }: VideoPlayerProps) => {
     const videoRef = useRef<HTMLDivElement>(null);
 
+    const { data: isReady = false } = useSWR(isHlsMediaUrl(src) ? src : null, isHlsReady, {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        refreshInterval: (latestIsReady = false) => {
+            if (latestIsReady) {
+                return 0;
+            }
+            return 1000;
+        },
+    });
+
     useEffect(() => {
         if (!videoRef.current || !src) {
+            return () => {};
+        }
+        if (isHlsMediaUrl(src) && !isReady) {
             return () => {};
         }
 
@@ -67,11 +101,28 @@ export const VideoPlayer = ({ src = '', mimeType = null }: VideoPlayerProps) => 
                 player.dispose();
             }
         };
-    }, [src, mimeType]);
+    }, [src, mimeType, isReady]);
 
     return (
         <AspectRatio.Root ratio={16 / 9}>
-            <div data-vjs-player ref={videoRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>
+            <div data-vjs-player ref={videoRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}>
+                {!isReady && isHlsMediaUrl(src) && (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            gap: 16,
+                        }}
+                    >
+                        <CircularProgress size={24} color="inherit" />
+                        <span style={{ fontSize: '16px', fontWeight: 500 }}>La vidéo est en cours de traitement...</span>
+                    </div>
+                )}
+            </div>
         </AspectRatio.Root>
     );
 };

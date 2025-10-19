@@ -1,0 +1,6 @@
+FROM ghcr.io/cargo-lambda/cargo-lambda:latest
+
+# Install ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
+CMD ["cargo", "lambda", "watch"]

@@ -1,3 +1,4 @@
+import { invokeTranscodeVideosLambda } from '@server/aws/lambda';
 import { db } from '@server/database';
 import { medias } from '@server/database/schemas/medias';
 import { uploadFile } from '@server/files/file-upload';
@@ -57,8 +58,12 @@ export async function POST(request: NextRequest) {
             type: 'video',
             url,
             isPelico: isPelicoVideo,
-            metadata: null,
+            metadata: {
+                originalFilePath: fileName,
+            },
         });
+
+        await invokeTranscodeVideosLambda(fileName);
 
         return Response.json({ url: `/${url}` });
     } catch {

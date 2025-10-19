@@ -11,6 +11,9 @@ import { Readable } from 'stream';
 const notFoundResponse = () => {
     return new NextResponse('Error 404, not found.', {
         status: 404,
+        headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        },
     });
 };
 const getContentTypeFromFileName = (filename: string): string | null => mime.lookup(filename) || null;
