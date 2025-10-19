@@ -36,7 +36,7 @@ export async function getFile(fileName: string, range?: string): Promise<Readabl
     if (USE_S3) {
         return getS3File(fileName, range);
     } else {
-        return getLocalFile(fileName);
+        return getLocalFile(fileName, range);
     }
 }
 

@@ -51,7 +51,10 @@
     "sanitize-filename": "^1.6.3",
     "sharp": "^0.34.3",
     "swr": "^2.3.4",
-    "uuid": "^12.0.0"
+    "uuid": "^12.0.0",
+    "video.js": "^8.23.4",
+    "videojs-hls-quality-selector": "^2.0.0",
+    "videojs-youtube": "^3.0.1"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.48.1",

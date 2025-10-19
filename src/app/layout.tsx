@@ -10,6 +10,7 @@ import 'normalize.css/normalize.css';
 import 'nprogress/nprogress.css';
 import './globals.css';
 import 'prosemirror-view/style/prosemirror.css';
+import 'video.js/dist/video-js.css';
 
 const APP_URL = getEnvVariable('HOST_URL');
 const APP_NAME = '1Village';

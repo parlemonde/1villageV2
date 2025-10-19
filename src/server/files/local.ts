@@ -1,4 +1,5 @@
 import { getBuffer } from '@server/lib/get-buffer';
+import { getSingleBytesRange } from '@server/lib/get-single-bytes-range';
 import fs from 'fs-extra';
 import mime from 'mime-types';
 import path from 'node:path';
@@ -13,7 +14,7 @@ export async function getLocalFileData(key: string): Promise<FileData | null> {
     try {
         const stats = fs.statSync(getFilePath(key));
         return {
-            AcceptRanges: 'none',
+            AcceptRanges: 'bytes',
             ContentLength: stats.size,
             ContentType: mime.lookup(key) || '',
             LastModified: stats.mtime,
@@ -24,9 +25,11 @@ export async function getLocalFileData(key: string): Promise<FileData | null> {
     }
 }
 
-export async function getLocalFile(key: string): Promise<Readable | null> {
+export async function getLocalFile(key: string, range?: string): Promise<Readable | null> {
     try {
-        return fs.createReadStream(getFilePath(key));
+        const stats = fs.statSync(getFilePath(key));
+        const singleBytesRange = getSingleBytesRange(stats.size, range);
+        return fs.createReadStream(getFilePath(key), singleBytesRange ? { start: singleBytesRange.start, end: singleBytesRange.end } : undefined);
     } catch {
         console.error(`File ${key} not found !`);
         return null;
