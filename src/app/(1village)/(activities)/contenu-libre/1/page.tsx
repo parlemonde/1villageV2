@@ -12,6 +12,7 @@ import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
 import { UploadDocumentModal } from '@frontend/components/upload/UploadDocumentModal';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal';
+import { UploadVideoModal } from '@frontend/components/upload/UploadVideoModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
@@ -33,6 +34,7 @@ export default function FreeContentStep1() {
 
     const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
     const [uploadSoundModalContentIndex, setUploadSoundModalContentIndex] = useState<number | null>(null);
+    const [uploadVideoModalContentIndex, setUploadVideoModalContentIndex] = useState<number | null>(null);
     const [uploadDocumentModalContentIndex, setUploadDocumentModalContentIndex] = useState<number | null>(null);
     const [selectH5pModalContentIndex, setSelectH5pModalContentIndex] = useState<number | null>(null);
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
@@ -71,6 +73,12 @@ export default function FreeContentStep1() {
         uploadDocumentModalContentIndex !== -1 &&
         contentWithIds[uploadDocumentModalContentIndex]?.content.type === 'document'
             ? contentWithIds[uploadDocumentModalContentIndex]?.content.documentUrl
+            : null;
+    const uploadVideoModalInitialVideoUrl =
+        uploadVideoModalContentIndex !== null &&
+        uploadVideoModalContentIndex !== -1 &&
+        contentWithIds[uploadVideoModalContentIndex]?.content.type === 'video'
+            ? contentWithIds[uploadVideoModalContentIndex]?.content.videoUrl
             : null;
     const selectH5pModalInitialContentId =
         selectH5pModalContentIndex !== null && selectH5pModalContentIndex !== -1 && contentWithIds[selectH5pModalContentIndex]?.content.type === 'h5p'
@@ -124,6 +132,8 @@ export default function FreeContentStep1() {
                                     setUploadDocumentModalContentIndex(index);
                                 } else if (content.type === 'h5p') {
                                     setSelectH5pModalContentIndex(index);
+                                } else if (content.type === 'video') {
+                                    setUploadVideoModalContentIndex(index);
                                 }
                             }}
                             onDelete={() => {
@@ -152,6 +162,8 @@ export default function FreeContentStep1() {
                                 setUploadDocumentModalContentIndex(-1);
                             } else if (newContent.type === 'h5p') {
                                 setSelectH5pModalContentIndex(-1);
+                            } else if (newContent.type === 'video') {
+                                setUploadVideoModalContentIndex(-1);
                             } else {
                                 const newContentArray = [...contentWithIds];
                                 newContentArray.push({ id: v4(), content: newContent });
@@ -223,6 +235,26 @@ export default function FreeContentStep1() {
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
                     setUploadDocumentModalContentIndex(null);
+                }}
+            />
+            <UploadVideoModal
+                isOpen={uploadVideoModalContentIndex !== null}
+                initialVideoUrl={uploadVideoModalInitialVideoUrl}
+                onClose={() => setUploadVideoModalContentIndex(null)}
+                onNewVideo={(videoUrl) => {
+                    if (uploadVideoModalContentIndex === null) {
+                        return;
+                    }
+                    const newContentArray = [...contentWithIds];
+                    // New content
+                    if (uploadVideoModalContentIndex === -1) {
+                        newContentArray.push({ id: v4(), content: { type: 'video', videoUrl } });
+                    } else if (newContentArray[uploadVideoModalContentIndex].content.type === 'video') {
+                        newContentArray[uploadVideoModalContentIndex].content.videoUrl = videoUrl;
+                    }
+                    setContentWithIds(newContentArray);
+                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                    setUploadVideoModalContentIndex(null);
                 }}
             />
             <SelectH5pModal

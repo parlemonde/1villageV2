@@ -27,8 +27,9 @@ const isYoutubeUrl = (src: string) => {
 
 interface VideoPlayerProps {
     src?: string;
+    mimeType?: string | null;
 }
-export const VideoPlayer = ({ src = '' }: VideoPlayerProps) => {
+export const VideoPlayer = ({ src = '', mimeType = null }: VideoPlayerProps) => {
     const videoRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -44,6 +45,9 @@ export const VideoPlayer = ({ src = '' }: VideoPlayerProps) => {
             : {
                   src: src,
               };
+        if (mimeType && !isYoutubeUrl(src)) {
+            source.type = mimeType;
+        }
         const videoElement = document.createElement('video-js');
         videoElement.style.width = '100%';
         videoElement.style.height = '100%';
@@ -63,7 +67,7 @@ export const VideoPlayer = ({ src = '' }: VideoPlayerProps) => {
                 player.dispose();
             }
         };
-    }, [src]);
+    }, [src, mimeType]);
 
     return (
         <AspectRatio.Root ratio={16 / 9}>

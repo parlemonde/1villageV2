@@ -1,5 +1,6 @@
 import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
+import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
 
 import type { AnyContent } from '../content.types';
 
@@ -17,8 +18,8 @@ export const ContentViewer = ({ content, activityId }: ContentViewerProps) => {
                 <div
                     style={{
                         width: '100%',
-                        maxWidth: 400,
-                        maxHeight: 300,
+                        maxWidth: 600,
+                        maxHeight: 400,
                         margin: '0 auto',
                         overflow: 'hidden',
                     }}
@@ -61,12 +62,25 @@ export const ContentViewer = ({ content, activityId }: ContentViewerProps) => {
                     style={{
                         width: '100%',
                         maxHeight: '75vh',
-                        maxWidth: 500,
+                        maxWidth: 600,
                         margin: '0 auto',
                         overflow: 'hidden',
                     }}
                 >
                     <H5pPlayer contentId={content.h5pId} contextId={`activity-${activityId}`} />
+                </div>
+            );
+        case 'video':
+            return (
+                <div
+                    style={{
+                        width: '100%',
+                        maxWidth: 600,
+                        maxHeight: 400,
+                        margin: '0 auto',
+                    }}
+                >
+                    <VideoPlayer src={content.videoUrl} />
                 </div>
             );
         default:

@@ -8,7 +8,7 @@ import mime from 'mime-types';
 import path from 'node:path';
 import { v4 } from 'uuid';
 
-const AVAILABLE_MEDIA_TYPES = ['audios', 'documents'] as const;
+const AVAILABLE_MEDIA_TYPES = ['audios', 'documents', 'videos'] as const;
 
 export async function getS3UploadParameters(
     fileName: string,
@@ -34,7 +34,7 @@ export async function getS3UploadParameters(
     const key = `media/${mediaType}/users/${isPelicoMedia && (currentUser.role === 'admin' || currentUser.role === 'mediator') ? 'pelico' : currentUser.id}/${uuid}.${extension}`;
     const contentType = mime.lookup(key) || undefined;
 
-    if (!contentType || !contentType.startsWith('audio/')) {
+    if (!contentType || (!contentType.startsWith('audio/') && !contentType.startsWith('video/') && contentType !== 'application/pdf')) {
         throw new Error('Invalid file');
     }
 
