@@ -2149,6 +2149,7 @@ dependencies = [
  "anyhow",
  "aws-config",
  "aws-sdk-s3",
+ "futures",
  "lambda_runtime",
  "serde",
  "serde_json",
