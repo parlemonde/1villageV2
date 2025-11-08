@@ -1,7 +1,9 @@
 use lambda_runtime::{tracing};
 use anyhow::{Result, Context as AnyhowContext};
 use std::path::{Path};
-use std::process::Command;
+use std::process::Stdio;
+use tokio::process::Command;
+use tokio::io::{AsyncBufReadExt, BufReader};
 
 use crate::video_utils::get_video_data;
 
@@ -110,18 +112,108 @@ pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Res
         stream_playlist_path.to_str().unwrap(),
     ]);
 
-    let output = Command::new("ffmpeg")
-        .args(&ffmpeg_args)
-        .output()
-        .context("Failed to execute ffmpeg command")?;
+    // Add progress monitoring to ffmpeg args - use pipe:1 for stdout
+    let progress_args = vec!["-progress", "pipe:1", "-nostats"];
+    let mut full_ffmpeg_args = progress_args;
+    full_ffmpeg_args.extend_from_slice(&ffmpeg_args);
 
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        let stdout = String::from_utf8_lossy(&output.stdout);
-        tracing::error!("FFmpeg failed. Stdout: {}, Stderr: {}", stdout, stderr);
-        return Err(anyhow::anyhow!("FFmpeg transcoding failed: {}", stderr));
+    let mut child = Command::new("ffmpeg")
+        .args(&full_ffmpeg_args)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())  // Discard stderr to avoid blocking
+        .spawn()
+        .context("Failed to spawn ffmpeg process")?;
+
+    // Monitor progress from stdout
+    let stdout = child.stdout.take()
+        .ok_or_else(|| anyhow::anyhow!("Failed to capture stdout"))?;
+    
+    let total_duration = video_data.duration_seconds;
+    let progress_task = tokio::spawn(async move {
+        monitor_ffmpeg_progress(stdout, total_duration).await
+    });
+
+    // Wait for ffmpeg to complete
+    let status = child.wait().await
+        .context("Failed to wait for ffmpeg process")?;
+
+    // Ensure progress monitoring completes
+    let _ = progress_task.await;
+
+    if !status.success() {
+        tracing::error!("FFmpeg process failed with exit code: {:?}", status.code());
+        return Err(anyhow::anyhow!("FFmpeg transcoding failed with status: {:?}", status));
     }
  
     tracing::info!("HLS transcoding completed successfully for all resolutions");
     Ok(())
+}
+
+/// Monitors ffmpeg progress and logs every ~5%
+async fn monitor_ffmpeg_progress(stdout: impl tokio::io::AsyncRead + Unpin, total_duration_seconds: f64) {
+    let reader = BufReader::new(stdout);
+    let mut lines = reader.lines();
+    
+    let mut last_logged_percentage = -1;
+    let log_interval = 5; // Log every 5%
+    
+    tracing::info!("Starting progress monitoring (total duration: {:.2}s)", total_duration_seconds);
+    
+    while let Ok(Some(line)) = lines.next_line().await {
+        // Parse progress lines like "out_time_us=4567890123" (microseconds)
+        if line.starts_with("out_time_us=") {
+            if let Some(time_str) = line.strip_prefix("out_time_us=") {
+                if let Ok(time_us) = time_str.parse::<i64>() {
+                    if time_us <= 0 {
+                        continue;
+                    }
+                    
+                    let current_seconds = time_us as f64 / 1_000_000.0;
+                    let percentage = ((current_seconds / total_duration_seconds * 100.0) as i32).min(100);
+                    
+                    // Log every ~5%
+                    let threshold = last_logged_percentage + log_interval;
+                    if percentage >= threshold && percentage <= 100 {
+                        let current_time = format_duration(current_seconds);
+                        let total_time = format_duration(total_duration_seconds);
+                        tracing::info!(
+                            "Transcoding progress: {}% ({} / {})",
+                            percentage,
+                            current_time,
+                            total_time
+                        );
+                        last_logged_percentage = percentage;
+                    }
+                }
+            }
+        }
+        // Also check for "progress=end" to know when encoding finishes
+        else if line == "progress=end" {
+            if last_logged_percentage < 100 {
+                let total_time = format_duration(total_duration_seconds);
+                tracing::info!(
+                    "Transcoding progress: 100% ({} / {})",
+                    total_time,
+                    total_time
+                );
+            }
+            break;
+        }
+    }
+    
+    tracing::debug!("Progress monitoring completed");
+}
+
+/// Formats seconds into MM:SS or HH:MM:SS
+fn format_duration(seconds: f64) -> String {
+    let total_seconds = seconds as i64;
+    let hours = total_seconds / 3600;
+    let minutes = (total_seconds % 3600) / 60;
+    let secs = total_seconds % 60;
+    
+    if hours > 0 {
+        format!("{:02}:{:02}:{:02}", hours, minutes, secs)
+    } else {
+        format!("{:02}:{:02}", minutes, secs)
+    }
 }
