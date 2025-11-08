@@ -31,10 +31,14 @@ export async function getS3UploadParameters(
 
     const uuid = v4();
     const extension = path.extname(fileName).substring(1);
-    const key = `media/${mediaType}/users/${isPelicoMedia && (currentUser.role === 'admin' || currentUser.role === 'mediator') ? 'pelico' : currentUser.id}/${uuid}.${extension}`;
+    const key =
+        mediaType === 'videos'
+            ? `media/videos/users/${isPelicoMedia && (currentUser.role === 'admin' || currentUser.role === 'mediator') ? 'pelico' : currentUser.id}/${uuid}/original.${extension}`
+            : `media/${mediaType}/users/${isPelicoMedia && (currentUser.role === 'admin' || currentUser.role === 'mediator') ? 'pelico' : currentUser.id}/${uuid}.${extension}`;
     const contentType = mime.lookup(key) || undefined;
 
-    if (!contentType || (!contentType.startsWith('audio/') && !contentType.startsWith('video/') && contentType !== 'application/pdf')) {
+    if (!contentType || (!contentType.startsWith('audio/') && !contentType.startsWith('video/') && !contentType.startsWith('application/'))) {
+        console.error('Invalid file', contentType);
         throw new Error('Invalid file');
     }
 
@@ -65,7 +69,7 @@ export async function getS3UploadParameters(
             {
                 'Content-Type': contentType,
             },
-            ['content-length-range', 0, 50 * 1024 * 1024],
+            ['content-length-range', 0, 500 * 1024 * 1024],
             {
                 'X-Amz-Algorithm': algorithm,
             },

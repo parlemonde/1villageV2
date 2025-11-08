@@ -1,8 +1,9 @@
 import { invokeTranscodeVideosLambda } from '@server/aws/lambda';
 import { db } from '@server/database';
 import { medias } from '@server/database/schemas/medias';
-import { uploadFile } from '@server/files/file-upload';
+import { uploadFile, USE_S3 } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import mime from 'mime-types';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        await invokeTranscodeVideosLambda(fileName);
+        await invokeTranscodeVideosLambda(USE_S3 ? { key: fileName, bucket: getEnvVariable('S3_BUCKET_NAME') } : { filePath: fileName });
 
         return Response.json({ url: `/${url}` });
     } catch {

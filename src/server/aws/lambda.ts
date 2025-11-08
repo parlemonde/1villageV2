@@ -2,7 +2,15 @@ import { getEnvVariable } from '@server/lib/get-env-variable';
 
 import { getAwsClient } from './aws-client';
 
-export const invokeTranscodeVideosLambda = async (filePath: string): Promise<boolean> => {
+type TranscodeVideosLambdaEvent =
+    | {
+          filePath: string;
+      }
+    | {
+          key: string;
+          bucket: string;
+      };
+export const invokeTranscodeVideosLambda = async (event: TranscodeVideosLambdaEvent): Promise<boolean> => {
     try {
         const client = getAwsClient();
         const response = client.fetch(
@@ -11,7 +19,7 @@ export const invokeTranscodeVideosLambda = async (filePath: string): Promise<boo
                 headers: {
                     'X-Amz-Invocation-Type': 'Event',
                 },
-                body: JSON.stringify({ filePath }),
+                body: JSON.stringify(event),
             },
         );
         // Do not await the response if we are using the local lambda

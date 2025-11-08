@@ -58,6 +58,8 @@ services:
     volumes:
       - ./server-transcode-videos:/app
       - ./tmp:/files
+    env_file:
+      - .env
     working_dir: /app
     ports:
       - "9000:9000"
