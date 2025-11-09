@@ -19,7 +19,7 @@ import React, { useContext } from 'react';
 
 import styles from './navigation.module.css';
 
-const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode): MenuItem[] => [
+const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode, isPelico?: boolean): MenuItem[] => [
     {
         icon: <HomeIcon />,
         label: 'Accueil',
@@ -29,9 +29,9 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
     },
     {
         icon: avatar || <AvatarIcon />,
-        label: 'Notre classe et nos activités',
-        href: '/ma-classe',
-        isActive: firstPath === 'ma-classe',
+        label: isPelico ? 'Activités de Pélico' : 'Nos activités',
+        href: '/my-activities',
+        isActive: firstPath === 'my-activities',
         onClick,
     },
     {
@@ -78,7 +78,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         ))}
                 </div>
                 <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
-                    <Menu items={getMenuItems(firstPath, undefined, avatar)} />
+                    <Menu items={getMenuItems(firstPath, undefined, avatar, user?.role === 'admin' || user?.role === 'mediator')} />
                 </div>
             </div>
         </div>
@@ -125,6 +125,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                         avatar,
+                        user?.role === 'admin' || user?.role === 'mediator',
                     ),
                     ...(user?.role === 'admin'
                         ? [

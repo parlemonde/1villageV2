@@ -15,10 +15,10 @@ import { useContext, useMemo, useState } from 'react';
 
 export default function FreeContentStep3() {
     const router = useRouter();
-    const { activity, onPublishActivity } = useContext(ActivityContext);
+    const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
     const { user: currentUser } = useContext(UserContext);
     const currentDate = useMemo(() => new Date(), []);
-    const [isPublishing, setIsPublishing] = useState(false);
+    const [isSubmiting, setIsSubmiting] = useState(false);
     if (!activity || activity.type !== 'libre') {
         return null;
     }
@@ -29,15 +29,19 @@ export default function FreeContentStep3() {
     const isValid = isFirstStepDone && isSecondStepDone;
 
     const onSubmit = async () => {
-        setIsPublishing(true);
+        setIsSubmiting(true);
         try {
-            await onPublishActivity();
+            if (activity.publishDate) {
+                await onUpdateActivity();
+            } else {
+                await onPublishActivity();
+            }
             router.push('/contenu-libre/success');
         } catch (error) {
             // TODO: show error toast
             console.error(error);
         } finally {
-            setIsPublishing(false);
+            setIsSubmiting(false);
         }
     };
 
@@ -71,13 +75,19 @@ export default function FreeContentStep3() {
                 status={isSecondStepDone ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldHideButtons />
+                <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldDisableButtons />
             </ActivityStepPreview>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
                 <Button as="a" href="/contenu-libre/2" color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
-                <Button color="primary" variant="contained" label="Publier" disabled={!isValid} onClick={onSubmit} />
+                <Button
+                    color="primary"
+                    variant="contained"
+                    label={activity.publishDate ? 'Modifier' : 'Publier'}
+                    disabled={!isValid}
+                    onClick={onSubmit}
+                />
             </div>
-            {isPublishing && <Loader isLoading={isPublishing} />}
+            {isSubmiting && <Loader isLoading={isSubmiting} />}
         </div>
     );
 }

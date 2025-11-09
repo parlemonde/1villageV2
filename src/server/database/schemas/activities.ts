@@ -50,4 +50,4 @@ export const activities = pgTable('activities', {
 });
 
 type InferredActivity = typeof activities.$inferSelect;
-export type Activity = InferredActivity & Activities;
+export type Activity = Omit<InferredActivity, 'type' | 'data'> & Activities;

@@ -9,6 +9,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity, ActivityType } from '@server/database/schemas/activities';
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
+import { updateActivity } from '@server-actions/activities/update-activity';
 import { usePathname } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -19,19 +20,18 @@ export const ActivityContext = createContext<{
     activity: Partial<Activity> | undefined;
     setActivity: (activity: Partial<Activity>) => void;
     onCreateActivity: (activityType: ActivityType, isPelico?: boolean) => void;
+    onUpdateActivity: () => Promise<void>;
     onPublishActivity: () => Promise<void>;
 }>({
     activity: undefined,
     setActivity: () => {},
     onCreateActivity: () => {},
+    onUpdateActivity: () => Promise.resolve(),
     onPublishActivity: () => Promise.resolve(),
 });
 
 let onCancelPreviousPromise: () => void = () => {};
 const onSaveDraft = async (activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
-    if (activity.publishDate !== undefined && activity.publishDate !== null) {
-        return;
-    }
     onCancelPreviousPromise(); // Cancel previous promise
     let cancelled = false;
     onCancelPreviousPromise = () => {
@@ -87,10 +87,10 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     }, [localActivity]);
 
     // Auto save draft after an update (using a debounced function)
-    const onUpdateActivity = useCallback(
+    const setActivity = useCallback(
         (newActivity: Partial<Activity>) => {
             setLocalActivity(newActivity);
-            if (newActivity.type && newActivity.phase !== undefined) {
+            if (newActivity.type && newActivity.phase !== undefined && (newActivity.publishDate === null || newActivity.publishDate === undefined)) {
                 onSaveDraftDebounced(
                     { ...newActivity, draftUrl: pathname },
                     (id) => {
@@ -118,6 +118,13 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
         [setLocalActivity, village, classroom],
     );
 
+    const onUpdateActivity = useCallback(async () => {
+        if (!localActivity || !localActivity.id || localActivity.publishDate === null || localActivity.publishDate === undefined) {
+            return;
+        }
+        await updateActivity(localActivity);
+    }, [localActivity]);
+
     const onPublishActivity = useCallback(async () => {
         if (!village || !localActivity) {
             return;
@@ -128,11 +135,12 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const contextValue = useMemo(
         () => ({
             activity: localActivity,
-            setActivity: onUpdateActivity,
+            setActivity,
             onCreateActivity,
+            onUpdateActivity,
             onPublishActivity,
         }),
-        [localActivity, onUpdateActivity, onCreateActivity, onPublishActivity],
+        [localActivity, setActivity, onCreateActivity, onUpdateActivity, onPublishActivity],
     );
 
     return (

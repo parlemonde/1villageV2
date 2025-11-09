@@ -20,9 +20,11 @@ interface ActivityCardProps {
     activity: Partial<Activity>;
     user?: User;
     classroom?: Classroom;
+    onEdit?: () => void;
+    onDelete?: () => void;
     shouldDisableButtons?: boolean;
 }
-export const ActivityCard = ({ activity, user, classroom, shouldDisableButtons }: ActivityCardProps) => {
+export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shouldDisableButtons = false }: ActivityCardProps) => {
     if (!user || !activity.type) {
         return null;
     }
@@ -31,7 +33,9 @@ export const ActivityCard = ({ activity, user, classroom, shouldDisableButtons }
         <div className={classNames(styles.activityCard, { [styles.isPinned]: activity.isPinned })}>
             <ActivityHeader activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
-                <div className={styles.activityCardBody}>{<ContentCard activity={activity} shouldDisableButtons={shouldDisableButtons} />}</div>
+                <div className={styles.activityCardBody}>
+                    {<ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />}
+                </div>
             )}
         </div>
     );

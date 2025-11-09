@@ -2,7 +2,7 @@ import { Button } from '@frontend/components/ui/Button';
 
 import type { ActivityContentCardProps } from './activity-card.types';
 
-export const FreeContentCard = ({ activity, shouldDisableButtons = false }: ActivityContentCardProps) => {
+export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     if (activity.type !== 'libre') {
         return null;
     }
@@ -28,14 +28,21 @@ export const FreeContentCard = ({ activity, shouldDisableButtons = false }: Acti
                     <p style={{ fontSize: '15px' }}>{activity.data?.resume}</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                    <Button
-                        as={shouldDisableButtons ? 'button' : 'a'}
-                        disabled={shouldDisableButtons}
-                        href={shouldDisableButtons ? undefined : `/activities/${activity.id}`}
-                        color="primary"
-                        variant="outlined"
-                        label={activity.isPelico ? 'Voir le message de Pélico' : 'Voir le message'}
-                    />
+                    {onEdit || onDelete ? (
+                        <>
+                            {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}
+                            {onDelete && <Button marginLeft="sm" label="Supprimer" variant="contained" color="error" onClick={onDelete} />}
+                        </>
+                    ) : (
+                        <Button
+                            as={shouldDisableButtons ? 'button' : 'a'}
+                            disabled={shouldDisableButtons}
+                            href={shouldDisableButtons ? undefined : `/activities/${activity.id}`}
+                            color="primary"
+                            variant="outlined"
+                            label={activity.isPelico ? 'Voir le message de Pélico' : 'Voir le message'}
+                        />
+                    )}
                 </div>
             </div>
         </div>
