@@ -231,12 +231,7 @@ fn build_scale_filter(quality_levels: &[QualityLevel]) -> String {
     let scale_parts: Vec<String> = quality_levels.iter()
         .enumerate()
         .map(|(i, level)| {
-            // If this is the original resolution and it's already at max width, no scaling needed
-            if i == 0 && level.width == quality_levels[0].width {
-                format!("[v{}]scale=w={}:h=-2[v{}out]", i + 1, level.width, i + 1)
-            } else {
-                format!("[v{}]scale=w={}:h=-2[v{}out]", i + 1, level.width, i + 1)
-            }
+            format!("[v{}]scale=w={}:h=-2[v{}out]", i + 1, level.width, i + 1)
         })
         .collect();
     
@@ -324,5 +319,79 @@ fn format_duration(seconds: f64) -> String {
         format!("{:02}:{:02}:{:02}", hours, minutes, secs)
     } else {
         format!("{:02}:{:02}", minutes, secs)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_determine_quality_levels_4k() {
+        let levels = determine_quality_levels(3840);
+        assert_eq!(levels.len(), 3);
+        assert_eq!(levels[0].width, 2560); // Capped at MAX_WIDTH
+        assert_eq!(levels[1].width, 1920);
+        assert_eq!(levels[2].width, 1280);
+    }
+
+    #[test]
+    fn test_determine_quality_levels_1080p() {
+        let levels = determine_quality_levels(1920);
+        assert_eq!(levels.len(), 3);
+        assert_eq!(levels[0].width, 1920);
+        assert_eq!(levels[1].width, 1280);
+        assert_eq!(levels[2].width, 854);
+    }
+
+    #[test]
+    fn test_determine_quality_levels_720p() {
+        let levels = determine_quality_levels(1280);
+        assert_eq!(levels.len(), 2);
+        assert_eq!(levels[0].width, 1280);
+        assert_eq!(levels[1].width, 854);
+    }
+
+    #[test]
+    fn test_determine_quality_levels_small() {
+        let levels = determine_quality_levels(800);
+        assert_eq!(levels.len(), 1);
+        assert_eq!(levels[0].width, 800);
+    }
+
+    #[test]
+    fn test_build_variant_stream_map_with_audio() {
+        let map = build_variant_stream_map(3, true);
+        assert_eq!(map, "v:0,a:0 v:1,a:1 v:2,a:2");
+    }
+
+    #[test]
+    fn test_build_variant_stream_map_without_audio() {
+        let map = build_variant_stream_map(2, false);
+        assert_eq!(map, "v:0 v:1");
+    }
+
+    #[test]
+    fn test_format_duration_short() {
+        assert_eq!(format_duration(90.0), "01:30");
+        assert_eq!(format_duration(65.5), "01:05");
+    }
+
+    #[test]
+    fn test_format_duration_long() {
+        assert_eq!(format_duration(3665.0), "01:01:05");
+        assert_eq!(format_duration(7200.0), "02:00:00");
+    }
+
+    #[test]
+    fn test_quality_level_bitrates() {
+        let level_4k = QualityLevel::new(2560);
+        assert_eq!(level_4k.bitrate, "7000k");
+        
+        let level_1080p = QualityLevel::new(1920);
+        assert_eq!(level_1080p.bitrate, "5000k");
+        
+        let level_720p = QualityLevel::new(1280);
+        assert_eq!(level_720p.bitrate, "3500k");
     }
 }
