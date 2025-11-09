@@ -8,6 +8,54 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use crate::video_utils::get_video_data;
 
 const MAX_DURATION_SECONDS: f64 = 25.0 * 60.0; // 25 minutes
+const MAX_WIDTH: u32 = 2560;
+const STANDARD_WIDTHS: [u32; 3] = [1920, 1280, 854];
+
+#[derive(Debug, Clone)]
+struct QualityLevel {
+    width: u32,
+    bitrate: &'static str,
+    maxrate: &'static str,
+    bufsize: &'static str,
+    audio_bitrate: &'static str,
+}
+
+impl QualityLevel {
+    fn new(width: u32) -> Self {
+        // Determine bitrates based on width
+        let (bitrate, maxrate, bufsize, audio_bitrate) = match width {
+            w if w >= 1920 => ("5000k", "5350k", "7500k", "192k"),
+            w if w >= 1280 => ("2800k", "2996k", "4200k", "128k"),
+            _ => ("1400k", "1498k", "2100k", "96k"),
+        };
+        
+        Self {
+            width,
+            bitrate,
+            maxrate,
+            bufsize,
+            audio_bitrate,
+        }
+    }
+}
+
+/// Determines which quality levels to encode based on input video width
+fn determine_quality_levels(input_width: u32) -> Vec<QualityLevel> {
+    let mut levels = Vec::new();
+    
+    // [1] Add original resolution (capped at MAX_WIDTH)
+    let original_width = input_width.min(MAX_WIDTH);
+    levels.push(QualityLevel::new(original_width));
+    
+    // [2] Add standard resolutions that are smaller than original
+    for &standard_width in &STANDARD_WIDTHS {
+        if standard_width < original_width && levels.len() < 3 {
+            levels.push(QualityLevel::new(standard_width));
+        }
+    }
+    
+    levels
+}
 
 /// Transcodes a video file to HLS.
 pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Result<()> {
@@ -25,97 +73,104 @@ pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Res
         ));
     }
 
-    let aspect_ratio = video_data.width as f64 / video_data.height as f64;
-    let target_aspect_ratio = 16.0 / 9.0; // 1.777...
+    // Determine quality levels based on input video dimensions
+    let quality_levels = determine_quality_levels(video_data.width);
+    let num_levels = quality_levels.len();
     
-    // Use scale_y_filter if aspect ratio is wider than 16:9, otherwise use scale_x_filter
-    let use_scale_y = aspect_ratio > target_aspect_ratio;
-    
-    tracing::info!("Video dimensions: {}x{}, aspect ratio: {:.3}, using {} filter", 
-        video_data.width, video_data.height, aspect_ratio, if use_scale_y { "scale_y" } else { "scale_x" });
-    tracing::info!("Processing video with audio: {}", video_data.has_audio);
+    tracing::info!(
+        "Video dimensions: {}x{}, audio: {}, generating {} quality level(s): {:?}",
+        video_data.width,
+        video_data.height,
+        video_data.has_audio,
+        num_levels,
+        quality_levels.iter().map(|q| q.width).collect::<Vec<_>>()
+    );
 
-    let scale_filter = if use_scale_y {
-        "[0:v]split=3[v1][v2][v3];[v1]scale=w=1920:h=-2[v1out];[v2]scale=w=1280:h=-2[v2out];[v3]scale=w=854:h=-2[v3out]"
-    } else {
-        "[0:v]split=3[v1][v2][v3];[v1]scale=w=-2:h=1080[v1out];[v2]scale=w=-2:h=720[v2out];[v3]scale=w=-2:h=480[v3out]"
-    };
+    // Build scale filter based on number of quality levels
+    let scale_filter = build_scale_filter(&quality_levels);
 
 
     let segment_filename_path = output_dir.join("stream_%v/data%04d.ts");
     let stream_playlist_path = output_dir.join("stream_%v/playlist.m3u8");
     
-    // Build variant stream map based on audio presence
-    let var_stream_map = if video_data.has_audio {
-        "v:0,a:0 v:1,a:1 v:2,a:2"
-    } else {
-        "v:0 v:1 v:2"
-    };
+    // Build variant stream map based on number of streams and audio presence
+    let var_stream_map = build_variant_stream_map(num_levels, video_data.has_audio);
 
-    let mut ffmpeg_args: Vec<&str> = vec![
-        "-i",
-        input_file.to_str().unwrap(),
-        "-preset",
-        "ultrafast",
-        "-g",
-        "48",
-        "-sc_threshold",
-        "0",
-        "-tune",
-        "zerolatency",
-        "-movflags",
-        "faststart",
-        "-filter_complex",
+    // Build ffmpeg arguments dynamically
+    let mut ffmpeg_args = vec![
+        "-i".to_string(),
+        input_file.to_str().unwrap().to_string(),
+        "-preset".to_string(),
+        "ultrafast".to_string(),
+        "-g".to_string(),
+        "48".to_string(),
+        "-sc_threshold".to_string(),
+        "0".to_string(),
+        "-tune".to_string(),
+        "zerolatency".to_string(),
+        "-movflags".to_string(),
+        "faststart".to_string(),
+        "-filter_complex".to_string(),
         scale_filter,
-        "-map",
-        "[v1out]",
-        "-c:v:2", "libx264", "-b:v:2", "1400k", "-maxrate:v:2", "1498k", "-bufsize:v:2", "2100k",
-        "-map",
-        "[v2out]",
-        "-c:v:1", "libx264", "-b:v:1", "2800k", "-maxrate:v:1", "2996k", "-bufsize:v:1", "4200k",
-        "-map",
-        "[v3out]",
-        "-c:v:0", "libx264", "-b:v:0", "5000k", "-maxrate:v:0", "5350k", "-bufsize:v:0", "7500k",
     ];
     
-    // Add audio mapping only if audio is present
-    if video_data.has_audio {
-        ffmpeg_args.extend_from_slice(&[
-            "-map",
-            "a:0", "-c:a:2", "aac", "-b:a:2", "96k", "-ac", "2",
-            "-map",
-            "a:0", "-c:a:1", "aac", "-b:a:1", "128k", "-ac", "2",
-            "-map",
-            "a:0", "-c:a:0", "aac", "-b:a:0", "192k", "-ac", "2",
+    // Add video stream mappings and encoding settings (reversed order for HLS - highest quality first)
+    for (i, level) in quality_levels.iter().enumerate().rev() {
+        ffmpeg_args.extend([
+            "-map".to_string(),
+            format!("[v{}out]", i + 1),
+            format!("-c:v:{}", num_levels - 1 - i),
+            "libx264".to_string(),
+            format!("-b:v:{}", num_levels - 1 - i),
+            level.bitrate.to_string(),
+            format!("-maxrate:v:{}", num_levels - 1 - i),
+            level.maxrate.to_string(),
+            format!("-bufsize:v:{}", num_levels - 1 - i),
+            level.bufsize.to_string(),
         ]);
     }
     
+    // Add audio mapping only if audio is present
+    if video_data.has_audio {
+        for (i, level) in quality_levels.iter().enumerate().rev() {
+            ffmpeg_args.extend([
+                "-map".to_string(),
+                "a:0".to_string(),
+                format!("-c:a:{}", num_levels - 1 - i),
+                "aac".to_string(),
+                format!("-b:a:{}", num_levels - 1 - i),
+                level.audio_bitrate.to_string(),
+                "-ac".to_string(),
+                "2".to_string(),
+            ]);
+        }
+    }
+    
     // Add HLS parameters
-    ffmpeg_args.extend_from_slice(&[
-        "-f",
-        "hls",
-        "-hls_time",
-        "6.4",
-        "-hls_playlist_type",
-        "vod",
-        "-hls_list_size",
-        "0",
-        "-hls_segment_filename",
-        segment_filename_path.to_str().unwrap(),
-        "-hls_flags",
-        "independent_segments",
-        "-master_pl_name",
-        "master.m3u8",
-        "-var_stream_map",
+    ffmpeg_args.extend([
+        "-f".to_string(),
+        "hls".to_string(),
+        "-hls_time".to_string(),
+        "6.4".to_string(),
+        "-hls_playlist_type".to_string(),
+        "vod".to_string(),
+        "-hls_list_size".to_string(),
+        "0".to_string(),
+        "-hls_segment_filename".to_string(),
+        segment_filename_path.to_str().unwrap().to_string(),
+        "-hls_flags".to_string(),
+        "independent_segments".to_string(),
+        "-master_pl_name".to_string(),
+        "master.m3u8".to_string(),
+        "-var_stream_map".to_string(),
         var_stream_map,
-        "-y",
-        stream_playlist_path.to_str().unwrap(),
+        "-y".to_string(),
+        stream_playlist_path.to_str().unwrap().to_string(),
     ]);
 
     // Add progress monitoring to ffmpeg args - use pipe:1 for stdout
-    let progress_args = vec!["-progress", "pipe:1", "-nostats"];
-    let mut full_ffmpeg_args = progress_args;
-    full_ffmpeg_args.extend_from_slice(&ffmpeg_args);
+    let mut full_ffmpeg_args = vec!["-progress".to_string(), "pipe:1".to_string(), "-nostats".to_string()];
+    full_ffmpeg_args.extend(ffmpeg_args);
 
     let mut child = Command::new("ffmpeg")
         .args(&full_ffmpeg_args)
@@ -147,6 +202,52 @@ pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Res
  
     tracing::info!("HLS transcoding completed successfully for all resolutions");
     Ok(())
+}
+
+/// Builds the ffmpeg scale filter for the given quality levels
+fn build_scale_filter(quality_levels: &[QualityLevel]) -> String {
+    let num_levels = quality_levels.len();
+    
+    if num_levels == 1 {
+        // No scaling needed, just copy the video stream
+        return "[0:v]copy[v1out]".to_string();
+    }
+    
+    // Split the input stream into N outputs
+    let split_outputs: Vec<String> = (1..=num_levels)
+        .map(|i| format!("[v{}]", i))
+        .collect();
+    let split_part = format!("[0:v]split={}{}",num_levels, split_outputs.join(""));
+    
+    // Scale each output to the target width
+    let scale_parts: Vec<String> = quality_levels.iter()
+        .enumerate()
+        .map(|(i, level)| {
+            // If this is the original resolution and it's already at max width, no scaling needed
+            if i == 0 && level.width == quality_levels[0].width {
+                format!("[v{}]scale=w={}:h=-2[v{}out]", i + 1, level.width, i + 1)
+            } else {
+                format!("[v{}]scale=w={}:h=-2[v{}out]", i + 1, level.width, i + 1)
+            }
+        })
+        .collect();
+    
+    format!("{};{}", split_part, scale_parts.join(";"))
+}
+
+/// Builds the variant stream map for HLS
+fn build_variant_stream_map(num_levels: usize, has_audio: bool) -> String {
+    let streams: Vec<String> = (0..num_levels)
+        .map(|i| {
+            if has_audio {
+                format!("v:{},a:{}", i, i)
+            } else {
+                format!("v:{}", i)
+            }
+        })
+        .collect();
+    
+    streams.join(" ")
 }
 
 /// Monitors ffmpeg progress and logs every ~5%
