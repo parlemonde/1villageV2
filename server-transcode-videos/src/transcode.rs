@@ -22,11 +22,13 @@ struct QualityLevel {
 
 impl QualityLevel {
     fn new(width: u32) -> Self {
-        // Determine bitrates based on width
+        // Determine bitrates based on width (increased for better quality)
         let (bitrate, maxrate, bufsize, audio_bitrate) = match width {
-            w if w >= 1920 => ("5000k", "5350k", "7500k", "192k"),
-            w if w >= 1280 => ("2800k", "2996k", "4200k", "128k"),
-            _ => ("1400k", "1498k", "2100k", "96k"),
+            w if w >= 2000 => ("8000k", "8800k", "12000k", "192k"),  // 4K/2K range
+            w if w >= 1920 => ("6000k", "6600k", "9000k", "192k"),   // Full HD
+            w if w >= 1280 => ("4000k", "4400k", "6000k", "128k"),   // HD
+            w if w >= 854 => ("2000k", "2200k", "3000k", "128k"),    // SD
+            _ => ("1200k", "1320k", "1800k", "96k"),                 // Low res
         };
         
         Self {
@@ -101,15 +103,19 @@ pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Res
         "-i".to_string(),
         input_file.to_str().unwrap().to_string(),
         "-preset".to_string(),
-        "ultrafast".to_string(),
+        "veryfast".to_string(),  // Changed from "ultrafast" for better quality
+        "-profile:v".to_string(),
+        "high".to_string(),      // Use high profile for better quality
+        "-level".to_string(),
+        "4.0".to_string(),       // H.264 level 4.0 (supports up to 1080p60)
         "-g".to_string(),
         "48".to_string(),
         "-sc_threshold".to_string(),
         "0".to_string(),
-        "-tune".to_string(),
-        "zerolatency".to_string(),
         "-movflags".to_string(),
         "faststart".to_string(),
+        "-pix_fmt".to_string(),
+        "yuv420p".to_string(),   // Ensure compatibility
         "-filter_complex".to_string(),
         scale_filter,
     ];
