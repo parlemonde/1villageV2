@@ -51,7 +51,7 @@ fn determine_quality_levels(input_width: u32) -> Vec<QualityLevel> {
     
     // [2] Add standard resolutions that are smaller than original
     for &standard_width in &STANDARD_WIDTHS {
-        if standard_width < original_width && levels.len() < 3 {
+        if standard_width < original_width && levels.len() < 2 {
             levels.push(QualityLevel::new(standard_width));
         }
     }
@@ -61,6 +61,15 @@ fn determine_quality_levels(input_width: u32) -> Vec<QualityLevel> {
 
 /// Transcodes a video file to HLS.
 pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Result<()> {
+    // Log system resources
+    let num_cpus = num_cpus::get();
+    let num_physical_cpus = num_cpus::get_physical();
+    tracing::info!(
+        "System resources: {} logical CPUs, {} physical CPUs",
+        num_cpus,
+        num_physical_cpus
+    );
+    
     tracing::info!("Starting HLS transcoding: {} -> {}", 
         input_file.display(), output_dir.display());
 
@@ -102,22 +111,22 @@ pub async fn transcode_video_to_hls(input_file: &Path, output_dir: &Path) -> Res
     let mut ffmpeg_args = vec![
         "-i".to_string(),
         input_file.to_str().unwrap().to_string(),
+        "-threads".to_string(),
+        "0".to_string(),         // Let ffmpeg decide optimal thread count
         "-preset".to_string(),
         "veryfast".to_string(),
         "-profile:v".to_string(),
         "high".to_string(),
         "-level".to_string(),
-        "4.0".to_string(),
+        "4.1".to_string(),       // Level 4.1 supports up to 1080p60
         "-g".to_string(),
-        "60".to_string(),        // Increased GOP for faster encoding (was 48)
+        "120".to_string(),       // GOP size: keyframe every 5 seconds
         "-sc_threshold".to_string(),
-        "0".to_string(),
-        "-x264-params".to_string(),
-        "ref=2:me=hex:subme=6".to_string(),  // Speed optimizations: fewer reference frames, faster motion estimation
-        "-movflags".to_string(),
-        "faststart".to_string(),
+        "0".to_string(),         // Disable scene change detection
         "-pix_fmt".to_string(),
-        "yuv420p".to_string(),
+        "yuv420p".to_string(),   // CRITICAL: Ensures compatibility with all devices/browsers
+        "-movflags".to_string(),
+        "faststart".to_string(), // Enable progressive download
         "-filter_complex".to_string(),
         scale_filter,
     ];
