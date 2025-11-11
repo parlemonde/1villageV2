@@ -44,8 +44,8 @@ const onSaveDraft = async (activity: Partial<Activity>, getSavedId: (id: number)
         if (newId !== undefined) {
             getSavedId(newId);
         }
-        // Wait for minimum 2s to show a pending state
-        const minDuration = 2000 - (Date.now() - now);
+        // Wait for minimum 1s to show a pending state
+        const minDuration = 1000 - (Date.now() - now);
         if (minDuration > 0) {
             await new Promise((resolve) => setTimeout(resolve, minDuration));
         }

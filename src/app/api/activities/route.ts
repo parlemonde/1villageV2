@@ -55,7 +55,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 countries !== null ? or(inArray(classrooms.countryCode, countries), isNull(activities.classroomId)) : undefined,
             ),
         )
-        .orderBy(desc(activities.publishDate));
+        .orderBy(desc(activities.isPinned), desc(activities.publishDate));
     const allActivities = result.map(({ activity }) => activity);
     return NextResponse.json(allActivities);
 };

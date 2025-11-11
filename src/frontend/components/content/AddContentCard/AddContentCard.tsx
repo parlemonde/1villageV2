@@ -2,7 +2,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { ImageIcon, TextIcon, VideoIcon, FileIcon, SpeakerLoudIcon, DashboardIcon } from '@radix-ui/react-icons';
 
 import styles from './add-content-card.module.css';
-import type { AnyContent } from '../content.types';
+import type { AnyContent, AnyContentType } from '../content.types';
 
 interface AddContentButtonProps {
     icon: React.ReactNode;
@@ -17,7 +17,7 @@ const AddContentButton = ({ icon, label, onClick }: AddContentButtonProps) => {
             variant="borderless"
             isUpperCase={false}
             label={
-                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: '40px' }}>
                     {icon}
                     <span style={{ fontSize: '14px', fontWeight: 300 }}>{label}</span>
                 </span>
@@ -27,37 +27,49 @@ const AddContentButton = ({ icon, label, onClick }: AddContentButtonProps) => {
     );
 };
 
+const contentTypes: Record<AnyContentType, { icon: React.ReactNode; label: string }> = {
+    html: {
+        icon: <TextIcon width={20} height={20} />,
+        label: 'Texte',
+    },
+    image: {
+        icon: <ImageIcon width={20} height={20} />,
+        label: 'Image',
+    },
+    audio: {
+        icon: <SpeakerLoudIcon width={20} height={20} />,
+        label: 'Audio',
+    },
+    video: {
+        icon: <VideoIcon width={20} height={20} />,
+        label: 'Vidéo',
+    },
+    document: {
+        icon: <FileIcon width={20} height={20} />,
+        label: 'Document',
+    },
+    h5p: {
+        icon: <DashboardIcon width={20} height={20} />,
+        label: 'H5p',
+    },
+};
+
 interface AddContentCardProps {
     addContentLabel?: string;
-    onAddContent: (newContent: AnyContent) => void;
+    availableContentTypes: AnyContentType[];
+    onAddContent: (newContentType: AnyContent['type']) => void;
 }
 
-export const AddContentCard = ({ addContentLabel = 'Ajouter:', onAddContent }: AddContentCardProps) => {
+export const AddContentCard = ({ addContentLabel = 'Ajouter:', availableContentTypes, onAddContent }: AddContentCardProps) => {
+    const availableContentTypesSet = new Set<AnyContentType>(availableContentTypes);
     return (
         <div className={styles.addContentCard}>
             <strong>{addContentLabel}</strong>
-            <AddContentButton icon={<TextIcon width={20} height={20} />} label="Texte" onClick={() => onAddContent({ type: 'html', html: '' })} />
-            <AddContentButton
-                icon={<ImageIcon width={20} height={20} />}
-                label="Image"
-                onClick={() => onAddContent({ type: 'image', imageUrl: '' })}
-            />
-            <AddContentButton
-                icon={<FileIcon width={20} height={20} />}
-                label="Document"
-                onClick={() => onAddContent({ type: 'document', documentUrl: '' })}
-            />
-            <AddContentButton
-                icon={<SpeakerLoudIcon width={20} height={20} />}
-                label="Audio"
-                onClick={() => onAddContent({ type: 'audio', audioUrl: '' })}
-            />
-            <AddContentButton
-                icon={<VideoIcon width={20} height={20} />}
-                label="Vidéo"
-                onClick={() => onAddContent({ type: 'video', videoUrl: '' })}
-            />
-            <AddContentButton icon={<DashboardIcon width={20} height={20} />} label="H5p" onClick={() => onAddContent({ type: 'h5p', h5pId: '' })} />
+            {Object.entries(contentTypes)
+                .filter(([type]) => availableContentTypesSet.has(type as AnyContentType))
+                .map(([type, { icon, label }]) => (
+                    <AddContentButton key={type} icon={icon} label={label} onClick={() => onAddContent(type as AnyContentType)} />
+                ))}
         </div>
     );
 };

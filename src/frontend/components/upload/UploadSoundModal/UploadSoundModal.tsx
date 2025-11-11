@@ -17,7 +17,7 @@ interface UploadSoundModalProps {
 }
 
 const isValidSoundUrl = (url: string) => {
-    return url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:') || url.startsWith('/media/sounds');
+    return url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:') || url.startsWith('/media/audios');
 };
 
 export const UploadSoundModal = ({ isOpen, initialSoundUrl = null, isPelicoSound = false, onClose, onNewSound }: UploadSoundModalProps) => {

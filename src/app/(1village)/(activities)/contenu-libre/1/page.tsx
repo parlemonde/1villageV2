@@ -2,7 +2,7 @@
 
 import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
-import type { AnyContent } from '@frontend/components/content/content.types';
+import type { AnyContent, AnyContentType } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
@@ -14,6 +14,7 @@ import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { UploadSoundModal } from '@frontend/components/upload/UploadSoundModal';
 import { UploadVideoModal } from '@frontend/components/upload/UploadVideoModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
 import isEqual from 'react-fast-compare';
@@ -28,15 +29,15 @@ const DEFAULT_CONTENT: AnyContent[] = [
     },
 ];
 
+const USER_ALLOWED_CONTENT_TYPES: AnyContentType[] = ['html', 'image', 'audio', 'video'];
+const PELICO_ALLOWED_CONTENT_TYPES: AnyContentType[] = ['html', 'image', 'audio', 'video', 'document', 'h5p'];
+
 export default function FreeContentStep1() {
+    const { user } = useContext(UserContext);
     const { activity, setActivity } = useContext(ActivityContext);
     const data = activity?.type === 'libre' ? activity.data : undefined;
 
-    const [uploadImageModalContentIndex, setUploadImageModalContentIndex] = useState<number | null>(null);
-    const [uploadSoundModalContentIndex, setUploadSoundModalContentIndex] = useState<number | null>(null);
-    const [uploadVideoModalContentIndex, setUploadVideoModalContentIndex] = useState<number | null>(null);
-    const [uploadDocumentModalContentIndex, setUploadDocumentModalContentIndex] = useState<number | null>(null);
-    const [selectH5pModalContentIndex, setSelectH5pModalContentIndex] = useState<number | null>(null);
+    const [modalContentIndex, setModalContentIndex] = useState<AnyContentType | number | null>(null); // null: no modal open, number: index of the content to edit, AnyContentType: type of the content to add
     const [contentWithIds, setContentWithIds] = useState<{ id: string; content: AnyContent }[]>(
         (data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })),
     );
@@ -56,40 +57,16 @@ export default function FreeContentStep1() {
         setContentWithIds((data?.content || DEFAULT_CONTENT).map((content) => ({ id: v4(), content })));
     }
 
-    const uploadImageModalInitialImageUrl =
-        uploadImageModalContentIndex !== null &&
-        uploadImageModalContentIndex !== -1 &&
-        contentWithIds[uploadImageModalContentIndex]?.content.type === 'image'
-            ? contentWithIds[uploadImageModalContentIndex]?.content.imageUrl
-            : null;
-    const uploadSoundModalInitialSoundUrl =
-        uploadSoundModalContentIndex !== null &&
-        uploadSoundModalContentIndex !== -1 &&
-        contentWithIds[uploadSoundModalContentIndex]?.content.type === 'audio'
-            ? contentWithIds[uploadSoundModalContentIndex]?.content.audioUrl
-            : null;
-    const uploadDocumentModalInitialDocumentUrl =
-        uploadDocumentModalContentIndex !== null &&
-        uploadDocumentModalContentIndex !== -1 &&
-        contentWithIds[uploadDocumentModalContentIndex]?.content.type === 'document'
-            ? contentWithIds[uploadDocumentModalContentIndex]?.content.documentUrl
-            : null;
-    const uploadVideoModalInitialVideoUrl =
-        uploadVideoModalContentIndex !== null &&
-        uploadVideoModalContentIndex !== -1 &&
-        contentWithIds[uploadVideoModalContentIndex]?.content.type === 'video'
-            ? contentWithIds[uploadVideoModalContentIndex]?.content.videoUrl
-            : null;
-    const selectH5pModalInitialContentId =
-        selectH5pModalContentIndex !== null && selectH5pModalContentIndex !== -1 && contentWithIds[selectH5pModalContentIndex]?.content.type === 'h5p'
-            ? contentWithIds[selectH5pModalContentIndex]?.content.h5pId
-            : null;
+    const isPelico = user?.role === 'admin' || user?.role === 'mediator';
+    const contentToEdit = typeof modalContentIndex === 'number' ? contentWithIds[modalContentIndex]?.content : undefined;
 
     return (
         <div className={styles.page} style={{ padding: '16px 32px' }}>
             <Link href="/contenu-libre" className={styles.backButton}>
                 <ChevronLeftIcon /> Retour
             </Link>
+            {JSON.stringify(modalContentIndex)}
+            {JSON.stringify(contentToEdit)}
             <Steps
                 steps={[
                     { label: 'Contenu', href: '/contenu-libre/1' },
@@ -124,16 +101,10 @@ export default function FreeContentStep1() {
                             isDraggable
                             htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
                             onEdit={() => {
-                                if (content.type === 'image') {
-                                    setUploadImageModalContentIndex(index);
-                                } else if (content.type === 'audio') {
-                                    setUploadSoundModalContentIndex(index);
-                                } else if (content.type === 'document') {
-                                    setUploadDocumentModalContentIndex(index);
-                                } else if (content.type === 'h5p') {
-                                    setSelectH5pModalContentIndex(index);
-                                } else if (content.type === 'video') {
-                                    setUploadVideoModalContentIndex(index);
+                                if (content.type === 'html') {
+                                    return;
+                                } else {
+                                    setModalContentIndex(index);
                                 }
                             }}
                             onDelete={() => {
@@ -153,22 +124,21 @@ export default function FreeContentStep1() {
                 <div style={{ margin: '32px 0', width: '100%', textAlign: 'center' }}>
                     <AddContentCard
                         addContentLabel="Ajouter à votre publication :"
-                        onAddContent={(newContent) => {
-                            if (newContent.type === 'image') {
-                                setUploadImageModalContentIndex(-1);
-                            } else if (newContent.type === 'audio') {
-                                setUploadSoundModalContentIndex(-1);
-                            } else if (newContent.type === 'document') {
-                                setUploadDocumentModalContentIndex(-1);
-                            } else if (newContent.type === 'h5p') {
-                                setSelectH5pModalContentIndex(-1);
-                            } else if (newContent.type === 'video') {
-                                setUploadVideoModalContentIndex(-1);
-                            } else {
+                        availableContentTypes={isPelico ? PELICO_ALLOWED_CONTENT_TYPES : USER_ALLOWED_CONTENT_TYPES}
+                        onAddContent={(newContentType) => {
+                            if (newContentType === 'html') {
                                 const newContentArray = [...contentWithIds];
-                                newContentArray.push({ id: v4(), content: newContent });
+                                newContentArray.push({
+                                    id: v4(),
+                                    content: {
+                                        type: 'html',
+                                        html: '',
+                                    },
+                                });
                                 setContentWithIds(newContentArray);
                                 setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            } else {
+                                setModalContentIndex(newContentType);
                             }
                         }}
                     />
@@ -178,102 +148,98 @@ export default function FreeContentStep1() {
                 </div>
             </div>
             <UploadImageModal
-                isOpen={uploadImageModalContentIndex !== null}
-                initialImageUrl={uploadImageModalInitialImageUrl}
-                onClose={() => setUploadImageModalContentIndex(null)}
+                isOpen={modalContentIndex === 'image' || contentToEdit?.type === 'image'}
+                initialImageUrl={contentToEdit?.type === 'image' ? contentToEdit.imageUrl : undefined}
+                onClose={() => setModalContentIndex(null)}
                 onNewImage={(imageUrl) => {
-                    if (uploadImageModalContentIndex === null) {
-                        return;
-                    }
                     const newContentArray = [...contentWithIds];
-                    // New content
-                    if (uploadImageModalContentIndex === -1) {
+                    if (modalContentIndex === 'image') {
                         newContentArray.push({ id: v4(), content: { type: 'image', imageUrl } });
-                    } else if (newContentArray[uploadImageModalContentIndex].content.type === 'image') {
-                        newContentArray[uploadImageModalContentIndex].content.imageUrl = imageUrl;
+                    } else if (contentToEdit?.type === 'image' && typeof modalContentIndex === 'number') {
+                        newContentArray[modalContentIndex].content = {
+                            ...contentToEdit,
+                            imageUrl,
+                        };
                     }
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    setUploadImageModalContentIndex(null);
+                    setModalContentIndex(null);
                 }}
             />
             <UploadSoundModal
-                isOpen={uploadSoundModalContentIndex !== null}
-                initialSoundUrl={uploadSoundModalInitialSoundUrl}
-                onClose={() => setUploadSoundModalContentIndex(null)}
+                isOpen={modalContentIndex === 'audio' || contentToEdit?.type === 'audio'}
+                initialSoundUrl={contentToEdit?.type === 'audio' ? contentToEdit.audioUrl : undefined}
+                onClose={() => setModalContentIndex(null)}
                 onNewSound={(soundUrl) => {
-                    if (uploadSoundModalContentIndex === null) {
-                        return;
-                    }
                     const newContentArray = [...contentWithIds];
-                    // New content
-                    if (uploadSoundModalContentIndex === -1) {
+                    if (modalContentIndex === 'audio') {
                         newContentArray.push({ id: v4(), content: { type: 'audio', audioUrl: soundUrl } });
-                    } else if (newContentArray[uploadSoundModalContentIndex].content.type === 'audio') {
-                        newContentArray[uploadSoundModalContentIndex].content.audioUrl = soundUrl;
+                    } else if (contentToEdit?.type === 'audio' && typeof modalContentIndex === 'number') {
+                        newContentArray[modalContentIndex].content = {
+                            ...contentToEdit,
+                            audioUrl: soundUrl,
+                        };
                     }
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    setUploadSoundModalContentIndex(null);
+                    setModalContentIndex(null);
                 }}
             />
             <UploadDocumentModal
-                isOpen={uploadDocumentModalContentIndex !== null}
-                initialDocumentUrl={uploadDocumentModalInitialDocumentUrl}
-                onClose={() => setUploadDocumentModalContentIndex(null)}
+                isOpen={modalContentIndex === 'document' || contentToEdit?.type === 'document'}
+                initialDocumentUrl={contentToEdit?.type === 'document' ? contentToEdit.documentUrl : undefined}
+                onClose={() => setModalContentIndex(null)}
                 onNewDocument={(documentUrl) => {
-                    if (uploadDocumentModalContentIndex === null) {
-                        return;
-                    }
                     const newContentArray = [...contentWithIds];
-                    // New content
-                    if (uploadDocumentModalContentIndex === -1) {
+                    if (modalContentIndex === 'document') {
                         newContentArray.push({ id: v4(), content: { type: 'document', documentUrl } });
-                    } else if (newContentArray[uploadDocumentModalContentIndex].content.type === 'document') {
-                        newContentArray[uploadDocumentModalContentIndex].content.documentUrl = documentUrl;
+                    } else if (contentToEdit?.type === 'document' && typeof modalContentIndex === 'number') {
+                        newContentArray[modalContentIndex].content = {
+                            ...contentToEdit,
+                            documentUrl,
+                        };
                     }
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    setUploadDocumentModalContentIndex(null);
+                    setModalContentIndex(null);
                 }}
             />
             <UploadVideoModal
-                isOpen={uploadVideoModalContentIndex !== null}
-                initialVideoUrl={uploadVideoModalInitialVideoUrl}
-                onClose={() => setUploadVideoModalContentIndex(null)}
+                isOpen={modalContentIndex === 'video' || contentToEdit?.type === 'video'}
+                initialVideoUrl={contentToEdit?.type === 'video' ? contentToEdit.videoUrl : undefined}
+                onClose={() => setModalContentIndex(null)}
                 onNewVideo={(videoUrl) => {
-                    if (uploadVideoModalContentIndex === null) {
-                        return;
-                    }
                     const newContentArray = [...contentWithIds];
-                    // New content
-                    if (uploadVideoModalContentIndex === -1) {
+                    if (modalContentIndex === 'video') {
                         newContentArray.push({ id: v4(), content: { type: 'video', videoUrl } });
-                    } else if (newContentArray[uploadVideoModalContentIndex].content.type === 'video') {
-                        newContentArray[uploadVideoModalContentIndex].content.videoUrl = videoUrl;
+                    } else if (contentToEdit?.type === 'video' && typeof modalContentIndex === 'number') {
+                        newContentArray[modalContentIndex].content = {
+                            ...contentToEdit,
+                            videoUrl,
+                        };
                     }
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    setUploadVideoModalContentIndex(null);
+                    setModalContentIndex(null);
                 }}
             />
             <SelectH5pModal
-                isOpen={selectH5pModalContentIndex !== null}
-                initialContentId={selectH5pModalInitialContentId}
-                onClose={() => setSelectH5pModalContentIndex(null)}
+                isOpen={modalContentIndex === 'h5p' || contentToEdit?.type === 'h5p'}
+                initialContentId={contentToEdit?.type === 'h5p' ? contentToEdit.h5pId : undefined}
+                onClose={() => setModalContentIndex(null)}
                 onSelect={(contentId) => {
-                    if (selectH5pModalContentIndex === null) {
-                        return;
-                    }
                     const newContentArray = [...contentWithIds];
-                    if (selectH5pModalContentIndex === -1) {
+                    if (modalContentIndex === 'h5p') {
                         newContentArray.push({ id: v4(), content: { type: 'h5p', h5pId: contentId } });
-                    } else if (newContentArray[selectH5pModalContentIndex].content.type === 'h5p') {
-                        newContentArray[selectH5pModalContentIndex].content.h5pId = contentId;
+                    } else if (contentToEdit?.type === 'h5p' && typeof modalContentIndex === 'number') {
+                        newContentArray[modalContentIndex].content = {
+                            ...contentToEdit,
+                            h5pId: contentId,
+                        };
                     }
                     setContentWithIds(newContentArray);
                     setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                    setSelectH5pModalContentIndex(null);
+                    setModalContentIndex(null);
                 }}
             />
             <Modal
