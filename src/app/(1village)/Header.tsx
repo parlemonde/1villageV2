@@ -48,7 +48,7 @@ export const Header = () => {
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
-                    {user?.role === 'admin' && <DropdownMenuItem label="Admin" href="/admin" />}
+                    {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" color='primary' href="/admin" />}
                     <DropdownMenuItem label="Mon compte" href="/mon-compte" />
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" />
                 </Dropdown>
@@ -71,7 +71,7 @@ const VillageSelector = () => {
 
     return (
         <>
-            <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
+            <Button size="sm" isUpperCase={false} color="primary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -108,7 +108,7 @@ const VillageSelector = () => {
                         />
                         <div style={{ width: '100%', textAlign: 'right', marginTop: '16px' }}>
                             <Button
-                                color="secondary"
+                                color="primary"
                                 variant={village === undefined ? 'outlined' : 'contained'}
                                 label="Choisir"
                                 onClick={async () => {

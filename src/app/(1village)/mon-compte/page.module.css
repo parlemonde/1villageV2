@@ -1,0 +1,98 @@
+.settingRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--grey-100);
+    gap: 24px;
+    transition: background-color 0.15s ease;
+    margin: 0 -32px;
+    padding: 20px 32px;
+}
+
+.settingRow:hover {
+    background-color: var(--grey-100);
+}
+
+.settingRow:last-child {
+    border-bottom: none;
+    margin-bottom: -20px;
+}
+
+.settingLabel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.settingLabelText {
+    font-weight: 500;
+    color: var(--font-color);
+    font-size: 14px;
+}
+
+.settingValue {
+    color: var(--grey-500);
+    font-size: 14px;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.buttonContainer {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+}
+
+.modalContent {
+    min-width: 320px;
+}
+
+.modalError {
+    color: var(--error-color);
+    margin-top: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.validationMessage {
+    font-size: 12px;
+    margin: 8px 0 0 0;
+}
+
+.errorMessage {
+    font-size: 12px;
+    margin: 8px 0 0 0;
+    color: var(--error-color);
+}
+
+.successMessage {
+    font-size: 12px;
+    margin: 8px 0 0 0;
+    color: var(--secondary-color);
+}
+
+.formFieldLarge {
+    margin-bottom: 16px;
+}
+
+.formFieldSmall {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    .settingRow {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 0;
+    }
+
+    .buttonContainer {
+        flex-direction: column;
+    }
+
+    .modalContent {
+        min-width: 280px;
+    }
+}

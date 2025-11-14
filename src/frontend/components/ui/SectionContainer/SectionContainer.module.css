@@ -1,0 +1,41 @@
+/**
+ * Section container styling - reusable card/content box
+ */
+
+.section {
+    background: white;
+    border-radius: 8px;
+    padding: 32px;
+    padding-top: 16px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .sectionTitle {
+        font-size: 14px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+}

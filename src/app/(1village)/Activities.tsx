@@ -8,14 +8,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
 import { useContext } from 'react';
 import useSWR from 'swr';
-
-const Filters = () => {
-    return (
-        <div>
-            <strong>Filtres:</strong>
-        </div>
-    );
-};
+import { ActivityFilters } from './ActivityFilters';
 
 export const Activities = () => {
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
@@ -32,7 +25,7 @@ export const Activities = () => {
 
     return (
         <div>
-            <Filters />
+            <ActivityFilters />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {activities?.map((activity) => (
                     <ActivityCard
