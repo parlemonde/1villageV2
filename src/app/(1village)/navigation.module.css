@@ -22,9 +22,14 @@
     gap: 8px;
     height: 38px;
 }
+
 .navigationCardTitleMobile {
     height: 59px;
     flex: 1 1 0;
+}
+
+.navigationCardMenu {
+    margin-top: 16px;
 }
 
 @media (max-width: 850px) {

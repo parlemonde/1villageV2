@@ -77,7 +77,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                             />
                         ))}
                 </div>
-                <div className={styles.navigationCard} style={{ marginTop: '16px' }}>
+                <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
                     <Menu items={getMenuItems(firstPath, undefined, avatar, user?.role === 'admin' || user?.role === 'mediator')} />
                 </div>
             </div>

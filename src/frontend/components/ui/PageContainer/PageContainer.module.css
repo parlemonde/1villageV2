@@ -1,0 +1,19 @@
+.pageContainer {
+    margin: 0 16px 32px 16px;
+    background-color: var(--grey-000);
+    border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pageContainer {
+        margin: 8px 12px 24px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pageContainer {
+        margin: 4px 8px 16px 8px;
+        padding: 0;
+    }
+}
