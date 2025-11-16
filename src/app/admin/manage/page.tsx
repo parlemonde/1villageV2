@@ -11,6 +11,7 @@ export default function AdminManagePage() {
             </p>
             <AdminLink href="/admin/manage/villages" label="Les villages-mondes" />
             <AdminLink href="/admin/manage/users" label="Les utilisateurs" />
+            <AdminLink href="/admin/manage/phases" label="Paraméter les phases" />
         </>
     );
 }

@@ -6,6 +6,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { db } from '@server/database';
 import type { Village } from '@server/database/schemas/villages';
 import { villages } from '@server/database/schemas/villages';
+import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { isNotNull } from 'drizzle-orm';
 import FuzzySet from 'fuzzyset.js';
@@ -23,6 +24,12 @@ interface PlmVillage {
 }
 
 export async function importVillages(): Promise<void> {
+    const currentUser = await getCurrentUser();
+
+    if (currentUser?.role !== 'admin') {
+        throw new Error('Not authorized');
+    }
+
     let plmVillages: PlmVillage[] = [];
     try {
         plmVillages = await jsonFetcher<PlmVillage[]>(
