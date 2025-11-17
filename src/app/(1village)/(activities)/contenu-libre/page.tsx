@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -14,16 +16,18 @@ export default function FreeContent() {
     const router = useRouter();
 
     return (
-        <div style={{ padding: '16px 32px' }}>
-            <Title marginBottom="md">Publication de contenu libre</Title>
-            <p>
-                Dans cette activité, nous vous proposons de créer une publication libre. Vous pourrez ensuite partager cette publication et décider de
-                l&apos;épingler dans le fil d&apos;actualité.
-            </p>
-            <div style={{ textAlign: 'right', marginTop: '16px' }}>
+        <PageContainer title="Publication de contenu libre">
+            <SectionContainer>
+                <p>
+                    Dans cette activité, nous vous proposons de créer une publication libre. Vous pourrez ensuite partager cette publication et
+                    décider de l&apos;épingler dans le fil d&apos;actualité.
+                </p>
+            </SectionContainer>
+
+            <div style={{ textAlign: 'right' }}>
                 <Button
                     color="primary"
-                    label="Étape suivante"
+                    label="Démarrer"
                     rightIcon={<ChevronRightIcon />}
                     onClick={() => {
                         onCreateActivity('libre', user.role === 'admin' || user.role === 'teacher');
@@ -31,6 +35,6 @@ export default function FreeContent() {
                     }}
                 ></Button>
             </div>
-        </div>
+        </PageContainer>
     );
 }

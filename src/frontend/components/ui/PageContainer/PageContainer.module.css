@@ -1,6 +1,5 @@
 .pageContainer {
-    margin: 0 16px 32px 16px;
-    background-color: var(--grey-000);
+    margin: 0 16px 32px;
     border-radius: 10px;
 }
 

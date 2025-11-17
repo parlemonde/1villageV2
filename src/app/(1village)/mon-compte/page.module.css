@@ -8,10 +8,6 @@
     padding: 16px 0;
 }
 
-.settingRow:hover {
-    background-color: var(--grey-100);
-}
-
 .settingRow:last-child {
     border-bottom: none;
 }

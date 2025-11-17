@@ -7,6 +7,7 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, isNull, desc } from 'drizzle-orm';
 
 import { MyActivities } from './my-activities';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 
 export default async function MyClassroom() {
     const user = await getCurrentUser();
@@ -25,9 +26,8 @@ export default async function MyClassroom() {
     const classroom = isPelico ? undefined : await getTeacherClassroom(user.id);
 
     return (
-        <div style={{ padding: '16px 16px 32px 16px' }}>
-            <Title>{isPelico ? 'Activités de Pélico' : 'Mes activités'}</Title>
+        <PageContainer title={isPelico ? 'Activités de Pélico' : 'Mes activités'}>
             <MyActivities activities={allActivities} user={user} classroom={classroom} />
-        </div>
+        </PageContainer>
     );
 }
