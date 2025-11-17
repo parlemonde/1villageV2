@@ -7,12 +7,10 @@ import { Switch } from '@frontend/components/ui/Form/Switch';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { Steps } from '@frontend/components/ui/Steps';
-import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon, ChevronLeftIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { useMemo, useContext, useState } from 'react';
 
 export default function FreeContentStep2() {
@@ -115,12 +113,8 @@ export default function FreeContentStep2() {
                 </SectionContainer>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Link href="/contenu-libre/1">
-                        <Button color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
-                    </Link>
-                    <Link href="/contenu-libre/3">
-                        <Button color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
-                    </Link>
+                    <Button as='a' href='/contenu-libre/1' color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
+                    <Button as='a' href='/contenu-libre/3' color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>
             </PageContainer>
         </>

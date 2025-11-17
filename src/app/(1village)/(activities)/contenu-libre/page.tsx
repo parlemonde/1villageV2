@@ -3,7 +3,6 @@
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer';
-import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';

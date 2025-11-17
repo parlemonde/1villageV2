@@ -4,7 +4,6 @@ import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import type { AnyContent, AnyContentType } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button';
-import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Steps } from '@frontend/components/ui/Steps';
 import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
@@ -144,12 +143,8 @@ export default function FreeContentStep1() {
                 </SectionContainer>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Link href="/contenu-libre">
-                        <Button color="primary" variant="outlined" label="Retour" leftIcon={<ChevronLeftIcon />} />
-                    </Link>
-                    <Link href="/contenu-libre/2">
-                        <Button color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
-                    </Link>
+                    <Button as="a" href="/contenu-libre " color="primary" variant="outlined" label="Retour" leftIcon={<ChevronLeftIcon />} />
+                    <Button as="a" href="/contenu-libre/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>
             </PageContainer>
 

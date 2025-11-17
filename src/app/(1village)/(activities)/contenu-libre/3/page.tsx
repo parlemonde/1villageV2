@@ -8,11 +8,9 @@ import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { Steps } from '@frontend/components/ui/Steps';
-import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useContext, useMemo, useState } from 'react';
 
@@ -81,9 +79,14 @@ export default function FreeContentStep3() {
                     </ActivityStepPreview>
                 </SectionContainer>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Link href="/contenu-libre/2">
-                        <Button color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
-                    </Link>
+                    <Button
+                        as="a"
+                        href="/contenu-libre/2"
+                        color="primary"
+                        variant="outlined"
+                        label="Étape précédente"
+                        leftIcon={<ChevronLeftIcon />}
+                    />
                     <Button
                         color="primary"
                         variant="contained"
