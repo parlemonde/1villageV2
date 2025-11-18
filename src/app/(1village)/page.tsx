@@ -38,9 +38,8 @@ export default function Home() {
 
     return (
         <>
-            <PageContainer>
-                <div className={styles.WordMapContainer}></div>
-                <Title marginBottom="md">Dernières activités</Title>
+            <div className={styles.WordMapContainer}></div>
+            <PageContainer title="Dernières activités">
                 <SectionContainer>
                     <Activities />
                 </SectionContainer>

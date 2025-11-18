@@ -3,17 +3,21 @@
  */
 
 .section {
-    background: white;
     border-radius: 8px;
-    padding: 24px;
+    padding: 16px;
     padding-bottom: 32px;
-    margin-bottom: 32px;
+}
+
+.sectionCard {
+    background: var(--primary-050);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.2s ease;
+    padding: 24px;
+    margin-bottom: 32px;
 }
 
 .sectionTitle {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     margin-top: 0px;
     margin-bottom: 16px;

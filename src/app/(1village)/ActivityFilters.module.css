@@ -11,26 +11,32 @@
 }
 
 .pelicoIcon {
-    width: 24px;
-    height: 24px;
+    width: 27px;
+    height: 18px;
 }
 
-.filterCheckbox {
+.filterGroup {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    height: 36px;
+    gap: 16px;
+    min-height: 36px;
     padding: 6px 12px;
     border: 1px solid var(--grey-300);
     border-radius: 10px;
-    cursor: pointer;
     background-color: var(--grey-000);
     transition: all 0.2s ease;
 }
 
-.filterCheckbox:hover {
+.filterGroup:hover {
     border-color: var(--grey-400);
     background-color: var(--grey-050);
+}
+
+.filterItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
 .checkboxRoot {
@@ -69,13 +75,6 @@
     display: flex;
     align-items: center;
     line-height: 0;
-}
-
-.countryFilters {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
 }
 
 .searchInput {

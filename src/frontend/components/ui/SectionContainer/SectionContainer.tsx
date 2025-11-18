@@ -5,6 +5,7 @@ import styles from './SectionContainer.module.css';
 
 interface SectionContainerProps {
     title?: string;
+    card?: boolean;
     children: React.ReactNode;
     className?: string;
 }
@@ -14,9 +15,9 @@ interface SectionContainerProps {
  * Provides consistent styling (white background, shadow, border-radius, padding)
  * @param className - Additional CSS classes to merge
  */
-export const SectionContainer = ({ title, children, className }: SectionContainerProps) => {
+export const SectionContainer = ({ title, card, children, className }: SectionContainerProps) => {
     return (
-        <div className={classNames(styles.section, className)}>
+        <div className={classNames(styles.section, { [styles.sectionCard]: card }, className)}>
             {title && <h2 className={styles.sectionTitle}>{title}</h2>}
             {children}
         </div>

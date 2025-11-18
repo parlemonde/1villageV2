@@ -7,7 +7,7 @@ import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activities';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { VillageContext } from '@frontend/contexts/villageContext';
-import PelicoReflechit from '@frontend/svg/pelico/pelico-reflechit.svg';
+import PelicoNeutreIcon from '@frontend/svg/pelico/pelico-neutre.svg';
 import styles from './ActivityFilters.module.css';
 import { ActivityTypeSelect } from './ActivityTypeSelect';
 
@@ -97,7 +97,7 @@ const ActivityFiltersComponent = ({ onFiltersChange }: ActivityFiltersProps) => 
         [onFiltersChange],
     );
 
-    const pelicoIcon = useMemo(() => <PelicoReflechit className={styles.pelicoIcon} />, []);
+    const pelicoIcon = useMemo(() => <PelicoNeutreIcon className={styles.pelicoIcon} />, []);
 
     return (
         <div className={styles.filtersContainer}>
@@ -109,11 +109,11 @@ const ActivityFiltersComponent = ({ onFiltersChange }: ActivityFiltersProps) => 
                 onSelectAllToggle={handleActivityTypeSelectAll}
             />
 
-            {/* Country Filters */}
+            {/* Country and Pelico Filters */}
             {village && village.countries.length > 0 && (
-                <div className={styles.countryFilters}>
+                <div className={styles.filterGroup}>
                     {village.countries.map((country) => (
-                        <label key={country} className={styles.filterCheckbox} title={country}>
+                        <label key={country} className={styles.filterItem} title={country}>
                             <Checkbox.Root
                                 checked={filters.selectedCountries.includes(country)}
                                 onCheckedChange={() => handleCountryToggle(country)}
@@ -124,29 +124,29 @@ const ActivityFiltersComponent = ({ onFiltersChange }: ActivityFiltersProps) => 
                                 </Checkbox.Indicator>
                             </Checkbox.Root>
                             <span className={styles.iconLabel}>
-                                <CountryFlag country={country} size="small" />
+                                <CountryFlag country={country} size="medium" />
                             </span>
                         </label>
                     ))}
+
+                    {/* isPelico Filter */}
+                    <label
+                        className={styles.filterItem}
+                        title={filters.isPelico === true ? 'Toutes les activités' : 'Activités avec Pélico'}
+                    >
+                        <Checkbox.Root
+                            checked={filters.isPelico === true}
+                            onCheckedChange={handlePelicoToggle}
+                            className={styles.checkboxRoot}
+                        >
+                            <Checkbox.Indicator className={styles.checkboxIndicator}>
+                                <CheckIcon />
+                            </Checkbox.Indicator>
+                        </Checkbox.Root>
+                        <span className={styles.iconLabel}>{pelicoIcon}</span>
+                    </label>
                 </div>
             )}
-
-            {/* isPelico Filter */}
-            <label
-                className={styles.filterCheckbox}
-                title={filters.isPelico === true ? 'Toutes les activités' : 'Activités avec Pélico'}
-            >
-                <Checkbox.Root
-                    checked={filters.isPelico === true}
-                    onCheckedChange={handlePelicoToggle}
-                    className={styles.checkboxRoot}
-                >
-                    <Checkbox.Indicator className={styles.checkboxIndicator}>
-                        <CheckIcon />
-                    </Checkbox.Indicator>
-                </Checkbox.Root>
-                <span className={styles.iconLabel}>{pelicoIcon}</span>
-            </label>
 
             {/* Search Input */}
             <input
