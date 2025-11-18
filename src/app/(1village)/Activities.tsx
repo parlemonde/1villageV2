@@ -5,8 +5,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
-import type { Activity } from '@server/database/schemas/activities';
-import type { Village } from '@server/database/schemas/villages';
+import type { Activity, ActivityType } from '@server/database/schemas/activities';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
@@ -28,9 +27,45 @@ const ActivitiesComponent = () => {
         selectedCountries: village?.countries ?? [],
     });
 
-    const handleFiltersChange = useCallback((newFilters: ActivityFiltersState) => {
-        setFilters(newFilters);
+    const handleActivityTypeToggle = useCallback((type: ActivityType) => {
+        setFilters((prev) => ({
+            ...prev,
+            activityTypes: prev.activityTypes.includes(type)
+                ? prev.activityTypes.filter((t) => t !== type)
+                : [...prev.activityTypes, type],
+        }));
     }, []);
+
+    const handleActivityTypeSelectAll = useCallback(() => {
+        setFilters((prev) => ({
+            ...prev,
+            activityTypes: [],
+        }));
+    }, []);
+
+    const handlePelicoToggle = useCallback(() => {
+        setFilters((prev) => ({
+            ...prev,
+            isPelico: prev.isPelico === true ? null : true,
+        }));
+    }, []);
+
+    const handleSearchChange = useCallback((query: string) => {
+        setFilters((prev) => ({
+            ...prev,
+            searchQuery: query,
+        }));
+    }, []);
+
+    const handleCountryToggle = useCallback((country: string) => {
+        setFilters((prev) => ({
+            ...prev,
+            selectedCountries: prev.selectedCountries.includes(country)
+                ? prev.selectedCountries.filter((c) => c !== country)
+                : [...prev.selectedCountries, country],
+        }));
+    }, []);
+
     const { data: activities } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
@@ -40,12 +75,6 @@ const ActivitiesComponent = () => {
             : null,
         jsonFetcher,
     );
-    const { data: villages } = useSWR<Village[]>('/api/villages', jsonFetcher);
-
-    const villagesMap = useMemo(() => {
-        if (!villages) return {};
-        return Object.fromEntries(villages.map((v) => [v.id, v]));
-    }, [villages]);
 
     const selectedCountriesSet = useMemo(() => new Set(filters.selectedCountries), [filters.selectedCountries]);
 
@@ -61,12 +90,7 @@ const ActivitiesComponent = () => {
             }
 
             // Filter by selected countries (based on classroom countryCode)
-            if (selectedCountriesSet.size > 0) {
-                if (activity.classroomId === null) {
-                    // Global activities (no classroom) are always included
-                    return true;
-                }
-
+            if (selectedCountriesSet.size > 0 && activity.classroomId !== null) {
                 const classroom = classroomsMap[activity.classroomId];
                 if (!classroom) {
                     return false;
@@ -79,7 +103,9 @@ const ActivitiesComponent = () => {
             }
 
             // Filter by isPelico
-            if (filters.isPelico === true && !activity.isPelico) {
+            // When unchecked (null): show only non-Pelico activities
+            // When checked (true): show all activities (both Pelico and non-Pelico)
+            if (filters.isPelico !== true && activity.isPelico) {
                 return false;
             }
 
@@ -95,11 +121,18 @@ const ActivitiesComponent = () => {
 
             return true;
         });
-    }, [activities, filters.activityTypes, filters.isPelico, searchQuery, selectedCountriesSet, village, villagesMap]);
+    }, [activities, filters.activityTypes, filters.isPelico, searchQuery, selectedCountriesSet, classroomsMap]);
 
     return (
         <div>
-            <ActivityFilters onFiltersChange={handleFiltersChange} />
+            <ActivityFilters
+                filters={filters}
+                onActivityTypeToggle={handleActivityTypeToggle}
+                onActivityTypeSelectAll={handleActivityTypeSelectAll}
+                onPelicoToggle={handlePelicoToggle}
+                onSearchChange={handleSearchChange}
+                onCountryToggle={handleCountryToggle}
+            />
             <div style={activitiesContainerStyle}>
                 {filteredActivities?.map((activity) => (
                     <ActivityCard
