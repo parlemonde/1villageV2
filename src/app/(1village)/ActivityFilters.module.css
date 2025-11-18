@@ -78,6 +78,8 @@
 }
 
 .searchInput {
+    flex: 1;
+    min-width: 200px;
     padding: 6px 12px;
     border: 1px solid var(--grey-300);
     border-radius: 10px;

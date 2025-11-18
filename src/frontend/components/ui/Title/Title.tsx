@@ -16,7 +16,7 @@ type TitleProps = {
 export const Title = ({
     id,
     variant = 'h2',
-    color = 'inherit',
+    color = 'primary',
     className,
     style = {},
     children,
