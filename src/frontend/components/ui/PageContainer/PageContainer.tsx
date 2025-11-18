@@ -6,7 +6,8 @@ import { Title } from '../Title';
 
 interface PageContainerProps {
     title?: string;
-    children: React.ReactNode;
+    actionButtons?: React.ReactNode[];
+    children?: React.ReactNode;
     className?: string;
 }
 
@@ -14,10 +15,24 @@ interface PageContainerProps {
  * PageContainer - A reusable wrapper component for consistent page margins and padding
  * @param className - Additional CSS classes to merge
  */
-export const PageContainer = ({ title, children, className }: PageContainerProps) => {
+export const PageContainer = ({ title, actionButtons, children, className }: PageContainerProps) => {
+    const hasHeader = title || actionButtons;
+
     return (
         <div className={classNames(styles.pageContainer, className)}>
-            {title && <Title marginBottom="md">{title}</Title>}
+            {hasHeader && (
+                <div className={styles.header}>
+                    {title && <Title className={styles.title}>{title}</Title>}
+                    {actionButtons && (
+                        <div className={styles.actions}>
+                            {actionButtons.map((button, index) => (
+                                <div key={index}>{button}</div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
             {children}
         </div>
     );

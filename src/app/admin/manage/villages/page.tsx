@@ -4,43 +4,47 @@ import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon, DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
 
 import { VillagesTable } from './VillagesTable';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 export default function AdminManageVillagesPage() {
     return (
         <>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Villages-mondes' }]} />
-            <div
-                style={{
-                    display: 'flex',
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    flexDirection: 'row',
-                    gap: '16px',
-                    margin: '16px 0',
-                }}
+
+            <PageContainer
+                title="Villages-mondes"
+                actionButtons={[
+                    <Button
+                        key="import-villages-button"
+                        variant="contained"
+                        color="primary"
+                        leftIcon={<DownloadIcon />}
+                        label="Importer les villages-mondes"
+                    />,
+                    <Button
+                        key="add-village-button"
+                        as="a"
+                        href="/admin/manage/villages/new"
+                        variant="contained"
+                        color="secondary"
+                        leftIcon={<PlusIcon />}
+                        label="Nouveau village-monde"
+                    />,
+                ]}
             >
-                <Title style={{ flex: '1 1 0' }}>Villages-mondes</Title>
-                <Button variant="contained" color="primary" leftIcon={<DownloadIcon />} label="Importer les villages-mondes" />
+                <SectionContainer>
+                    <VillagesTable />
+                </SectionContainer>
                 <Button
                     as="a"
-                    href="/admin/manage/villages/new"
-                    variant="contained"
-                    color="secondary"
-                    leftIcon={<PlusIcon />}
-                    label="Nouveau village-monde"
+                    color="primary"
+                    variant="outlined"
+                    label="Retour"
+                    href="/admin/manage"
+                    leftIcon={<ChevronLeftIcon width={18} height={18} />}
                 />
-            </div>
-            <VillagesTable />
-            <Button
-                as="a"
-                color="primary"
-                variant="outlined"
-                label="Retour"
-                href="/admin/manage"
-                marginTop="lg"
-                leftIcon={<ChevronLeftIcon width={18} height={18} />}
-            />
+            </PageContainer>
         </>
     );
 }

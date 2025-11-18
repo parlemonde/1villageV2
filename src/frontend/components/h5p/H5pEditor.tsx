@@ -39,7 +39,7 @@ const H5pEditor = ({ contentId = 'new', onSaved }: H5pEditorProps) => {
                     onSaved={onSaved}
                 />
             </div>
-            <div style={{ margin: '2rem 0 1rem 0', textAlign: 'center' }}>
+            <div style={{ marginTop: '16px', textAlign: 'center' }}>
                 <Button
                     label={contentId === 'new' ? 'Créer le contenu H5P !' : 'Mettre à jour le contenu H5P !'}
                     color="primary"

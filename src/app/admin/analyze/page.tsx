@@ -1,9 +1,10 @@
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 
 export default function AdminAnalyzePage() {
     return (
-        <>
-            <Title>Analyser</Title>
-        </>
+        <PageContainer title="Analyser">
+            <SectionContainer></SectionContainer>
+        </PageContainer>
     );
 }

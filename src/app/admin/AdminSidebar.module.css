@@ -1,0 +1,18 @@
+.sidebarTitle {
+    width: 320px;
+    background-color: white;
+    text-align: center;
+    border-radius: 10px;
+    padding: 8px;
+    margin-bottom: 16px;
+    height: 36px;
+    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+}
+
+.sidebar {
+    width: 320px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 16px 8px;
+    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+}
