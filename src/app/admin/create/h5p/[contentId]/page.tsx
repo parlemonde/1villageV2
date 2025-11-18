@@ -2,6 +2,7 @@ import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Title } from '@frontend/components/ui/Title';
 
 import { Editor } from './Editor';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -23,8 +24,9 @@ export default async function AdminCreateH5pNewPage({ params }: ServerPageProps)
                     },
                 ]}
             />
-            <Title marginY="md">{isNew ? 'Nouvelle activité H5P' : "Modifier l'activité H5P"}</Title>
-            <Editor contentId={contentId} />
+            <PageContainer title={isNew ? 'Nouvelle activité H5P' : "Modifier l'activité H5P"}>
+                <Editor contentId={contentId} />
+            </PageContainer>
         </>
     );
 }

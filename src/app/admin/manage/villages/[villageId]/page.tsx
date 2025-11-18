@@ -6,6 +6,8 @@ import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import { VillageForm } from './VillageForm';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -45,8 +47,11 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
                     },
                 ]}
             />
-            <Title marginY="md">{village ? village.name : 'Ajouter un village-monde'}</Title>
-            <VillageForm village={village} isNew={isNew} />
+            <PageContainer title={village ? village.name : 'Ajouter un village-monde'}>
+                <SectionContainer>
+                    <VillageForm village={village} isNew={isNew} />
+                </SectionContainer>
+            </PageContainer>
         </>
     );
 }

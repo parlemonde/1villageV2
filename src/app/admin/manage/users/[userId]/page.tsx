@@ -1,4 +1,6 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { db } from '@server/database';
 import { users } from '@server/database/schemas/users';
@@ -33,7 +35,10 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
                     },
                 ]}
             />
-            <Title marginY="md">{user ? user.name : 'Ajouter un utilisateur'}</Title>
+
+            <PageContainer title={user ? user.name : 'Ajouter un utilisateur'}>
+                <SectionContainer></SectionContainer>
+            </PageContainer>
             {/* <UserForm user={user} isNew={isNew} /> */}
         </>
     );

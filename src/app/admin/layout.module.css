@@ -1,49 +1,36 @@
-body:has(.adminLayout) {
+.backgroundWrapper {
     background-color: var(--primary-100);
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh; /* for mobile */
 }
 
-.adminHeader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 48px;
-    background-color: white;
-    z-index: 100;
+.rootLayout {
+    /* position */
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh; /* for mobile */
+
+    /* display */
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: stretch;
     justify-content: flex-start;
-    padding: 0 48px;
-    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+    padding: 84px 20px 0 20px; /* 8px + 60px + 16px = 84px (header height + margin) */
+    position: relative;
+    gap: 16px;
 }
 
-.adminSidebar {
-    position: fixed;
-    top: 48px;
-    left: 0;
-    bottom: 0;
-    width: 320px;
-    z-index: 100;
-}
-.adminSidebarContent {
-    margin: 32px 0px 32px 32px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 16px 8px;
-    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
-}
-
-.adminLayout {
-    padding-top: 48px;
-    padding-left: 320px;
-}
-
-.adminMainContent {
-    margin: 32px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 32px;
-    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+.content {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 16px;
+    overflow-x: hidden;
 }
 
 .logo {
@@ -56,7 +43,11 @@ body:has(.adminLayout) {
     flex: 1 1 0;
     color: var(--primary-color);
     font-size: 28px;
-    font-family: var(--font-alegreya-sans), Times New Roman, Times, serif;
+    font-family:
+        var(--font-alegreya-sans),
+        Times New Roman,
+        Times,
+        serif;
     font-weight: 500;
     margin-left: 8px;
 }

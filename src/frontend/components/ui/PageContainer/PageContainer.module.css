@@ -7,6 +7,26 @@
     transition: box-shadow 0.2s ease;
 }
 
+.header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.title {
+    flex: 1 1 0;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .pageContainer {
