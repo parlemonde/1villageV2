@@ -11,6 +11,7 @@ import type { User } from '@server/database/schemas/users';
 import { deleteActivity } from '@server-actions/activities/delete-activity';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 interface MyActivitiesProps {
     activities: Activity[];
@@ -27,48 +28,48 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
 
     return (
         <>
-            <Title variant="h2" marginY="sm">
-                Brouillons
-            </Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                {draftActivities.map((activity) => (
-                    <ActivityCard
-                        key={activity.id}
-                        activity={activity}
-                        user={user}
-                        classroom={classroom}
-                        onEdit={() => {
-                            setToLocalStorage('activity', activity);
-                            router.push(activity.draftUrl || '/contenu-libre/3');
-                        }}
-                        onDelete={() => {
-                            setActivityIdToDelete(activity.id);
-                        }}
-                    />
-                ))}
-                {draftActivities.length === 0 && <EmptyState message="Vous n'avez pas de brouillons." />}
-            </div>
-            <Title variant="h2" marginY="sm">
-                Activités publiées
-            </Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
-                {publishedActivities.map((activity) => (
-                    <ActivityCard
-                        key={activity.id}
-                        activity={activity}
-                        user={user}
-                        classroom={classroom}
-                        onEdit={() => {
-                            setToLocalStorage('activity', activity);
-                            router.push('/contenu-libre/3');
-                        }}
-                        onDelete={() => {
-                            setActivityIdToDelete(activity.id);
-                        }}
-                    />
-                ))}
-                {publishedActivities.length === 0 && <EmptyState message="Vous n'avez pas d'activités publiées." />}
-            </div>
+            <SectionContainer title="Brouillons">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {draftActivities.map((activity) => (
+                        <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            user={user}
+                            classroom={classroom}
+                            onEdit={() => {
+                                setToLocalStorage('activity', activity);
+                                router.push(activity.draftUrl || '/contenu-libre/3');
+                            }}
+                            onDelete={() => {
+                                setActivityIdToDelete(activity.id);
+                            }}
+                        />
+                    ))}
+                    {draftActivities.length === 0 && <EmptyState message="Vous n'avez pas de brouillons." />}
+                </div>
+            </SectionContainer>
+
+            <SectionContainer title="Activités publiées">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {publishedActivities.map((activity) => (
+                        <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            user={user}
+                            classroom={classroom}
+                            onEdit={() => {
+                                setToLocalStorage('activity', activity);
+                                router.push('/contenu-libre/3');
+                            }}
+                            onDelete={() => {
+                                setActivityIdToDelete(activity.id);
+                            }}
+                        />
+                    ))}
+                    {publishedActivities.length === 0 && <EmptyState message="Vous n'avez pas d'activités publiées." />}
+                </div>
+            </SectionContainer>
+
             <Modal
                 isOpen={activityIdToDelete !== null}
                 onClose={() => setActivityIdToDelete(null)}
@@ -110,7 +111,6 @@ const EmptyState = ({ message }: { message: string }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '16px',
-                marginBottom: '32px',
                 alignItems: 'center',
                 justifyContent: 'center',
                 border: '1px dashed var(--grey-300)',

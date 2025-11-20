@@ -9,6 +9,8 @@ import { useContext } from 'react';
 
 import { Activities } from './Activities';
 import styles from './page.module.css';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 
 export default function Home() {
     const { village } = useContext(VillageContext);
@@ -37,10 +39,11 @@ export default function Home() {
     return (
         <>
             <div className={styles.WordMapContainer}></div>
-            <div style={{ margin: '8px 16px 32px 16px' }}>
-                <Title>Dernières activités</Title>
-                <Activities />
-            </div>
+            <PageContainer title="Dernières activités">
+                <SectionContainer>
+                    <Activities />
+                </SectionContainer>
+            </PageContainer>
         </>
     );
 }

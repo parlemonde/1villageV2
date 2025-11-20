@@ -1,0 +1,102 @@
+.filtersContainer {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filtersLabel {
+    font-weight: 600;
+}
+
+.pelicoIcon {
+    width: 27px;
+    height: 18px;
+}
+
+.filterGroup {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 36px;
+    padding: 6px 12px;
+    border: 1px solid var(--grey-300);
+    border-radius: 10px;
+    background-color: var(--grey-000);
+    transition: all 0.2s ease;
+}
+
+.filterGroup:hover {
+    border-color: var(--grey-400);
+    background-color: var(--grey-050);
+}
+
+.filterItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkboxRoot {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--grey-400);
+    border-radius: 4px;
+    background-color: var(--grey-000);
+    transition: all 0.2s ease;
+}
+
+.checkboxRoot:hover {
+    border-color: var(--primary-color);
+}
+
+.checkboxRoot[data-state='checked'] {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkboxIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 14px;
+    height: 14px;
+}
+
+.iconLabel {
+    display: flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.searchInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 6px 12px;
+    border: 1px solid var(--grey-300);
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: var(--grey-000);
+    color: var(--font-color);
+    transition: border-color 0.2s ease;
+    height: 36px;
+    box-sizing: border-box;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 62, 217, 0.1);
+}
+
+.searchInput::placeholder {
+    color: var(--grey-400);
+}

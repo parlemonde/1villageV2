@@ -119,7 +119,7 @@ export const Modal = ({
                     )}
                     {isLoading && (
                         <div className={styles.loader}>
-                            <CircularProgress color="primary" />
+                            <CircularProgress color="secondary" />
                         </div>
                     )}
                 </Dialog.Content>
