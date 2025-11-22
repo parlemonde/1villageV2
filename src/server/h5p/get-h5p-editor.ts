@@ -84,10 +84,12 @@ class H5pUrlGenerator extends UrlGenerator {
         super(config);
         this._config = config;
     }
-    public coreFile = (file: string): string => `${this._config.coreUrl}/${file}?version=${this._config.h5pVersion}`;
+    public coreFile = (file: string): string =>
+        `${this._config.coreUrl}/${file.startsWith('/') ? file.slice(1) : file}?version=${this._config.h5pVersion}`;
     public coreFiles = (): string => `${this._config.coreUrl}/js`;
-    public editorLibraryFile = (file: string): string => `${this._config.editorLibraryUrl}/${file}?version=${this._config.h5pVersion}`;
-    public editorLibraryFiles = (): string => `${this._config.editorLibraryUrl}/`;
+    public editorLibraryFile = (file: string): string =>
+        `${this._config.editorLibraryUrl}/${file.startsWith('/') ? file.slice(1) : file}?version=${this._config.h5pVersion}`;
+    public editorLibraryFiles = (): string => `${this._config.editorLibraryUrl}`;
 }
 
 const initH5p = async () => {
