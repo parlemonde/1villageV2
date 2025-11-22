@@ -65,8 +65,6 @@ export default function FreeContentStep1() {
             <Link href="/contenu-libre" className={styles.backButton}>
                 <ChevronLeftIcon /> Retour
             </Link>
-            {JSON.stringify(modalContentIndex)}
-            {JSON.stringify(contentToEdit)}
             <Steps
                 steps={[
                     { label: 'Contenu', href: '/contenu-libre/1' },
