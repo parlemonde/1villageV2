@@ -69,12 +69,26 @@ const DEFAULT_CONFIG: IH5PConfig = {
     contentFilesUrlPlayerOverride: '/api/h5p/content/{{contentId}}',
     temporaryFilesUrl: '/temp-file',
     paramsUrl: '/params',
-    editorLibraryUrl: '/editor',
+    editorLibraryUrl: '/static/h5p/editor',
     downloadUrl: '/download',
-    coreUrl: '/core',
+    coreUrl: '/static/h5p/core',
     ajaxUrl: '/ajax',
     playUrl: '/play',
 };
+
+// Do not use base url for the core and editor urls.
+// But we need it for the content. So we need to override the methods.
+class H5pUrlGenerator extends UrlGenerator {
+    private _config: IH5PConfig;
+    constructor(config: IH5PConfig) {
+        super(config);
+        this._config = config;
+    }
+    public coreFile = (file: string): string => `${this._config.coreUrl}/${file}?version=${this._config.h5pVersion}`;
+    public coreFiles = (): string => `${this._config.coreUrl}/js`;
+    public editorLibraryFile = (file: string): string => `${this._config.editorLibraryUrl}/${file}?version=${this._config.h5pVersion}`;
+    public editorLibraryFiles = (): string => `${this._config.editorLibraryUrl}/`;
+}
 
 const initH5p = async () => {
     const keyValueStorage = new KeyValueStorage();
@@ -87,7 +101,7 @@ const initH5p = async () => {
     }
     const config: IH5PConfig = { ...DEFAULT_CONFIG, uuid };
 
-    const urlGenerator = new UrlGenerator(config);
+    const urlGenerator = new H5pUrlGenerator(config);
 
     const h5pEditor = new H5PEditor(
         keyValueStorage,
