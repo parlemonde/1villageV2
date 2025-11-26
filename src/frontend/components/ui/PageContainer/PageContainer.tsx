@@ -1,6 +1,7 @@
 'use client';
 
 import classNames from 'clsx';
+
 import styles from './PageContainer.module.css';
 import { Title } from '../Title';
 

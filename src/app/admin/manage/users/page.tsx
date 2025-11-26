@@ -1,9 +1,10 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
-import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
-import { UsersTable } from './UsersTable';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
+import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
+
+import { UsersTable } from './UsersTable';
 
 export default function AdminManageUsersPage() {
     return (

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import type { User } from '@server/database/schemas/users';
 import { updateUserName } from '@server-actions/users/update-user-name';
+import { useState } from 'react';
 
 interface UseUpdateNameReturn {
     isUpdating: boolean;
@@ -7,7 +8,7 @@ interface UseUpdateNameReturn {
     handleUpdate: (name: string) => Promise<void>;
 }
 
-export const useUpdateName = (onSuccess: (result: any) => void): UseUpdateNameReturn => {
+export const useUpdateName = (onSuccess: (result: User) => void): UseUpdateNameReturn => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

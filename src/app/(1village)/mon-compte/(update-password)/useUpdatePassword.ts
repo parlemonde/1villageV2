@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { updateUserPassword } from '@server-actions/users/update-user-password';
+import { useState } from 'react';
 
 interface UseUpdatePasswordReturn {
     isUpdating: boolean;

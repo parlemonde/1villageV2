@@ -1,13 +1,12 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 import { db } from '@server/database';
 import { villages } from '@server/database/schemas/villages';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import { VillageForm } from './VillageForm';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

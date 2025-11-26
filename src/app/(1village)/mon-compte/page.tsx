@@ -6,6 +6,7 @@ import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { UserContext } from '@frontend/contexts/userContext';
 import { checkIfSSOUser } from '@server-actions/users/is-sso-user';
 import { useContext, useEffect, useState } from 'react';
+
 import { UpdateEmailModal } from './(update-email)/UpdateEmailModal';
 import { UpdateNameModal } from './(update-name)/UpdateNameModal';
 import { UpdatePasswordModal } from './(update-password)/UpdatePasswordModal';

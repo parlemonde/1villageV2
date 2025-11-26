@@ -113,8 +113,15 @@ export default function FreeContentStep2() {
                 </SectionContainer>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button as='a' href='/contenu-libre/1' color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
-                    <Button as='a' href='/contenu-libre/3' color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
+                    <Button
+                        as="a"
+                        href="/contenu-libre/1"
+                        color="primary"
+                        variant="outlined"
+                        label="Étape précédente"
+                        leftIcon={<ChevronLeftIcon />}
+                    />
+                    <Button as="a" href="/contenu-libre/3" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>
             </PageContainer>
         </>

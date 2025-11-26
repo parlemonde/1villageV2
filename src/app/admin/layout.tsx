@@ -2,9 +2,9 @@ import { UserProvider } from '@frontend/contexts/userContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { redirect } from 'next/navigation';
 
-import styles from './layout.module.css';
-import { Header } from './Header';
 import { AdminSidebar } from './AdminSidebar';
+import { Header } from './Header';
+import styles from './layout.module.css';
 
 export default async function RootLayout({
     children,

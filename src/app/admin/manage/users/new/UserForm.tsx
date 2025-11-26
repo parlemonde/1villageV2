@@ -339,15 +339,9 @@ export const UserForm = ({ user, classroom, isNew = false }: UserFormProps) => {
             </div>
 
             <div className={styles.buttons}>
+                <Button label="Annuler" variant="outlined" color="grey" type="button" onClick={handleCancel} />
                 <Button
-                    label="Annuler"
-                    variant="outlined"
-                    color="grey"
-                    type="button"
-                    onClick={handleCancel}
-                />
-                <Button
-                    label={isNew ? 'Ajouter l\'utilisateur' : 'Enregistrer'}
+                    label={isNew ? "Ajouter l'utilisateur" : 'Enregistrer'}
                     variant="contained"
                     color="primary"
                     type="submit"

@@ -1,9 +1,8 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
-import { Title } from '@frontend/components/ui/Title';
-
-import { Editor } from './Editor';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer';
+
+import { Editor } from './Editor';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -33,4 +32,3 @@ export default async function AdminCreateH5pNewPage({ params }: ServerPageProps)
         </>
     );
 }
-

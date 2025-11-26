@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use server';
 
 import { db } from '@server/database';
@@ -7,11 +8,7 @@ import { auth } from '@server/lib/auth';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 
-export const updateUserPassword = async (
-    currentPassword: string,
-    newPassword: string,
-    confirmPassword: string,
-) => {
+export const updateUserPassword = async (currentPassword: string, newPassword: string, confirmPassword: string) => {
     const currentUser = await getCurrentUser();
     if (!currentUser) {
         throw new Error('Non autorisé');
@@ -44,16 +41,14 @@ export const updateUserPassword = async (
 
     // Update password through Better Auth
     try {
-        await auth.api.changePassword(
-            {
-                body: {
-                    currentPassword,
-                    newPassword,
-                },
-                headers: await headers(),
+        await auth.api.changePassword({
+            body: {
+                currentPassword,
+                newPassword,
             },
-        );
-    } catch (error) {
+            headers: await headers(),
+        });
+    } catch {
         throw new Error('Le mot de passe actuel est incorrect');
     }
 

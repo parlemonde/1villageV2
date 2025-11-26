@@ -1,4 +1,4 @@
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
@@ -8,7 +8,6 @@ import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-curren
 import { and, eq, isNull, desc } from 'drizzle-orm';
 
 import { MyActivities } from './my-activities';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 
 export default async function MyClassroom() {
     const user = await getCurrentUser();

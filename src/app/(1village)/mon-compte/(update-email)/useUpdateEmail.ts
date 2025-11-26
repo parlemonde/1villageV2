@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import type { User } from '@server/database/schemas/users';
 import { updateUserEmail } from '@server-actions/users/update-user-email';
+import { useState } from 'react';
 
 interface UseUpdateEmailReturn {
     isUpdating: boolean;
@@ -7,7 +8,7 @@ interface UseUpdateEmailReturn {
     handleUpdate: (email: string) => Promise<void>;
 }
 
-export const useUpdateEmail = (onSuccess: (result: any) => void): UseUpdateEmailReturn => {
+export const useUpdateEmail = (onSuccess: (result: User) => void): UseUpdateEmailReturn => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +19,7 @@ export const useUpdateEmail = (onSuccess: (result: any) => void): UseUpdateEmail
             const result = await updateUserEmail(email);
             onSuccess(result);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Echec de la mise à jour de l\'email');
+            setError(err instanceof Error ? err.message : "Echec de la mise à jour de l'email");
         } finally {
             setIsUpdating(false);
         }

@@ -2,7 +2,7 @@
 
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { Modal } from '@frontend/components/ui/Modal';
-import { Title } from '@frontend/components/ui/Title';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 import { setToLocalStorage } from '@frontend/hooks/useLocalStorage/local-storage';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Activity } from '@server/database/schemas/activities';
@@ -11,7 +11,6 @@ import type { User } from '@server/database/schemas/users';
 import { deleteActivity } from '@server-actions/activities/delete-activity';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 interface MyActivitiesProps {
     activities: Activity[];

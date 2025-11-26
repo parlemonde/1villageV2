@@ -1,12 +1,12 @@
 'use client';
 
 import classNames from 'clsx';
+
 import styles from './SectionContainer.module.css';
 
 interface SectionContainerProps {
     title?: string;
     card?: boolean;
-    children: React.ReactNode;
     className?: string;
 }
 
@@ -15,7 +15,7 @@ interface SectionContainerProps {
  * Provides consistent styling (white background, shadow, border-radius, padding)
  * @param className - Additional CSS classes to merge
  */
-export const SectionContainer = ({ title, card, children, className }: SectionContainerProps) => {
+export const SectionContainer = ({ title, card, children, className }: React.PropsWithChildren<SectionContainerProps>) => {
     return (
         <div className={classNames(styles.section, { [styles.sectionCard]: card }, className)}>
             {title && <h2 className={styles.sectionTitle}>{title}</h2>}
