@@ -4,7 +4,6 @@ import { db } from '@server/database';
 import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 
 export const updateUserName = async (newName: string) => {
     const currentUser = await getCurrentUser();
@@ -16,11 +15,7 @@ export const updateUserName = async (newName: string) => {
         throw new Error('Le nom ne peut pas être vide');
     }
 
-    await db
-        .update(users)
-        .set({ name: newName.trim(), updatedAt: new Date() })
-        .where(eq(users.id, currentUser.id));
+    await db.update(users).set({ name: newName.trim(), updatedAt: new Date() }).where(eq(users.id, currentUser.id));
 
     return { ...currentUser, name: newName.trim() };
 };
-    

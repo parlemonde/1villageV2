@@ -30,9 +30,7 @@ const ActivitiesComponent = () => {
     const handleActivityTypeToggle = useCallback((type: ActivityType) => {
         setFilters((prev) => ({
             ...prev,
-            activityTypes: prev.activityTypes.includes(type)
-                ? prev.activityTypes.filter((t) => t !== type)
-                : [...prev.activityTypes, type],
+            activityTypes: prev.activityTypes.includes(type) ? prev.activityTypes.filter((t) => t !== type) : [...prev.activityTypes, type],
         }));
     }, []);
 

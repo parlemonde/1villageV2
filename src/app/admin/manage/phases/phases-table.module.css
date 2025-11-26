@@ -1,0 +1,38 @@
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    table-layout: fixed;
+    margin: 16px 0;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.headerCell {
+    font-weight: 700;
+    padding: 8px;
+    border-bottom: 1px solid var(--primary-500);
+    background-color: white;
+}
+.headerContent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.row {
+    vertical-align: middle;
+    outline: 0px;
+    background-color: white;
+}
+.row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.cell {
+    padding: 2px 8px;
+    border-bottom: 1px solid var(--grey-300);
+    text-align: center;
+}
+.row:last-child .cell {
+    border-bottom: none;
+}

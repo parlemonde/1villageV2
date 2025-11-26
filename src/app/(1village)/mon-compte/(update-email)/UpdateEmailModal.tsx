@@ -1,13 +1,14 @@
 'use client';
 
-import { useContext, useState } from 'react';
 import { Field } from '@frontend/components/ui/Form';
 import { Input } from '@frontend/components/ui/Form/Input';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
+import { useContext, useState } from 'react';
+
 import { useUpdateEmail } from './useUpdateEmail';
-import { isValidEmail } from '../validation';
 import styles from '../page.module.css';
+import { isValidEmail } from '../validation';
 
 interface UpdateEmailModalProps {
     isOpen: boolean;
@@ -65,7 +66,7 @@ export const UpdateEmailModal = ({ isOpen, onClose, initialValue }: UpdateEmailM
                         />
                     }
                 />
-                {isEmailEmpty && value.length > 0 && <p className={styles.errorMessage}>L'email ne peut pas être vide</p>}
+                {isEmailEmpty && value.length > 0 && <p className={styles.errorMessage}>L&apos;email ne peut pas être vide</p>}
                 {isEmailInvalid && <p className={styles.errorMessage}>Veuillez entrer une adresse email valide</p>}
                 {!isEmailEmpty && isValidEmail(value) && <p className={styles.successMessage}>✓ Email valide</p>}
                 {error && <p className={styles.modalError}>{error}</p>}

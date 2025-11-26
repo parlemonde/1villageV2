@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { db } from '@server/database';
 import { auth_accounts } from '@server/database/schemas/auth-schemas';
 import { eq } from 'drizzle-orm';

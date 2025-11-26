@@ -1,12 +1,13 @@
 'use client';
 
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { VillageContext } from '@frontend/contexts/villageContext';
+import PelicoNeutreIcon from '@frontend/svg/pelico/pelico-neutre.svg';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activities';
 import React, { useContext, useMemo } from 'react';
-import { CountryFlag } from '@frontend/components/CountryFlag';
-import { VillageContext } from '@frontend/contexts/villageContext';
-import PelicoNeutreIcon from '@frontend/svg/pelico/pelico-neutre.svg';
+
 import styles from './ActivityFilters.module.css';
 import { ActivityTypeSelect } from './ActivityTypeSelect';
 
@@ -42,11 +43,7 @@ const ActivityFiltersComponent = ({
         <div className={styles.filtersContainer}>
             <span className={styles.filtersLabel}>Filtres :</span>
 
-            <ActivityTypeSelect
-                selectedTypes={filters.activityTypes}
-                onToggle={onActivityTypeToggle}
-                onSelectAllToggle={onActivityTypeSelectAll}
-            />
+            <ActivityTypeSelect selectedTypes={filters.activityTypes} onToggle={onActivityTypeToggle} onSelectAllToggle={onActivityTypeSelectAll} />
 
             {/* Country and Pelico Filters */}
             {village && village.countries.length > 0 && (
@@ -73,11 +70,7 @@ const ActivityFiltersComponent = ({
                         className={styles.filterItem}
                         title={filters.isPelico === true ? 'Toutes les activités (avec et sans Pélico)' : 'Activités sans Pélico uniquement'}
                     >
-                        <Checkbox.Root
-                            checked={filters.isPelico === true}
-                            onCheckedChange={onPelicoToggle}
-                            className={styles.checkboxRoot}
-                        >
+                        <Checkbox.Root checked={filters.isPelico === true} onCheckedChange={onPelicoToggle} className={styles.checkboxRoot}>
                             <Checkbox.Indicator className={styles.checkboxIndicator}>
                                 <CheckIcon />
                             </Checkbox.Indicator>

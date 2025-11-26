@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
+import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
@@ -9,8 +11,6 @@ import { useContext } from 'react';
 
 import { Activities } from './Activities';
 import styles from './page.module.css';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 
 export default function Home() {
     const { village } = useContext(VillageContext);

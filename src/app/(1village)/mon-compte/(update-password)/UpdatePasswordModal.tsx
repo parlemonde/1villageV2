@@ -1,22 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import { Field } from '@frontend/components/ui/Form';
 import { Input } from '@frontend/components/ui/Form/Input';
 import { Modal } from '@frontend/components/ui/Modal';
+import { useState } from 'react';
+
 import { useUpdatePassword } from './useUpdatePassword';
-import { getPasswordStrength } from '../validation';
 import styles from '../page.module.css';
+import { getPasswordStrength } from '../validation';
 
 interface UpdatePasswordModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-export const UpdatePasswordModal = ({
-    isOpen,
-    onClose,
-}: UpdatePasswordModalProps) => {
+export const UpdatePasswordModal = ({ isOpen, onClose }: UpdatePasswordModalProps) => {
     const { isUpdating, error, handleUpdate } = useUpdatePassword();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -24,10 +22,7 @@ export const UpdatePasswordModal = ({
 
     const passwordStrength = getPasswordStrength(newPassword);
     const passwordsMatch = newPassword === confirmPassword && newPassword.length > 0;
-    const isFormValid =
-        currentPassword.length > 0 &&
-        newPassword.length >= 8 &&
-        passwordsMatch;
+    const isFormValid = currentPassword.length > 0 && newPassword.length >= 8 && passwordsMatch;
 
     const isNewPasswordInvalid = newPassword.length > 0 && passwordStrength.level !== 'strong';
     const isConfirmPasswordInvalid = !passwordsMatch && confirmPassword.length > 0;
@@ -99,13 +94,10 @@ export const UpdatePasswordModal = ({
                     />
                     {isNewPasswordInvalid && (
                         <p className={styles.errorMessage}>
-                            Mot de passe trop faible. Il doit contenir au moins 8 charactères avec des lettres minuscules,
-                            majuscules et des chiffres.
+                            Mot de passe trop faible. Il doit contenir au moins 8 charactères avec des lettres minuscules, majuscules et des chiffres.
                         </p>
                     )}
-                    {newPassword.length > 0 && !isNewPasswordInvalid && (
-                        <p className={styles.successMessage}>✓ Mot de passe solide</p>
-                    )}
+                    {newPassword.length > 0 && !isNewPasswordInvalid && <p className={styles.successMessage}>✓ Mot de passe solide</p>}
                 </div>
 
                 <div className={styles.formFieldSmall}>
@@ -126,12 +118,8 @@ export const UpdatePasswordModal = ({
                         }
                     />
                 </div>
-                {isConfirmPasswordInvalid && (
-                    <p className={styles.errorMessage}>Les mots de passe ne correspondent pas</p>
-                )}
-                {passwordsMatch && newPassword.length > 0 && (
-                    <p className={styles.successMessage}>✓ Les mots de passe correspondent</p>
-                )}
+                {isConfirmPasswordInvalid && <p className={styles.errorMessage}>Les mots de passe ne correspondent pas</p>}
+                {passwordsMatch && newPassword.length > 0 && <p className={styles.successMessage}>✓ Les mots de passe correspondent</p>}
 
                 {error && <p className={styles.modalError}>{error}</p>}
             </div>
