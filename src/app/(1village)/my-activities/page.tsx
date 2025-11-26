@@ -4,6 +4,7 @@ import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
 import { getTeacherClassroom } from '@server/entities/classrooms/get-teacher-classroom';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { and, eq, isNull, desc } from 'drizzle-orm';
 
 import { MyActivities } from './my-activities';
@@ -11,15 +12,17 @@ import { PageContainer } from '@frontend/components/ui/PageContainer/PageContain
 
 export default async function MyClassroom() {
     const user = await getCurrentUser();
+    const { village } = user ? await getCurrentVillageAndClassroomForUser(user) : { village: undefined };
 
-    if (!user) {
+    if (!user || !village) {
         // Login redirection is handled by the parent layout
         return null;
     }
+
     const allActivities = (await db
         .select()
         .from(activities)
-        .where(and(eq(activities.userId, user.id), isNull(activities.deleteDate)))
+        .where(and(eq(activities.userId, user.id), isNull(activities.deleteDate), eq(activities.villageId, village.id)))
         .orderBy(desc(activities.updateDate))) as Activity[];
 
     const isPelico = user.role === 'admin' || user.role === 'mediator';

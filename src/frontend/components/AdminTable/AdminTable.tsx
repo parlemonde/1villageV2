@@ -70,7 +70,7 @@ const CellAccessor = <T,>({ column, row, index }: CellAccessorProps<T>): React.R
 };
 
 export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }: AdminTableProps<T>) => {
-    const [pageSize, setPageSize] = React.useState(10);
+    const [pageSize, setPageSize] = React.useState(50);
     const [pageIndex, setPageIndex] = React.useState(1);
     const [sortColumn, setSortColumn] = React.useState<string | null>(null);
     const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc' | null>(null);

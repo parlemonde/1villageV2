@@ -1,11 +1,11 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
-import { Title } from '@frontend/components/ui/Title';
-import { ChevronLeftIcon, DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
-
-import { VillagesTable } from './VillagesTable';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
+import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
+
+import { ImportVillagesButton } from './ImportVillagesButton';
+import { VillagesTable } from './VillagesTable';
 
 export default function AdminManageVillagesPage() {
     return (
@@ -15,13 +15,7 @@ export default function AdminManageVillagesPage() {
             <PageContainer
                 title="Villages-mondes"
                 actionButtons={[
-                    <Button
-                        key="import-villages-button"
-                        variant="contained"
-                        color="primary"
-                        leftIcon={<DownloadIcon />}
-                        label="Importer les villages-mondes"
-                    />,
+                    <ImportVillagesButton key="import-villages-button" />,
                     <Button
                         key="add-village-button"
                         as="a"
