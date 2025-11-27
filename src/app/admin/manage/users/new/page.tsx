@@ -1,12 +1,12 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
+import { Title } from '@frontend/components/ui/Title';
 
 import { UserForm } from './UserForm';
 
 export default function AdminNewUserPage() {
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs
                 breadcrumbs={[
                     { label: 'Gérer', href: '/admin/manage' },
@@ -16,12 +16,8 @@ export default function AdminNewUserPage() {
                     },
                 ]}
             />
-
-            <PageContainer title="Ajouter un utilisateur">
-                <SectionContainer>
-                    <UserForm isNew />
-                </SectionContainer>
-            </PageContainer>
-        </>
+            <Title marginY="md">Ajouter un utilisateur</Title>
+            <UserForm isNew />
+        </PageContainer>
     );
 }

@@ -1,6 +1,6 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
+import { Title } from '@frontend/components/ui/Title';
 
 import { Editor } from './Editor';
 
@@ -14,7 +14,7 @@ export default async function AdminCreateH5pNewPage({ params }: ServerPageProps)
     const isNew = contentId === 'new';
 
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs
                 breadcrumbs={[
                     { label: 'Créer', href: '/admin' },
@@ -24,11 +24,8 @@ export default async function AdminCreateH5pNewPage({ params }: ServerPageProps)
                     },
                 ]}
             />
-            <PageContainer title={isNew ? 'Nouvelle activité H5P' : "Modifier l'activité H5P"}>
-                <SectionContainer>
-                    <Editor contentId={contentId} />
-                </SectionContainer>
-            </PageContainer>
-        </>
+            <Title marginY="md">{isNew ? 'Nouvelle activité H5P' : "Modifier l'activité H5P"}</Title>
+            <Editor contentId={contentId} />
+        </PageContainer>
     );
 }

@@ -1,8 +1,6 @@
 'use client';
 
 import { Button } from '@frontend/components/ui/Button';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
@@ -39,11 +37,10 @@ export default function Home() {
     return (
         <>
             <div className={styles.WordMapContainer}></div>
-            <PageContainer title="Dernières activités">
-                <SectionContainer>
-                    <Activities />
-                </SectionContainer>
-            </PageContainer>
+            <div style={{ margin: '8px 16px 32px 16px' }}>
+                <Title marginBottom="sm">Dernières activités</Title>
+                <Activities />
+            </div>
         </>
     );
 }

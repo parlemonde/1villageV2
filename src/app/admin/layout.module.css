@@ -1,11 +1,18 @@
-.backgroundWrapper {
+body:has(.adminLayout) {
     background-color: var(--primary-100);
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh; /* for mobile */
+}
+.adminSidebar {
+    width: 320px;
+    min-width: 320px;
+    position: relative;
+    align-self: stretch;
+}
+.adminSidebarStickyContent {
+    position: sticky;
+    top: 84px;
 }
 
-.rootLayout {
+.adminLayout {
     /* position */
     width: 100%;
     max-width: 1450px;
@@ -16,38 +23,17 @@
     /* display */
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: flex-start;
     padding: 84px 20px 0 20px; /* 8px + 60px + 16px = 84px (header height + margin) */
     position: relative;
     gap: 16px;
 }
 
-.content {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 16px;
-    overflow-x: hidden;
-}
-
-.logo {
-    width: 36px;
-    height: 36px;
-    color: var(--primary-color);
-}
-
-.title {
-    flex: 1 1 0;
-    color: var(--primary-color);
-    font-size: 28px;
-    font-family:
-        var(--font-alegreya-sans),
-        Times New Roman,
-        Times,
-        serif;
-    font-weight: 500;
-    margin-left: 8px;
+.adminMainContent {
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+    margin-bottom: 16px;
 }

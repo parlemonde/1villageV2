@@ -2,7 +2,7 @@
 
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
+import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
 import { checkIfSSOUser } from '@server-actions/users/is-sso-user';
 import { useContext, useEffect, useState } from 'react';
@@ -81,12 +81,18 @@ export default function MyAccount() {
                     </div>
                 </SectionContainer>
             </PageContainer>
-
             <UpdateNameModal isOpen={updateNameModalOpen} onClose={() => setUpdateNameModalOpen(false)} initialValue={user.name} />
-
             <UpdateEmailModal isOpen={updateEmailModalOpen} onClose={() => setUpdateEmailModalOpen(false)} initialValue={user.email} />
-
             <UpdatePasswordModal isOpen={updatePasswordModalOpen} onClose={() => setUpdatePasswordModalOpen(false)} />
         </>
     );
 }
+
+const SectionContainer = ({ title, children }: { title: string; children: React.ReactNode }) => {
+    return (
+        <div>
+            <Title marginY="md">{title}</Title>
+            {children}
+        </div>
+    );
+};
