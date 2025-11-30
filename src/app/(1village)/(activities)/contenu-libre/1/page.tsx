@@ -4,8 +4,11 @@ import { AddContentCard } from '@frontend/components/content/AddContentCard';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import type { AnyContent, AnyContentType } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button';
+import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
 import { UploadDocumentModal } from '@frontend/components/upload/UploadDocumentModal';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
@@ -19,8 +22,6 @@ import isEqual from 'react-fast-compare';
 import { v4 } from 'uuid';
 
 import styles from './page.module.css';
-import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 
 const DEFAULT_CONTENT: AnyContent[] = [
     {
@@ -61,93 +62,90 @@ export default function FreeContentStep1() {
     const contentToEdit = typeof modalContentIndex === 'number' ? contentWithIds[modalContentIndex]?.content : undefined;
 
     return (
-        <>
-            <PageContainer title="Publication de contenu libre">
-                {modalContentIndex && JSON.stringify(modalContentIndex)}
-                {JSON.stringify(contentToEdit)}
-                <Steps
-                    steps={[
-                        { label: 'Contenu', href: '/contenu-libre/1' },
-                        { label: 'Forme', href: '/contenu-libre/2' },
-                        { label: 'Pré-visualiser', href: '/contenu-libre/3' },
-                    ]}
-                    activeStep={1}
-                    marginBottom="sm"
-                />
-
-                <SectionContainer title="Écrivez le contenu de votre publication">
-                    <p>
-                        Utilisez l&apos;éditeur de bloc pour définir le contenu de votre publication. Dans l&apos;étape 2 vous pourrez définir
-                        l&apos;aspect de la carte résumée de votre publication.
-                    </p>
-                    <div style={{ marginTop: '16px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            {contentWithIds.map(({ id, content }, index) => (
-                                <ContentEditor
-                                    key={id}
-                                    content={content}
-                                    activityId={activity.id}
-                                    setContent={(newContent) => {
-                                        const newContentArray = [...contentWithIds];
-                                        newContentArray[index].content = newContent;
-                                        setContentWithIds(newContentArray);
-                                        setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                                    }}
-                                    hasDottedBorder
-                                    isDraggable
-                                    htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
-                                    onEdit={() => {
-                                        if (content.type === 'html') {
-                                            return;
-                                        } else {
-                                            setModalContentIndex(index);
-                                        }
-                                    }}
-                                    onDelete={() => {
-                                        const isEmptyContent = content.type === 'html' && !content.html;
-                                        if (isEmptyContent) {
-                                            const newContentArray = [...contentWithIds];
-                                            newContentArray.splice(index, 1);
-                                            setContentWithIds(newContentArray);
-                                            setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                                        } else {
-                                            setDeleteIndex(index);
-                                        }
-                                    }}
-                                />
-                            ))}
-                        </div>
-                        <div style={{ marginTop: '32px', width: '100%', textAlign: 'center' }}>
-                            <AddContentCard
-                                addContentLabel="Ajouter à votre publication :"
-                                availableContentTypes={isPelico ? PELICO_ALLOWED_CONTENT_TYPES : USER_ALLOWED_CONTENT_TYPES}
-                                onAddContent={(newContentType) => {
-                                    if (newContentType === 'html') {
-                                        const newContentArray = [...contentWithIds];
-                                        newContentArray.push({
-                                            id: v4(),
-                                            content: {
-                                                type: 'html',
-                                                html: '',
-                                            },
-                                        });
-                                        setContentWithIds(newContentArray);
-                                        setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
-                                    } else {
-                                        setModalContentIndex(newContentType);
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                </SectionContainer>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button as="a" href="/contenu-libre " color="primary" variant="outlined" label="Retour" leftIcon={<ChevronLeftIcon />} />
+        <PageContainer className={styles.page}>
+            <Link href="/contenu-libre" className={styles.backButton}>
+                <ChevronLeftIcon /> Retour
+            </Link>
+            <Steps
+                steps={[
+                    { label: 'Contenu', href: '/contenu-libre/1' },
+                    { label: 'Forme', href: '/contenu-libre/2' },
+                    { label: 'Pré-visualiser', href: '/contenu-libre/3' },
+                ]}
+                activeStep={1}
+                marginTop="xl"
+                marginBottom="md"
+            />
+            <Title variant="h2" marginBottom="md">
+                Écrivez le contenu de votre publication
+            </Title>
+            <p>
+                Utilisez l&apos;éditeur de bloc pour définir le contenu de votre publication. Dans l&apos;étape 2 vous pourrez définir l&apos;aspect
+                de la carte résumée de votre publication.
+            </p>
+            <div style={{ marginTop: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {contentWithIds.map(({ id, content }, index) => (
+                        <ContentEditor
+                            key={id}
+                            content={content}
+                            activityId={activity.id}
+                            setContent={(newContent) => {
+                                const newContentArray = [...contentWithIds];
+                                newContentArray[index].content = newContent;
+                                setContentWithIds(newContentArray);
+                                setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            }}
+                            hasDottedBorder
+                            isDraggable
+                            htmlEditorPlaceholder="Commencez à écrire ici, ou ajoutez une vidéo, un son ou une image."
+                            onEdit={() => {
+                                if (content.type === 'html') {
+                                    return;
+                                } else {
+                                    setModalContentIndex(index);
+                                }
+                            }}
+                            onDelete={() => {
+                                const isEmptyContent = content.type === 'html' && !content.html;
+                                if (isEmptyContent) {
+                                    const newContentArray = [...contentWithIds];
+                                    newContentArray.splice(index, 1);
+                                    setContentWithIds(newContentArray);
+                                    setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                                } else {
+                                    setDeleteIndex(index);
+                                }
+                            }}
+                        />
+                    ))}
+                </div>
+                <div style={{ margin: '32px 0', width: '100%', textAlign: 'center' }}>
+                    <AddContentCard
+                        addContentLabel="Ajouter à votre publication :"
+                        availableContentTypes={isPelico ? PELICO_ALLOWED_CONTENT_TYPES : USER_ALLOWED_CONTENT_TYPES}
+                        onAddContent={(newContentType) => {
+                            if (newContentType === 'html') {
+                                const newContentArray = [...contentWithIds];
+                                newContentArray.push({
+                                    id: v4(),
+                                    content: {
+                                        type: 'html',
+                                        html: '',
+                                    },
+                                });
+                                setContentWithIds(newContentArray);
+                                setActivity({ ...activity, data: { ...data, content: newContentArray.map(({ content }) => content) } });
+                            } else {
+                                setModalContentIndex(newContentType);
+                            }
+                        }}
+                    />
+                </div>
+                <div style={{ textAlign: 'right', marginTop: '16px' }}>
                     <Button as="a" href="/contenu-libre/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
                 </div>
-            </PageContainer>
-
+            </div>
             <UploadImageModal
                 isOpen={modalContentIndex === 'image' || contentToEdit?.type === 'image'}
                 initialImageUrl={contentToEdit?.type === 'image' ? contentToEdit.imageUrl : undefined}
@@ -263,6 +261,6 @@ export default function FreeContentStep1() {
             >
                 <p>Voulez vous vraiment supprimer ce bloc ?</p>
             </Modal>
-        </>
+        </PageContainer>
     );
 }

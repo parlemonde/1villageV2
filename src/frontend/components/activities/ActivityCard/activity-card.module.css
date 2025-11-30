@@ -1,25 +1,16 @@
 .activityCard {
     width: 100%;
     background-color: white;
-    border: 1px solid var(--grey-100);
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 200ms ease-in-out;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
 }
-
 .isPinned {
     border: 2px solid var(--primary-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
-
-.isPinned:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
-}
-
 .activityCardHeader {
-    padding: 12px;
+    padding: 4px;
 }
 
 .activityCardBody {
-    padding: 0 12px 12px 12px;
+    padding: 0 4px 4px 4px;
 }

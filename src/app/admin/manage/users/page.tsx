@@ -1,5 +1,6 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 
@@ -7,7 +8,7 @@ import { UsersTable } from './UsersTable';
 
 export default function AdminManageUsersPage() {
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Utilisateurs' }]} />
             <div
                 style={{
@@ -40,6 +41,6 @@ export default function AdminManageUsersPage() {
                 marginTop="lg"
                 leftIcon={<ChevronLeftIcon width={18} height={18} />}
             />
-        </>
+        </PageContainer>
     );
 }

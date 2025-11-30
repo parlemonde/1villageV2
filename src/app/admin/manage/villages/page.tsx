@@ -1,13 +1,15 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
-import { ChevronLeftIcon, DownloadIcon, PlusIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 
+import { ImportVillagesButton } from './ImportVillagesButton';
 import { VillagesTable } from './VillagesTable';
 
 export default function AdminManageVillagesPage() {
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Villages-mondes' }]} />
             <div
                 style={{
@@ -21,7 +23,7 @@ export default function AdminManageVillagesPage() {
                 }}
             >
                 <Title style={{ flex: '1 1 0' }}>Villages-mondes</Title>
-                <Button variant="contained" color="primary" leftIcon={<DownloadIcon />} label="Importer les villages-mondes" />
+                <ImportVillagesButton />
                 <Button
                     as="a"
                     href="/admin/manage/villages/new"
@@ -41,6 +43,6 @@ export default function AdminManageVillagesPage() {
                 marginTop="lg"
                 leftIcon={<ChevronLeftIcon width={18} height={18} />}
             />
-        </>
+        </PageContainer>
     );
 }
