@@ -127,6 +127,7 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
             <Field
                 label="Email"
                 name="email"
+                isRequired
                 input={
                     <Input
                         id="email"
@@ -153,6 +154,7 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
             <Field
                 label="Nom"
                 name="name"
+                isRequired
                 input={
                     <Input
                         id="name"
@@ -185,6 +187,7 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
             <Field
                 label="Mot de passe"
                 name="password"
+                isRequired={isNew}
                 input={
                     <Input
                         id="password"
