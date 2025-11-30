@@ -1,0 +1,11 @@
+.activityFilters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.filtersLabel {
+    font-weight: 600;
+}

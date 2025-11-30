@@ -6,36 +6,35 @@ import { Checkbox as RadixCheckbox } from 'radix-ui';
 import * as React from 'react';
 
 import styles from './checkbox.module.css';
-import { IconButton } from '../Button/IconButton';
-import type { SVGIcon } from '../Button/IconButton';
+
+const CHECKBOX_SIZE = {
+    sm: 20,
+    md: 24,
+    lg: 28,
+};
 
 type CheckboxProps = {
     name: string;
-    label?: string;
+    label?: React.ReactNode;
     isChecked?: boolean;
     isDisabled?: boolean;
+    size?: 'sm' | 'md' | 'lg';
     onChange?: (newIsChecked: boolean) => void;
 };
-export const Checkbox = ({ name, label, isChecked, isDisabled, onChange }: CheckboxProps) => {
+export const Checkbox = ({ name, label, isChecked, isDisabled, size = 'md', onChange }: CheckboxProps) => {
     return (
         <div className={styles.Checkbox}>
             <RadixCheckbox.Root asChild checked={isChecked} onCheckedChange={onChange} id={name} name={name} disabled={isDisabled}>
-                <IconButton
-                    icon={(isChecked ? CheckedIcon : UncheckedIcon) as SVGIcon}
-                    variant="borderless"
-                    marginRight={label ? 'xs' : -8}
-                    marginLeft={-8}
-                    disabled={isDisabled}
-                    color="primary"
-                    iconProps={{
-                        width: 24,
-                        height: 24,
-                        color: isDisabled ? 'grey--300' : isChecked ? 'var(--primary-color)' : 'rgba(0, 0, 0, 0.6)',
-                    }}
-                />
+                <button disabled={isDisabled} className={styles.Icon}>
+                    {isChecked ? (
+                        <CheckedIcon style={{ width: CHECKBOX_SIZE[size], height: CHECKBOX_SIZE[size] }} />
+                    ) : (
+                        <UncheckedIcon style={{ width: CHECKBOX_SIZE[size], height: CHECKBOX_SIZE[size] }} />
+                    )}
+                </button>
             </RadixCheckbox.Root>
             {label && (
-                <label className={styles.Checkbox__Label} htmlFor={name}>
+                <label className={styles.Label} htmlFor={name}>
                     {label}
                 </label>
             )}

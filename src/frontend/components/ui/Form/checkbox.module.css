@@ -1,8 +1,31 @@
 .Checkbox{
     display: inline-flex;
     align-items: center;
-
-    &__Label {
-        cursor: pointer;
-    }
+    user-select: none;
+}
+.Label {
+    padding-left: 4px;
+    cursor: pointer;
+    display: flex;
+}
+.Icon {
+   background-color: transparent;
+   border: none;
+   padding: 0;
+   margin: 0;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--grey-500);
+   border-radius: 4px;
+}
+.Icon:hover {
+    color: var(--primary-color);
+}
+.Icon[data-state="checked"] {
+    color: var(--primary-color);
+}
+.Icon[data-state="checked"]:hover {
+    box-shadow: inset 0 0 0 16px var(--primary-100);
 }
