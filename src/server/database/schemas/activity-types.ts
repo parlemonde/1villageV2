@@ -28,6 +28,7 @@ type PuzzleActivity = {
 export type Activities = FreeActivity | GameActivity | PuzzleActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
+// Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     libre: true,
     jeu: true,

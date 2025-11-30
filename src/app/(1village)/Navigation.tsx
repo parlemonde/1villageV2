@@ -7,15 +7,19 @@ import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
 import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import { usePhase } from '@frontend/hooks/usePhase';
 import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
 import React, { useContext } from 'react';
+import useSWR from 'swr';
 
 import styles from './navigation.module.css';
 
@@ -49,8 +53,13 @@ interface NavigationProps {
 }
 export const Navigation = ({ village, classroomCountryCode }: NavigationProps) => {
     const { user, classroom } = useContext(UserContext);
+    const [phase] = usePhase();
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+
+    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+        keepPreviousData: true,
+    });
 
     // Do not display navigation on activity page
     if (pathname.startsWith('/activities/')) {
@@ -80,6 +89,15 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
                     <Menu items={getMenuItems(firstPath, undefined, avatar, user?.role === 'admin' || user?.role === 'mediator')} />
                 </div>
+                {activityTypes.length > 0 && (
+                    <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
+                        <Menu
+                            items={activityTypes.map((type) => ({
+                                label: type,
+                            }))}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -90,6 +108,7 @@ interface NavigationMobileMenuProps {
 }
 export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
     const { user, classroom } = useContext(UserContext);
+    const [phase] = usePhase();
     const classroomCountryCode = classroom?.countryCode;
     const { village } = useContext(VillageContext);
     const pathname = usePathname();
@@ -98,6 +117,10 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const avatar = (
         <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
     );
+
+    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+        keepPreviousData: true,
+    });
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
@@ -127,6 +150,10 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                         avatar,
                         user?.role === 'admin' || user?.role === 'mediator',
                     ),
+                    ...activityTypes.map((type, index) => ({
+                        hasSeparatorTop: index === 0,
+                        label: type,
+                    })),
                     ...(user?.role === 'admin'
                         ? [
                               {
