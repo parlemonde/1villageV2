@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@frontend/components/ui/Form';
-import type { ActivityType } from '@server/database/schemas/activities';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 
 import { ActivityCountriesSelect } from './ActivityCountriesSelect/ActivityCountriesSelect';
 import { ActivityTypeSelect } from './ActivityTypeSelect/ActivityTypeSelect';

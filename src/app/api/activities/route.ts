@@ -1,7 +1,7 @@
 import { db } from '@server/database';
-import type { ActivityType } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
-import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activities';
+import type { ActivityType } from '@server/database/schemas/activity-types';
+import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, ilike, inArray, isNotNull, isNull, or, sql, desc } from 'drizzle-orm';
