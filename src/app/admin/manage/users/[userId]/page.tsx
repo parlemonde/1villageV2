@@ -2,8 +2,8 @@ import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { db } from '@server/database';
-import { classrooms } from '@server/database/schemas/classrooms';
 import { users } from '@server/database/schemas/users';
+import { isSSOUser as isSSOUserHelper } from '@server/helpers/is-sso-user';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
@@ -25,13 +25,7 @@ export default async function AdminEditUserPage({ params }: ServerPageProps) {
         notFound();
     }
 
-    // Fetch classroom data if user is a teacher
-    const classroom =
-        user.role === 'teacher'
-            ? await db.query.classrooms.findFirst({
-                  where: eq(classrooms.teacherId, userId),
-              })
-            : undefined;
+    const isSSOUser = await isSSOUserHelper(userId);
 
     return (
         <PageContainer>
@@ -45,7 +39,7 @@ export default async function AdminEditUserPage({ params }: ServerPageProps) {
                 ]}
             />
             <Title marginY="md">{user.name}</Title>
-            <UserForm user={user} classroom={classroom} isNew={false} />
+            <UserForm user={user} isSSOUser={isSSOUser} isNew={false} />
         </PageContainer>
     );
 }
