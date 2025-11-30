@@ -1,5 +1,6 @@
 import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Link } from '@frontend/components/ui/Link';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
@@ -43,7 +44,7 @@ export default async function ActivityPage({ params }: ServerPageProps) {
     }
 
     return (
-        <div style={{ padding: '16px' }}>
+        <PageContainer>
             <div className={styles.breadcrumb}>
                 <Link href="/" className={styles.homeBreadcrumbItem}>
                     <HomeSVG width={16} height={16} />
@@ -57,6 +58,6 @@ export default async function ActivityPage({ params }: ServerPageProps) {
             <div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
                 <ActivityView activity={activity} />
             </div>
-        </div>
+        </PageContainer>
     );
 }

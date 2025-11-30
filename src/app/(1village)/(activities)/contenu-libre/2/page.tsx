@@ -4,6 +4,7 @@ import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Switch } from '@frontend/components/ui/Form/Switch';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
@@ -24,7 +25,7 @@ export default function FreeContentStep2() {
     }
 
     return (
-        <div style={{ padding: '16px 32px' }}>
+        <PageContainer>
             <Steps
                 steps={[
                     { label: 'Contenu', href: '/contenu-libre/1', status: (activity.data?.content || []).length > 0 ? 'success' : 'warning' },
@@ -113,6 +114,6 @@ export default function FreeContentStep2() {
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Button as="a" href="/contenu-libre/3" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
             </div>
-        </div>
+        </PageContainer>
     );
 }

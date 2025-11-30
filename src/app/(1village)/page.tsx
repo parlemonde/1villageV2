@@ -38,7 +38,7 @@ export default function Home() {
         <>
             <div className={styles.WordMapContainer}></div>
             <div style={{ margin: '8px 16px 32px 16px' }}>
-                <Title>Dernières activités</Title>
+                <Title marginBottom="sm">Dernières activités</Title>
                 <Activities />
             </div>
         </>

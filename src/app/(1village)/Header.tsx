@@ -15,7 +15,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
@@ -48,9 +48,9 @@ export const Header = () => {
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
-                    {user?.role === 'admin' && <DropdownMenuItem label="Admin" href="/admin" />}
-                    <DropdownMenuItem label="Mon compte" href="/mon-compte" />
-                    <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" />
+                    {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
+                    <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
+                    <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>
             {isOpen && (
@@ -96,6 +96,7 @@ const VillageSelector = () => {
                             input={
                                 <Select
                                     isFullWidth
+                                    color="secondary"
                                     value={villageId ? `${villageId}` : undefined}
                                     onChange={(value) => setVillageId(Number(value))}
                                     placeholder="Sélectionner un village"

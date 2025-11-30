@@ -1,4 +1,4 @@
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
@@ -28,9 +28,8 @@ export default async function MyClassroom() {
     const classroom = isPelico ? undefined : await getTeacherClassroom(user.id);
 
     return (
-        <div style={{ padding: '16px 16px 32px 16px' }}>
-            <Title>{isPelico ? 'Activités de Pélico' : 'Mes activités'}</Title>
+        <PageContainer title={isPelico ? 'Activités de Pélico' : 'Mes activités'}>
             <MyActivities activities={allActivities} user={user} classroom={classroom} />
-        </div>
+        </PageContainer>
     );
 }

@@ -1,9 +1,5 @@
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 
 export default function AdminMediasPage() {
-    return (
-        <>
-            <Title>Médiathèque</Title>
-        </>
-    );
+    return <PageContainer title="Médiathèque"></PageContainer>;
 }

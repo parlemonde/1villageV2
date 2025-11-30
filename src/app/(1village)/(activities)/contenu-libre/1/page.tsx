@@ -6,6 +6,7 @@ import type { AnyContent, AnyContentType } from '@frontend/components/content/co
 import { Button } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Modal } from '@frontend/components/ui/Modal';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
@@ -61,7 +62,7 @@ export default function FreeContentStep1() {
     const contentToEdit = typeof modalContentIndex === 'number' ? contentWithIds[modalContentIndex]?.content : undefined;
 
     return (
-        <div className={styles.page} style={{ padding: '16px 32px' }}>
+        <PageContainer className={styles.page}>
             <Link href="/contenu-libre" className={styles.backButton}>
                 <ChevronLeftIcon /> Retour
             </Link>
@@ -260,6 +261,6 @@ export default function FreeContentStep1() {
             >
                 <p>Voulez vous vraiment supprimer ce bloc ?</p>
             </Modal>
-        </div>
+        </PageContainer>
     );
 }

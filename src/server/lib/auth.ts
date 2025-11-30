@@ -30,6 +30,10 @@ export const auth = registerService('auth', () =>
                     input: false, // don't allow user to set role
                 },
             },
+            changeEmail: {
+                enabled: true,
+                updateEmailWithoutVerification: true,
+            },
         },
         session: {
             modelName: 'auth_sessions',

@@ -5,6 +5,7 @@ import { ActivityStepPreview } from '@frontend/components/activities/ActivitySte
 import { FreeContentView } from '@frontend/components/activities/ActivityView/FreeContentView';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
@@ -46,7 +47,7 @@ export default function FreeContentStep3() {
     };
 
     return (
-        <div style={{ padding: '16px 32px' }}>
+        <PageContainer>
             <Steps
                 steps={[
                     { label: 'Contenu', href: '/contenu-libre/1', status: isFirstStepDone ? 'success' : 'warning' },
@@ -88,6 +89,6 @@ export default function FreeContentStep3() {
                 />
             </div>
             {isSubmiting && <Loader isLoading={isSubmiting} />}
-        </div>
+        </PageContainer>
     );
 }

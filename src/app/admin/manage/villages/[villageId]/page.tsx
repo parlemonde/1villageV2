@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { db } from '@server/database';
 import { villages } from '@server/database/schemas/villages';
@@ -35,7 +36,7 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
     }
 
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs
                 breadcrumbs={[
                     { label: 'Gérer', href: '/admin/manage' },
@@ -47,6 +48,6 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
             />
             <Title marginY="md">{village ? village.name : 'Ajouter un village-monde'}</Title>
             <VillageForm village={village} isNew={isNew} />
-        </>
+        </PageContainer>
     );
 }

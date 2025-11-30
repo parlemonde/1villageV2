@@ -4,7 +4,6 @@
  *
  * Additional fields can be added. Ex: 'role'. In this case, add them to the `additionalFields` object in the `auth` service.
  */
-import { sql } from 'drizzle-orm';
 import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
 
 const USER_ROLES_ENUM = ['admin', 'mediator', 'teacher', 'parent'] as const;
@@ -18,7 +17,7 @@ export const users = pgTable('users', {
     image: text('image'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
-        .$onUpdate(() => sql`now()`)
+        .$onUpdate(() => new Date())
         .notNull(),
     role: text('role', { enum: USER_ROLES_ENUM }).default('teacher').notNull(),
 });

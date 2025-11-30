@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 
+import styles from './activity-side-panel.module.css';
+
 export const ActivitySidePanel = () => {
     const pathname = usePathname();
 
@@ -11,5 +13,5 @@ export const ActivitySidePanel = () => {
         return null;
     }
 
-    return <div style={{ width: '300px' }}>ActivitySidePanel</div>;
+    return <div className={styles.activitySidePanel}>ActivitySidePanel</div>;
 };

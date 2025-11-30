@@ -1,62 +1,39 @@
 body:has(.adminLayout) {
     background-color: var(--primary-100);
 }
-
-.adminHeader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 48px;
-    background-color: white;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 48px;
-    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
-}
-
 .adminSidebar {
-    position: fixed;
-    top: 48px;
-    left: 0;
-    bottom: 0;
     width: 320px;
-    z-index: 100;
+    min-width: 320px;
+    position: relative;
+    align-self: stretch;
 }
-.adminSidebarContent {
-    margin: 32px 0px 32px 32px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 16px 8px;
-    box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
+.adminSidebarStickyContent {
+    position: sticky;
+    top: 84px;
 }
 
 .adminLayout {
-    padding-top: 48px;
-    padding-left: 320px;
+    /* position */
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh; /* for mobile */
+
+    /* display */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 84px 20px 0 20px; /* 8px + 60px + 16px = 84px (header height + margin) */
+    position: relative;
+    gap: 16px;
 }
 
 .adminMainContent {
-    margin: 32px;
+    width: 100%;
     background-color: white;
     border-radius: 10px;
-    padding: 32px;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
-}
-
-.logo {
-    width: 36px;
-    height: 36px;
-    color: var(--primary-color);
-}
-
-.title {
-    flex: 1 1 0;
-    color: var(--primary-color);
-    font-size: 28px;
-    font-family: var(--font-alegreya-sans), Times New Roman, Times, serif;
-    font-weight: 500;
-    margin-left: 8px;
+    margin-bottom: 16px;
 }
