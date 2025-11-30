@@ -5,7 +5,6 @@
  * Command:
  * npx @better-auth/cli generate --config src/server/auth/auth.ts --output src/server/database/schemas/auth-schemas.ts
  */
-import { sql } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
@@ -16,7 +15,7 @@ export const auth_sessions = pgTable('auth_sessions', {
     token: text('token').notNull().unique(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
-        .$onUpdate(() => sql`now()`)
+        .$onUpdate(() => new Date())
         .notNull(),
     ipAddress: text('ip_address'),
     userAgent: text('user_agent'),
@@ -41,7 +40,7 @@ export const auth_accounts = pgTable('auth_accounts', {
     password: text('password'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
-        .$onUpdate(() => sql`now()`)
+        .$onUpdate(() => new Date())
         .notNull(),
 });
 
@@ -53,6 +52,6 @@ export const auth_verifications = pgTable('auth_verifications', {
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
         .defaultNow()
-        .$onUpdate(() => sql`now()`)
+        .$onUpdate(() => new Date())
         .notNull(),
 });

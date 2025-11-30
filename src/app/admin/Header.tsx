@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, IconButton } from '@frontend/components/ui/Button';
+import { IconButton } from '@frontend/components/ui/Button';
 import { Dropdown } from '@frontend/components/ui/Dropdown';
 import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuItem';
 import CogIcon from '@frontend/svg/cogIcon.svg';
@@ -8,6 +8,7 @@ import LogoSVG from '@frontend/svg/logo.svg';
 import { ExitIcon, HamburgerMenuIcon, HomeIcon } from '@radix-ui/react-icons';
 import { logout } from '@server-actions/authentication/logout';
 import React from 'react';
+
 import styles from './header.module.css';
 
 export const Header = () => {

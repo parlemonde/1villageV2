@@ -1,0 +1,9 @@
+.activitySidePanel {
+    width: 300px;
+}
+
+@media (max-width: 850px) {
+    .activitySidePanel {
+        display: none;
+    }
+}

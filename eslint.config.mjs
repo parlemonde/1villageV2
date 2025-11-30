@@ -90,6 +90,6 @@ export default eslintTS.config(
         },
     },
     {
-        ignores: ['.postgres-data/', '.next/', '.open-next/', 'drizzle/', 'node_modules/', 'tmp/'],
+        ignores: ['public', '.postgres-data/', '.next/', '.open-next/', 'drizzle/', 'node_modules/', 'tmp/', 'server-transcode-videos/'],
     },
 );

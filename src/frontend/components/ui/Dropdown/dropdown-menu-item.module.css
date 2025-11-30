@@ -8,7 +8,6 @@
     width: 100%;
     color: var(--text-color);
     text-decoration: none;
-    white-space: nowrap;
 }
 .dropdownMenuItem:hover,
 .dropdownMenuItem:focus {

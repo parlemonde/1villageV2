@@ -15,7 +15,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { DashboardIcon, ExitIcon, HamburgerMenuIcon, PersonIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
@@ -48,8 +48,8 @@ export const Header = () => {
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
-                    {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" color="primary" href="/admin" icon={DashboardIcon} />}
-                    <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={PersonIcon} />
+                    {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
+                    <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>
@@ -71,7 +71,7 @@ const VillageSelector = () => {
 
     return (
         <>
-            <Button size="sm" isUpperCase={false} color="primary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
+            <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -96,6 +96,7 @@ const VillageSelector = () => {
                             input={
                                 <Select
                                     isFullWidth
+                                    color="secondary"
                                     value={villageId ? `${villageId}` : undefined}
                                     onChange={(value) => setVillageId(Number(value))}
                                     placeholder="Sélectionner un village"
@@ -108,7 +109,7 @@ const VillageSelector = () => {
                         />
                         <div style={{ width: '100%', textAlign: 'right', marginTop: '16px' }}>
                             <Button
-                                color="primary"
+                                color="secondary"
                                 variant={village === undefined ? 'outlined' : 'contained'}
                                 label="Choisir"
                                 onClick={async () => {

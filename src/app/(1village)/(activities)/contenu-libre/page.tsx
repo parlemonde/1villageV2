@@ -2,7 +2,6 @@
 
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -16,23 +15,20 @@ export default function FreeContent() {
 
     return (
         <PageContainer title="Publication de contenu libre">
-            <SectionContainer>
-                <p>
-                    Dans cette activité, nous vous proposons de créer une publication libre. Vous pourrez ensuite partager cette publication et
-                    décider de l&apos;épingler dans le fil d&apos;actualité.
-                </p>
-            </SectionContainer>
-
-            <div style={{ textAlign: 'right' }}>
+            <p>
+                Dans cette activité, nous vous proposons de créer une publication libre. Vous pourrez ensuite partager cette publication et décider de
+                l&apos;épingler dans le fil d&apos;actualité.
+            </p>
+            <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Button
                     color="primary"
-                    label="Démarrer"
+                    label="Étape suivante"
                     rightIcon={<ChevronRightIcon />}
                     onClick={() => {
                         onCreateActivity('libre', user.role === 'admin' || user.role === 'teacher');
                         router.push('/contenu-libre/1');
                     }}
-                ></Button>
+                />
             </div>
         </PageContainer>
     );

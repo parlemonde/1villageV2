@@ -9,7 +9,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
-import { Cross1Icon } from '@radix-ui/react-icons';
+import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
@@ -132,7 +132,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                               {
                                   hasSeparatorTop: true,
                                   icon: <GearIcon />,
-                                  label: 'Admin',
+                                  label: 'Portail admin',
                                   href: '/admin',
                                   isActive: firstPath === 'admin',
                                   onClick: () => {
@@ -153,6 +153,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                     },
                     {
                         hasSeparatorTop: true,
+                        icon: <ExitIcon />,
                         label: 'Se déconnecter',
                         textAlign: 'center',
                         color: 'danger',

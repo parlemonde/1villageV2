@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
+import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
 import { db } from '@server/database';
 import { villages } from '@server/database/schemas/villages';
@@ -6,8 +7,6 @@ import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import { VillageForm } from './VillageForm';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer/SectionContainer';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -37,7 +36,7 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
     }
 
     return (
-        <>
+        <PageContainer>
             <Breadcrumbs
                 breadcrumbs={[
                     { label: 'Gérer', href: '/admin/manage' },
@@ -47,11 +46,8 @@ export default async function AdminManageVillageEditPage({ params }: ServerPageP
                     },
                 ]}
             />
-            <PageContainer title={village ? village.name : 'Ajouter un village-monde'}>
-                <SectionContainer>
-                    <VillageForm village={village} isNew={isNew} />
-                </SectionContainer>
-            </PageContainer>
-        </>
+            <Title marginY="md">{village ? village.name : 'Ajouter un village-monde'}</Title>
+            <VillageForm village={village} isNew={isNew} />
+        </PageContainer>
     );
 }
