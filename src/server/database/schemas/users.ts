@@ -1,8 +1,9 @@
 /**
  * User fields are managed by better-auth.
- * Do not modify default fields: id, name, email, emailVerified, image, createdAt and updatedAt.
+ * Do not modify default fields: id, name, email, emailVerified, image, createdAt, updatedAt, and role.
  *
- * Additional fields can be added. Ex: 'role'. In this case, add them to the `additionalFields` object in the `auth` service.
+ * Additional fields can be added. In this case, add them to the `additionalFields` object in the `auth` service.
+ * See: https://www.better-auth.com/docs/reference/options#user
  */
 import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
 
@@ -20,6 +21,9 @@ export const users = pgTable('users', {
         .$onUpdate(() => new Date())
         .notNull(),
     role: text('role', { enum: USER_ROLES_ENUM }).default('teacher').notNull(),
+    banned: boolean('banned').default(false),
+    bannedReason: text('banned_reason'),
+    banExpires: timestamp('ban_expires', { withTimezone: true }),
 });
 
 type FullUser = typeof users.$inferSelect;

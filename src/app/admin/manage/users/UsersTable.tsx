@@ -6,10 +6,10 @@ import { Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { UserContext } from '@frontend/contexts/userContext';
+import { authClient } from '@frontend/lib/auth-client';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { User } from '@server/database/schemas/users';
-import { deleteUser } from '@server-actions/users/delete-user';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
@@ -119,16 +119,17 @@ export function UsersTable() {
                     if (userToDeleteId === null) {
                         return;
                     }
-                    try {
-                        setIsDeletingUser(true);
-                        await deleteUser(userToDeleteId);
-                        await mutate(); // refresh the users list
-                    } catch (error) {
+                    setIsDeletingUser(true);
+                    const { error } = await authClient.admin.removeUser({
+                        userId: userToDeleteId,
+                    });
+                    if (error) {
                         console.error(error);
-                    } finally {
-                        setIsDeletingUser(false);
-                        setUserToDeleteId(null);
+                    } else {
+                        await mutate(); // refresh the users list
                     }
+                    setIsDeletingUser(false);
+                    setUserToDeleteId(null);
                 }}
                 isLoading={isDeletingUser}
             >
