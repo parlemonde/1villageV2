@@ -1,0 +1,9 @@
+.bgCgu {
+    background-color: lightblue;
+}
+
+@media (min-width: 1024px) {
+    .bgCgu {
+        background-color: lightgreen;
+    }
+}
