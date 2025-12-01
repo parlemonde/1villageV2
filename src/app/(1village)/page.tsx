@@ -37,7 +37,7 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.WordMapContainer}>
+            <div className={styles.WorldMapContainer}>
                 <WorldMap />
             </div>
             <div style={{ margin: '8px 16px 32px 16px' }}>

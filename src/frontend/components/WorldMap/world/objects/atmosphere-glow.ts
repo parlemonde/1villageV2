@@ -30,38 +30,38 @@ void main() {
 `;
 
 export class AtmosphereGlow extends Mesh {
-  constructor(radius = GLOBE_RADIUS) {
-    // Geometry with resized vertex positions according to normals
-    const glowGeometry = new SphereGeometry(radius, 75, 75);
-    const position = new Float32Array(glowGeometry.attributes.position.count * 3);
-    for (let idx = 0, len = position.length; idx < len; idx++) {
-      const normal = (glowGeometry.attributes.normal as BufferAttribute).array[idx];
-      const curPos = (glowGeometry.attributes.position as BufferAttribute).array[idx];
-      position[idx] = curPos + normal * radius * 0.15;
+    constructor(radius = GLOBE_RADIUS) {
+        // Geometry with resized vertex positions according to normals
+        const glowGeometry = new SphereGeometry(radius, 75, 75);
+        const position = new Float32Array(glowGeometry.attributes.position.count * 3);
+        for (let idx = 0, len = position.length; idx < len; idx++) {
+            const normal = (glowGeometry.attributes.normal as BufferAttribute).array[idx];
+            const curPos = (glowGeometry.attributes.position as BufferAttribute).array[idx];
+            position[idx] = curPos + normal * radius * 0.15;
+        }
+        glowGeometry.setAttribute('position', new BufferAttribute(position, 3));
+
+        const glowMaterial = new ShaderMaterial({
+            depthWrite: false,
+            fragmentShader,
+            transparent: true,
+            uniforms: {
+                coefficient: {
+                    value: 0.1,
+                },
+                color: {
+                    value: new Color('lightskyblue'),
+                },
+                power: {
+                    value: 2.45,
+                },
+            },
+            vertexShader,
+            side: BackSide,
+        });
+
+        super(glowGeometry, glowMaterial);
+
+        this.name = 'atmosphere-glow';
     }
-    glowGeometry.setAttribute('position', new BufferAttribute(position, 3));
-
-    const glowMaterial = new ShaderMaterial({
-      depthWrite: false,
-      fragmentShader,
-      transparent: true,
-      uniforms: {
-        coefficient: {
-          value: 0.1,
-        },
-        color: {
-          value: new Color('lightskyblue'),
-        },
-        power: {
-          value: 2.45,
-        },
-      },
-      vertexShader,
-      side: BackSide,
-    });
-
-    super(glowGeometry, glowMaterial);
-
-    this.name = 'atmosphere-glow';
-  }
 }

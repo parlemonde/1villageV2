@@ -5,23 +5,27 @@ import type { User } from '@server/database/schemas/users';
 
 import { UserPopover } from './UserPopover';
 
-export type PopoverData<T extends 'country' | 'classroom' = 'country' | 'classroom'> = {
-    type: T;
-    data: T extends 'country'
-        ? {
-              country: string;
-          }
-        : T extends 'classroom'
-          ? Classroom
-          : never;
+type CountryPopoverData = {
+    type: 'country';
+    data: {
+        country: string;
+    };
 };
+type UserAndClassroomPopoverData = {
+    type: 'user-and-classroom';
+    data: {
+        user: User;
+        classroom: Classroom;
+    };
+};
+export type PopoverData = CountryPopoverData | UserAndClassroomPopoverData;
 export type PopoverProps = {
     x: number;
     y: number;
 } & PopoverData;
 
-export const isCountry = (props: PopoverData): props is PopoverData<'country'> => props.type === 'country';
-export const isClassroom = (props: PopoverData): props is PopoverData<'classroom'> => props.type === 'classroom';
+export const isCountry = (props: PopoverData): props is CountryPopoverData => props.type === 'country';
+export const isUserAndClassroom = (props: PopoverData): props is UserAndClassroomPopoverData => props.type === 'user-and-classroom';
 
 export const Popover = ({ x, y, ...props }: PopoverProps) => {
     return (
@@ -36,7 +40,7 @@ export const Popover = ({ x, y, ...props }: PopoverProps) => {
                     }}
                 >
                     {isCountry(props) && <span style={{ fontSize: '0.875rem' }}>{props.data.country}</span>}
-                    {isClassroom(props) && <UserPopover classroom={props.data} />}
+                    {isUserAndClassroom(props) && <UserPopover user={props.data.user} classroom={props.data.classroom} />}
                 </div>
             </div>
         </div>

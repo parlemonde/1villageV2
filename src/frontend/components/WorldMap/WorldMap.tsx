@@ -1,29 +1,20 @@
 'use client';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { VillageContext } from '@frontend/contexts/villageContext';
 import { useRouter } from 'next/navigation';
 import type { CSSProperties } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import useSWR from 'swr';
 
-import type { Classroom } from '@server/database/schemas/classrooms';
-
 import type { PopoverData } from './Popover';
-import { isClassroom, Popover } from './Popover';
+import { isUserAndClassroom, Popover } from './Popover';
 import { useFullScreen } from './use-full-screen';
 import { World } from './world';
 import type { GeoJSONCityData } from './world/objects/capital';
 import type { GeoJSONCountriesData } from './world/objects/country';
-
-// Compatibility type for WorldMap
-type WorldMapUser = {
-    id: number;
-    position: {
-        lat: number;
-        lng: number;
-    };
-    classroom: Classroom;
-};
+import type { UserAndClassroom } from './world/objects/earth';
 
 const getCountriesAndCapitals = async () => {
     const [countriesResponse, capitalResponse] = await Promise.all([
@@ -38,21 +29,23 @@ const getCountriesAndCapitals = async () => {
 
 const WorldMap = () => {
     const router = useRouter();
-
-    // Fetch classrooms
-    const { data: classrooms } = useSWR<Classroom[]>('/api/classrooms', (url: string) => fetch(url).then((res) => res.json()));
-
-    // Transform classrooms to WorldMapUser format
-    const users: WorldMapUser[] = (classrooms || [])
-        .filter((classroom) => classroom.coordinates?.latitude && classroom.coordinates?.longitude)
-        .map((classroom, index) => ({
-            id: classroom.id,
-            position: {
-                lat: classroom.coordinates!.latitude,
-                lng: classroom.coordinates!.longitude,
-            },
-            classroom,
-        }));
+    const { usersMap, classroomsMap } = useContext(VillageContext);
+    const usersAndClassrooms: UserAndClassroom[] = React.useMemo(
+        () =>
+            Object.values(classroomsMap)
+                .map((classroom) => {
+                    const user = classroom ? usersMap[classroom.teacherId] : undefined;
+                    if (!user || !classroom) {
+                        return undefined;
+                    }
+                    return {
+                        user,
+                        classroom,
+                    };
+                })
+                .filter((d) => d !== undefined),
+        [usersMap, classroomsMap],
+    );
 
     // -- 3D world --
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -68,15 +61,16 @@ const WorldMap = () => {
         if (!canvas) {
             return () => {};
         }
+        const newWorld = new World(canvas, setMouseStyle, setPopoverData);
         const prevent = (event: Event) => {
             event.preventDefault();
+            newWorld?.onStopRotationAnimation();
         };
         canvas.addEventListener('mousewheel', prevent);
         canvas.addEventListener('wheel', prevent);
-        const newWorld = new World(canvas, setMouseStyle, setPopoverData);
         let animationFrame: number | null = null;
-        const render = (time: number) => {
-            newWorld.render(time);
+        const render = () => {
+            newWorld.render();
             animationFrame = requestAnimationFrame(render);
         };
         animationFrame = requestAnimationFrame(render);
@@ -98,30 +92,22 @@ const WorldMap = () => {
     }, [world, countriesAndCapitals]);
 
     useEffect(() => {
-        if (world && users.length > 0) {
-            world.addUsers(users as any); // Type will be fixed in world.ts
+        if (world && usersAndClassrooms.length > 0) {
+            world.addUsers(usersAndClassrooms);
         }
-    }, [world, users]);
-
-    useEffect(() => {
-        if (world) {
-            world.changeView('earth');
-        }
-    }, [world]);
+    }, [world, usersAndClassrooms]);
 
     return (
-        <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%', maxHeight: 'calc(100vh - 90px)' }}>
+        <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
             <canvas
                 ref={canvasRef}
                 style={{ width: '100%', height: '100%', backgroundColor: 'black', cursor: mouseStyle }}
                 onClick={() => {
-                    if (world) {
-                        world.onClick.bind(world)();
-                        if (popoverData && isClassroom(popoverData) && popoverData.data?.mascotteId) {
-                            world.resetHoverState();
-                            router.push(`/activities/${popoverData.data.mascotteId}`);
-                        }
+                    if (popoverData && isUserAndClassroom(popoverData) && popoverData.data.classroom.mascotteId) {
+                        world?.resetHoverState();
+                        router.push(`/activities/${popoverData.data.classroom.mascotteId}`);
                     }
+                    world?.onStopRotationAnimation();
                 }}
                 onMouseMove={(event) => {
                     if (world) {
