@@ -2,6 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
 import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
@@ -38,14 +39,36 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
         isActive: firstPath === 'my-activities',
         onClick,
     },
-    {
-        icon: <FreeContentIcon />,
-        label: 'Publier un contenu libre',
-        href: '/contenu-libre',
-        isActive: firstPath === 'contenu-libre',
-        onClick,
-    },
+    ...(isPelico
+        ? [
+              {
+                  icon: <FreeContentIcon />,
+                  label: 'Publier un contenu libre',
+                  href: '/contenu-libre',
+                  isActive: firstPath === 'contenu-libre',
+                  onClick,
+              },
+          ]
+        : []),
 ];
+
+const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: () => void): MenuItem | null => {
+    const Icon = ACTIVITY_ICONS[type];
+    const label = ACTIVITY_LABELS[type] || type;
+    const href = ACTIVITY_URLS[type];
+
+    if (!href) {
+        return null;
+    }
+
+    return {
+        icon: Icon !== null ? <Icon /> : undefined,
+        label,
+        href,
+        isActive: firstPath === href.split('/')[1],
+        onClick,
+    };
+};
 
 interface NavigationProps {
     village: Village;
@@ -70,6 +93,8 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
         <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
     );
 
+    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath)).filter((item) => item !== null);
+
     return (
         <div className={styles.navigationWrapper}>
             <div className={styles.stickyContent}>
@@ -89,13 +114,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
                     <Menu items={getMenuItems(firstPath, undefined, avatar, user?.role === 'admin' || user?.role === 'mediator')} />
                 </div>
-                {activityTypes.length > 0 && (
+                {activityMenuItems.length > 0 && (
                     <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
-                        <Menu
-                            items={activityTypes.map((type) => ({
-                                label: type,
-                            }))}
-                        />
+                        <Menu items={activityMenuItems} />
                     </div>
                 )}
             </div>
@@ -121,6 +142,17 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
+
+    const activityMenuItems = activityTypes
+        .map((type) =>
+            getActivityMenuItem(type, firstPath, () => {
+                onClose();
+            }),
+        )
+        .filter((item) => item !== null);
+    if (activityMenuItems.length > 0) {
+        activityMenuItems[0].hasSeparatorTop = true;
+    }
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
@@ -150,10 +182,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                         avatar,
                         user?.role === 'admin' || user?.role === 'mediator',
                     ),
-                    ...activityTypes.map((type, index) => ({
-                        hasSeparatorTop: index === 0,
-                        label: type,
-                    })),
+                    ...activityMenuItems,
                     ...(user?.role === 'admin'
                         ? [
                               {

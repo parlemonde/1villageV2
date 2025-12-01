@@ -1,5 +1,6 @@
 'use client';
 
+import { ACTIVITY_NAMES } from '@frontend/components/activities/activities-constants';
 import { Button } from '@frontend/components/ui/Button/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -73,7 +74,7 @@ export const ActivityPhasesTable = ({ phases }: ActivityPhasesTableProps) => {
                 <tbody>
                     {ACTIVITY_TYPES_ENUM.map((activityType) => (
                         <tr className={styles.row} key={activityType}>
-                            <td className={styles.cell}>{activityType}</td>
+                            <td className={styles.cell}>{ACTIVITY_NAMES[activityType] || activityType}</td>
                             <td className={styles.cell}>
                                 <span style={{ display: 'flex', justifyContent: 'center' }}>
                                     <Checkbox
