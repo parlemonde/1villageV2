@@ -2,7 +2,8 @@
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import { VillageContext } from '@frontend/contexts/villageContext';
-import type { Activity, ActivityType } from '@server/database/schemas/activities';
+import type { Activity } from '@server/database/schemas/activities';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
 
 import { FreeContentView } from './FreeContentView';

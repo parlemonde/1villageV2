@@ -1,31 +1,59 @@
 'use client';
 
 import { Dropdown } from '@frontend/components/ui/Dropdown';
+import { VillageContext } from '@frontend/contexts/villageContext';
+import { usePhase } from '@frontend/hooks/usePhase';
 import ArrowDownIcon from '@frontend/svg/arrowDown.svg';
 import CheckedIcon from '@frontend/svg/checkedIcon.svg';
 import UncheckedIcon from '@frontend/svg/uncheckedIcon.svg';
-import type { ActivityType } from '@server/database/schemas/activities';
-import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activities';
+import { jsonFetcher } from '@lib/json-fetcher';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import classNames from 'clsx';
 import { DropdownMenu } from 'radix-ui';
-import React from 'react';
+import React, { useContext } from 'react';
+import useSWR from 'swr';
 
 import styles from './activity-type-select.module.css';
-
-const ACTIVITY_TYPES_MAP: Record<ActivityType, string> = {
-    libre: 'Contenu Libre',
-    jeu: 'Jeu',
-    enigme: 'Enigme',
-};
+import { ACTIVITY_NAMES } from '../../activities-constants';
 
 interface ActivityTypeSelectProps {
     selectedTypes: ActivityType[];
     setSelectedTypes: (types: ActivityType[]) => void;
 }
 export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: ActivityTypeSelectProps) => {
+    const { village } = useContext(VillageContext);
+    const [phase] = usePhase();
+    const { data: availableTypesForPhase = [] } = useSWR<ActivityType[]>(
+        village !== undefined && phase !== null ? `/api/activities/types?phase=${phase}` : null,
+        jsonFetcher,
+        {
+            keepPreviousData: true,
+        },
+    );
+
+    // Always include the "libre" type in the available types.
+    const availableTypes = React.useMemo<ActivityType[]>(
+        () => (!availableTypesForPhase.includes('libre') ? ['libre', ...availableTypesForPhase] : availableTypesForPhase),
+        [availableTypesForPhase],
+    );
+
     const selectedTypesSet = new Set(selectedTypes);
-    const areAllTypesSelected = ACTIVITY_TYPES_ENUM.every((type) => selectedTypesSet.has(type));
+    const areAllTypesSelected = availableTypes.every((type) => selectedTypesSet.has(type));
     const showAllAsSelected = areAllTypesSelected || selectedTypesSet.size === 0;
+
+    // Update selected types when available types change. (village or phase changed.)
+    const previousAvailableTypes = React.useRef(availableTypes);
+    React.useEffect(() => {
+        const availableTypesSet = new Set(availableTypes);
+        const extraTypes = selectedTypes.filter((type) => !availableTypesSet.has(type));
+        if (previousAvailableTypes.current.join(',') !== availableTypes.join(',')) {
+            setSelectedTypes([]); // Reset to all.
+        } else if (extraTypes.length > 0) {
+            setSelectedTypes(selectedTypes.filter((type) => availableTypesSet.has(type)));
+        }
+
+        previousAvailableTypes.current = availableTypes;
+    }, [availableTypes, selectedTypes, setSelectedTypes]);
 
     return (
         <Dropdown
@@ -39,7 +67,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
                             <>
                                 {selectedTypes.slice(0, 2).map((type) => (
                                     <span key={type} className={styles.chip}>
-                                        {ACTIVITY_TYPES_MAP[type]}
+                                        {ACTIVITY_NAMES[type] || type}
                                     </span>
                                 ))}
                                 {selectedTypes.length > 2 && <span className={styles.chip}>+{selectedTypes.length - 2}</span>}
@@ -73,7 +101,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
                 Toutes
             </DropdownMenu.CheckboxItem>
             <DropdownMenu.Separator className={styles.separator} />
-            {ACTIVITY_TYPES_ENUM.map((type) => (
+            {availableTypes.map((type) => (
                 <DropdownMenu.CheckboxItem
                     key={type}
                     className={styles.item}
@@ -100,7 +128,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
                         </span>
                     )}
 
-                    {ACTIVITY_TYPES_MAP[type]}
+                    {ACTIVITY_NAMES[type] || type}
                 </DropdownMenu.CheckboxItem>
             ))}
         </Dropdown>

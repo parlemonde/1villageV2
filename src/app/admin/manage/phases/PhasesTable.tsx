@@ -104,51 +104,57 @@ export const PhasesTable = () => {
                         <tr className={styles.row} key={village.id}>
                             <td className={styles.cell}>{village.name}</td>
                             <td className={styles.cell}>
-                                <Checkbox name={`phase-1-${village.id}`} isChecked isDisabled />
+                                <span style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Checkbox name={`phase-1-${village.id}`} isChecked isDisabled />
+                                </span>
                             </td>
                             <td className={styles.cell}>
-                                <Checkbox
-                                    name={`phase-2-${village.id}`}
-                                    isDisabled={village.activePhase >= 2}
-                                    isChecked={village.activePhase >= 2 || (villagesActivePhase[village.id] || 0) >= 2}
-                                    onChange={() => {
-                                        if (village.activePhase >= 2) {
-                                            return;
-                                        }
-                                        if ((villagesActivePhase[village.id] || 0) >= 2) {
-                                            const newVillagesActivePhase = { ...villagesActivePhase };
-                                            delete newVillagesActivePhase[village.id];
-                                            setVillagesActivePhase(newVillagesActivePhase);
-                                        } else {
-                                            setVillagesActivePhase({
-                                                ...villagesActivePhase,
-                                                [village.id]: village.activePhase >= 2 ? village.activePhase - 2 : 2,
-                                            });
-                                        }
-                                    }}
-                                />
+                                <span style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Checkbox
+                                        name={`phase-2-${village.id}`}
+                                        isDisabled={village.activePhase >= 2}
+                                        isChecked={village.activePhase >= 2 || (villagesActivePhase[village.id] || 0) >= 2}
+                                        onChange={() => {
+                                            if (village.activePhase >= 2) {
+                                                return;
+                                            }
+                                            if ((villagesActivePhase[village.id] || 0) >= 2) {
+                                                const newVillagesActivePhase = { ...villagesActivePhase };
+                                                delete newVillagesActivePhase[village.id];
+                                                setVillagesActivePhase(newVillagesActivePhase);
+                                            } else {
+                                                setVillagesActivePhase({
+                                                    ...villagesActivePhase,
+                                                    [village.id]: village.activePhase >= 2 ? village.activePhase - 2 : 2,
+                                                });
+                                            }
+                                        }}
+                                    />
+                                </span>
                             </td>
                             <td className={styles.cell}>
-                                <Checkbox
-                                    name={`phase-3-${village.id}`}
-                                    isDisabled={village.activePhase >= 3}
-                                    isChecked={village.activePhase >= 3 || (villagesActivePhase[village.id] || 0) >= 3}
-                                    onChange={() => {
-                                        if (village.activePhase >= 3) {
-                                            return;
-                                        }
-                                        if ((villagesActivePhase[village.id] || 0) >= 3) {
-                                            const newVillagesActivePhase = { ...villagesActivePhase };
-                                            delete newVillagesActivePhase[village.id];
-                                            setVillagesActivePhase(newVillagesActivePhase);
-                                        } else {
-                                            setVillagesActivePhase({
-                                                ...villagesActivePhase,
-                                                [village.id]: village.activePhase >= 3 ? village.activePhase - 3 : 3,
-                                            });
-                                        }
-                                    }}
-                                />
+                                <span style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Checkbox
+                                        name={`phase-3-${village.id}`}
+                                        isDisabled={village.activePhase >= 3}
+                                        isChecked={village.activePhase >= 3 || (villagesActivePhase[village.id] || 0) >= 3}
+                                        onChange={() => {
+                                            if (village.activePhase >= 3) {
+                                                return;
+                                            }
+                                            if ((villagesActivePhase[village.id] || 0) >= 3) {
+                                                const newVillagesActivePhase = { ...villagesActivePhase };
+                                                delete newVillagesActivePhase[village.id];
+                                                setVillagesActivePhase(newVillagesActivePhase);
+                                            } else {
+                                                setVillagesActivePhase({
+                                                    ...villagesActivePhase,
+                                                    [village.id]: village.activePhase >= 3 ? village.activePhase - 3 : 3,
+                                                });
+                                            }
+                                        }}
+                                    />
+                                </span>
                             </td>
                         </tr>
                     ))}

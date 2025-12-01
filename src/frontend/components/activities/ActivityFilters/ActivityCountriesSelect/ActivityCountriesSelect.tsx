@@ -3,8 +3,9 @@
 import { CountryFlag } from '@frontend/components/CountryFlag/CountryFlag';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import { usePhase } from '@frontend/hooks/usePhase';
 import PelicoNeutreIcon from '@frontend/svg/pelico/pelico-neutre.svg';
-import { useContext } from 'react';
+import { useContext, useMemo, useRef, useEffect } from 'react';
 
 import styles from './activity-countries-select.module.css';
 
@@ -16,7 +17,33 @@ interface ActivityCountriesSelectProps {
 }
 export const ActivityCountriesSelect = ({ selectedCountries, isPelico, setSelectedCountries, setIsPelico }: ActivityCountriesSelectProps) => {
     const { village } = useContext(VillageContext);
+    const [phase] = usePhase();
+
+    const availableCountries = useMemo<string[]>(() => village?.countries ?? [], [village]);
     const selectedCountriesSet = new Set(selectedCountries);
+
+    // Update selected countries when available countries change. (village or phase changed.)
+    const previousAvailableCountries = useRef(availableCountries);
+    const previousPhase = useRef(phase);
+    const previousVillageId = useRef(village?.id);
+    useEffect(() => {
+        const availableCountriesSet = new Set(availableCountries);
+        const extraCountries = selectedCountries.filter((country) => !availableCountriesSet.has(country));
+        if (
+            previousAvailableCountries.current.join(',') !== availableCountries.join(',') ||
+            previousPhase.current !== phase ||
+            previousVillageId.current !== village?.id
+        ) {
+            setSelectedCountries(availableCountries); // Reset to all.
+            setIsPelico(true); // Reset to true.
+        } else if (extraCountries.length > 0) {
+            setSelectedCountries(selectedCountries.filter((country) => availableCountriesSet.has(country)));
+        }
+
+        previousAvailableCountries.current = availableCountries;
+        previousPhase.current = phase;
+        previousVillageId.current = village?.id;
+    }, [availableCountries, phase, selectedCountries, setSelectedCountries, setIsPelico, village]);
 
     return (
         <div className={styles.activityCountriesSelect}>

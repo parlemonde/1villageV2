@@ -5,7 +5,8 @@ import HomeSVG from '@frontend/svg/navigation/home.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
-import type { Activity, ActivityType } from '@server/database/schemas/activities';
+import type { Activity } from '@server/database/schemas/activities';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import { eq, isNotNull, and } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 

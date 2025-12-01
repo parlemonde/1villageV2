@@ -2,19 +2,11 @@ import { sql } from 'drizzle-orm';
 import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { boolean, smallint, integer, pgTable, serial, timestamp, jsonb, uuid, text } from 'drizzle-orm/pg-core';
 
-import type { Activities } from './activity.types';
+import type { Activities } from './activity-types';
+import { ACTIVITY_TYPES_ENUM } from './activity-types';
 import { classrooms } from './classrooms';
 import { users } from './users';
 import { villages } from './villages';
-
-export type ActivityType = Activities['type'];
-// Use a map to catch missing values and ensure uniqueness
-const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
-    libre: true,
-    jeu: true,
-    enigme: true,
-};
-export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 
 export const activities = pgTable('activities', {
     id: serial('id').primaryKey(),

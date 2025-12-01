@@ -1,12 +1,13 @@
 'use client';
 
+import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import Jumelles from '@frontend/svg/phases/jumelles.svg';
 import Puzzle from '@frontend/svg/phases/puzzle.svg';
 import Step2 from '@frontend/svg/phases/step2.svg';
 import classNames from 'clsx';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 import styles from './phases.module.css';
 
@@ -15,16 +16,25 @@ interface DisplayedPhasesProps {
 }
 const DisplayedPhases = ({ isOnRootPage }: DisplayedPhasesProps) => {
     const router = useRouter();
+    const { village } = useContext(VillageContext);
     const [phase, setPhase] = usePhase();
+
+    const previousVillageId = useRef<number | undefined>(undefined);
+    useEffect(() => {
+        if (village?.id !== previousVillageId.current) {
+            setPhase(village?.activePhase ?? null);
+            previousVillageId.current = village?.id;
+        }
+    }, [village?.id, village?.activePhase, setPhase]);
+
     return (
         <div className={styles.phases}>
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 1 })}
                 onClick={() => {
+                    setPhase(1);
                     if (!isOnRootPage) {
-                        router.push(`/?phase=1`);
-                    } else if (phase !== 1) {
-                        setPhase(1);
+                        router.push('/');
                     }
                 }}
             >
@@ -38,10 +48,9 @@ const DisplayedPhases = ({ isOnRootPage }: DisplayedPhasesProps) => {
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 2 })}
                 onClick={() => {
+                    setPhase(2);
                     if (!isOnRootPage) {
-                        router.push(`/?phase=2`);
-                    } else if (phase !== 2) {
-                        setPhase(2);
+                        router.push('/');
                     }
                 }}
             >
@@ -55,10 +64,9 @@ const DisplayedPhases = ({ isOnRootPage }: DisplayedPhasesProps) => {
             <button
                 className={classNames(styles.phaseContainer, { [styles.phaseContainerActive]: phase === 3 })}
                 onClick={() => {
+                    setPhase(3);
                     if (!isOnRootPage) {
-                        router.push(`/?phase=3`);
-                    } else if (phase !== 3) {
-                        setPhase(3);
+                        router.push('/');
                     }
                 }}
             >

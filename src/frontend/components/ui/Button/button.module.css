@@ -213,6 +213,7 @@
     color: var(--grey-500);
     box-shadow: none;
     background-color: var(--grey-100);
+    border: 1px solid var(--grey-100);
 }
 
 .variant-borderless:disabled {

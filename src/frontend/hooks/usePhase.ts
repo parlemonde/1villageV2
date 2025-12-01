@@ -1,15 +1,12 @@
 import { VillageContext } from '@frontend/contexts/villageContext';
-import { parseAsInteger, useQueryState } from 'nuqs';
 import { useContext } from 'react';
+
+import { useSessionStorage } from './useSessionStorage';
 
 export const usePhase = (): [number | null, (value: number | null) => void] => {
     const { village } = useContext(VillageContext);
-    const [phaseUrl, setPhase] = useQueryState(
-        'phase',
-        parseAsInteger.withOptions({
-            history: 'push',
-        }),
-    );
-    const phase = phaseUrl ?? village?.activePhase ?? null;
-    return [phase, setPhase];
+    const [phaseFromStorage, setPhaseFromStorage] = useSessionStorage<number | null>('phase', null);
+    const phase = phaseFromStorage ?? village?.activePhase ?? null;
+
+    return [phase, setPhaseFromStorage];
 };

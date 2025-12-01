@@ -1,6 +1,7 @@
 'use client';
 
-import type { Activity, ActivityType } from '@server/database/schemas/activities';
+import type { Activity } from '@server/database/schemas/activities';
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';

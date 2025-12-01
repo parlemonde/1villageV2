@@ -27,7 +27,6 @@
 
 .main {
     background-color: white;
-    /* box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8); */
     box-shadow: 0 2px 2px rgba(186, 186, 186, .8);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
