@@ -7,6 +7,7 @@ import styles from './field.module.css';
 type FieldProps = {
     name?: string;
     label?: React.ReactNode;
+    isRequired?: boolean;
     input: React.ReactNode;
     helperText?: string;
     helperTextStyle?: React.CSSProperties;
@@ -14,10 +15,24 @@ type FieldProps = {
     style?: React.CSSProperties;
 } & MarginProps &
     PaddingProps;
-export const Field = ({ name, label, input, className, style = {}, helperText, helperTextStyle = {}, ...marginAndPaddingProps }: FieldProps) => {
+export const Field = ({
+    name,
+    label,
+    isRequired = false,
+    input,
+    className,
+    style = {},
+    helperText,
+    helperTextStyle = {},
+    ...marginAndPaddingProps
+}: FieldProps) => {
     return (
         <div className={classNames(styles.field, className)} style={{ ...style, ...getMarginAndPaddingStyle(marginAndPaddingProps) }}>
-            {label && <label htmlFor={name}>{label}</label>}
+            {label && (
+                <label htmlFor={name}>
+                    {label} {isRequired && <span className={styles.required}>*</span>}
+                </label>
+            )}
             {input}
             {helperText && (
                 <p className={styles.helperText} style={helperTextStyle}>

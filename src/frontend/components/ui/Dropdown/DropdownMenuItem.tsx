@@ -1,7 +1,7 @@
 import { Link } from '@frontend/components/ui/Link';
 import classNames from 'clsx';
-import React from 'react';
 import { DropdownMenu } from 'radix-ui';
+import React from 'react';
 
 import styles from './dropdown-menu-item.module.css';
 

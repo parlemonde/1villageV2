@@ -3,15 +3,28 @@ import { registerService } from '@server/lib/register-service';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
+import { admin } from 'better-auth/plugins';
+import { adminAc, userAc } from 'better-auth/plugins/admin/access';
 
 import { ssoPlugin } from './parlemonde-sso-plugin';
+
+const adminPlugin = admin({
+    defaultRole: 'teacher',
+    roles: {
+        admin: adminAc,
+        mediator: userAc,
+        teacher: userAc,
+        parent: userAc,
+    },
+});
+const cookiesPlugin = nextCookies();
 
 export const auth = registerService('auth', () =>
     betterAuth({
         database: drizzleAdapter(db, {
             provider: 'pg',
         }),
-        plugins: ssoPlugin ? [ssoPlugin, nextCookies()] : [nextCookies()], // make sure `nextCookies()` is the last plugin in the array
+        plugins: ssoPlugin ? [ssoPlugin, adminPlugin, cookiesPlugin] : [adminPlugin, cookiesPlugin], // make sure `nextCookies()` is the last plugin in the array
         emailAndPassword: {
             enabled: true,
         },
@@ -22,13 +35,9 @@ export const auth = registerService('auth', () =>
         },
         user: {
             modelName: 'users',
-            additionalFields: {
-                role: {
-                    type: 'string', // enum: ['admin', 'mediator', 'teacher', 'parent']
-                    required: true,
-                    defaultValue: 'teacher',
-                    input: false, // don't allow user to set role
-                },
+            changeEmail: {
+                enabled: true,
+                updateEmailWithoutVerification: true,
             },
         },
         session: {

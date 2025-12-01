@@ -1,0 +1,105 @@
+.trigger {
+    padding: 0 10px;
+    height: 36px;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    min-width: 160px;
+    color: var(--font-color);
+}
+.trigger:hover, 
+.trigger:focus {
+    border-color: var(--grey-500);
+}
+.trigger:focus {
+    outline: none;
+}
+.trigger[data-state="open"] {
+    border-color: var(--primary-color);
+    /* box-shadow: inset 0px 0px 0px 1px var(--primary-color); */
+}
+
+.chipsContainer {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+}
+.chip {
+    padding: 3px 8px;
+    background-color: var(--primary-100);
+    color: var(--primary-700);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.icon {
+    width: 22px;
+    height: 22px;
+    fill: var(--grey-500);
+}
+.trigger:hover .icon,
+.trigger:focus .icon {
+    fill: var(--grey-600);
+}
+.trigger[data-state="open"] .icon {
+    fill: var(--primary-color);
+}
+
+.content {
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: var(--radix-dropdown-menu-trigger-width);
+}
+
+.item {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+    border: none;
+    word-break: break-word;
+}
+.item:hover,
+.item:focus {
+    /* background-color: #f3f2fa; */
+    background-color: var(--grey-100);
+    outline: none;
+    border: none;
+}
+.checkboxIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.checkbox {
+    width: 20px;
+    height: 20px;
+    color: var(--grey-500);
+}
+.checked {
+    color: var(--primary-color);
+}
+
+.separator {
+    height: 1px;
+    background-color: var(--grey-200);
+    margin: 4px 0;
+}
+
+.optionLabel {
+    text-transform: capitalize;
+}

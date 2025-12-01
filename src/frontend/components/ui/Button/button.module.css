@@ -43,7 +43,7 @@
 .variant-contained.color-secondary {
     background-color: var(--secondary-color);
     border: 1px solid var(--secondary-color);
-    color: white;
+    color: var(--font-color);
 }
 .variant-contained.color-secondary:hover,
 .variant-contained.color-secondary:focus-visible {
@@ -213,6 +213,7 @@
     color: var(--grey-500);
     box-shadow: none;
     background-color: var(--grey-100);
+    border: 1px solid var(--grey-100);
 }
 
 .variant-borderless:disabled {

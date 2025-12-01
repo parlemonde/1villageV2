@@ -1,0 +1,42 @@
+name: Deploy
+on: workflow_dispatch
+concurrency: deploy
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Build the app in the dist directory
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm build
+      - run: mkdir --parents dist/assets/_next; mv .next/static $_
+      - run: cp -r public/* dist/assets
+      - run: (cd .next/standalone && zip --symlinks -r - .) > dist/1village.zip
+      # Upload the build to S3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - run: aws s3 cp dist s3://${{ secrets.AWS_BUCKET_NAME }}/builds/prod --recursive
+      # Deploy to server
+      - name: Get IP address
+        id: get-ip
+        run: echo "ip=$(curl https://api.ipify.org)" >> "$GITHUB_OUTPUT"
+      - name: Add Github Actions IP to security-group
+        run: aws ec2 authorize-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 22 --cidr ${{ steps.get-ip.outputs.ip }}/32
+      - run: mkdir -p ~/.ssh/ && echo "${{secrets.SSH_KNOWN_HOSTS}}" > ~/.ssh/known_hosts
+      - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > server-key.pem && chmod 600 server-key.pem
+      - name: Deploy
+        run: ssh -i server-key.pem ${{ secrets.SERVER_URL}} "exec sh ./deploy.sh"
+      - name: Revoke Github Actions IP from security-group
+        if: always()
+        run: aws ec2 revoke-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 22 --cidr ${{ steps.get-ip.outputs.ip }}/32

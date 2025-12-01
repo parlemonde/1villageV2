@@ -19,6 +19,7 @@ interface SelectProps extends MarginProps {
     isFullWidth?: boolean;
     placeholder?: string;
     style?: React.CSSProperties;
+    hasError?: boolean;
 }
 
 export const Select = (props: SelectProps) => {
@@ -33,6 +34,7 @@ export const Select = (props: SelectProps) => {
         isFullWidth = false,
         placeholder = 'Choisir une option',
         style = {},
+        hasError = false,
         ...marginProps
     } = props;
 
@@ -61,6 +63,7 @@ export const Select = (props: SelectProps) => {
                 id={id}
                 className={classNames(styles.selectTrigger, styles[`size-${size}`], styles[`color-${color}`], {
                     [styles[`isFullWidth`]]: isFullWidth,
+                    [styles.hasError]: hasError,
                 })}
                 style={{ ...getMarginAndPaddingStyle(marginProps), ...style }}
             >

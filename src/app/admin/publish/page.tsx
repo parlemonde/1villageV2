@@ -1,9 +1,5 @@
-import { Title } from '@frontend/components/ui/Title';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
 
 export default function AdminPublishPage() {
-    return (
-        <>
-            <Title>Publier</Title>
-        </>
-    );
+    return <PageContainer title="Publier"></PageContainer>;
 }

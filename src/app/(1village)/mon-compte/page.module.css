@@ -4,41 +4,32 @@
     align-items: center;
     border-bottom: 1px solid var(--grey-100);
     gap: 24px;
-    transition: background-color 0.15s ease;
     padding: 16px 0;
 }
-
 .settingRow:last-child {
     border-bottom: none;
 }
-
 .settingLabel {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
 }
-
 .settingLabelText {
     font-weight: 500;
     color: var(--font-color);
     font-size: 14px;
 }
-
 .settingValue {
     color: var(--grey-500);
     font-size: 14px;
     line-height: 1.5;
-    word-break: break-all;
 }
-
 .buttonContainer {
-    margin-top: 24px;
     display: flex;
-    gap: 12px;
+    width: 100%;
+   justify-content: flex-end;
 }
-
-.modalContent {
+/* .modalContent {
     min-width: 320px;
 }
 
@@ -59,9 +50,9 @@
     font-size: 12px;
     margin: 8px 0 0 0;
     color: var(--error-color);
-}
+} */
 
-.successMessage {
+/* .successMessage {
     font-size: 12px;
     margin: 8px 0 0 0;
     color: var(--secondary-color);
@@ -73,20 +64,20 @@
 
 .formFieldSmall {
     margin-bottom: 8px;
-}
+} */
 
 @media (max-width: 768px) {
     .settingRow {
         flex-direction: column;
         gap: 12px;
         padding: 16px 0;
+        align-items: flex-start;
+    }
+    .button {
+        width: 100%;
     }
 
-    .buttonContainer {
-        flex-direction: column;
-    }
-
-    .modalContent {
+    /* .modalContent {
         min-width: 280px;
-    }
+    } */
 }

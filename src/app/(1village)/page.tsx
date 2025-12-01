@@ -1,5 +1,6 @@
 'use client';
 
+import { WorldMap } from '@frontend/components/WorldMap';
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
@@ -9,9 +10,6 @@ import { useContext } from 'react';
 
 import { Activities } from './Activities';
 import styles from './page.module.css';
-import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
-import { SectionContainer } from '@frontend/components/ui/SectionContainer';
-import { WorldMap } from '@frontend/components/WorldMap';
 
 export default function Home() {
     const { village } = useContext(VillageContext);
@@ -39,14 +37,13 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.WorldMapContainer}>
+            <div className={styles.WordMapContainer}>
                 <WorldMap />
             </div>
-            <PageContainer title="Dernières activités">
-                <SectionContainer>
-                    <Activities />
-                </SectionContainer>
-            </PageContainer>
+            <div style={{ margin: '8px 16px 32px 16px' }}>
+                <Title marginBottom="sm">Dernières activités</Title>
+                <Activities />
+            </div>
         </>
     );
 }

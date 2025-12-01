@@ -15,6 +15,20 @@
       "when": 1758221485386,
       "tag": "0001_fat_zuras",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764504180388,
+      "tag": "0002_complete_mephisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1764531193273,
+      "tag": "0003_light_tyger_tiger",
+      "breakpoints": true
     }
   ]
 }

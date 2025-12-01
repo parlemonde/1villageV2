@@ -15,7 +15,7 @@ type TitleProps = {
     PaddingProps;
 export const Title = ({
     id,
-    variant = 'h2',
+    variant = 'h1',
     color = 'primary',
     className,
     style = {},
