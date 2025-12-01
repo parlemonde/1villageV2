@@ -1,5 +1,6 @@
 'use client';
 
+import { WorldMap } from '@frontend/components/WorldMap';
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
@@ -36,7 +37,9 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.WordMapContainer}></div>
+            <div className={styles.WorldMapContainer}>
+                <WorldMap />
+            </div>
             <div style={{ margin: '8px 16px 32px 16px' }}>
                 <Title marginBottom="sm">Dernières activités</Title>
                 <Activities />

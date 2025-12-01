@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
   - esbuild
+  - maplibre-gl
   - sharp
   - unrs-resolver
