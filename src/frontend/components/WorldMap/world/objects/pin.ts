@@ -60,7 +60,7 @@ export class Pin
         this.name = 'pin';
 
         loadGLB(
-            '/earth/pin.glb',
+            '/static/earth/pin.glb',
             (pinModel) => this.init(pinModel, user, classroom, isPelico),
             () => {},
         );
@@ -85,7 +85,7 @@ export class Pin
         cylindar.rotation.x = Math.PI / 2;
         this.add(cylindar);
 
-        const imgSrc = classroom.avatarUrl || getGravatarUrl(`classroom-${user.id}@parlemonde.org`);
+        const imgSrc = isPelico ? '/static/images/pelico-avatar.jpg' : classroom.avatarUrl || getGravatarUrl(`classroom-${user.id}@parlemonde.org`);
         const cylindar2 = new Mesh(
             new CylinderGeometry(3.4, 3.4, 0.8, 30),
             new MeshStandardMaterial({

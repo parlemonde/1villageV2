@@ -18,8 +18,8 @@ import type { UserAndClassroom } from './world/objects/earth';
 
 const getCountriesAndCapitals = async () => {
     const [countriesResponse, capitalResponse] = await Promise.all([
-        fetch('/earth/countries.geo.json').then((res) => res.json() as Promise<GeoJSONCountriesData>),
-        fetch('/earth/capitals.geo.json').then((res) => res.json() as Promise<GeoJSONCityData>),
+        fetch('/static/earth/countries.geo.json').then((res) => res.json() as Promise<GeoJSONCountriesData>),
+        fetch('/static/earth/capitals.geo.json').then((res) => res.json() as Promise<GeoJSONCityData>),
     ]);
     return {
         countries: countriesResponse.features || [],
