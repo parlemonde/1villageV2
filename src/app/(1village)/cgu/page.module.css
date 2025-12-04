@@ -1,9 +1,13 @@
-.bgCgu {
-    background-color: lightblue;
+.textCenter {
+    text-align: center;
 }
 
-@media (min-width: 1024px) {
-    .bgCgu {
-        background-color: lightgreen;
-    }
+.textPrimary {
+    color: var(--primary-color);
+}
+
+.textOrangeBackground {
+  background-color: var(--text-orange-background);
+  color: white;
+  display: inline-block;
 }

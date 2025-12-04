@@ -1,12 +1,14 @@
 import React from 'react';
 
+import styles from './page.module.css';
+
 export const CGU = () => {
     return (
         <div style={{ textAlign: 'justify' }}>
-            <div className="text-center" style={{ marginBottom: '1rem' }}>
-                <h2 className="text--primary">Conditions générales d’utilisation 1Village (V2)</h2>
+            <div className={styles.textCenter} style={{ marginBottom: '1rem' }}>
+                <h2 className={styles.textPrimary}>Conditions générales d’utilisation 1Village (V2)</h2>
             </div>
-            <h3 className="text--orange-background">1. Respect de certaines dispositions sur la plateforme 1Village</h3>
+            <h3 className={styles.textOrangeBackground}>1. Respect de certaines dispositions sur la plateforme 1Village</h3>
             <p>
                 En tant que professeur des écoles, utilisateur de la plateforme 1v.parlemonde.org, je m’engage à ne mettre en ligne aucun contenu qui
                 contreviendrait à la législation applicable, notamment tout message à caractère raciste, injurieux, diffamant, ou pornographique, quel
@@ -22,7 +24,7 @@ export const CGU = () => {
             </p>
 
             <br />
-            <h3 className="text--orange-background">2. Acceptation des mentions légales du site https://www.parlemonde.org</h3>
+            <h3 className={styles.textOrangeBackground}>2. Acceptation des mentions légales du site https://www.parlemonde.org</h3>
             <p>
                 Je prends connaissance et j’accepte les mentions légales telles que précisées à l’adresse suivante :
                 <a href="https://www.parlemonde.org/mentions-legales/" target="_blank" rel="noreferrer">
@@ -31,7 +33,7 @@ export const CGU = () => {
             </p>
 
             <br />
-            <h3 className="text--orange-background">3. Adhésion à l’association Par Le Monde</h3>
+            <h3 className={styles.textOrangeBackground}>3. Adhésion à l’association Par Le Monde</h3>
             <p>
                 Je prends connaissance des statuts et du règlement intérieur de l’association Par Le Monde et consens, conformément aux dispositions
                 statutaires (articles 5 et 11 des statuts, articles 1 et 2 du règlement intérieur), à devenir membre de droit de l’association l’année
@@ -43,7 +45,7 @@ export const CGU = () => {
                 le règlement intérieur, et ayant donné leur accord à devenir membres de droit. Tous les membres de droit ont le pouvoir de voter à
                 l’assemblée générale. Aucune cotisation n’est demandée à ce jour pour les professeurs participant à 1Village.
             </p>
-            <h3 className="text--orange-background">4. Notification 1Village</h3>
+            <h3 className={styles.textOrangeBackground}>4. Notification 1Village</h3>
             <p>
                 Je donne mon accord pour recevoir des notifications sur l’activité d’1Village. À tout moment de l’année elles seront désactivables
                 dans l’espace “mon compte” prévu à cet effet.
