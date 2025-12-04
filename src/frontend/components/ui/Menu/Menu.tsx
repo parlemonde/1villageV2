@@ -56,6 +56,7 @@ export const Menu = ({ items }: MenuProps) => {
                     </NavigationMenu.Item>
                 ))}
             </NavigationMenu.List>
+            <Link href={'/cgu'}>Conditions générales d&apos;utilisation</Link>
         </NavigationMenu.Root>
     );
 };
