@@ -8,6 +8,7 @@ export const UserContext = React.createContext<{
     user: User;
     setUser: (user: User) => void;
     classroom: Classroom | undefined;
+    setClassroom: (classroom: Classroom | undefined) => void;
 }>({
     user: {
         id: '',
@@ -18,14 +19,16 @@ export const UserContext = React.createContext<{
     },
     setUser: () => {},
     classroom: undefined,
+    setClassroom: () => {},
 });
 
 interface UserProviderProps {
     initialUser: User;
-    classroom?: Classroom;
+    initialClassroom?: Classroom;
 }
-export const UserProvider = ({ initialUser, classroom, children }: React.PropsWithChildren<UserProviderProps>) => {
+export const UserProvider = ({ initialUser, initialClassroom, children }: React.PropsWithChildren<UserProviderProps>) => {
     const [user, setUser] = React.useState<User>(initialUser);
-    const value = React.useMemo(() => ({ user, setUser, classroom }), [user, setUser, classroom]);
+    const [classroom, setClassroom] = React.useState<Classroom | undefined>(initialClassroom);
+    const value = React.useMemo(() => ({ user, setUser, classroom, setClassroom }), [user, setUser, classroom, setClassroom]);
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
