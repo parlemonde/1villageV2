@@ -21,7 +21,7 @@ export default async function VillageLayout({
     }
     const { village, classroom } = await getCurrentVillageAndClassroomForUser(user);
     return (
-        <UserProvider initialUser={user} classroom={classroom}>
+        <UserProvider initialUser={user} initialClassroom={classroom}>
             <VillageProvider village={village}>
                 <Header />
                 <div className={styles.rootLayout}>
