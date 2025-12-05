@@ -1,0 +1,12 @@
+.countryOptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+.countryFlag {
+    width: 30px;
+    text-align: center;
+}
