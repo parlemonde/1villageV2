@@ -24,8 +24,8 @@ const ROLE_LABELS: Record<User['role'], string> = {
 export function ClassroomsTable() {
     const { user: currentUser } = useContext(UserContext);
 
-    /*const [userToDeleteId, setUserToDeleteId] = useState<string | null>(null);
-    const [isDeletingUser, setIsDeletingUser] = useState(false); */
+    const [classroomToDeleteId, setClassroomToDeleteId] = useState<string | null>(null);
+    const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
     const { data: classrooms, isLoading, mutate } = useSWR<Classroom[]>('/api/classrooms', jsonFetcher);
@@ -59,33 +59,55 @@ export function ClassroomsTable() {
                 columns={[
                     {
                         id: 'name',
-                        header: 'Nom',
+                        header: 'Ecole',
                         accessor: 'name',
                         isSortable: true,
                     },
                     {
-                        id: 'email',
-                        header: 'Email',
-                        accessor: 'email',
+                        id: 'level',
+                        header: 'Niveau',
+                        accessor: 'level',
                         isSortable: true,
                     },
                     {
-                        id: 'role',
-                        header: 'Rôle',
-                        accessor: (user) => ROLE_LABELS[user.role],
-                        width: '150px',
+                        id: 'address',
+                        header: 'Adresse',
+                        accessor: 'address',
                         isSortable: true,
-                        getSortValue: (user) => ROLE_LABELS[user.role],
+                    },
+                    {
+                        id: 'city',
+                        header: 'Ville',
+                        accessor: 'city',
+                        isSortable: true,
+                    },
+                    {
+                        id: 'countryCode',
+                        header: 'Pays',
+                        accessor: 'countryCode',
+                        isSortable: true,
+                    },
+                    {
+                        id: 'teacherId',
+                        header: 'Professeur',
+                        accessor: 'teacherId',
+                        isSortable: true,
+                    },
+                    {
+                        id: 'villageId',
+                        header: 'Village monde',
+                        accessor: 'villageId',
+                        isSortable: true,
                     },
                     {
                         id: 'actions',
                         header: 'Actions',
-                        accessor: (user) => (
+                        accessor: (classroom) => (
                             <>
                                 <Tooltip content="Modifier la classe" hasArrow>
                                     <IconButton
                                         as="a"
-                                        href={`/admin/manage/classrooms/${user.id}`}
+                                        href={`/admin/manage/classrooms/${classroom.id}`}
                                         variant="borderless"
                                         color="primary"
                                         icon={Pencil1Icon}
@@ -97,7 +119,7 @@ export function ClassroomsTable() {
                                         variant="borderless"
                                         color="error"
                                         icon={TrashIcon}
-                                        onClick={() => setUserToDeleteId(user.id)}
+                                        onClick={() => setClassroomToDeleteId(classroom.id)}
                                     />
                                 </Tooltip>
                             </>
