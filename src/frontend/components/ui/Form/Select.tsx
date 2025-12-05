@@ -8,7 +8,7 @@ import { useState } from 'react';
 import styles from './select.module.css';
 import { getMarginAndPaddingStyle, type MarginProps } from '../css-styles';
 
-interface SelectProps extends MarginProps {
+export interface SelectProps extends MarginProps {
     name?: string;
     id?: string;
     value?: string;
@@ -20,6 +20,7 @@ interface SelectProps extends MarginProps {
     placeholder?: string;
     style?: React.CSSProperties;
     hasError?: boolean;
+    disabled?: boolean;
 }
 
 export const Select = (props: SelectProps) => {
@@ -35,6 +36,7 @@ export const Select = (props: SelectProps) => {
         placeholder = 'Choisir une option',
         style = {},
         hasError = false,
+        disabled = false,
         ...marginProps
     } = props;
 
@@ -50,6 +52,7 @@ export const Select = (props: SelectProps) => {
 
     return (
         <RadixSelect.Root
+            disabled={disabled}
             value={value}
             onValueChange={(newValue) => {
                 setSelectedValue(newValue);

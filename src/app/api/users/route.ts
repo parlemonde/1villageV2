@@ -7,10 +7,11 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq, and, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { createLoader, parseAsInteger } from 'nuqs/server';
+import { createLoader, parseAsInteger, parseAsString } from 'nuqs/server';
 
 const usersSearchParams = {
     villageId: parseAsInteger,
+    role: parseAsString,
 };
 const loadSearchParams = createLoader(usersSearchParams);
 
@@ -55,6 +56,10 @@ const getAllUsers = async (): Promise<User[]> => {
     return (await db.select(userColumns).from(users).orderBy(users.id)) as User[];
 };
 
+const getAllTeachers = async (): Promise<User[]> => {
+    return await db.select(userColumns).from(users).where(eq(users.role, 'teacher')).orderBy(users.id);
+};
+
 export const GET = async ({ nextUrl }: NextRequest) => {
     const user = await getCurrentUser();
     if (!user) {
@@ -62,7 +67,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, role } = loadSearchParams(nextUrl.searchParams);
 
     if (villageId !== null) {
         return NextResponse.json(await getVillageUsers(villageId));
@@ -70,6 +75,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         if (user.role !== 'admin') {
             return new NextResponse(null, { status: 403 });
         }
+
+        if (role === 'teacher') {
+            return NextResponse.json(await getAllTeachers());
+        }
+
         return NextResponse.json(await getAllUsers());
     }
 };
