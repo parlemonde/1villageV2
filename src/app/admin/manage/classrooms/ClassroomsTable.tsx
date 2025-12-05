@@ -14,17 +14,10 @@ import type { User } from '@server/database/schemas/users';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
-const ROLE_LABELS: Record<User['role'], string> = {
-    admin: 'Admin',
-    mediator: 'Médiateur',
-    teacher: 'Professeur',
-    parent: 'Parent',
-};
-
 export function ClassroomsTable() {
     const { user: currentUser } = useContext(UserContext);
 
-    const [classroomToDeleteId, setClassroomToDeleteId] = useState<string | null>(null);
+    const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
     const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
@@ -59,7 +52,7 @@ export function ClassroomsTable() {
                 columns={[
                     {
                         id: 'name',
-                        header: 'Ecole',
+                        header: 'Nom',
                         accessor: 'name',
                         isSortable: true,
                     },
