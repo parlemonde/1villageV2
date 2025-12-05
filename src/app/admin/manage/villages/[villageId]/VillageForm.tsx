@@ -1,11 +1,9 @@
 'use client';
 
-import { CountryFlag } from '@frontend/components/CountryFlag';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
-import { Select } from '@frontend/components/ui/Form/Select';
+import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Loader } from '@frontend/components/ui/Loader';
-import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { createVillage } from '@server-actions/villages/create-village';
@@ -14,18 +12,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import styles from './village-form.module.css';
-
-const countryOptions = Object.entries(COUNTRIES).map(([key, value]) => ({
-    label: (
-        <div className={styles.countryOptions}>
-            <span className={styles.countryFlag}>
-                <CountryFlag size="small" country={key} />
-            </span>
-            <span>{value}</span>
-        </div>
-    ),
-    value: key,
-}));
 
 interface Country {
     isoCode: string | null;
@@ -41,12 +27,11 @@ interface CountryFieldProps {
 const CountryField = ({ index, value, onChange, onDelete }: CountryFieldProps) => {
     return (
         <div className={styles.countrySelect}>
-            <Select
-                value={value.isoCode === null ? '' : value.isoCode} // use undefined to display the placeholder
+            <CountrySelect
+                value={value.isoCode === null ? '' : value.isoCode}
                 onChange={(newIsoCode) => onChange({ isoCode: newIsoCode, classroomCount: value.classroomCount })}
                 color="secondary"
                 isFullWidth
-                options={countryOptions}
                 placeholder={`Choisir le pays ${index + 1}`}
             />
             <Input
