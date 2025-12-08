@@ -6,7 +6,7 @@ export const CGU = () => {
     return (
         <div className={styles.cguBlock}>
             <div className={styles.textCenter} style={{ marginBottom: '1rem' }}>
-                <h2 className={styles.textPrimary}>Conditions générales d’utilisation 1Village (V2)</h2>
+                <h2 className={styles.textPrimary}>Conditions générales d’utilisation 1Village</h2>
             </div>
             <h3 className={styles.textOrangeBackground}>1. Respect de certaines dispositions sur la plateforme 1Village</h3>
             <p>
