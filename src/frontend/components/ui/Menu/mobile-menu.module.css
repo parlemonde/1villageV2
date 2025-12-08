@@ -64,3 +64,10 @@
 .color-danger {
     color: var(--error-color);
 }
+.cguLink {
+    color: var(--font-color);
+    font-size: 14px;
+    display: block;
+    margin-top: 16px;
+    padding: 0 8px;
+}

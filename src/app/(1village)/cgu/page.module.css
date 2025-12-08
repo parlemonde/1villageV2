@@ -1,3 +1,8 @@
+.cguBlock {
+  padding: 0 20px 40px;
+  text-align: justify;
+}
+
 .textCenter {
     text-align: center;
 }

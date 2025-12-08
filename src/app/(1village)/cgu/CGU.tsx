@@ -4,7 +4,7 @@ import styles from './page.module.css';
 
 export const CGU = () => {
     return (
-        <div style={{ textAlign: 'justify' }}>
+        <div className={styles.cguBlock}>
             <div className={styles.textCenter} style={{ marginBottom: '1rem' }}>
                 <h2 className={styles.textPrimary}>Conditions générales d’utilisation 1Village (V2)</h2>
             </div>
