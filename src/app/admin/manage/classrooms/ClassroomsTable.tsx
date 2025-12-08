@@ -11,6 +11,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
+import { getClassroomWithTeacher } from '@server/helpers/get-classroom-with-teacher';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
@@ -90,6 +91,12 @@ export function ClassroomsTable() {
                         id: 'villageId',
                         header: 'Village monde',
                         accessor: 'villageId',
+                        isSortable: true,
+                    },
+                    {
+                        id: 'villageName',
+                        header: 'Village Name',
+                        accessor: 'villageName',
                         isSortable: true,
                     },
                     {
