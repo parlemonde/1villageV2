@@ -6,10 +6,10 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';
 
-import { FreeContentCard } from './FreeContentCard';
 import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { ActivityHeader } from '../ActivityHeader';
+import { FreeContentCard } from './cards/FreeContentCard';
 
 const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = {
     libre: FreeContentCard,

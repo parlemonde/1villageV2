@@ -6,8 +6,8 @@ import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
 
-import { FreeContentView } from './FreeContentView';
 import type { ActivityContentViewProps } from './activity-view.types';
+import { FreeContentView } from './views/FreeContentView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
