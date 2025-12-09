@@ -20,7 +20,7 @@ import { VillageContext } from './villageContext';
 export const ActivityContext = createContext<{
     activity: Partial<Activity> | undefined;
     setActivity: (activity: Partial<Activity>) => void;
-    onCreateActivity: (activityType: ActivityType, isPelico?: boolean) => void;
+    onCreateActivity: (activityType: ActivityType, isPelico?: boolean, initialData?: Activity['data']) => void;
     onUpdateActivity: () => Promise<void>;
     onPublishActivity: () => Promise<void>;
 }>({
@@ -108,8 +108,15 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     );
 
     const onCreateActivity = useCallback(
-        (activityType: ActivityType, isPelico?: boolean) => {
-            setLocalActivity({ type: activityType, phase: village?.activePhase, villageId: village?.id, classroomId: classroom?.id, isPelico });
+        (activityType: ActivityType, isPelico?: boolean, initialData?: Activity['data']) => {
+            setLocalActivity({
+                type: activityType,
+                phase: village?.activePhase,
+                villageId: village?.id,
+                classroomId: classroom?.id,
+                isPelico,
+                data: initialData,
+            } as Partial<Activity>);
             jsonFetcher<Activity>(`/api/activities/draft${serializeToQueryUrl({ type: activityType })}`)
                 .then(setDraftActivity)
                 .catch(() => {

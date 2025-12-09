@@ -2,7 +2,7 @@
 
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
-import { FreeContentView } from '@frontend/components/activities/ActivityView/FreeContentView';
+import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -68,7 +68,7 @@ export default function FreeContentStep3() {
                 status={isFirstStepDone ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                <FreeContentView activity={activity} />
+                <ContentViewer content={activity.data?.content} activityId={activity.id} />
             </ActivityStepPreview>
             <ActivityStepPreview
                 stepName="Forme"

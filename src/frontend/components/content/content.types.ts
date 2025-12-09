@@ -24,3 +24,4 @@ type H5pContent = {
 };
 export type AnyContent = HtmlContent | ImageContent | AudioContent | VideoContent | DocumentContent | H5pContent;
 export type AnyContentType = AnyContent['type'];
+export type Content = AnyContent[];

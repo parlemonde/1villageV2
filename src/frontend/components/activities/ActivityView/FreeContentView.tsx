@@ -6,11 +6,5 @@ export const FreeContentView = ({ activity }: ActivityContentViewProps) => {
     if (activity.type !== 'libre') {
         return null;
     }
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', margin: '32px 0' }}>
-            {(activity.data?.content || []).map((content, index) => (
-                <ContentViewer key={index} content={content} activityId={activity.id} />
-            ))}
-        </div>
-    );
+    return <ContentViewer content={activity.data?.content} activityId={activity.id} />;
 };

@@ -1,4 +1,5 @@
 import { ActivityView } from '@frontend/components/activities/ActivityView';
+import { ACTIVITY_NAMES } from '@frontend/components/activities/activities-constants';
 import { Link } from '@frontend/components/ui/Link';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
@@ -6,17 +7,10 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { Activity } from '@server/database/schemas/activities';
-import type { ActivityType } from '@server/database/schemas/activity-types';
 import { eq, isNotNull, and } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
-
-const TITLES: Record<ActivityType, string> = {
-    libre: 'Publication',
-    enigme: 'Énigme',
-    jeu: 'Jeu',
-};
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -53,7 +47,7 @@ export default async function ActivityPage({ params }: ServerPageProps) {
                 </Link>
                 <ChevronRightIcon width={20} height={20} />
                 <span className={styles.activityBreadcrumbItem}>
-                    Activité - {activity.type === 'libre' && activity.isPelico ? 'Message de Pélico' : TITLES[activity.type]}
+                    Activité - {activity.type === 'libre' && activity.isPelico ? 'Message de Pélico' : ACTIVITY_NAMES[activity.type]}
                 </span>
             </div>
             <div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
