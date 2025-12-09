@@ -1,6 +1,6 @@
 import EnigmeIcon from '@frontend/svg/activities/enigme.svg';
+import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
-import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 
 export const ACTIVITY_NAMES: Record<ActivityType, string> = {

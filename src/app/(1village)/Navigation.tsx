@@ -9,7 +9,7 @@ import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
-import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
+import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
