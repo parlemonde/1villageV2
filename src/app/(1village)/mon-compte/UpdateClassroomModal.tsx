@@ -22,6 +22,9 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
 
+    const hasValidationErrors = !currentSchoolName || !currentAddress || !currentCity || !currentCountry;
+    const isConfirmDisabled = isUpdating || hasValidationErrors;
+
     const handleClose = () => {
         setCurrentLevel(classroom?.level || '');
         setCurrentSchoolName(classroom?.name || '');
@@ -33,7 +36,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     };
 
     const handleConfirm = async () => {
-        if (!currentCountry) {
+        if (!currentSchoolName || !currentAddress || !currentCity || !currentCountry) {
             return;
         }
 
@@ -65,7 +68,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
             onConfirm={handleConfirm}
             isLoading={isUpdating}
             width="md"
-            isConfirmDisabled={false}
+            isConfirmDisabled={isConfirmDisabled}
         >
             {updateErrorMessage && <p style={{ color: 'var(--error-color)', marginBottom: 4, textAlign: 'center' }}>{updateErrorMessage}</p>}
             <Field
@@ -89,6 +92,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 name="name"
                 label="École"
                 marginBottom="md"
+                isRequired
                 input={
                     <Input
                         id="name"
@@ -105,6 +109,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 name="address"
                 label="Adresse"
                 marginBottom="md"
+                isRequired
                 input={
                     <Input
                         id="address"
@@ -121,11 +126,13 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 name="city"
                 label="Ville"
                 marginBottom="md"
+                isRequired
                 input={
                     <Input id="city" type="text" isFullWidth hasError={false} value={currentCity} onChange={(e) => setCurrentCity(e.target.value)} />
                 }
             />
             <Field
+                style={{ pointerEvents: 'none' }}
                 name="country"
                 label="Pays"
                 marginBottom="md"
