@@ -72,9 +72,3 @@
     color: var(--error-color);
     border-color: var(--error-400);
 }
-.cguLink {
-    color: var(--font-color);
-    font-size: 14px;
-    display: block;
-    margin-top: 16px;
-}

@@ -4,6 +4,7 @@ import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
+import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
 import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -119,6 +120,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         <Menu items={activityMenuItems} />
                     </div>
                 )}
+                <Link href={'/cgu'} className={classNames(styles.cguLink)}>
+                    Conditions générales d&apos;utilisation
+                </Link>
             </div>
         </div>
     );
@@ -219,6 +223,9 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                     },
                 ]}
             />
+            <Link href={'/cgu'} className={classNames(styles.cguLink)} onClick={() => onClose()}>
+                Conditions générales d&apos;utilisation
+            </Link>
         </div>
     );
 };
