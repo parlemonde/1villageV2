@@ -26,13 +26,16 @@ export function ClassroomsTable() {
 
     //const userToDelete = users?.find((user) => user.id === userToDeleteId);
 
-    const filteredClassrooms = classrooms?.filter(
-        (classroom) =>
-            classroom.name.toLowerCase().includes(search.toLowerCase()) ||
-            classroom.address.toLowerCase().includes(search.toLowerCase()) ||
-            classroom.level?.toLowerCase().includes(search.toLowerCase()) ||
-            classroom.city.toLowerCase().includes(search.toLowerCase()),
-    );
+    const filteredClassrooms = classrooms?.filter((classroom) => {
+        const cls = classroom.classroom;
+
+        return (
+            cls.name.toLowerCase().includes(search.toLowerCase()) ||
+            cls.address.toLowerCase().includes(search.toLowerCase()) ||
+            cls.level?.toLowerCase().includes(search.toLowerCase()) ||
+            cls.city.toLowerCase().includes(search.toLowerCase())
+        );
+    });
 
     return (
         <div>
@@ -54,43 +57,37 @@ export function ClassroomsTable() {
                     {
                         id: 'name',
                         header: 'Nom',
-                        accessor: 'name',
+                        accessor: 'classroom.name',
                         isSortable: true,
                     },
                     {
                         id: 'level',
                         header: 'Niveau',
-                        accessor: 'level',
+                        accessor: 'classroom.level',
                         isSortable: true,
                     },
                     {
                         id: 'address',
                         header: 'Adresse',
-                        accessor: 'address',
+                        accessor: 'classroom.address',
                         isSortable: true,
                     },
                     {
                         id: 'city',
                         header: 'Ville',
-                        accessor: 'city',
+                        accessor: 'classroom.city',
                         isSortable: true,
                     },
                     {
                         id: 'countryCode',
                         header: 'Pays',
-                        accessor: 'countryCode',
+                        accessor: 'classroom.countryCode',
                         isSortable: true,
                     },
                     {
-                        id: 'teacherId',
+                        id: 'teacherName',
                         header: 'Professeur',
-                        accessor: 'teacherId',
-                        isSortable: true,
-                    },
-                    {
-                        id: 'villageId',
-                        header: 'Village monde',
-                        accessor: 'villageId',
+                        accessor: 'teacherName',
                         isSortable: true,
                     },
                     {

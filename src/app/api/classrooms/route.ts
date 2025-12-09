@@ -1,6 +1,8 @@
 import { db } from '@server/database';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import { classrooms } from '@server/database/schemas/classrooms';
+import { users } from '@server/database/schemas/users';
+import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
@@ -12,12 +14,22 @@ const classroomsSearchParams = {
 };
 const loadSearchParams = createLoader(classroomsSearchParams);
 
-const getVillageClassrooms = async (villageId: number): Promise<Classroom[]> => {
-    return await db.select().from(classrooms).where(eq(classrooms.villageId, villageId));
-};
+const getVillageClassrooms = async (villageId: number | null) => {
+    //Start building the query
+    let query = db
+        .select({ classroom: classrooms, villageName: villages?.name, teacherName: users.name })
+        .from(classrooms)
+        .leftJoin(villages, eq(villages.id, classrooms.villageId))
+        .leftJoin(users, eq(users.id, classrooms.teacherId));
 
-const getAllClassrooms = async (): Promise<Classroom[]> => {
-    return await db.select().from(classrooms).orderBy(classrooms.id);
+    //Add filter only if villageId is provided
+    if (villageId !== null) {
+        query = query.where(eq(classrooms.villageId, villageId));
+    }
+
+    //Execute the query
+    const result = await query;
+    return result;
 };
 
 export const GET = async ({ nextUrl }: NextRequest) => {
@@ -33,6 +45,6 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         if (user.role !== 'admin') {
             return new NextResponse(null, { status: 403 });
         }
-        return NextResponse.json(await getAllClassrooms());
+        return NextResponse.json(await getVillageClassrooms(null));
     }
 };
