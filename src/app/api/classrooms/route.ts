@@ -1,5 +1,4 @@
 import { db } from '@server/database';
-import type { Classroom } from '@server/database/schemas/classrooms';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { users } from '@server/database/schemas/users';
 import { villages } from '@server/database/schemas/villages';
