@@ -23,6 +23,13 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
     const [isUpdatePasswordModalOpen, setIsUpdatePasswordModalOpen] = useState(false);
     const [isUpdateClassroomModalOpen, setIsUpdateClassroomModalOpen] = useState(false);
 
+    const displayClassroomInfo = () => {
+        if (!classroom) {
+            return '';
+        }
+        return [classroom.level, classroom.name, classroom.address, classroom.city, COUNTRIES[classroom.countryCode]].filter(Boolean).join(', ');
+    };
+
     return (
         <>
             <div className={styles.settingRow}>
@@ -59,11 +66,7 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
                 <div className={styles.settingRow}>
                     <div className={styles.settingLabel}>
                         <span className={styles.settingLabelText}>Ma classe</span>
-                        {classroom && (
-                            <span className={styles.settingValue}>
-                                {classroom.level}, {classroom.name}, {classroom.address}, {classroom.city}, {COUNTRIES[classroom.countryCode]}
-                            </span>
-                        )}
+                        {classroom && <span className={styles.settingValue}>{displayClassroomInfo()}</span>}
                     </div>
                     <Button
                         label="Modifier ma classe"

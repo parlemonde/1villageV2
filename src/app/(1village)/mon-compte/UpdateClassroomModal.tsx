@@ -3,7 +3,7 @@ import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 interface UpdateClassroomModalProps {
     isOpen: boolean;
@@ -13,11 +13,11 @@ interface UpdateClassroomModalProps {
 export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalProps) {
     const { user, classroom, setClassroom } = useContext(UserContext);
 
-    const [currentLevel, setCurrentLevel] = useState(classroom?.level || '');
-    const [currentSchoolName, setCurrentSchoolName] = useState(classroom?.name || '');
-    const [currentAddress, setCurrentAddress] = useState(classroom?.address || '');
-    const [currentCity, setCurrentCity] = useState(classroom?.city || '');
-    const [currentCountry, setCurrentCountry] = useState(classroom?.countryCode || '');
+    const [currentLevel, setCurrentLevel] = useState('');
+    const [currentSchoolName, setCurrentSchoolName] = useState('');
+    const [currentAddress, setCurrentAddress] = useState('');
+    const [currentCity, setCurrentCity] = useState('');
+    const [currentCountry, setCurrentCountry] = useState('');
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
@@ -25,12 +25,15 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const hasValidationErrors = !currentSchoolName || !currentAddress || !currentCity || !currentCountry;
     const isConfirmDisabled = isUpdating || hasValidationErrors;
 
-    const handleClose = () => {
+    useEffect(() => {
         setCurrentLevel(classroom?.level || '');
         setCurrentSchoolName(classroom?.name || '');
         setCurrentAddress(classroom?.address || '');
         setCurrentCity(classroom?.city || '');
         setCurrentCountry(classroom?.countryCode || '');
+    }, [classroom, isOpen]);
+
+    const handleClose = () => {
         setUpdateErrorMessage('');
         onClose();
     };
@@ -49,6 +52,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 level: currentLevel,
                 name: currentSchoolName,
                 address: currentAddress,
+                city: currentCity,
             });
             setClassroom(updatedClassroom);
             handleClose();
