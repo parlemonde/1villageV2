@@ -12,6 +12,7 @@ export default function AdminManagePage() {
             <AdminLink href="/admin/manage/users" label="Les utilisateurs" />
             <AdminLink href="/admin/manage/phases" label="Paraméter les phases" />
             <AdminLink href="/admin/manage/activities" label="Paraméter les activités" />
+            <AdminLink href="/admin/manage/archives" label="Archives" />
         </PageContainer>
     );
 }
