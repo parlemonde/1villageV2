@@ -1,0 +1,20 @@
+.listArchives {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    a {
+        display: inline-block;
+        padding: 0px 10px;
+        color: var(--font-color);
+        text-decoration: none;
+    }
+
+    a:hover {
+        border-radius: 5px;
+        background-color: var(--grey-200);
+    }
+}
