@@ -3,23 +3,22 @@
 import { AdminTable } from '@frontend/components/AdminTable';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
-import { Modal } from '@frontend/components/ui/Modal';
+//import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { UserContext } from '@frontend/contexts/userContext';
-import { authClient } from '@frontend/lib/auth-client';
+//import { authClient } from '@frontend/lib/auth-client';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import type { User } from '@server/database/schemas/users';
-import { getClassroomWithTeacher } from '@server/helpers/get-classroom-with-teacher';
+//import type { User } from '@server/database/schemas/users';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 export function ClassroomsTable() {
-    const { user: currentUser } = useContext(UserContext);
+    //const { user: currentUser } = useContext(UserContext);
 
-    const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
-    const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
+    //const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
+    //const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
     const { data: classrooms, isLoading, mutate } = useSWR<Classroom[]>('/api/classrooms', jsonFetcher);
@@ -92,7 +91,7 @@ export function ClassroomsTable() {
                     },
                     {
                         id: 'villageName',
-                        header: 'Village Name',
+                        header: 'Village',
                         accessor: 'villageName',
                         isSortable: true,
                     },
