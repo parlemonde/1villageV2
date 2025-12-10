@@ -1,4 +1,5 @@
 import { db } from '@server/database';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { users } from '@server/database/schemas/users';
 import { villages } from '@server/database/schemas/villages';
@@ -13,9 +14,15 @@ const classroomsSearchParams = {
 };
 const loadSearchParams = createLoader(classroomsSearchParams);
 
-const getVillageClassrooms = async (villageId: number | null) => {
+export type ClassroomVillageTeacher = {
+    classroom: Classroom;
+    villageName: string | null;
+    teacherName: string | null;
+};
+
+const getVillageClassrooms = async (villageId: number | null): Promise<ClassroomVillageTeacher[]> => {
     //Start building the query
-    let query = db
+    const query = db
         .select({ classroom: classrooms, villageName: villages?.name, teacherName: users.name })
         .from(classrooms)
         .leftJoin(villages, eq(villages.id, classrooms.villageId))
@@ -23,7 +30,7 @@ const getVillageClassrooms = async (villageId: number | null) => {
 
     //Add filter only if villageId is provided
     if (villageId !== null) {
-        query = query.where(eq(classrooms.villageId, villageId));
+        query.where(eq(classrooms.villageId, villageId));
     }
 
     //Execute the query
