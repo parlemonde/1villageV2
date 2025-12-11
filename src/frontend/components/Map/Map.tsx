@@ -54,7 +54,7 @@ const DEFAULT_COORDINATES: Coordinates = { lat: 48.858, lng: 2.294 };
 const Map = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, zoom = 5, ...marginAndPaddingProps }: MapProps) => {
     return (
         <MapContainer
-            style={{ ...getMarginAndPaddingStyle(marginAndPaddingProps), width: '550px', height: '250px' }}
+            style={{ ...getMarginAndPaddingStyle(marginAndPaddingProps), width: '100%', height: '250px', padding: '16px' }}
             center={coordinates}
             zoom={zoom}
             scrollWheelZoom={true}
