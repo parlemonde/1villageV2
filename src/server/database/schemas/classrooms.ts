@@ -5,10 +5,10 @@ import { villages } from './villages';
 
 export const classrooms = pgTable('classrooms', {
     id: serial('id').primaryKey(),
+    alias: text('alias'),
     name: text('name').notNull(),
     address: text('address').notNull(),
     level: text('level'), // Used to display the classroom name
-    city: text('city').notNull(), // Used to display the classroom name
     coordinates: jsonb('coordinates').$type<{ latitude: number; longitude: number }>(),
     avatarUrl: text('avatarUrl'),
     mascotteId: integer('mascotteId'),
