@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 'use client';
 
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
