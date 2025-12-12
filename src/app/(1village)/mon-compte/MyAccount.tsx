@@ -3,8 +3,10 @@
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
+import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { useContext, useState } from 'react';
 
+import { UpdateClassroomModal } from './UpdateClassroomModal';
 import { UpdateEmailModal } from './UpdateEmailModal';
 import { UpdateNameModal } from './UpdateNameModal';
 import { UpdatePasswordModal } from './UpdatePasswordModal';
@@ -14,11 +16,19 @@ interface MyAccountProps {
     isSSOUser: boolean;
 }
 export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
-    const { user } = useContext(UserContext);
+    const { user, classroom } = useContext(UserContext);
 
     const [isUpdateNameModalOpen, setIsUpdateNameModalOpen] = useState(false);
     const [isUpdateEmailModalOpen, setIsUpdateEmailModalOpen] = useState(false);
     const [isUpdatePasswordModalOpen, setIsUpdatePasswordModalOpen] = useState(false);
+    const [isUpdateClassroomModalOpen, setIsUpdateClassroomModalOpen] = useState(false);
+
+    const displayClassroomInfo = () => {
+        if (!classroom) {
+            return '';
+        }
+        return [classroom.level, classroom.name, classroom.address, COUNTRIES[classroom.countryCode]].filter(Boolean).join(', ');
+    };
 
     return (
         <>
@@ -52,6 +62,22 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
                     />
                 )}
             </div>
+            {user.role === 'teacher' && (
+                <div className={styles.settingRow}>
+                    <div className={styles.settingLabel}>
+                        <span className={styles.settingLabelText}>Ma classe</span>
+                        {classroom && <span className={styles.settingValue}>{displayClassroomInfo()}</span>}
+                    </div>
+                    <Button
+                        label="Modifier ma classe"
+                        color="secondary"
+                        variant="outlined"
+                        isUpperCase={false}
+                        className={styles.button}
+                        onClick={() => setIsUpdateClassroomModalOpen(true)}
+                    />
+                </div>
+            )}
             {!isSSOUser && (
                 <div className={styles.buttonContainer}>
                     <Button
@@ -67,6 +93,7 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
             )}
             <UpdateNameModal isOpen={isUpdateNameModalOpen} onClose={() => setIsUpdateNameModalOpen(false)} initialValue={user.name} />
             <UpdateEmailModal isOpen={isUpdateEmailModalOpen} onClose={() => setIsUpdateEmailModalOpen(false)} initialValue={user.email} />
+            <UpdateClassroomModal isOpen={isUpdateClassroomModalOpen} onClose={() => setIsUpdateClassroomModalOpen(false)} />
             <UpdatePasswordModal isOpen={isUpdatePasswordModalOpen} onClose={() => setIsUpdatePasswordModalOpen(false)} />
 
             <Title marginTop="xl" marginBottom="md" variant="h2">
