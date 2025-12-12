@@ -1,8 +1,10 @@
 'use client';
 
+import type { NominatimPlace } from '@app/api/geo/route';
+import { Map } from '@frontend/components/Map';
+import type { Coordinates } from '@frontend/components/Map/Map';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
-import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
@@ -12,7 +14,7 @@ import type { Village } from '@server/database/schemas/villages';
 import { createClassroom } from '@server-actions/classrooms/create-classroom';
 import type { User } from 'better-auth';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import styles from '../../manage.module.css';
@@ -20,28 +22,59 @@ import styles from '../../manage.module.css';
 export function ClassroomForm() {
     const router = useRouter();
 
+    const [alias, setAlias] = useState('');
     const [level, setLevel] = useState('');
     const [schoolName, setSchoolName] = useState('');
     const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
     const [village, setVillage] = useState('');
     const [teacher, setTeacher] = useState('');
+    const [coordinates, setCoordinates] = useState<Coordinates>({ lat: 0, lng: 0 });
+    const [country, setCountry] = useState('');
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [useFallback, setUseFallback] = useState(false);
 
     const { data: villages } = useSWR<Village[]>('/api/villages', jsonFetcher);
-    const { data: currentVillageResponse } = useSWR<Village[]>(
-        village ? `/api/villages${serializeToQueryUrl({ villageId: village })}` : null,
-        jsonFetcher,
-    );
     const { data: teachers } = useSWR<User[]>(`/api/users${serializeToQueryUrl({ role: 'teacher' })}`, jsonFetcher);
 
-    const currentVillage = currentVillageResponse?.[0];
-
-    const hasValidationErrors = !country || !village || !teacher || !schoolName || !address || !city;
+    const hasValidationErrors = !village || !teacher || !schoolName || !address;
     const isDisabled = hasValidationErrors || isLoading;
+
+    useEffect(() => {
+        if (error) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        }
+    }, [error]);
+
+    const getAddressPosition = async () => {
+        const response = await fetch(`/api/geo${serializeToQueryUrl({ query: address })}`);
+        const [data] = (await response.json()) as NominatimPlace[];
+
+        if (!data) {
+            setUseFallback(true);
+            setError("Nous n'avont pas pu trouver l'adresse de l'école. Veuillez déplacer le marqueur à l'emplacement de votre école.");
+            return;
+        }
+
+        setCountry(data.address.country_code.toUpperCase());
+        return {
+            countryCode: data.address.country_code.toUpperCase(),
+            latitude: data.lat,
+            longitude: data.lon,
+        };
+    };
+
+    const getCountryByCoordinates = async () => {
+        const response = await fetch(`/api/geo${serializeToQueryUrl({ query: `${coordinates?.lat},${coordinates?.lng}` })}`);
+        const [data] = (await response.json()) as NominatimPlace[];
+
+        setCountry(data.address.country_code.toUpperCase());
+        return data.address.country_code.toUpperCase();
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,21 +87,45 @@ export function ClassroomForm() {
         setIsLoading(true);
 
         try {
+            if (useFallback) {
+                await getCountryByCoordinates();
+                await createClassroom({
+                    level,
+                    schoolName,
+                    address,
+                    country,
+                    villageId: Number(village),
+                    teacherId: teacher,
+                    coordinates: { latitude: coordinates.lat, longitude: coordinates.lng },
+                });
+
+                router.push('/admin/manage/classrooms');
+                return;
+            }
+
+            const addressPosition = await getAddressPosition();
+            if (!addressPosition) {
+                setIsLoading(false);
+                return;
+            }
+
             await createClassroom({
                 level,
                 schoolName,
                 address,
-                city,
-                country,
+                country: addressPosition.countryCode,
                 villageId: Number(village),
                 teacherId: teacher,
+                coordinates: { latitude: Number(addressPosition.latitude), longitude: Number(addressPosition.longitude) },
             });
             router.push('/admin/manage/classrooms');
         } catch (e) {
             console.error(e);
             const error = e as Error;
             if (error.name === 'MaxClassroomsError') {
-                setError(`Le village a atteint le nombre maximum de classes pour le pays ${COUNTRIES[country]}`);
+                setError(`Le village a atteint le nombre maximum de classes pour le pays '${COUNTRIES[country]}'`);
+            } else if (error.name === 'CountryNotAllowedError') {
+                setError(`Ce village n'accepte pas les classes de pays '${COUNTRIES[country]}'`);
             } else {
                 setError('Une erreur est survenue lors de la création de la classe');
             }
@@ -81,6 +138,21 @@ export function ClassroomForm() {
         <form onSubmit={handleSubmit} className={styles.form}>
             <Loader isLoading={isLoading} />
             {error && <div className={styles.error}>{error}</div>}
+            <Field
+                label="Pseudo"
+                name="alias"
+                input={
+                    <Input
+                        id="alias"
+                        name="alias"
+                        color="secondary"
+                        isFullWidth
+                        value={alias}
+                        onChange={(e) => setAlias(e.target.value)}
+                        type="text"
+                    />
+                }
+            />
             <Field
                 label="Niveau de classe"
                 name="level"
@@ -128,35 +200,7 @@ export function ClassroomForm() {
                     />
                 }
             />
-            <Field
-                label="Ville"
-                name="city"
-                isRequired
-                input={
-                    <Input id="city" name="city" color="secondary" isFullWidth value={city} onChange={(e) => setCity(e.target.value)} type="text" />
-                }
-            />
-            <Field
-                label="Pays"
-                name="country"
-                isRequired
-                input={
-                    <CountrySelect
-                        id="country"
-                        name="country"
-                        color="secondary"
-                        isFullWidth
-                        value={country}
-                        filter={(country: string) => {
-                            if (currentVillage?.countries) {
-                                return currentVillage?.countries.includes(country) ?? false;
-                            }
-                            return true;
-                        }}
-                        onChange={(country) => setCountry(country)}
-                    />
-                }
-            />
+            {useFallback && <Map marginBottom="md" marginX="auto" setCoordinates={setCoordinates} />}
             <Field
                 label="Village-monde"
                 name="village"

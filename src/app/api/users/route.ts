@@ -56,8 +56,13 @@ const getAllUsers = async (): Promise<User[]> => {
     return (await db.select(userColumns).from(users).orderBy(users.id)) as User[];
 };
 
-const getAllTeachers = async (): Promise<User[]> => {
-    return await db.select(userColumns).from(users).where(eq(users.role, 'teacher')).orderBy(users.id);
+const getAllTeachersWithoutClassrooms = async (): Promise<User[]> => {
+    return await db
+        .select(userColumns)
+        .from(users)
+        .leftJoin(classrooms, eq(users.id, classrooms.teacherId))
+        .where(and(eq(users.role, 'teacher'), isNull(classrooms.teacherId)))
+        .orderBy(users.id);
 };
 
 export const GET = async ({ nextUrl }: NextRequest) => {
@@ -77,7 +82,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         }
 
         if (role === 'teacher') {
-            return NextResponse.json(await getAllTeachers());
+            return NextResponse.json(await getAllTeachersWithoutClassrooms());
         }
 
         return NextResponse.json(await getAllUsers());

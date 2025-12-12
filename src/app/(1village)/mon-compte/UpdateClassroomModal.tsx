@@ -20,7 +20,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const [currentLevel, setCurrentLevel] = useState('');
     const [currentSchoolName, setCurrentSchoolName] = useState('');
     const [currentAddress, setCurrentAddress] = useState('');
-    const [currentCity, setCurrentCity] = useState('');
     const [currentCountry, setCurrentCountry] = useState('');
     const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates | undefined>();
 
@@ -35,7 +34,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         setCurrentLevel(classroom?.level || '');
         setCurrentSchoolName(classroom?.name || '');
         setCurrentAddress(classroom?.address || '');
-        setCurrentCity(classroom?.city || '');
         setCurrentCountry(classroom?.countryCode || '');
         setCurrentCoordinates(classroom?.coordinates ? { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude } : undefined);
     }, [classroom, isOpen]);
@@ -59,7 +57,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         }
 
         return {
-            city: data.address.city,
             countryCode: data.address.country_code.toUpperCase(),
             latitude: data.lat,
             longitude: data.lon,
@@ -95,7 +92,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                     level: currentLevel,
                     name: currentSchoolName,
                     address: currentAddress,
-                    city: currentCity,
                     countryCode: country,
                     coordinates: currentCoordinates ? { latitude: currentCoordinates.lat, longitude: currentCoordinates.lng } : undefined,
                 });
@@ -114,7 +110,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 level: currentLevel,
                 name: currentSchoolName,
                 address: currentAddress,
-                city: address.city,
                 countryCode: address.countryCode,
                 coordinates: { latitude: Number(address.latitude), longitude: Number(address.longitude) },
             });
