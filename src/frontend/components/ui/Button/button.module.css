@@ -228,6 +228,12 @@
     display: none;
 }
 
+@media (max-width: 768px) {
+    .leftIcon svg + span {
+        display: none;
+    }
+}
+
 @media (min-width: 850px) {
     .isTabletUpOnly {
         display: flex;
