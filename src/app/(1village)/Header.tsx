@@ -15,7 +15,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
@@ -40,11 +40,35 @@ export const Header = () => {
                         onClick={() => setIsOpen(!isOpen)}
                     />
                 </div>
-                <div style={{ flex: '1 1 0' }}>
+                <div className={styles.navContainer}>
                     <div className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </div>
+                    {user?.role === 'teacher' && (
+                        <div className={styles.teacherButtonContainer}>
+                            <IconButton
+                                icon={DrawingPinIcon}
+                                variant="borderless"
+                                size="lg"
+                                color="primary"
+                                className={styles.teacherMenuButton}
+                                as="a"
+                                href="https://prof.parlemonde.org/les-ressources/"
+                                onClick={() => console.warn('Teacher menu clicked')}
+                            />
+                            <IconButton
+                                icon={ChatBubbleIcon}
+                                variant="borderless"
+                                size="lg"
+                                color="primary"
+                                className={styles.teacherMenuButton}
+                                as="a"
+                                href="https://prof.parlemonde.org/la-salle/"
+                                onClick={() => console.warn('Teacher menu clicked')}
+                            />
+                        </div>
+                    )}
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">

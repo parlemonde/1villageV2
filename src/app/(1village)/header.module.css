@@ -24,10 +24,23 @@
     border-radius: 10px;
 }
 
+.navContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.teacherButtonContainer {
+    margin-left: 20px;
+}
+
+.teacherMenuButton {
+    padding: 10px;
+}
+
 .menuButton {
-    position: absolute;
-    left: 8px;
-    top: 6px;
     width: 34px;
     height: 34px;
     display: none;
@@ -36,7 +49,6 @@
 .logoContainer {
     display: flex;
     align-items: center;
-    width: 100%;
     justify-content: flex-start;
 }
 
