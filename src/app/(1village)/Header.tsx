@@ -47,25 +47,25 @@ export const Header = () => {
                     </div>
                     {user?.role === 'teacher' && (
                         <div className={styles.teacherButtonContainer}>
-                            <IconButton
-                                icon={DrawingPinIcon}
+                            <Button
+                                leftIcon={<DrawingPinIcon width="24" height="24" />}
                                 variant="borderless"
-                                size="lg"
                                 color="primary"
+                                isUpperCase={false}
+                                label="Mes ressources"
                                 className={styles.teacherMenuButton}
                                 as="a"
                                 href="https://prof.parlemonde.org/les-ressources/"
-                                onClick={() => console.warn('Teacher menu clicked')}
                             />
-                            <IconButton
-                                icon={ChatBubbleIcon}
+                            <Button
+                                leftIcon={<ChatBubbleIcon width="24" height="24" />}
                                 variant="borderless"
-                                size="lg"
                                 color="primary"
+                                isUpperCase={false}
+                                label="Ma messagerie"
                                 className={styles.teacherMenuButton}
                                 as="a"
                                 href="https://prof.parlemonde.org/la-salle/"
-                                onClick={() => console.warn('Teacher menu clicked')}
                             />
                         </div>
                     )}
