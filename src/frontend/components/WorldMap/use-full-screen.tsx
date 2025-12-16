@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 
+import styles from './world-map.module.css';
+
 export const useFullScreen = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isFullScreen, setIsFullScreen] = useState(false);
@@ -22,22 +24,7 @@ export const useFullScreen = () => {
     };
 
     const fullScreenButton = (
-        <button
-            title="Plein écran"
-            onClick={toggleFullScreen}
-            style={{
-                marginTop: '0.5rem',
-                padding: '8px',
-                minWidth: 0,
-                backgroundColor: 'white',
-                border: '1px solid #c5c5c5',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
+        <button title="Plein écran" onClick={toggleFullScreen} className={styles.button} style={{ marginTop: 8 }}>
             {isFullScreen ? (
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
