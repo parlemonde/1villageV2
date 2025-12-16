@@ -21,7 +21,6 @@ export interface SelectProps extends MarginProps {
     placeholder?: string;
     style?: React.CSSProperties;
     hasError?: boolean;
-    disabled?: boolean;
 }
 
 export const Select = (props: SelectProps) => {

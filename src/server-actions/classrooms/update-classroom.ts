@@ -16,6 +16,10 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Cl
         throw new Error('Classroom ID is required to update classroom');
     }
 
+    if (user.role === 'admin') {
+        return await db.update(classrooms).set(rest).where(eq(classrooms.id, classroomId));
+    }
+
     return await db
         .update(classrooms)
         .set(rest)
