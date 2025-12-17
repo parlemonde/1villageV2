@@ -51,9 +51,9 @@ export const Header = () => {
                                 leftIcon={<DrawingPinIcon width="24" height="24" />}
                                 variant="borderless"
                                 color="primary"
+                                size="md"
                                 isUpperCase={false}
                                 label="Mes ressources"
-                                className={styles.teacherMenuButton}
                                 as="a"
                                 href="https://prof.parlemonde.org/les-ressources/"
                             />
@@ -61,9 +61,9 @@ export const Header = () => {
                                 leftIcon={<ChatBubbleIcon width="24" height="24" />}
                                 variant="borderless"
                                 color="primary"
+                                size="md"
                                 isUpperCase={false}
                                 label="Ma messagerie"
-                                className={styles.teacherMenuButton}
                                 as="a"
                                 href="https://prof.parlemonde.org/la-salle/"
                             />
