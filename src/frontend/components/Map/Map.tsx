@@ -49,7 +49,7 @@ type MapProps = {
 } & MarginProps &
     PaddingProps;
 
-const DEFAULT_COORDINATES: Coordinates = { lat: 48.858, lng: 2.294 };
+export const DEFAULT_COORDINATES: Coordinates = { lat: 48.858, lng: 2.294 };
 
 const Map = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, zoom = 5, ...marginAndPaddingProps }: MapProps) => {
     return (

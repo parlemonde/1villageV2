@@ -1,11 +1,13 @@
 import type { NominatimPlace } from '@app/api/geo/route';
 import { Map } from '@frontend/components/Map';
-import type { Coordinates } from '@frontend/components/Map/Map';
+import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
+import { VillageContext } from '@frontend/contexts/villageContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import { useContext, useEffect, useState } from 'react';
 
@@ -16,16 +18,18 @@ interface UpdateClassroomModalProps {
 
 export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalProps) {
     const { user, classroom, setClassroom } = useContext(UserContext);
+    const { invalidateClassrooms } = useContext(VillageContext);
 
     const [currentLevel, setCurrentLevel] = useState('');
     const [currentSchoolName, setCurrentSchoolName] = useState('');
     const [currentAddress, setCurrentAddress] = useState('');
     const [currentCountry, setCurrentCountry] = useState('');
-    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates | undefined>();
+    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates>(DEFAULT_COORDINATES);
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
     const [useFallback, setUseFallback] = useState(false);
+    const [hasAddressChanged, setHasAddressChanged] = useState(false);
 
     const hasValidationErrors = !currentSchoolName || !currentAddress;
     const isConfirmDisabled = isUpdating || hasValidationErrors;
@@ -35,8 +39,13 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         setCurrentSchoolName(classroom?.name || '');
         setCurrentAddress(classroom?.address || '');
         setCurrentCountry(classroom?.countryCode || '');
-        setCurrentCoordinates(classroom?.coordinates ? { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude } : undefined);
+        setCurrentCoordinates({ lat: classroom?.coordinates?.latitude ?? 0, lng: classroom?.coordinates?.longitude ?? 0 });
     }, [classroom, isOpen]);
+
+    const updateClassroomAndInvalidateContext = (classroom: Classroom) => {
+        setClassroom(classroom);
+        invalidateClassrooms();
+    };
 
     const handleClose = () => {
         setUseFallback(false);
@@ -57,10 +66,21 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         }
 
         return {
-            city: data.address.city,
             countryCode: data.address.country_code.toUpperCase(),
-            latitude: data.lat,
-            longitude: data.lon,
+            latitude: Number(data.lat),
+            longitude: Number(data.lon),
+        };
+    };
+
+    const getAddressPositionData = async () => {
+        if (hasAddressChanged) {
+            return await getAddressPosition();
+        }
+
+        return {
+            countryCode: currentCountry,
+            latitude: currentCoordinates.lat,
+            longitude: currentCoordinates.lng,
         };
     };
 
@@ -71,6 +91,42 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         return data.address.country_code.toUpperCase();
     };
 
+    const prepareFallbackClassroomData = async () => {
+        const country = await getCountryByCoordinates();
+        if (country !== currentCountry) {
+            setUpdateErrorMessage("L'emplacement sélectionné ne correspond pas à votre pays.");
+            return;
+        }
+        return {
+            currentLevel,
+            currentSchoolName,
+            currentAddress,
+            currentCountry: country,
+            currentCoordinates: { latitude: currentCoordinates.lat, longitude: currentCoordinates.lng },
+        };
+    };
+
+    const prepareStandardClassroomData = async () => {
+        const addressPosition = await getAddressPositionData();
+        if (!addressPosition) {
+            return;
+        }
+        return {
+            currentLevel,
+            currentSchoolName,
+            currentAddress,
+            currentCountry: addressPosition.countryCode,
+            currentCoordinates: { latitude: addressPosition.latitude, longitude: addressPosition.longitude },
+        };
+    };
+
+    const prepareClassroomData = async () => {
+        if (useFallback) {
+            return prepareFallbackClassroomData();
+        }
+        return prepareStandardClassroomData();
+    };
+
     const handleConfirm = async () => {
         if (hasValidationErrors) {
             return;
@@ -79,42 +135,24 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         setUpdateErrorMessage('');
         setIsUpdating(true);
         try {
-            if (useFallback) {
-                const country = await getCountryByCoordinates();
-                if (country !== currentCountry) {
-                    setUpdateErrorMessage("L'emplacement sélectionné ne correspond pas à votre pays.");
-                    setIsUpdating(false);
-                    return;
-                }
-
-                const [updatedClassroom] = await updateClassroom({
-                    teacherId: user.id,
-                    id: classroom?.id,
-                    level: currentLevel,
-                    name: currentSchoolName,
-                    address: currentAddress,
-                    countryCode: country,
-                    coordinates: currentCoordinates ? { latitude: currentCoordinates.lat, longitude: currentCoordinates.lng } : undefined,
-                });
-                setClassroom(updatedClassroom);
-                handleClose();
+            const classroomData = await prepareClassroomData();
+            if (!classroomData || !classroom) {
                 return;
             }
 
-            const address = await getAddressPosition();
-            if (!address) {
-                return;
-            }
             const [updatedClassroom] = await updateClassroom({
                 teacherId: user.id,
-                id: classroom?.id,
-                level: currentLevel,
-                name: currentSchoolName,
-                address: currentAddress,
-                countryCode: address.countryCode,
-                coordinates: { latitude: Number(address.latitude), longitude: Number(address.longitude) },
+                id: classroom.id,
+                level: classroomData.currentLevel,
+                name: classroomData.currentSchoolName,
+                address: classroomData.currentAddress,
+                countryCode: classroomData.currentCountry,
+                coordinates: {
+                    latitude: classroomData.currentCoordinates.latitude,
+                    longitude: classroomData.currentCoordinates.longitude,
+                },
             });
-            setClassroom(updatedClassroom);
+            updateClassroomAndInvalidateContext(updatedClassroom);
             handleClose();
         } catch {
             setUpdateErrorMessage('Une erreur est survenue lors de la mise à jour de votre classe');
@@ -181,7 +219,10 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                         isFullWidth
                         hasError={false}
                         value={currentAddress}
-                        onChange={(e) => setCurrentAddress(e.target.value)}
+                        onChange={(e) => {
+                            setCurrentAddress(e.target.value);
+                            setHasAddressChanged(true);
+                        }}
                         placeholder="Entrez l'adresse de l'école"
                     />
                 }
