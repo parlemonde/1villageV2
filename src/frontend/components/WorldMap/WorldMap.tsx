@@ -15,6 +15,7 @@ const WorldMap = () => {
     const { containerRef, fullScreenButton } = useFullScreen();
     const { classroomsMap } = useContext(VillageContext);
 
+    const animationCancelledRef = useRef(false);
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) {
@@ -22,17 +23,35 @@ const WorldMap = () => {
         }
         const { map, dispose } = initWorldMap(canvas);
         setMap(map);
-        // let animationFrame: number | null = null;
-        // const render = () => {
-        //     newWorld.render();
-        //     animationFrame = requestAnimationFrame(render);
-        // };
-        // animationFrame = requestAnimationFrame(render);
+        let animationFrame: number | null = null;
+        map.on('mousedown', () => {
+            animationCancelledRef.current = true;
+        });
+        const render = () => {
+            if (animationCancelledRef.current) {
+                return;
+            }
+            let newLng = map.getCenter().lng - 2;
+            if (newLng < -180) {
+                newLng += 360;
+            }
+            map.flyTo({
+                center: { lng: newLng, lat: map.getCenter().lat },
+                duration: 1000,
+                easing: (t) => {
+                    if (t === 1) {
+                        animationFrame = requestAnimationFrame(render);
+                    }
+                    return t;
+                },
+            });
+        };
+        animationFrame = requestAnimationFrame(render);
         return () => {
             dispose();
-            // if (animationFrame !== null) {
-            //     cancelAnimationFrame(animationFrame);
-            // }
+            if (animationFrame !== null) {
+                cancelAnimationFrame(animationFrame);
+            }
         };
     }, []);
 
@@ -45,6 +64,14 @@ const WorldMap = () => {
             .filter((classroom) => classroom !== undefined)
             .map((classroom) => getClassroomMarker({ classroom, canvas }));
         markers.forEach((marker) => marker.marker.addTo(map));
+        markers.forEach((marker) =>
+            marker.setClickHandler(() => {
+                map.flyTo({
+                    center: marker.marker.getLngLat(),
+                    zoom: map.getZoom(),
+                });
+            }),
+        );
         return () => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
@@ -60,6 +87,7 @@ const WorldMap = () => {
                         <button
                             className={styles.button}
                             onClick={() => {
+                                animationCancelledRef.current = true;
                                 map.zoomIn();
                             }}
                         >
@@ -71,6 +99,7 @@ const WorldMap = () => {
                         <button
                             className={`${styles.button} ${styles.bottom}`}
                             onClick={() => {
+                                animationCancelledRef.current = true;
                                 map.zoomOut();
                             }}
                         >

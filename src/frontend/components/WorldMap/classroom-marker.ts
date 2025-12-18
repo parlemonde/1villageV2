@@ -59,6 +59,7 @@ const MarkerSVG = ({
 
 export interface DisposableMarker extends Disposable {
     marker: Marker;
+    setClickHandler: (handler: (event: MouseEvent) => void) => void;
 }
 interface GetClassroomMarkerArgs {
     classroom: Classroom;
@@ -109,11 +110,31 @@ export const getClassroomMarker = ({ classroom, canvas }: GetClassroomMarkerArgs
     };
     el.addEventListener('mouseenter', onMouseEnter);
     el.addEventListener('mouseleave', onMouseLeave);
+    let onClick: ((event: MouseEvent) => void) | undefined;
+    const onMarkerClick = (event: MouseEvent) => {
+        if (onClick) {
+            const elBoundingClientRect = el.getBoundingClientRect();
+            if (
+                event.clientX < elBoundingClientRect.left ||
+                event.clientX > elBoundingClientRect.right ||
+                event.clientY < elBoundingClientRect.top ||
+                event.clientY > elBoundingClientRect.bottom
+            ) {
+                return;
+            }
+            onClick(event);
+        }
+    };
+    el.addEventListener('click', onMarkerClick);
     return {
         marker,
         dispose: () => {
             el.removeEventListener('mouseenter', onMouseEnter);
             el.removeEventListener('mouseleave', onMouseLeave);
+            el.removeEventListener('click', onMarkerClick);
+        },
+        setClickHandler: (handler: (event: MouseEvent) => void) => {
+            onClick = handler;
         },
     };
 };

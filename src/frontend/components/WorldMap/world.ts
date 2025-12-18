@@ -11,6 +11,8 @@ import type { Disposable } from './world-map.types';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 const MAP_LIBRE_DEFAULT_FOV = 36.87;
+const MIN_ZOOM = 0.8;
+const MAX_ZOOM = 18;
 
 export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable => {
     const disposables: (() => void)[] = [];
@@ -20,8 +22,8 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
         container: canvas,
         style: 'https://tiles.openfreemap.org/styles/liberty',
         zoom: 1,
-        minZoom: 0.8,
-        maxZoom: 16,
+        minZoom: MIN_ZOOM,
+        maxZoom: MAX_ZOOM,
         center: [0, 0],
         maplibreLogo: false,
         pixelRatio: window.devicePixelRatio || 1,
@@ -68,25 +70,10 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
             camera.aspect = canvas.width / canvas.height;
             camera.updateProjectionMatrix();
 
-            // Apply rotations
-            // 1. Roll (Z rotation) - usually 0
-            // 2. Pitch (X rotation, negative)
-            // 3. Bearing (Z rotation)
-            // 4. Latitude (X rotation)
-            // 5. Longitude (Y rotation, negative)
-            const roll = transform.rollInRadians ?? 0;
-            const pitch = transform.pitchInRadians ?? transform.pitch * DEG2RAD;
-            const bearing = transform.bearingInRadians ?? transform.bearing * DEG2RAD;
+            // Setup camera rotation
             const lat = -(transform.center?.lat ?? 0) * DEG2RAD;
             const lng = -(transform.center?.lng ?? 0) * DEG2RAD;
-
-            // Setup camera rotations by applying transforms in order
-            camera.rotation.set(0, 0, 0);
-            camera.rotateZ(roll);
-            camera.rotateX(-pitch);
-            camera.rotateZ(bearing);
-            camera.rotateX(lat);
-            camera.rotateY(-lng);
+            camera.rotation.set(lat, -lng, 0);
 
             // Render sky
             renderer.resetState();
@@ -107,7 +94,7 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
         map.setProjection({
             type: 'globe',
         });
-        // // Set french language for labels
+        // Set french language for labels
         map.setLayoutProperty('label_country_1', 'text-field', ['get', `name:fr`]);
         map.setLayoutProperty('label_country_2', 'text-field', ['get', `name:fr`]);
         map.setLayoutProperty('label_country_3', 'text-field', ['get', `name:fr`]);
@@ -128,19 +115,21 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
             id: 'satellite',
             type: 'raster',
             source: {
-                tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg'],
                 type: 'raster',
+                tiles: ['/static/images/earth-tiles/tile-{z}-{y}-{x}.webp'],
+                maxzoom: 2,
             },
             paint: {
                 'raster-opacity': ['interpolate', ['exponential', 2], ['zoom'], 1, 1, 2.8, 0],
             },
+            maxzoom: 3,
         });
 
         for (const layer of layers) {
             map.setLayerZoomRange(
                 layer,
-                Math.max(layer === 'natural_earth' ? 1.1 : 1.2, map.getLayer(layer)?.minzoom ?? 0),
-                Math.min(16, map.getLayer(layer)?.maxzoom ?? 16),
+                Math.max(1.1, map.getLayer(layer)?.minzoom ?? 0),
+                Math.min(MAX_ZOOM + 1, map.getLayer(layer)?.maxzoom ?? MAX_ZOOM + 1),
             );
         }
     });
