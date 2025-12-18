@@ -78,3 +78,27 @@ export async function listLocalFiles(prefix: string): Promise<string[]> {
         return [];
     }
 }
+
+export async function listLocalFolders(prefix: string): Promise<string[]> {
+    try {
+        const folders = new Set<string>();
+        const prefixPath = getFilePath(prefix.endsWith('/') ? prefix : `${prefix}/`);
+
+        // Vérifier que le répertoire existe
+        if (!fs.existsSync(prefixPath)) {
+            return [];
+        }
+
+        const entries = await fs.readdir(prefixPath, { withFileTypes: true });
+        for (const entry of entries) {
+            if (entry.isDirectory()) {
+                folders.add(entry.name);
+            }
+        }
+
+        return Array.from(folders).sort();
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
