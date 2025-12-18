@@ -1,3 +1,4 @@
+import { getArchiveFolders } from '@app/archives/[...filepath]/route';
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
@@ -7,8 +8,8 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 
 import styles from './archives.module.css';
 
-export default function AdminManageArchivePage() {
-    const archives: string[] = ['2024', '2023', '2022', '2021'];
+export default async function AdminManageArchivePage() {
+    const archives = await getArchiveFolders();
     return (
         <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Archives' }]} />
@@ -19,7 +20,7 @@ export default function AdminManageArchivePage() {
             <ul className={styles.listArchives}>
                 {archives.map((archive, index) => (
                     <li key={index}>
-                        <Link href={`/api/archives/${archive}`} passHref target="_blank">
+                        <Link href={`/archives/${archive}/index.html`} passHref target="_blank">
                             {archive}
                         </Link>
                     </li>

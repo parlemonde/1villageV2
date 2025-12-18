@@ -1,4 +1,4 @@
-import { getFile, getFileData } from '@server/files/file-upload';
+import { getFile, getFileData, listFolders } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getSingleBytesRange } from '@server/lib/get-single-bytes-range';
 import mime from 'mime-types';
@@ -98,4 +98,17 @@ export async function HEAD(_request: NextRequest, props: { params: Promise<{ fil
             'Accept-Ranges': 'bytes',
         },
     });
+}
+
+/**
+ * Liste les sous-dossiers de 1er niveau dans /tmp/archives/
+ * @returns Un tableau des noms de sous-dossiers
+ */
+export async function getArchiveFolders(): Promise<string[]> {
+    try {
+        return await listFolders('archives');
+    } catch (error) {
+        console.error('Erreur lors de la lecture des dossiers archives:', error);
+        return [];
+    }
 }
