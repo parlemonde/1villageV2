@@ -17,8 +17,9 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
 
 interface ActivityViewProps {
     activity: Activity;
+    showDetails?: boolean;
 }
-export const ActivityView = ({ activity }: ActivityViewProps) => {
+export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps) => {
     const { usersMap, classroomsMap } = useContext(VillageContext);
     const ContentView = CONTENT_VIEWS[activity.type];
     return (
@@ -27,8 +28,9 @@ export const ActivityView = ({ activity }: ActivityViewProps) => {
                 activity={activity}
                 user={usersMap[activity.userId]}
                 classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                showDetails={showDetails}
             />
-            {ContentView && <ContentView activity={activity} />}
+            {showDetails && ContentView && <ContentView activity={activity} />}
         </div>
     );
 };
