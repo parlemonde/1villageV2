@@ -41,8 +41,9 @@ interface ActivityHeaderProps {
     user?: User;
     classroom?: Classroom;
     className?: string;
+    showDetails?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className }: ActivityHeaderProps) => {
+export const ActivityHeader = ({ user, classroom, activity, className, showDetails = true }: ActivityHeaderProps) => {
     if (!activity.type) {
         return null;
     }
@@ -53,26 +54,32 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
             <div className={styles.activityHeaderText}>
                 <span>
                     <ActivityDisplayName user={user} classroom={classroom} isPelico={activity.isPelico} />
-                    {' a '}
-                    <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
+                    {showDetails && (
+                        <>
+                            {' a '}
+                            <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
+                        </>
+                    )}
                 </span>
-                <div className={styles.activityHeaderInfo}>
-                    <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>
-                    {activity.isPelico && (
-                        <>
-                            <span>&nbsp;&middot;&nbsp;</span>
-                            <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
-                        </>
-                    )}
-                    {classroom && (
-                        <>
-                            <span>&nbsp;&middot;&nbsp;</span>
-                            <CountryFlag size="small" country={classroom?.countryCode} />
-                        </>
-                    )}
-                </div>
+                {showDetails && (
+                    <div className={styles.activityHeaderInfo}>
+                        <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>
+                        {activity.isPelico && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
+                            </>
+                        )}
+                        {classroom && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <CountryFlag size="small" country={classroom?.countryCode} />
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
-            {Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
+            {showDetails && Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
         </div>
     );
 };
