@@ -31,7 +31,7 @@ const ActivityDisplayName = ({ user, classroom, isPelico }: ActivityDisplayNameP
     } else if (classroom && classroom.id === currentClassroom?.id) {
         return 'Votre classe';
     } else if (classroom) {
-        return `La classe${classroom.level ? ` de ${classroom.level}` : ''} à ${classroom.city}`;
+        return classroom.alias || (classroom.level ? `Les ${classroom.level} de ${classroom.name}` : classroom.name);
     }
     return user?.name || 'Un pélicopain';
 };
