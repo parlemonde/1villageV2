@@ -9,7 +9,7 @@ import Image from 'next/image';
 import styles from './avatar.module.css';
 import { Link } from '../ui/Link';
 
-const getGravatarUrl = (email: string, size: number) => {
+export const getGravatarUrl = (email: string, size: number) => {
     const hash = crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex');
     return `https://0.gravatar.com/avatar/${hash}?s${size}&r=g&d=identicon`;
 };

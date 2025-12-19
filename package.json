@@ -32,7 +32,7 @@
     "earcut": "^3.0.2",
     "fs-extra": "^11.3.1",
     "fuzzyset.js": "^1.0.7",
-    "maplibre-gl": "2.1.9",
+    "maplibre-gl": "5.14.0",
     "mime-types": "^3.0.1",
     "next": "15.4.10",
     "normalize.css": "^8.0.1",
