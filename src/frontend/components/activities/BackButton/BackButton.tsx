@@ -2,7 +2,7 @@ import { Link } from '@frontend/components/ui/Link';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import React from 'react';
 
-import styles from './backButton.module.css';
+import styles from './back-button.module.css';
 
 interface BackButtonProps {
     href: string;
