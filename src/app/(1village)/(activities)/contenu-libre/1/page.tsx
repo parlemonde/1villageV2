@@ -1,16 +1,14 @@
 'use client';
 
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { ContentEditor } from '@frontend/components/content/ContentEditor';
 import { Button } from '@frontend/components/ui/Button';
-import { Link } from '@frontend/components/ui/Link';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext } from 'react';
-
-import styles from './page.module.css';
 
 export default function FreeContentStep1() {
     const { activity, setActivity } = useContext(ActivityContext);
@@ -19,10 +17,8 @@ export default function FreeContentStep1() {
     }
 
     return (
-        <PageContainer className={styles.page}>
-            <Link href="/contenu-libre" className={styles.backButton}>
-                <ChevronLeftIcon /> Retour
-            </Link>
+        <PageContainer>
+            <BackButton href="/contenu-libre" label="Retour" />
             <Steps
                 steps={[
                     { label: 'Contenu', href: '/contenu-libre/1' },
