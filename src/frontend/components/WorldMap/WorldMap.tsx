@@ -12,10 +12,11 @@ import styles from './world-map.module.css';
 const WorldMap = () => {
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
-    const { containerRef, fullScreenButton } = useFullScreen();
+    const { containerRef, fullScreenButton } = useFullScreen(() => {
+        map?.stop();
+    });
     const { classroomsMap } = useContext(VillageContext);
 
-    const animationCancelledRef = useRef(false);
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) {
@@ -24,20 +25,14 @@ const WorldMap = () => {
         const { map, dispose } = initWorldMap(canvas);
         setMap(map);
         let animationFrame: number | null = null;
-        map.on('mousedown', () => {
-            animationCancelledRef.current = true;
-        });
         const render = () => {
-            if (animationCancelledRef.current) {
-                return;
-            }
-            let newLng = map.getCenter().lng - 2;
+            let newLng = map.getCenter().lng - 90;
             if (newLng < -180) {
                 newLng += 360;
             }
             map.flyTo({
                 center: { lng: newLng, lat: map.getCenter().lat },
-                duration: 1000,
+                duration: 30000,
                 easing: (t) => {
                     if (t === 1) {
                         animationFrame = requestAnimationFrame(render);
@@ -87,7 +82,7 @@ const WorldMap = () => {
                         <button
                             className={styles.button}
                             onClick={() => {
-                                animationCancelledRef.current = true;
+                                map.stop();
                                 map.zoomIn();
                             }}
                         >
@@ -99,7 +94,7 @@ const WorldMap = () => {
                         <button
                             className={`${styles.button} ${styles.bottom}`}
                             onClick={() => {
-                                animationCancelledRef.current = true;
+                                map.stop();
                                 map.zoomOut();
                             }}
                         >

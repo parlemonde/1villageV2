@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 
 import styles from './world-map.module.css';
 
-export const useFullScreen = () => {
+export const useFullScreen = (onFullScreenChange: () => void) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -12,6 +12,7 @@ export const useFullScreen = () => {
         if (!containerRef.current) {
             return;
         }
+        onFullScreenChange();
         if (!document.fullscreenElement) {
             containerRef.current.requestFullscreen();
             setIsFullScreen(true);
