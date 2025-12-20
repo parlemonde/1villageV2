@@ -8,6 +8,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { redirect, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 
+import { MediaFilters } from './MediaFilters';
 import { MediasGrid } from './MediasGrid';
 
 const ITEMS_PER_PAGE = 1;
@@ -23,6 +24,7 @@ export default function AdminMediasPage() {
     );
     return (
         <PageContainer title="Médiathèque">
+            <MediaFilters />
             <MediasGrid items={mediaLibraryResponse?.items ?? []} />
             <Pagination
                 totalItems={mediaLibraryResponse?.totalItems ?? 0}

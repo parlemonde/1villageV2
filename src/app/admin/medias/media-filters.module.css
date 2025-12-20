@@ -1,0 +1,24 @@
+.filters {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+    width: 80%;
+
+    @media (max-width: 1500px) {
+        width: 100%;
+    }
+}
+.pelico-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 6px;
+}
+.pelico-checkbox:hover {
+    background-color: var(--grey-100);
+}
+.pelico-checkbox img {
+    mix-blend-mode: multiply;
+}
