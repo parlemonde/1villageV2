@@ -1,0 +1,5 @@
+.pagination {
+    display: flex;
+    flex-direction: row;
+    column-gap: 4px;
+}

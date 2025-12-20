@@ -10,6 +10,7 @@ import useSWR from 'swr';
 
 import { MediaFilters } from './MediaFilters';
 import { MediasGrid } from './MediasGrid';
+import styles from './page.module.css';
 
 const ITEMS_PER_PAGE = 1;
 
@@ -26,12 +27,15 @@ export default function AdminMediasPage() {
         <PageContainer title="Médiathèque">
             <MediaFilters />
             <MediasGrid items={mediaLibraryResponse?.items ?? []} />
-            <Pagination
-                totalItems={mediaLibraryResponse?.totalItems ?? 0}
-                itemsPerPage={ITEMS_PER_PAGE}
-                currentPage={currentPage}
-                onPageChange={(page) => redirect(`/admin/medias${serializeToQueryUrl({ p: page })}`)}
-            />
+
+            <div className={styles.paginationContainer}>
+                <Pagination
+                    totalItems={mediaLibraryResponse?.totalItems ?? 0}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                    currentPage={currentPage}
+                    onPageChange={(page) => redirect(`/admin/medias${serializeToQueryUrl({ p: page })}`)}
+                />
+            </div>
         </PageContainer>
     );
 }

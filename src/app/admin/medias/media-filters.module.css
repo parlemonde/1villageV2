@@ -3,6 +3,7 @@
     flex-direction: row;
     column-gap: 16px;
     width: 80%;
+    margin-bottom: 32px;
 
     @media (max-width: 1500px) {
         width: 100%;
@@ -18,7 +19,4 @@
 }
 .pelico-checkbox:hover {
     background-color: var(--grey-100);
-}
-.pelico-checkbox img {
-    mix-blend-mode: multiply;
 }

@@ -43,7 +43,14 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
             <div className={styles['card-body']}>
                 {item.mediaUrl && (
                     <div className={styles['card-image-container']}>
-                        <Image fill className={styles['card-image']} src={'/' + item.mediaUrl} alt={props.alt ?? ''} />
+                        <Image
+                            loader={({ src }) => src}
+                            objectFit="cover"
+                            fill
+                            className={styles['card-image']}
+                            src={'/' + item.mediaUrl}
+                            alt={props.alt ?? ''}
+                        />
                     </div>
                 )}
                 <div className={styles['card-content']}>
