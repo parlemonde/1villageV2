@@ -1,0 +1,75 @@
+.width-xs {
+    width: 300px;
+}
+.width-sm {
+    width: 400px;
+}
+.width-md {
+    width: 600px;
+}
+.width-lg {
+    width: 900px;
+}
+.width-xl {
+    width: 1200px;
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--grey-300);
+    border-radius: 5px;
+    background-color: white;
+    height: 270px;
+}
+.card-title {
+    font-size: 1rem;
+    font-weight: 500;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+.card-content {
+    padding: 5px 10px;
+}
+.card-body {
+    width: 100%;
+}
+.card-description {
+    font-size: 0.8rem;
+    color: var(--grey-600);
+}
+.card-image-container {
+    height: 140px;
+    width: 100%;
+    position: relative;
+}
+.card-image {
+    border-radius: 5px 5px 0 0;
+}
+.download-icon {
+    position: absolute;
+    bottom: 10;
+    right: 10;
+    color: var(--primary-color);
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: var(--grey-100);
+    }
+}
+.country {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.countries {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
