@@ -94,6 +94,7 @@ export default eslintTS.config(
             ],
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+            '@typescript-eslint/triple-slash-reference': 'off',
         },
     },
     {
