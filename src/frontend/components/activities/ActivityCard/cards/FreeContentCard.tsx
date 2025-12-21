@@ -11,15 +11,29 @@ export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDele
             {activity.data?.cardImageUrl && (
                 <div
                     style={{
+                        width: '24%',
+                        minWidth: '150px',
                         minHeight: '150px',
-                        backgroundColor: 'var(--grey-100)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        position: 'relative',
                     }}
                 >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={activity.data?.cardImageUrl} alt="Image principale de la publication" style={{ width: 'auto', height: '150px' }} />
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'var(--grey-100)',
+                            backgroundImage: `url(${activity.data?.cardImageUrl})`,
+                            backgroundSize: 'contain',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                    />
                 </div>
             )}
             <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'space-between' }}>

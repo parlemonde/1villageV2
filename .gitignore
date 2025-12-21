@@ -43,3 +43,5 @@ next-env.d.ts
 .dynamodb
 tmp
 server-transcode-videos/target
+
+.package-lock.json

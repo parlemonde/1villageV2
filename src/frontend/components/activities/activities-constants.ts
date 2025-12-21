@@ -32,3 +32,9 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu',
     enigme: '/creer-une-enigme',
 };
+
+export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
+    libre: '/contenu-libre/3',
+    jeu: '/creer-un-jeu/3',
+    enigme: '/creer-une-enigme/3',
+};

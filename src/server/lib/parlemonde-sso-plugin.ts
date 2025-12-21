@@ -117,7 +117,6 @@ export const ssoPlugin = registerService('parlemonde-sso-plugin', () =>
                                   await db.insert(classrooms).values({
                                       name: plmUser.school || '',
                                       address: plmUser.address || '',
-                                      city: plmUser.city || '',
                                       countryCode,
                                       teacherId: user.id,
                                       villageId: village?.id,
