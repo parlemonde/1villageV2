@@ -2,7 +2,7 @@
 
 import type { NominatimPlace } from '@app/api/geo/route';
 import { Map } from '@frontend/components/Map';
-import type { Coordinates } from '@frontend/components/Map/Map';
+import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
@@ -35,7 +35,9 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
     const [address, setAddress] = useState(classroom?.address ?? '');
     const [village, setVillage] = useState(classroom?.villageId?.toString() ?? '');
     const [teacher, setTeacher] = useState(classroom?.teacherId ?? '');
-    const [coordinates, setCoordinates] = useState<Coordinates>({ lat: 0, lng: 0 });
+    const [coordinates, setCoordinates] = useState<Coordinates>(
+        classroom?.coordinates ? { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude } : DEFAULT_COORDINATES,
+    );
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -291,7 +293,7 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
                     />
                 }
             />
-            {useFallback && <Map marginBottom="md" marginX="auto" setCoordinates={setCoordinates} />}
+            {useFallback && <Map marginBottom="md" marginX="auto" coordinates={coordinates} setCoordinates={setCoordinates} />}
             <Field
                 label="Village-monde"
                 name="village"

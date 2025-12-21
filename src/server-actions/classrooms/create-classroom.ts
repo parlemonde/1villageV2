@@ -42,7 +42,7 @@ export const createClassroom = async (createClassroom: CreateClassroomArgs) => {
         throw error;
     }
 
-    const alias = createClassroom.alias ?? `Les ${createClassroom.level} de ${createClassroom.schoolName}`;
+    const alias = createClassroom.alias || `Les ${createClassroom.level} de ${createClassroom.schoolName}`;
 
     await db.insert(classrooms).values({
         alias,
