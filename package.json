@@ -14,7 +14,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "typecheck": "tsc --noEmit -p .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "db:migrate": "dotenvx run -- tsx src/server/database/migrate.ts",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio"
