@@ -14,7 +14,7 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "next typegen && tsc --noEmit -p .",
     "db:migrate": "dotenvx run -- tsx src/server/database/migrate.ts",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio"
@@ -34,7 +34,7 @@
     "fuzzyset.js": "^1.0.7",
     "maplibre-gl": "5.14.0",
     "mime-types": "^3.0.1",
-    "next": "15.4.10",
+    "next": "15.5.9",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "nuqs": "^2.5.1",
