@@ -72,7 +72,7 @@ html {
     --warning-100: #fbe4c1;
     --warning-200: #f8d59d;
     --warning-300: #f5c474;
-    --warning-400: #ca8621; 
+    --warning-400: #ca8621;
     --warning-500: #b0710d; /* (warning color) */
     --warning-600: #87570a;
     --warning-700: #613e07;
@@ -84,4 +84,6 @@ html {
     --grey-500: #7a7d93;
     --grey-600: #5d6073;
     --grey-700: #424552;
+
+    --text-orange-background: rgb(243, 121, 52);
 }

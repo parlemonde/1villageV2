@@ -4,12 +4,13 @@ import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
+import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
 import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
-import FreeContentIcon from '@frontend/svg/navigation/free-content.svg';
+import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
@@ -119,6 +120,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         <Menu items={activityMenuItems} />
                     </div>
                 )}
+                <Link href={'/cgu'} className={classNames(styles.cguLink)}>
+                    Conditions générales d&apos;utilisation
+                </Link>
             </div>
         </div>
     );
@@ -219,6 +223,9 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                     },
                 ]}
             />
+            <Link href={'/cgu'} className={classNames(styles.cguLink)} onClick={() => onClose()}>
+                Conditions générales d&apos;utilisation
+            </Link>
         </div>
     );
 };

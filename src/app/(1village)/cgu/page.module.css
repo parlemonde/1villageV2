@@ -1,0 +1,18 @@
+.cguBlock {
+  padding: 0 20px 40px;
+  text-align: justify;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.textPrimary {
+    color: var(--primary-color);
+}
+
+.textOrangeBackground {
+  background-color: var(--text-orange-background);
+  color: white;
+  display: inline-block;
+}

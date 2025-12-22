@@ -54,3 +54,16 @@
     background-color: white;
     padding: 0;
 }
+.cguLink {
+    display: block;
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--font-color);
+    text-align: center;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+

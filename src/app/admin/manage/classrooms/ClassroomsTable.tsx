@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { AdminTable } from '@frontend/components/AdminTable';
@@ -28,7 +28,7 @@ export function ClassroomsTable() {
             cls.name.toLowerCase().includes(search.toLowerCase()) ||
             cls.address.toLowerCase().includes(search.toLowerCase()) ||
             cls.level?.toLowerCase().includes(search.toLowerCase()) ||
-            cls.city.toLowerCase().includes(search.toLowerCase())
+            cls.alias?.toLowerCase().includes(search.toLowerCase())
         );
     });
 
@@ -50,9 +50,9 @@ export function ClassroomsTable() {
             <AdminTable
                 columns={[
                     {
-                        id: 'name',
-                        header: 'Nom',
-                        accessor: 'classroom.name',
+                        id: 'alias',
+                        header: 'Pseudo',
+                        accessor: 'classroom.alias',
                         isSortable: true,
                     },
                     {
@@ -62,15 +62,15 @@ export function ClassroomsTable() {
                         isSortable: true,
                     },
                     {
-                        id: 'address',
-                        header: 'Adresse',
-                        accessor: 'classroom.address',
+                        id: 'name',
+                        header: 'Ecole',
+                        accessor: 'classroom.name',
                         isSortable: true,
                     },
                     {
-                        id: 'city',
-                        header: 'Ville',
-                        accessor: 'classroom.city',
+                        id: 'address',
+                        header: 'Adresse',
+                        accessor: 'classroom.address',
                         isSortable: true,
                     },
                     {

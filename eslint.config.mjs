@@ -19,6 +19,13 @@ export default eslintTS.config(
     eslintPrettier,
     {
         rules: {
+            // Windoqws eol
+            'prettier/prettier': [
+                'error',
+                {
+                    endOfLine: 'auto',
+                },
+            ],
             'no-console': [
                 'error',
                 {

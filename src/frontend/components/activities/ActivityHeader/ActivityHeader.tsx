@@ -3,30 +3,16 @@
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { UserContext } from '@frontend/contexts/userContext';
-import KeyIcon from '@frontend/svg/activities/enigme.svg';
-import GameIcon from '@frontend/svg/activities/game.svg';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
 import type { Activity } from '@server/database/schemas/activities';
-import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';
 import { useContext } from 'react';
 
 import styles from './activity-header.module.css';
-
-const TITLES: Record<ActivityType, string> = {
-    libre: 'envoyé un message à ses Pélicopains',
-    jeu: 'lancé un jeu',
-    enigme: 'créé une énigme',
-};
-
-const ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
-    libre: null,
-    jeu: GameIcon,
-    enigme: KeyIcon,
-};
+import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '../activities-constants';
 
 const toFormattedDate = (date: string | null): string => {
     return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';
@@ -45,7 +31,7 @@ const ActivityDisplayName = ({ user, classroom, isPelico }: ActivityDisplayNameP
     } else if (classroom && classroom.id === currentClassroom?.id) {
         return 'Votre classe';
     } else if (classroom) {
-        return `La classe${classroom.level ? ` de ${classroom.level}` : ''} à ${classroom.city}`;
+        return classroom.alias || (classroom.level ? `Les ${classroom.level} de ${classroom.name}` : classroom.name);
     }
     return user?.name || 'Un pélicopain';
 };
@@ -60,7 +46,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
     if (!activity.type) {
         return null;
     }
-    const Icon = activity.isPinned ? PinnedIcon : ICONS[activity.type];
+    const Icon = activity.isPinned ? PinnedIcon : ACTIVITY_ICONS[activity.type];
     return (
         <div className={classNames(styles.activityHeader, className)}>
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
@@ -68,7 +54,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                 <span>
                     <ActivityDisplayName user={user} classroom={classroom} isPelico={activity.isPelico} />
                     {' a '}
-                    <strong>{TITLES[activity.type]}</strong>
+                    <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
                 </span>
                 <div className={styles.activityHeaderInfo}>
                     <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>

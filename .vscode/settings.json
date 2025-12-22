@@ -10,6 +10,7 @@
     "**/node_modules": true,
     "**/tmp": true,
     "**/.open-next": true,
+    "**/.zed": true,
   },
   "files.exclude": {
     "**/.postgres-data": true,
@@ -17,5 +18,6 @@
     "**/tmp": true,
     "**/.open-next": true,
     "**/.next": true,
+    "**/.zed": true,
   }
 }
