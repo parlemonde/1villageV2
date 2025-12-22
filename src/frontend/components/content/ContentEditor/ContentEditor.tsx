@@ -111,6 +111,7 @@ export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityI
                 />
             </div>
             <UploadImageModal
+                isPelicoImage={isPelico}
                 isOpen={modalContentIndex === 'image' || contentToEdit?.type === 'image'}
                 initialImageUrl={contentToEdit?.type === 'image' ? contentToEdit.imageUrl : undefined}
                 onClose={() => setModalContentIndex(null)}

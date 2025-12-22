@@ -18,6 +18,7 @@ export default function FreeContentStep2() {
     const { activity, setActivity } = useContext(ActivityContext);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
+    const isPelico = currentUser.role === 'admin' || currentUser.role === 'mediator';
     const currentDate = useMemo(() => new Date(), []);
 
     if (!activity || activity.type !== 'libre') {
@@ -100,6 +101,7 @@ export default function FreeContentStep2() {
                     onClose={() => setIsUploadImageModalOpen(false)}
                     initialImageUrl={activity.data?.cardImageUrl}
                     onNewImage={(imageUrl) => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: imageUrl } })}
+                    isPelicoImage={isPelico}
                 />
             </div>
             {activity.data?.cardImageUrl && (
