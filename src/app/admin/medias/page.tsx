@@ -1,10 +1,12 @@
 'use client';
 
 import type { MediaLibraryResponse } from '@app/api/media-library/route';
+import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Pagination } from '@frontend/components/ui/Pagination/Pagination';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import { DownloadIcon } from '@radix-ui/react-icons';
 import { redirect, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -26,6 +28,8 @@ export default function AdminMediasPage() {
     const [village, setVillage] = useState('');
     const [classroom, setClassroom] = useState('');
 
+    const downloadAll = () => {};
+
     const { data: mediaLibraryResponse } = useSWR<MediaLibraryResponse>(
         `/api/media-library${serializeToQueryUrl({
             page: currentPage,
@@ -40,6 +44,17 @@ export default function AdminMediasPage() {
     );
     return (
         <PageContainer title="Médiathèque">
+            <div className={styles.downloadButtonContainer}>
+                <Button
+                    color="primary"
+                    label={
+                        <>
+                            <DownloadIcon /> Télécharger
+                        </>
+                    }
+                    onClick={downloadAll}
+                />
+            </div>
             <MediaFilters
                 isPelico={isPelico}
                 activity={activity}
