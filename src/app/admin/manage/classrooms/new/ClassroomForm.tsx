@@ -7,7 +7,6 @@ import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
-import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -196,8 +195,6 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
         setError('');
         setIsLoading(true);
 
-        const country = classroom?.countryCode ?? '';
-
         try {
             const classroomData = await prepareClassroomData();
             if (!classroomData) {
@@ -206,19 +203,16 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
             await createOrUpdateClassroom(classroomData);
             router.push('/admin/manage/classrooms');
         } catch (e) {
-            handleSubmitError(e, country);
+            handleSubmitError(e);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleSubmitError = (e: unknown, country: string) => {
-        console.error(e);
+    const handleSubmitError = (e: unknown) => {
         const error = e as Error;
-        if (error.name === 'MaxClassroomsError') {
-            setError(`Le village a atteint le nombre maximum de classes pour le pays '${COUNTRIES[country]}'`);
-        } else if (error.name === 'CountryNotAllowedError') {
-            setError(`Ce village n'accepte pas les classes du pays '${COUNTRIES[country]}'`);
+        if (error.name === 'MaxClassroomsError' || error.name === 'CountryNotAllowedError') {
+            setError(error.message);
         } else {
             setError('Une erreur est survenue lors de la création de la classe');
         }

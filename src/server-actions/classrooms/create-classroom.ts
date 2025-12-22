@@ -1,5 +1,6 @@
 'use server';
 
+import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { db } from '@server/database';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { villages } from '@server/database/schemas/villages';
@@ -26,7 +27,7 @@ export const createClassroom = async (createClassroom: CreateClassroomArgs) => {
 
     const [village] = await db.select().from(villages).where(eq(villages.id, createClassroom.villageId));
     if (!village.countries.includes(createClassroom.country)) {
-        const error = Error(`Village ${village.name} doesn't allow classroms from country ${createClassroom.country}`);
+        const error = Error(`Le village ${village.name} n'accepte pas les classes du pays '${COUNTRIES[createClassroom.country]}'`);
         error.name = 'CountryNotAllowedError';
         throw error;
     }
@@ -37,7 +38,7 @@ export const createClassroom = async (createClassroom: CreateClassroomArgs) => {
     );
 
     if (classroomsCount >= village.classroomCount[createClassroom.country]) {
-        const error = Error(`Village ${village.name} has reached the maximum number of classrooms for country ${createClassroom.country}`);
+        const error = Error(`Le village ${village.name} a atteint le nombre maximum de classes pour le pays '${COUNTRIES[createClassroom.country]}'`);
         error.name = 'MaxClassroomsError';
         throw error;
     }
