@@ -54,7 +54,7 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                     </div>
                 )}
                 <div className={styles['card-content']}>
-                    <div className={styles['card-title']}>{item.userRole === 'admin' ? 'Pélico' : item.schoolName}</div>
+                    <div className={styles['card-title']}>{item.isPelico ? 'Pélico' : item.classroomAlias}</div>
                     <div className={styles['card-description']}>
                         <>
                             {item.villageName}
