@@ -36,6 +36,7 @@ export const Header = () => {
                         icon={HamburgerMenuIcon}
                         variant="borderless"
                         size="lg"
+                        color="primary"
                         className={styles.menuButton}
                         onClick={() => setIsOpen(!isOpen)}
                     />
