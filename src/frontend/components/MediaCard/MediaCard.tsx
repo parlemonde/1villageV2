@@ -4,6 +4,7 @@ import type { MediaLibraryItem } from '@app/api/media-library/route';
 import { downloadFile } from '@lib/download-file';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { DownloadIcon } from '@radix-ui/react-icons';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import classNames from 'clsx';
 import Image from 'next/image';
 import React from 'react';
@@ -38,17 +39,20 @@ const generateCountries = (item: MediaLibraryItem) => {
 };
 
 export function MediaCard({ item, ...props }: MediaCardProps) {
+    const hostUrl = getEnvVariable('HOST_URL');
+    const mediaUri = 'originalFilePath' in item.mediaMetadata ? (item.mediaMetadata.originalFilePath as string) : item.mediaUrl;
+    const downloadLink = `${hostUrl}/${mediaUri}`;
+
     return (
         <div className={classNames(styles.card, { [styles[`width-${props.width}`]]: props.width })}>
             <div className={styles['card-body']}>
                 {item.mediaUrl && (
                     <div className={styles['card-image-container']}>
                         <Image
-                            loader={({ src }) => src}
-                            objectFit="cover"
                             fill
+                            unoptimized={item.mediaType === 'video'}
                             className={styles['card-image']}
-                            src={'/' + item.mediaUrl}
+                            src={item.mediaType === 'video' ? '/static/images/video-placeholder.png' : '/' + item.mediaUrl}
                             alt={props.alt ?? ''}
                         />
                     </div>
@@ -65,7 +69,7 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                     </div>
                 </div>
             </div>
-            <DownloadIcon width={20} height={20} className={styles['download-icon']} onClick={() => downloadFile(item.mediaUrl)} />
+            <DownloadIcon className={styles['download-icon']} onClick={() => downloadFile(downloadLink)} />
         </div>
     );
 }

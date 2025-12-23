@@ -1,6 +1,6 @@
-export async function downloadFile(filePath: string) {
+export async function downloadFile(path: string, fileName?: string) {
     try {
-        const response = await fetch('http://localhost:3000/' + filePath);
+        const response = await fetch(path);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -11,11 +11,10 @@ export async function downloadFile(filePath: string) {
 
         const link = document.createElement('a');
         link.href = url;
-        link.download = filePath.split('/').pop() ?? 'media';
+        link.download = fileName ?? path.split('/').pop() ?? 'media';
         document.body.appendChild(link);
         link.click();
 
-        // Nettoyage
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
     } catch (error) {

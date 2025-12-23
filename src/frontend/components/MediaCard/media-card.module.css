@@ -50,6 +50,7 @@
 }
 .card-image {
     border-radius: 5px 5px 0 0;
+    object-fit: cover;
 }
 .download-icon {
     position: absolute;
@@ -58,6 +59,9 @@
     color: var(--primary-color);
     cursor: pointer;
     border-radius: 5px;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
 
     &:hover {
         background-color: var(--grey-100);

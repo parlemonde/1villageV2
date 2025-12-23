@@ -5,11 +5,11 @@ import { users } from './users';
 const MEDIA_TYPES_ENUM = ['image', 'video', 'audio', 'h5p', 'pdf'] as const;
 export type MediaType = (typeof MEDIA_TYPES_ENUM)[number];
 
-interface ImageMetadata {
+export interface ImageMetadata {
     width: number;
     height: number;
 }
-interface VideoMetadata {
+export interface VideoMetadata {
     originalFilePath: string;
 }
 interface AudioMetadata {

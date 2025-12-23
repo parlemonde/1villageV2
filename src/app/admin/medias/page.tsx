@@ -4,10 +4,10 @@ import type { MediaLibraryResponse } from '@app/api/media-library/route';
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Pagination } from '@frontend/components/ui/Pagination/Pagination';
+import { downloadFile } from '@lib/download-file';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { DownloadIcon } from '@radix-ui/react-icons';
-import { redirect, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import useSWR from 'swr';
 
@@ -18,9 +18,7 @@ import styles from './page.module.css';
 const ITEMS_PER_PAGE = 12;
 
 export default function AdminMediasPage() {
-    const searchParams = useSearchParams();
-    const pageParam = searchParams.get('p');
-    const currentPage = pageParam ? Number(pageParam) : 1;
+    const [currentPage, setCurrentPage] = useState(1);
 
     const [isPelico, setIsPelico] = useState(false);
     const [activity, setActivity] = useState('');
@@ -28,7 +26,20 @@ export default function AdminMediasPage() {
     const [village, setVillage] = useState('');
     const [classroom, setClassroom] = useState('');
 
-    const downloadAll = () => {};
+    const downloadAll = async () => {
+        const url = `/api/media-library/archive${serializeToQueryUrl({
+            currentPage: currentPage,
+            itemsPerPage: ITEMS_PER_PAGE,
+            activityType: activity,
+            countryCode: country,
+            villageId: village,
+            classroomId: classroom,
+            isPelico: isPelico,
+        })}`;
+
+        const archiveName = `mediatheque_${new Date().toLocaleDateString()}.zip`;
+        downloadFile(url, archiveName);
+    };
 
     const { data: mediaLibraryResponse } = useSWR<MediaLibraryResponse>(
         `/api/media-library${serializeToQueryUrl({
@@ -42,6 +53,7 @@ export default function AdminMediasPage() {
         })}`,
         jsonFetcher,
     );
+
     return (
         <PageContainer title="Médiathèque">
             <div className={styles.downloadButtonContainer}>
@@ -74,7 +86,7 @@ export default function AdminMediasPage() {
                     totalItems={mediaLibraryResponse?.totalItems ?? 0}
                     itemsPerPage={ITEMS_PER_PAGE}
                     currentPage={currentPage}
-                    onPageChange={(page) => redirect(`/admin/medias${serializeToQueryUrl({ p: page })}`)}
+                    onPageChange={(page) => setCurrentPage(page)}
                 />
             </div>
         </PageContainer>
