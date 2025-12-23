@@ -30,6 +30,7 @@ body:has(.adminLayout) {
 }
 
 .adminMainContent {
+    width: 100%;
     max-width: calc(100% - 320px - 16px) /* total width - adminSidebar (320px) - gap (16px) */;
     background-color: white;
     border-radius: 10px;
