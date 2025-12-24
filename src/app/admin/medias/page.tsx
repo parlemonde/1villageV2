@@ -26,6 +26,14 @@ export default function AdminMediasPage() {
     const [village, setVillage] = useState('');
     const [classroom, setClassroom] = useState('');
 
+    const resetFilters = () => {
+        setIsPelico(false);
+        setActivity('');
+        setCountry('');
+        setVillage('');
+        setClassroom('');
+    };
+
     const downloadAll = async () => {
         const url = `/api/media-library/archive${serializeToQueryUrl({
             currentPage: currentPage,
@@ -41,7 +49,7 @@ export default function AdminMediasPage() {
         downloadFile(url, archiveName);
     };
 
-    const { data: mediaLibraryResponse } = useSWR<MediaLibraryResponse>(
+    const { data: mediaLibraryResponse, isLoading } = useSWR<MediaLibraryResponse>(
         `/api/media-library${serializeToQueryUrl({
             page: currentPage,
             itemsPerPage: ITEMS_PER_PAGE,
@@ -78,8 +86,9 @@ export default function AdminMediasPage() {
                 setCountry={setCountry}
                 setVillage={setVillage}
                 setClassroom={setClassroom}
+                resetFilters={resetFilters}
             />
-            <MediasGrid items={mediaLibraryResponse?.items ?? []} />
+            <MediasGrid items={mediaLibraryResponse?.items ?? []} isLoading={isLoading} resetFilters={resetFilters} />
 
             <div className={styles.paginationContainer}>
                 <Pagination

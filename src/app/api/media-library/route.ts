@@ -13,6 +13,7 @@ import { NextResponse } from 'next/server';
 import { createLoader, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringEnum } from 'nuqs/server';
 
 export interface MediaLibraryItem {
+    activityId: number;
     activityType: ActivityType;
     classroomAlias?: string;
     mediaType: MediaType;
@@ -57,8 +58,8 @@ export const GET = async (request: NextRequest) => {
         })
         .from(activities)
         .innerJoin(users, eq(activities.userId, users.id))
-        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .innerJoin(medias, eq(medias.userId, users.id))
+        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
+        .leftJoin(medias, eq(medias.userId, users.id))
         .innerJoin(villages, eq(activities.villageId, villages.id))
         .where(
             and(
@@ -72,7 +73,8 @@ export const GET = async (request: NextRequest) => {
         );
 
     const result = await db
-        .selectDistinct({
+        .select({
+            activityId: activities.id,
             activityType: activities.type,
             classroomAlias: classrooms.alias,
             mediaType: medias.type,

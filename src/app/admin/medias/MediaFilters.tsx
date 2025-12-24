@@ -25,6 +25,7 @@ interface MediaFiltersProps {
     setCountry: (country: string) => void;
     setVillage: (village: string) => void;
     setClassroom: (classroom: string) => void;
+    resetFilters: () => void;
 }
 
 export function MediaFilters({
@@ -38,6 +39,7 @@ export function MediaFilters({
     setCountry,
     setVillage,
     setClassroom,
+    resetFilters,
 }: MediaFiltersProps) {
     const { data: currentVillageResponse } = useSWR<Village[]>(
         village ? `/api/villages${serializeToQueryUrl({ villageId: village })}` : null,
@@ -63,14 +65,6 @@ export function MediaFilters({
             label: classroom.name,
             value: classroom.id.toString(),
         })) ?? [];
-
-    const resetFilters = () => {
-        setIsPelico(false);
-        setActivity('');
-        setCountry('');
-        setVillage('');
-        setClassroom('');
-    };
 
     return (
         <div className={styles.filters}>

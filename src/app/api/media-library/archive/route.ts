@@ -41,6 +41,9 @@ export const GET = async (request: NextRequest) => {
 
     const mediasList = await db
         .selectDistinct({
+            activityId: activities.id,
+            activityType: activities.type,
+            villageName: villages.name,
             type: medias.type,
             url: medias.url,
             metadata: medias.metadata,
@@ -81,7 +84,8 @@ export const GET = async (request: NextRequest) => {
             continue;
         }
 
-        const fileName = url.split('/').pop() ?? '';
+        const fileExtension = url.split('.').pop();
+        const fileName = `${media.activityType}_${media.villageName.replace(/ /g, '_')}_${media.activityId}.${fileExtension}`;
         zip.file(fileName, file);
     }
 

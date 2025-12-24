@@ -43,6 +43,9 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
     const mediaUri = 'originalFilePath' in item.mediaMetadata ? (item.mediaMetadata.originalFilePath as string) : item.mediaUrl;
     const downloadLink = `${hostUrl}/${mediaUri}`;
 
+    const fileExtension = mediaUri.split('.').pop();
+    const fileName = `${item.activityType}_${item.villageName.replace(/ /g, '_')}_${item.activityId}.${fileExtension}`;
+
     return (
         <div className={classNames(styles.card, { [styles[`width-${props.width}`]]: props.width })}>
             <div className={styles['card-body']}>
@@ -69,7 +72,7 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                     </div>
                 </div>
             </div>
-            <DownloadIcon className={styles['download-icon']} onClick={() => downloadFile(downloadLink)} />
+            <DownloadIcon className={styles['download-icon']} onClick={() => downloadFile(downloadLink, fileName)} />
         </div>
     );
 }
