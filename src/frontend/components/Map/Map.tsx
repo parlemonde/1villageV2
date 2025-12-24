@@ -43,8 +43,8 @@ function DraggableMarker({ icon, coordinates, setCoordinates }: DraggableMarkerP
 }
 
 type MapProps = {
-    coordinates: Coordinates | undefined;
-    zoom: number;
+    coordinates?: Coordinates;
+    zoom?: number;
     setCoordinates: (coordinates: Coordinates) => void;
 } & MarginProps &
     PaddingProps;
