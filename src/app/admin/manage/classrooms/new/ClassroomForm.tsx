@@ -7,6 +7,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
+import { VillageContext } from '@frontend/contexts/villageContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -15,7 +16,7 @@ import { createClassroom } from '@server-actions/classrooms/create-classroom';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import type { User } from 'better-auth';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import styles from '../../manage.module.css';
@@ -27,6 +28,7 @@ interface ClassroomFormProps {
 export function ClassroomForm({ classroom }: ClassroomFormProps) {
     const isEditMode = !!classroom;
     const router = useRouter();
+    const { invalidateClassrooms } = useContext(VillageContext);
 
     const [alias, setAlias] = useState(classroom?.alias ?? '');
     const [level, setLevel] = useState(classroom?.level ?? '');
@@ -160,7 +162,7 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
         coordinates: { latitude: number; longitude: number };
     }) => {
         if (isEditMode) {
-            await updateClassroom({
+            const { error } = await updateClassroom({
                 id: classroom.id,
                 alias,
                 level,
@@ -171,8 +173,10 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
                 teacherId,
                 coordinates,
             });
+            invalidateClassrooms();
+            return { error };
         } else {
-            await createClassroom({
+            const { error } = await createClassroom({
                 alias,
                 level,
                 schoolName,
@@ -182,6 +186,8 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
                 teacherId,
                 coordinates,
             });
+            invalidateClassrooms();
+            return { error };
         }
     };
 
@@ -195,27 +201,19 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
         setError('');
         setIsLoading(true);
 
-        try {
-            const classroomData = await prepareClassroomData();
-            if (!classroomData) {
-                return;
-            }
-            await createOrUpdateClassroom(classroomData);
-            router.push('/admin/manage/classrooms');
-        } catch (e) {
-            handleSubmitError(e);
-        } finally {
+        const classroomData = await prepareClassroomData();
+        if (!classroomData) {
             setIsLoading(false);
+            return;
         }
-    };
 
-    const handleSubmitError = (e: unknown) => {
-        const error = e as Error;
-        if (error.name === 'MaxClassroomsError' || error.name === 'CountryNotAllowedError') {
+        const { error } = await createOrUpdateClassroom(classroomData);
+        if (error) {
             setError(error.message);
-        } else {
-            setError('Une erreur est survenue lors de la création de la classe');
+            setIsLoading(false);
+            return;
         }
+        router.push('/admin/manage/classrooms');
     };
 
     return (
