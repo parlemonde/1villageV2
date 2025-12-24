@@ -6,7 +6,7 @@
   "license": "GPL-3.0-or-later",
   "homepage": "https://1v.parlemonde.org",
   "scripts": {
-    "dev:next": "next dev --turbopack",
+    "dev:next": "next dev",
     "dev:services": "docker compose up",
     "dev": "concurrently --names nextjs,docker -c green,blue --kill-others-on-fail \"pnpm run dev:next\" \"pnpm run dev:services\"",
     "build": "next build",
@@ -34,7 +34,7 @@
     "fuzzyset.js": "^1.0.7",
     "maplibre-gl": "5.15.0",
     "mime-types": "^3.0.2",
-    "next": "15.5.9",
+    "next": "16.1.1",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "nuqs": "^2.8.6",
@@ -93,5 +93,11 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.50.1"
   },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
+  }
 }
