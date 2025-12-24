@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs -- Rule is broken... */
 import { Link } from '@frontend/components/ui/Link';
 import classNames from 'clsx';
 import * as React from 'react';
@@ -79,7 +80,7 @@ const ButtonWithRef = (
     );
     if (as === 'a' && buttonProps.href?.startsWith('/')) {
         return (
-            <Link {...buttonProps} ref={buttonProps.ref as React.Ref<HTMLAnchorElement>} href={buttonProps.href as string}>
+            <Link {...buttonProps} ref={ref as React.Ref<HTMLAnchorElement>} href={buttonProps.href as string}>
                 {children}
             </Link>
         );

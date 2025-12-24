@@ -1,6 +1,6 @@
 import type { CustomLayerInterface } from 'maplibre-gl';
 import { Map } from 'maplibre-gl';
-import { PerspectiveCamera, Scene, WebGLRenderer, AmbientLight, MathUtils } from 'three';
+import { PerspectiveCamera, Scene, WebGLRenderer, MathUtils } from 'three';
 
 import { disposeNode } from './stars/dispose-node';
 import { Sky } from './stars/stars';
@@ -35,7 +35,6 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
 
     // Init stars
     const scene = new Scene();
-    scene.add(new AmbientLight(0xffffff, 1));
     const stars = new Sky();
     scene.add(stars);
     const camera = new PerspectiveCamera(MAP_LIBRE_DEFAULT_FOV, 1, 0.1, 100);
