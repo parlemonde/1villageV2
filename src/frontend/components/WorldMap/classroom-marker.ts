@@ -50,7 +50,7 @@ const MarkerSVG = ({
                 <div style="display: flex; align-items: center; gap: 8px">
                     <span style="margin: 0; padding: 0; font-size: 0.75rem; color: #666; line-height: 1.2">${classroom.address}</span>
                     <p style="margin: 0; padding: 0; font-size: 0.75rem; color: #666">&middot;</p>
-                    <img alt="${classroom.countryCode} flag" style="width:auto;height:16px;border-radius:2px;box-shadow:0 0 2px var(--grey-400)" src="/static/country-flags/${classroom.countryCode.toLowerCase()}.svg">
+                    <img alt="${classroom.countryCode} flag" style="width:auto;height:16px;border-radius:2px;box-shadow:0 0 2px var(--grey-400)" src="/static/country-flags/${classroom.countryCode?.toLowerCase()}.svg">
                 </div>
             </div>
         </div>

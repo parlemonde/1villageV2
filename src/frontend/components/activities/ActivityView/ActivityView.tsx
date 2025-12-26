@@ -23,7 +23,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
     const { usersMap, classroomsMap } = useContext(VillageContext);
     const ContentView = CONTENT_VIEWS[activity.type];
     return (
-        <div>
+        <>
             <ActivityHeader
                 activity={activity}
                 user={usersMap[activity.userId]}
@@ -31,6 +31,6 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}
-        </div>
+        </>
     );
 };
