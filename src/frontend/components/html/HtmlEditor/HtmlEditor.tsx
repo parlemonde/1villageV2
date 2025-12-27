@@ -64,19 +64,22 @@ interface HtmlEditorProps {
 
 export const HtmlEditor = (props: HtmlEditorProps) => {
     const { content, onChange, color = 'primary', variant = 'default', placeholder = '', className } = props;
-    const parentDoc = getDoc(content);
+    const parentDoc = React.useMemo(() => getDoc(content), [content]);
 
     const [isFocused, setIsFocused] = React.useState(false);
     const [state, setState] = React.useState<EditorState>(getNewState(parentDoc, placeholder));
     const viewRef = React.useRef<EditorView | null>(null);
 
     // Keep the state in sync with the content if the editor is controlled
-    if ('content' in props && !parentDoc.eq(state.doc)) {
-        const newState = getNewState(parentDoc, placeholder);
-        newState.selection = state.selection; // Keep the selection
-        setState(newState);
-        viewRef.current?.updateState(newState);
-    }
+    const isNotInSync = 'content' in props && !parentDoc.eq(state.doc);
+    React.useEffect(() => {
+        if (isNotInSync) {
+            const newState = getNewState(parentDoc, placeholder);
+            newState.selection = state.selection; // Keep the selection
+            setState(newState);
+            viewRef.current?.updateState(newState);
+        }
+    }, [isNotInSync, parentDoc, placeholder, state]);
 
     // Use a following ref to avoid re-initializing the editor when the content changes
     const contentRef = React.useRef(content);

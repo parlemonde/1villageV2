@@ -7,8 +7,9 @@ export function getBuffer(stream: Buffer | Stream | Readable): Promise<Buffer> {
     }
     return new Promise<Buffer>((resolve, reject) => {
         const _buf = Array<Buffer>();
-        stream.on('data', (chunk) => _buf.push(chunk));
-        stream.on('end', () => resolve(Buffer.concat(_buf)));
-        stream.on('error', (err) => reject(`error converting stream - ${err}`));
+        const readable = stream as Readable;
+        readable.on('data', (chunk: Buffer) => _buf.push(chunk));
+        readable.on('end', () => resolve(Buffer.concat(_buf)));
+        readable.on('error', (err: Error) => reject(`error converting stream - ${err}`));
     });
 }

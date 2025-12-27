@@ -1,7 +1,7 @@
 // All Environment Variables should be defined here
 // Use empty string if the variable can't have a default value
 const DEFAULT_ENV_VARIABLES = {
-    BETTER_AUTH_SECRET: '1234',
+    BETTER_AUTH_SECRET: '01234567890123456789012345678901',
     BETTER_AUTH_URL: 'http://localhost:3000',
     HOST_URL: 'http://localhost:3000',
     ADMIN_PASSWORD: 'Admin1234',
