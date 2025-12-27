@@ -44,6 +44,7 @@
     "drizzle.config.ts",
     "next-env.d.ts",
     "next.config.ts",
+    "next-intl.d.ts",
     "src/**/*.html",
     "src/**/*.ts",
     "src/**/*.tsx",

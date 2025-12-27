@@ -3,6 +3,8 @@ import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import classNames from 'clsx';
 import type { Metadata, Viewport } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { Tooltip } from 'radix-ui';
 import { Suspense } from 'react';
@@ -57,18 +59,21 @@ export const viewport: Viewport = {
     themeColor: '#4c3ed9',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = await getLocale();
     return (
-        <html lang="fr">
+        <html lang={locale}>
             <body className={classNames(alegreyaSansFont.variable, robotoFont.variable)}>
                 <noscript>You need to enable JavaScript to run this app.</noscript>
-                <NuqsAdapter>
-                    <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
-                </NuqsAdapter>
+                <NextIntlClientProvider>
+                    <NuqsAdapter>
+                        <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
+                    </NuqsAdapter>
+                </NextIntlClientProvider>
                 <Suspense>
                     <NProgressDone />
                 </Suspense>
