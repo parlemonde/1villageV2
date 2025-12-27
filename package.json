@@ -17,7 +17,8 @@
     "typecheck": "next typegen && tsc --noEmit -p .",
     "db:migrate": "dotenvx run -- tsx src/server/database/migrate.ts",
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "i18n:extract": "tsx src/server/i18n/extract.mts"
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.958.0",
@@ -102,6 +103,17 @@
     "overrides": {
       "@types/react": "19.2.7",
       "@types/react-dom": "19.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "maplibre-gl",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "volta": {
+    "node": "24.12.0"
   }
 }

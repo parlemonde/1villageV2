@@ -3,7 +3,7 @@ import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { redirect } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
+import { getExtracted } from 'next-intl/server';
 
 import { ActivitySidePanel } from './ActivitySidePanel';
 import { Header } from './Header';
@@ -16,7 +16,7 @@ export default async function VillageLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const t = await getTranslations();
+    const t = await getExtracted();
     const user = await getCurrentUser();
     if (!user) {
         redirect('/login');
@@ -27,11 +27,7 @@ export default async function VillageLayout({
             <VillageProvider village={village}>
                 <Header />
                 <div className={styles.rootLayout}>
-                    <h1>
-                        {t('HomePage.title', {
-                            firstName: 'John',
-                        })}
-                    </h1>
+                    <h1>{t('Other text')}</h1>
                     {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
                     <div className={styles.content}>
                         {village && <Phases />}
