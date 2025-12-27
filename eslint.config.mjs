@@ -11,6 +11,24 @@ const eslintConfig = defineConfig([
     eslintPrettier,
     {
         rules: {
+            // Disallow useTranslations from next-intl, use useExtracted instead
+            'no-restricted-imports': [
+                'error',
+                {
+                    paths: [
+                        {
+                            name: 'next-intl',
+                            importNames: ['useTranslations'],
+                            message: 'Use useExtracted from next-intl instead of useTranslations.',
+                        },
+                        {
+                            name: 'next-intl/server',
+                            importNames: ['getTranslations'],
+                            message: 'Use getExtracted from next-intl instead of getTranslations.',
+                        },
+                    ],
+                },
+            ],
             // Windows eol
             'prettier/prettier': [
                 'error',
