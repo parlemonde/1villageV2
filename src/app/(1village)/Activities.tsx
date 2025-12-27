@@ -12,7 +12,7 @@ import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 export const Activities = () => {
-    const t = useExtracted('app');
+    const t = useExtracted('app.(1village).Activities');
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
     const [phase] = usePhase();
     const [filters, setFilters] = useState<ActivityFiltersState>({

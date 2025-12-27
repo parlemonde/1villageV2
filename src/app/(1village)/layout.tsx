@@ -16,7 +16,7 @@ export default async function VillageLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const t = await getExtracted();
+    const t = await getExtracted('app.(1village).layout');
     const user = await getCurrentUser();
     if (!user) {
         redirect('/login');
