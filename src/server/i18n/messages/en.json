@@ -1,7 +1,13 @@
 {
   "app": {
-    "VgH3tb": "Look ma, no keys!",
-    "XUU5H3": "Hello, {firstName}"
-  },
-  "f+dMhf": "Other text"
+    "(1village)": {
+      "Activities": {
+        "VgH3tb": "Look ma, no keys!",
+        "XUU5H3": "Hello, {firstName}"
+      },
+      "layout": {
+        "f+dMhf": "Other text"
+      }
+    }
+  }
 }

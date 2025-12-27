@@ -4,13 +4,20 @@ import eslintNextVitals from 'eslint-config-next/core-web-vitals';
 import eslintPrettier from 'eslint-plugin-prettier/recommended';
 import eslintTS from 'typescript-eslint';
 
+import i18nNamespacePlugin from './eslint-plugins/i18n-namespace.mjs';
+
 const eslintConfig = defineConfig([
     ...eslintNextVitals,
     eslintJS.configs.recommended,
     eslintTS.configs.recommended,
     eslintPrettier,
     {
+        plugins: {
+            'i18n-namespace': i18nNamespacePlugin,
+        },
         rules: {
+            // Validate namespace for useExtracted/getExtracted
+            'i18n-namespace/valid-namespace': 'error',
             // Disallow useTranslations from next-intl, use useExtracted instead
             'no-restricted-imports': [
                 'error',
