@@ -2,11 +2,14 @@ import { getDynamoDBItem } from '@server/aws/dynamodb';
 import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
 
-import { DEFAULT_MESSAGES } from './default-messages';
+import extractedMessages from './messages/en.json';
 
 const isObject = (value: unknown): value is Record<string, unknown> => {
     return typeof value === 'object' && value !== null;
 };
+
+const DEFAULT_MESSAGES = isObject(extractedMessages) ? extractedMessages : {};
+
 const combineMessagesWithDefault = (
     messages: Record<string, unknown>,
     defaults: Record<string, unknown> = DEFAULT_MESSAGES,
