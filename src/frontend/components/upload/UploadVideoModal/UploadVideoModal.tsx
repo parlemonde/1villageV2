@@ -19,8 +19,16 @@ interface UploadVideoModalProps {
     isPelicoVideo?: boolean;
     onClose: () => void;
     onNewVideo?: (videoUrl: string) => void;
+    getActivityId: () => Promise<number>;
 }
-export const UploadVideoModal = ({ isOpen, initialVideoUrl = null, isPelicoVideo = false, onClose, onNewVideo }: UploadVideoModalProps) => {
+export const UploadVideoModal = ({
+    isOpen,
+    initialVideoUrl = null,
+    isPelicoVideo = false,
+    onClose,
+    onNewVideo,
+    getActivityId,
+}: UploadVideoModalProps) => {
     const [videoUrlOrFile, setVideoUrlOrFile] = React.useState<string | File | null>(initialVideoUrl);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -51,7 +59,8 @@ export const UploadVideoModal = ({ isOpen, initialVideoUrl = null, isPelicoVideo
             onNewVideo?.(videoUrlOrFile);
         } else {
             setIsSubmitting(true);
-            const uploadedVideoUrl = await uploadVideo(videoUrlOrFile, isPelicoVideo);
+            const activityId = await getActivityId();
+            const uploadedVideoUrl = await uploadVideo(videoUrlOrFile, isPelicoVideo, activityId);
             onNewVideo?.(uploadedVideoUrl);
             setIsSubmitting(false);
         }

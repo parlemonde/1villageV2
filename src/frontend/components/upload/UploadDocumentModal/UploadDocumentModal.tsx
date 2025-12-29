@@ -13,6 +13,7 @@ interface UploadDocumentModalProps {
     isPelicoDocument?: boolean;
     onClose: () => void;
     onNewDocument?: (documentUrl: string) => void;
+    getActivityId: () => Promise<number>;
 }
 
 const isValidDocumentUrl = (url: string) => {
@@ -25,6 +26,7 @@ export const UploadDocumentModal = ({
     isPelicoDocument = false,
     onClose,
     onNewDocument,
+    getActivityId,
 }: UploadDocumentModalProps) => {
     const [documentUrlOrFile, setDocumentUrlOrFile] = useState<string | File | null>(initialDocumentUrl);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,7 +61,8 @@ export const UploadDocumentModal = ({
             onNewDocument?.(documentUrlOrFile);
         } else {
             setIsSubmitting(true);
-            const uploadedDocumentUrl = await uploadDocument(documentUrlOrFile, isPelicoDocument);
+            const activityId = await getActivityId();
+            const uploadedDocumentUrl = await uploadDocument(documentUrlOrFile, isPelicoDocument, activityId);
             onNewDocument?.(uploadedDocumentUrl);
             setIsSubmitting(false);
         }

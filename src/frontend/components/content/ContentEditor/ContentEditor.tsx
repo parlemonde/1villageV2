@@ -133,6 +133,7 @@ export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityI
                 }}
             />
             <UploadSoundModal
+                getActivityId={getActivityId}
                 isOpen={modalContentIndex === 'audio' || contentToEdit?.type === 'audio'}
                 initialSoundUrl={contentToEdit?.type === 'audio' ? contentToEdit.audioUrl : undefined}
                 onClose={() => setModalContentIndex(null)}
@@ -152,6 +153,7 @@ export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityI
                 }}
             />
             <UploadDocumentModal
+                getActivityId={getActivityId}
                 isOpen={modalContentIndex === 'document' || contentToEdit?.type === 'document'}
                 initialDocumentUrl={contentToEdit?.type === 'document' ? contentToEdit.documentUrl : undefined}
                 onClose={() => setModalContentIndex(null)}
@@ -171,6 +173,7 @@ export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityI
                 }}
             />
             <UploadVideoModal
+                getActivityId={getActivityId}
                 isOpen={modalContentIndex === 'video' || contentToEdit?.type === 'video'}
                 initialVideoUrl={contentToEdit?.type === 'video' ? contentToEdit.videoUrl : undefined}
                 onClose={() => setModalContentIndex(null)}
