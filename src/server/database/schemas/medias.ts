@@ -13,10 +13,10 @@ export interface ImageMetadata {
 export interface VideoMetadata {
     originalFilePath: string;
 }
-interface AudioMetadata {
+export interface AudioMetadata {
     duration: number;
 }
-interface H5pMetadata {
+export interface H5pMetadata {
     title: string;
     library: string;
 }

@@ -22,25 +22,9 @@ export type MediaCardProps = {
 } & PaddingProps &
     MarginProps;
 
-const generateCountries = (item: MediaLibraryItem) => {
-    return (
-        <>
-            {item.villageCountries.map((c) => {
-                return (
-                    <div className={styles.country} key={c}>
-                        <CountryFlag country={c} size="small" />
-                        &nbsp;
-                        {COUNTRIES[c]}
-                    </div>
-                );
-            })}
-        </>
-    );
-};
-
 export function MediaCard({ item, ...props }: MediaCardProps) {
     const hostUrl = getEnvVariable('HOST_URL');
-    const mediaUri = 'originalFilePath' in item.mediaMetadata ? (item.mediaMetadata.originalFilePath as string) : item.mediaUrl;
+    const mediaUri = item.mediaMetadata && 'originalFilePath' in item.mediaMetadata ? (item.mediaMetadata.originalFilePath as string) : item.mediaUrl;
     const downloadLink = `${hostUrl}/${mediaUri}`;
 
     const fileExtension = mediaUri.split('.').pop();
@@ -52,8 +36,9 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                 {item.mediaUrl && (
                     <div className={styles['card-image-container']}>
                         <Image
+                            loader={({ src }) => src}
                             fill
-                            unoptimized={item.mediaType === 'video'}
+                            unoptimized={mediaUri.startsWith('https')}
                             className={styles['card-image']}
                             src={item.mediaType === 'video' ? '/static/images/video-placeholder.png' : '/' + item.mediaUrl}
                             alt={props.alt ?? ''}
@@ -63,12 +48,16 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                 <div className={styles['card-content']}>
                     <div className={styles['card-title']}>{item.isPelico ? 'Pélico' : item.classroomAlias}</div>
                     <div className={styles['card-description']}>
-                        <>
-                            {item.villageName}
-                            <br />
-                            <div className={styles.countries}>{generateCountries(item)}</div>
-                            {ACTIVITY_NAMES[item.activityType]}
-                        </>
+                        {item.villageName}
+                        <br />
+                        {item.classroomCountry && (
+                            <div className={styles.country}>
+                                <CountryFlag country={item.classroomCountry} size="small" />
+                                &nbsp;
+                                {COUNTRIES[item.classroomCountry]}
+                                {ACTIVITY_NAMES[item.activityType]}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

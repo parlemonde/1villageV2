@@ -51,9 +51,9 @@ export const GET = async (request: NextRequest) => {
         })
         .from(activities)
         .innerJoin(users, eq(activities.userId, users.id))
-        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .innerJoin(medias, eq(medias.userId, users.id))
+        .innerJoin(medias, eq(medias.activityId, activities.id))
         .innerJoin(villages, eq(activities.villageId, villages.id))
+        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
         .where(
             and(
                 inArray(medias.type, ['image', 'video']),

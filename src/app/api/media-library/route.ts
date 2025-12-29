@@ -2,7 +2,7 @@ import { db } from '@server/database/database';
 import { activities } from '@server/database/schemas/activities';
 import { ACTIVITY_TYPES_ENUM, type ActivityType } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
-import type { ImageMetadata, MediaType, VideoMetadata } from '@server/database/schemas/medias';
+import type { AudioMetadata, H5pMetadata, ImageMetadata, MediaType, VideoMetadata } from '@server/database/schemas/medias';
 import { medias } from '@server/database/schemas/medias';
 import { users } from '@server/database/schemas/users';
 import { villages } from '@server/database/schemas/villages';
@@ -15,12 +15,12 @@ import { createLoader, parseAsBoolean, parseAsInteger, parseAsString, parseAsStr
 export interface MediaLibraryItem {
     activityId: number;
     activityType: ActivityType;
-    classroomAlias?: string;
+    classroomAlias: string | null;
+    classroomCountry: string | null;
     mediaType: MediaType;
     mediaUrl: string;
     mediaId: string;
-    mediaMetadata: ImageMetadata | VideoMetadata;
-    villageCountries: string[];
+    mediaMetadata: ImageMetadata | VideoMetadata | AudioMetadata | H5pMetadata | null;
     villageName: string;
     isPelico: boolean;
 }
@@ -42,7 +42,7 @@ const GetMediasParams = {
 
 const loadSearchParams = createLoader(GetMediasParams);
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (request: NextRequest): Promise<NextResponse<MediaLibraryResponse>> => {
     const currentUser = await getCurrentUser();
     if (!currentUser) {
         return new NextResponse(null, {
@@ -58,9 +58,9 @@ export const GET = async (request: NextRequest) => {
         })
         .from(activities)
         .innerJoin(users, eq(activities.userId, users.id))
-        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .leftJoin(medias, eq(medias.userId, users.id))
+        .innerJoin(medias, eq(medias.activityId, activities.id))
         .innerJoin(villages, eq(activities.villageId, villages.id))
+        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
         .where(
             and(
                 inArray(medias.type, ['image', 'video']),
@@ -77,20 +77,20 @@ export const GET = async (request: NextRequest) => {
             activityId: activities.id,
             activityType: activities.type,
             classroomAlias: classrooms.alias,
+            classroomCountry: classrooms.countryCode,
             mediaType: medias.type,
             mediaUrl: medias.url,
             mediaId: medias.id,
             mediaMetadata: medias.metadata,
             createDate: medias.createDate,
-            villageCountries: villages.countries,
             villageName: villages.name,
             isPelico: medias.isPelico,
         })
         .from(activities)
         .innerJoin(users, eq(activities.userId, users.id))
-        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .innerJoin(medias, eq(medias.userId, users.id))
+        .innerJoin(medias, eq(medias.activityId, activities.id))
         .innerJoin(villages, eq(activities.villageId, villages.id))
+        .leftJoin(classrooms, eq(activities.classroomId, classrooms.id))
         .where(
             and(
                 inArray(medias.type, ['image', 'video']),
@@ -101,13 +101,12 @@ export const GET = async (request: NextRequest) => {
                 isPelico ? eq(medias.isPelico, isPelico) : undefined,
             ),
         )
-
         .orderBy(desc(medias.createDate))
         .limit(itemsPerPage)
         .offset((page - 1) * itemsPerPage);
 
     return NextResponse.json({
-        items: result,
+        items: result.map((item) => ({ ...item, activityType: item.activityType as ActivityType })),
         totalItems: totalItems.count,
     });
 };
