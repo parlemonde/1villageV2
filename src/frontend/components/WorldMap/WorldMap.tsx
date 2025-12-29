@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 'use client';
 
 import { VillageContext } from '@frontend/contexts/villageContext';
@@ -55,9 +56,16 @@ const WorldMap = () => {
         if (!map || !canvas) {
             return () => {};
         }
+        debugger;
         const markers = Object.values(classroomsMap)
-            .filter((classroom) => classroom !== undefined)
-            .map((classroom) => getClassroomMarker({ classroom, canvas }));
+            .filter((classroom) => {
+                debugger;
+                return classroom?.classroom !== undefined;
+            })
+            .map((classroom) => {
+                debugger;
+                return getClassroomMarker({ classroom, canvas });
+            });
         markers.forEach((marker) => marker.marker.addTo(map));
         markers.forEach((marker) =>
             marker.setClickHandler(() => {
