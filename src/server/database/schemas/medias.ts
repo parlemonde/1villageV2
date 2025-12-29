@@ -1,5 +1,6 @@
-import { pgTable, uuid, timestamp, char, jsonb, boolean, text } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp, char, jsonb, boolean, text, integer } from 'drizzle-orm/pg-core';
 
+import { activities } from './activities';
 import { users } from './users';
 
 const MEDIA_TYPES_ENUM = ['image', 'video', 'audio', 'h5p', 'pdf'] as const;
@@ -32,6 +33,7 @@ export const medias = pgTable('medias', {
     type: char('type', { length: 5, enum: MEDIA_TYPES_ENUM }).notNull(),
     url: text('url').notNull(),
     metadata: jsonb('metadata').$type<ImageMetadata | VideoMetadata | AudioMetadata | H5pMetadata>(),
+    activityId: integer('activityId').references(() => activities.id, { onDelete: 'cascade' }),
 });
 
 export type Media = typeof medias.$inferSelect;
