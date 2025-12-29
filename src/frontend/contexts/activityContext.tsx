@@ -23,12 +23,14 @@ export const ActivityContext = createContext<{
     onCreateActivity: (activityType: ActivityType, isPelico?: boolean, initialData?: Activity['data']) => void;
     onUpdateActivity: () => Promise<void>;
     onPublishActivity: () => Promise<void>;
+    getOrCreateDraft: () => Promise<number>;
 }>({
     activity: undefined,
     setActivity: () => {},
     onCreateActivity: () => {},
     onUpdateActivity: () => Promise.resolve(),
     onPublishActivity: () => Promise.resolve(),
+    getOrCreateDraft: () => Promise.resolve(0),
 });
 
 let onCancelPreviousPromise: () => void = () => {};
@@ -68,10 +70,6 @@ const onSaveDraft = async (activity: Partial<Activity>, getSavedId: (id: number)
     onCancelPreviousPromise = () => {};
 };
 
-const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
-    onSaveDraft(activity, getSavedId, setDraftStep).catch();
-}, 2000);
-
 export const ActivityProvider = ({ children }: { children: React.ReactNode }) => {
     const { village } = useContext(VillageContext);
     const { classroom } = useContext(UserContext);
@@ -80,6 +78,14 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const pathname = usePathname();
 
     const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
+
+    const onSaveDraftDebounced = debounce((getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
+        const activity = localActivityRef.current;
+        if (!activity) {
+            return;
+        }
+        onSaveDraft(activity, getSavedId, setDraftStep).catch();
+    }, 2000);
 
     // Use a following ref for the activity to use in callbacks and effects without causing re-renders
     const localActivityRef = useRef<Partial<Activity> | undefined>(undefined);
@@ -90,21 +96,22 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     // Auto save draft after an update (using a debounced function)
     const setActivity = useCallback(
         (newActivity: Partial<Activity>) => {
-            setLocalActivity(newActivity);
+            const updatedActivity = {
+                ...newActivity,
+                id: localActivityRef?.current?.id || newActivity?.id,
+            };
+            localActivityRef.current = updatedActivity;
+            setLocalActivity(updatedActivity);
             if (newActivity.type && newActivity.phase !== undefined && (newActivity.publishDate === null || newActivity.publishDate === undefined)) {
-                onSaveDraftDebounced(
-                    { ...newActivity, draftUrl: pathname },
-                    (id) => {
-                        if (localActivityRef.current) {
-                            // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
-                            setLocalActivity({ ...localActivityRef.current, id });
-                        }
-                    },
-                    setDraftStep,
-                );
+                onSaveDraftDebounced((id) => {
+                    if (localActivityRef.current) {
+                        // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
+                        setLocalActivity({ ...localActivityRef.current, id });
+                    }
+                }, setDraftStep);
             }
         },
-        [setLocalActivity, pathname],
+        [setLocalActivity, localActivityRef, onSaveDraftDebounced],
     );
 
     const onCreateActivity = useCallback(
@@ -125,6 +132,24 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
         },
         [setLocalActivity, village, classroom],
     );
+
+    const getOrCreateDraft = useCallback(async (): Promise<number> => {
+        if (localActivity?.id) {
+            return localActivity.id;
+        }
+
+        if (localActivity && localActivity.type && localActivity.phase !== undefined) {
+            const draftId = await saveDraft({ ...localActivity, draftUrl: pathname });
+            if (!draftId) {
+                throw new Error('Failed to save draft');
+            }
+
+            localActivityRef.current = { ...localActivity, id: draftId };
+            return draftId;
+        }
+
+        throw new Error('No activity to save');
+    }, [localActivity, pathname]);
 
     const onUpdateActivity = useCallback(async () => {
         if (!localActivity || !localActivity.id || localActivity.publishDate === null || localActivity.publishDate === undefined) {
@@ -147,8 +172,9 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
             onCreateActivity,
             onUpdateActivity,
             onPublishActivity,
+            getOrCreateDraft,
         }),
-        [localActivity, setActivity, onCreateActivity, onUpdateActivity, onPublishActivity],
+        [localActivity, setActivity, onCreateActivity, onUpdateActivity, onPublishActivity, getOrCreateDraft],
     );
 
     return (

@@ -29,9 +29,10 @@ interface ContentEditorProps {
     content?: Content;
     setContent: (content: Content) => void;
     activityId?: number;
+    getActivityId: () => Promise<number>;
 }
 
-export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityId }: ContentEditorProps) => {
+export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityId, getActivityId }: ContentEditorProps) => {
     const { user } = useContext(UserContext);
     const [modalContentIndex, setModalContentIndex] = useState<AnyContentType | number | null>(null); // null: no modal open, number: index of the content to edit, AnyContentType: type of the content to add
     const [contentWithIds, setContentWithIds] = useState<{ id: string; anyContent: AnyContent }[]>(content.map((c) => ({ id: v4(), anyContent: c })));
@@ -111,6 +112,7 @@ export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityI
                 />
             </div>
             <UploadImageModal
+                getActivityId={getActivityId}
                 isPelicoImage={isPelico}
                 isOpen={modalContentIndex === 'image' || contentToEdit?.type === 'image'}
                 initialImageUrl={contentToEdit?.type === 'image' ? contentToEdit.imageUrl : undefined}

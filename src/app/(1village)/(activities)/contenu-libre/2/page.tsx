@@ -15,7 +15,7 @@ import { useMemo, useContext, useState } from 'react';
 
 export default function FreeContentStep2() {
     const { user: currentUser } = useContext(UserContext);
-    const { activity, setActivity } = useContext(ActivityContext);
+    const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
     const isPelico = currentUser.role === 'admin' || currentUser.role === 'mediator';
@@ -97,6 +97,7 @@ export default function FreeContentStep2() {
                     />
                 )}
                 <UploadImageModal
+                    getActivityId={getOrCreateDraft}
                     isOpen={isUploadImageModalOpen}
                     onClose={() => setIsUploadImageModalOpen(false)}
                     initialImageUrl={activity.data?.cardImageUrl}
