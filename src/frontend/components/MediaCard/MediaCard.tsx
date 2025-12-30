@@ -51,12 +51,14 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                         {item.villageName}
                         <br />
                         {item.classroomCountry && (
-                            <div className={styles.country}>
-                                <CountryFlag country={item.classroomCountry} size="small" />
-                                &nbsp;
-                                {COUNTRIES[item.classroomCountry]}
+                            <>
+                                <div className={styles.country}>
+                                    <CountryFlag country={item.classroomCountry} size="small" />
+                                    &nbsp;
+                                    {COUNTRIES[item.classroomCountry]}
+                                </div>
                                 {ACTIVITY_NAMES[item.activityType]}
-                            </div>
+                            </>
                         )}
                     </div>
                 </div>
