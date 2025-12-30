@@ -7,11 +7,12 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq, and } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { createLoader, parseAsInteger, parseAsString } from 'nuqs/server';
+import { createLoader, parseAsBoolean, parseAsInteger, parseAsString } from 'nuqs/server';
 
 const classroomsSearchParams = {
     villageId: parseAsInteger,
     country: parseAsString,
+    withVillage: parseAsBoolean.withDefault(false),
 };
 const loadSearchParams = createLoader(classroomsSearchParams);
 
@@ -21,23 +22,19 @@ export type ClassroomVillageTeacher = {
     teacherName: string | null;
 };
 
-const getVillageClassrooms = async (villageId: number | null): Promise<ClassroomVillageTeacher[]> => {
-    //Start building the query
-    const query = db
+const getVillageClassroomsWithVillage = async (villageId: number): Promise<ClassroomVillageTeacher[]> => {
+    return await db
         .select({ classroom: classrooms, villageName: villages?.name, teacherName: users.name })
         .from(classrooms)
         .leftJoin(villages, eq(villages.id, classrooms.villageId))
-        .leftJoin(users, eq(users.id, classrooms.teacherId));
+        .leftJoin(users, eq(users.id, classrooms.teacherId))
+        .where(eq(classrooms.villageId, villageId));
+};
 
-    //Add filter only if villageId is provided
-    if (villageId !== null) {
-        query.where(eq(classrooms.villageId, villageId));
-    }
+const getVillageClassrooms = async (villageId: number): Promise<Classroom[]> => {
+    return await db.select().from(classrooms).where(eq(classrooms.villageId, villageId));
+};
 
-    //Execute the query
-    const result = await query;
-    return result;
-}
 const getCountryClassrooms = async (country: string): Promise<Classroom[]> => {
     return await db.select().from(classrooms).where(eq(classrooms.countryCode, country));
 };
@@ -53,10 +50,13 @@ const getAllClassrooms = async (): Promise<Classroom[]> => {
     return await db.select().from(classrooms).orderBy(classrooms.id);
 };
 
-const buildQuery = async (villageId: number | null, country: string | null) => {
+const buildQuery = async (villageId: number | null, country: string | null, withVillage: boolean) => {
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
     } else if (villageId) {
+        if (withVillage) {
+            return await getVillageClassroomsWithVillage(villageId);
+        }
         return await getVillageClassrooms(villageId);
     } else if (country) {
         return await getCountryClassrooms(country);
@@ -71,11 +71,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId, country } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, country, withVillage } = loadSearchParams(nextUrl.searchParams);
     if (!villageId && user.role !== 'admin') {
         return new NextResponse(null, { status: 403 });
     }
 
-    const result = await buildQuery(villageId, country);
+    const result = await buildQuery(villageId, country, withVillage);
     return NextResponse.json(result);
 };

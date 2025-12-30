@@ -13,6 +13,7 @@ import type { Village } from '@server/database/schemas/villages';
 import useSWR from 'swr';
 
 import styles from './media-filters.module.css';
+import { Classroom } from '@server/database/schemas/classrooms';
 
 interface MediaFiltersProps {
     isPelico: boolean;
@@ -59,7 +60,7 @@ export function MediaFilters({
             value: village.id.toString(),
         })) ?? [];
 
-    const { data: classrooms } = useSWR<Village[]>(`/api/classrooms${serializeToQueryUrl({ villageId: village, country: country })}`, jsonFetcher);
+    const { data: classrooms } = useSWR<Classroom[]>(`/api/classrooms${serializeToQueryUrl({ villageId: village, country: country })}`, jsonFetcher);
     const classroomOptions =
         classrooms?.map((classroom) => ({
             label: classroom.name,

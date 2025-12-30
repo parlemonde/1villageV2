@@ -6,6 +6,7 @@ import { IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -17,7 +18,7 @@ export function ClassroomsTable() {
     //const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
-    const { data: classrooms, isLoading, mutate: _ } = useSWR<ClassroomVillageTeacher[]>('/api/classrooms', jsonFetcher);
+    const { data: classrooms, isLoading, mutate: _ } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
     //const userToDelete = users?.find((user) => user.id === userToDeleteId);
 
