@@ -8,7 +8,7 @@ import { USE_S3 } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 
-type NewMedia = Pick<Media, 'type' | 'url' | 'isPelico' | 'metadata'>;
+type NewMedia = Pick<Media, 'type' | 'url' | 'isPelico' | 'metadata' | 'activityId'>;
 
 export const addMedia = async (media: NewMedia) => {
     const user = await getCurrentUser();

@@ -3,7 +3,7 @@
 import { addMedia } from '@server-actions/file-upload/add-media';
 import { getS3UploadParameters } from '@server-actions/file-upload/get-s3-upload-parameters';
 
-export const uploadDocument = async (file: File, isPelicoDocument: boolean) => {
+export const uploadDocument = async (file: File, isPelicoDocument: boolean, activityId: number) => {
     const formData = new FormData();
 
     const s3UploadParameters = await getS3UploadParameters(file.name, 'documents', isPelicoDocument);
@@ -30,11 +30,13 @@ export const uploadDocument = async (file: File, isPelicoDocument: boolean) => {
             url: `/${key}`,
             isPelico: isPelicoDocument,
             metadata: null,
+            activityId,
         });
         return `/${key}`;
     } else {
         formData.append('file', file);
         formData.append('isPelicoDocument', `${isPelicoDocument}`);
+        formData.append('activityId', activityId.toString());
         const response = await fetch('/api/documents', {
             method: 'POST',
             body: formData,

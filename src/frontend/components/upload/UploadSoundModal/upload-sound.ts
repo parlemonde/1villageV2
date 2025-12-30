@@ -3,7 +3,7 @@
 import { addMedia } from '@server-actions/file-upload/add-media';
 import { getS3UploadParameters } from '@server-actions/file-upload/get-s3-upload-parameters';
 
-export const uploadSound = async (file: File, isPelicoSound: boolean, duration: number) => {
+export const uploadSound = async (file: File, isPelicoSound: boolean, duration: number, activityId: number) => {
     const formData = new FormData();
 
     const s3UploadParameters = await getS3UploadParameters(file.name, 'audios', isPelicoSound);
@@ -32,12 +32,14 @@ export const uploadSound = async (file: File, isPelicoSound: boolean, duration: 
             metadata: {
                 duration,
             },
+            activityId,
         });
         return `/${key}`;
     } else {
         formData.append('file', file);
         formData.append('isPelicoAudio', `${isPelicoSound}`);
         formData.append('duration', `${duration}`);
+        formData.append('activityId', activityId.toString());
         const response = await fetch('/api/audios', {
             method: 'POST',
             body: formData,

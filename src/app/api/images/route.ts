@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const file: FormDataEntryValue | null = formData.get('image');
         const isPelicoImage = formData.get('isPelicoImage') === 'true';
+        const activityId = formData.get('activityId');
 
         if (!currentUser) {
             return new NextResponse(null, {
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
                 width: imageSize.width,
                 height: imageSize.height,
             },
+            activityId: activityId ? Number(activityId) : null,
         });
 
         return Response.json({ url: `/${fileName}` });

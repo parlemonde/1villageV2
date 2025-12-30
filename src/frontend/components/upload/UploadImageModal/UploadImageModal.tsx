@@ -14,9 +14,10 @@ interface UploadImageModalProps {
     isPelicoImage?: boolean;
     onClose: () => void;
     onNewImage?: (imageUrl: string) => void;
+    getActivityId: () => Promise<number>;
 }
 
-export const UploadImageModal = ({ isOpen, initialImageUrl = null, isPelicoImage, onClose, onNewImage }: UploadImageModalProps) => {
+export const UploadImageModal = ({ isOpen, initialImageUrl = null, isPelicoImage, onClose, onNewImage, getActivityId }: UploadImageModalProps) => {
     const [isResizing, setIsResizing] = useState(false);
     const [imageUrlOrFile, setImageUrlOrFile] = useState<string | File | null>(initialImageUrl);
     const [resizedImageBlob, setResizedImageBlob] = useState<Blob | null>(null);
@@ -71,7 +72,8 @@ export const UploadImageModal = ({ isOpen, initialImageUrl = null, isPelicoImage
             onNewImage?.(imageToUpload);
         } else {
             setIsSubmitting(true);
-            const uploadedImageUrl = await uploadImage(imageToUpload, isPelicoImage);
+            const activityId = await getActivityId();
+            const uploadedImageUrl = await uploadImage(imageToUpload, isPelicoImage, activityId);
             onNewImage?.(uploadedImageUrl);
             setIsSubmitting(false);
         }

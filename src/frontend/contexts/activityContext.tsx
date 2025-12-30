@@ -23,12 +23,14 @@ export const ActivityContext = createContext<{
     onCreateActivity: (activityType: ActivityType, isPelico?: boolean, initialData?: Activity['data']) => void;
     onUpdateActivity: () => Promise<void>;
     onPublishActivity: () => Promise<void>;
+    getOrCreateDraft: () => Promise<number>;
 }>({
     activity: undefined,
     setActivity: () => {},
     onCreateActivity: () => {},
     onUpdateActivity: () => Promise.resolve(),
     onPublishActivity: () => Promise.resolve(),
+    getOrCreateDraft: () => Promise.resolve(0),
 });
 
 let onCancelPreviousPromise: () => void = () => {};
@@ -90,10 +92,14 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     // Auto save draft after an update (using a debounced function)
     const setActivity = useCallback(
         (newActivity: Partial<Activity>) => {
-            setLocalActivity(newActivity);
+            const updatedActivity = {
+                ...newActivity,
+                id: localActivityRef?.current?.id || newActivity?.id,
+            };
+            setLocalActivity(updatedActivity);
             if (newActivity.type && newActivity.phase !== undefined && (newActivity.publishDate === null || newActivity.publishDate === undefined)) {
                 onSaveDraftDebounced(
-                    { ...newActivity, draftUrl: pathname },
+                    { ...updatedActivity, draftUrl: pathname },
                     (id) => {
                         if (localActivityRef.current) {
                             // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
@@ -126,6 +132,24 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
         [setLocalActivity, village, classroom],
     );
 
+    const getOrCreateDraft = useCallback(async (): Promise<number> => {
+        if (localActivity?.id) {
+            return localActivity.id;
+        }
+
+        if (localActivity && localActivity.type && localActivity.phase !== undefined) {
+            const draftId = await saveDraft({ ...localActivity, draftUrl: pathname });
+            if (!draftId) {
+                throw new Error('Failed to save draft');
+            }
+
+            localActivityRef.current = { ...localActivity, id: draftId };
+            return draftId;
+        }
+
+        throw new Error('No activity to save');
+    }, [localActivity, pathname]);
+
     const onUpdateActivity = useCallback(async () => {
         if (!localActivity || !localActivity.id || localActivity.publishDate === null || localActivity.publishDate === undefined) {
             return;
@@ -147,8 +171,9 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
             onCreateActivity,
             onUpdateActivity,
             onPublishActivity,
+            getOrCreateDraft,
         }),
-        [localActivity, setActivity, onCreateActivity, onUpdateActivity, onPublishActivity],
+        [localActivity, setActivity, onCreateActivity, onUpdateActivity, onPublishActivity, getOrCreateDraft],
     );
 
     return (

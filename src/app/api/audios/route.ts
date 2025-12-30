@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoAudio = formData.get('isPelicoAudio') === 'true';
         const duration = getDuration(formData.get('duration'));
+        const activityId = formData.get('activityId');
 
         if (!currentUser) {
             return new NextResponse(null, {
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
             metadata: {
                 duration,
             },
+            activityId: activityId ? Number(activityId) : null,
         });
 
         return Response.json({ url: `/${fileName}` });

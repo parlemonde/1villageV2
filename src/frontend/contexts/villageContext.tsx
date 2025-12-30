@@ -28,7 +28,7 @@ export const VillageProvider = ({ village, children }: React.PropsWithChildren<V
     const { data: users } = useSWR<User[]>(village ? `/api/users${serializeToQueryUrl({ villageId: village.id })}` : null, jsonFetcher);
 
     const { data: classrooms, mutate } = useSWR<ClassroomVillageTeacher[]>(
-        village ? `/api/classrooms${serializeToQueryUrl({ villageId: village.id })}` : null,
+        village ? `/api/classrooms${serializeToQueryUrl({ villageId: village.id, withVillage: true })}` : null,
         jsonFetcher,
     );
 
