@@ -1,8 +1,6 @@
 import type { CustomLayerInterface } from 'maplibre-gl';
 import { Map } from 'maplibre-gl';
-import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
-import { AmbientLight } from 'three';
-import { DEG2RAD } from 'three/src/math/MathUtils';
+import { PerspectiveCamera, Scene, WebGLRenderer, MathUtils } from 'three';
 
 import { disposeNode } from './stars/dispose-node';
 import { Sky } from './stars/stars';
@@ -37,7 +35,6 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
 
     // Init stars
     const scene = new Scene();
-    scene.add(new AmbientLight(0xffffff, 1));
     const stars = new Sky();
     scene.add(stars);
     const camera = new PerspectiveCamera(MAP_LIBRE_DEFAULT_FOV, 1, 0.1, 100);
@@ -71,8 +68,8 @@ export const initWorldMap = (canvas: HTMLDivElement): { map: Map } & Disposable 
             camera.updateProjectionMatrix();
 
             // Setup camera rotation
-            const lat = -(transform.center?.lat ?? 0) * DEG2RAD;
-            const lng = -(transform.center?.lng ?? 0) * DEG2RAD;
+            const lat = -(transform.center?.lat ?? 0) * MathUtils.DEG2RAD;
+            const lng = -(transform.center?.lng ?? 0) * MathUtils.DEG2RAD;
             camera.rotation.set(lat, -lng, 0);
 
             // Render sky

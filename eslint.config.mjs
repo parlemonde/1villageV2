@@ -1,25 +1,17 @@
-import { FlatCompat } from '@eslint/eslintrc';
 import eslintJS from '@eslint/js';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import eslintNextVitals from 'eslint-config-next/core-web-vitals';
 import eslintPrettier from 'eslint-plugin-prettier/recommended';
-import { dirname } from 'path';
 import eslintTS from 'typescript-eslint';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-});
-
-export default eslintTS.config(
-    compat.extends('next/core-web-vitals'),
+const eslintConfig = defineConfig([
+    ...eslintNextVitals,
     eslintJS.configs.recommended,
     eslintTS.configs.recommended,
     eslintPrettier,
     {
         rules: {
-            // Windoqws eol
+            // Windows eol
             'prettier/prettier': [
                 'error',
                 {
@@ -94,9 +86,10 @@ export default eslintTS.config(
             ],
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+            '@typescript-eslint/triple-slash-reference': 'off',
         },
     },
-    {
-        ignores: ['public', '.postgres-data/', '.next/', '.open-next/', 'drizzle/', 'node_modules/', 'tmp/', 'server-transcode-videos/'],
-    },
-);
+    globalIgnores(['public', '.postgres-data/', '.next/', '.open-next/', 'drizzle/', 'node_modules/', 'tmp/', 'server-transcode-videos/']),
+]);
+
+export default eslintConfig;
