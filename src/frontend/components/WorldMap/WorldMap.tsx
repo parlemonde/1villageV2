@@ -62,9 +62,9 @@ const WorldMap = () => {
                 debugger;
                 return classroom?.classroom !== undefined;
             })
-            .map((classroom) => {
+            .map((classroomVT) => {
                 debugger;
-                return getClassroomMarker({ classroom, canvas });
+                return getClassroomMarker({ classroomVT, canvas });
             });
         markers.forEach((marker) => marker.marker.addTo(map));
         markers.forEach((marker) =>

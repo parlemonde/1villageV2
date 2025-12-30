@@ -10,7 +10,7 @@ import type { Disposable } from './world-map.types';
 interface MarkerSVGProps {
     markerId: string;
     avatarUrl: string;
-    classroom: Classroom;
+    classroom: Classroom | undefined;
 }
 const MarkerSVG = ({
     markerId,
@@ -64,7 +64,7 @@ export interface DisposableMarker extends Disposable {
     setClickHandler: (handler: (event: MouseEvent) => void) => void;
 }
 interface GetClassroomMarkerArgs {
-    classroomVT: ClassroomVillageTeacher;
+    classroomVT: ClassroomVillageTeacher | undefined;
     canvas: HTMLDivElement;
 }
 export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
