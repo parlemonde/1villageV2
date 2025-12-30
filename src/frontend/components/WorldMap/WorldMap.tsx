@@ -2,7 +2,7 @@
 'use client';
 
 import { VillageContext } from '@frontend/contexts/villageContext';
-import type { Map } from 'maplibre-gl';
+import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
@@ -56,17 +56,14 @@ const WorldMap = () => {
         if (!map || !canvas) {
             return () => {};
         }
-        debugger;
+        const bounds = new LngLatBounds();
         const markers = Object.values(classroomsMap)
-            .filter((classroom) => {
-                debugger;
-                return classroom?.classroom !== undefined;
-            })
-            .map((classroomVT) => {
-                debugger;
-                return getClassroomMarker({ classroomVT, canvas });
-            });
-        markers.forEach((marker) => marker.marker.addTo(map));
+            .filter((classroom) => classroom?.classroom !== undefined)
+            .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
+        markers.forEach((marker) => {
+            marker.marker.addTo(map);
+            bounds.extend(marker.marker.getLngLat());
+        });
         markers.forEach((marker) =>
             marker.setClickHandler(() => {
                 map.flyTo({
@@ -75,6 +72,9 @@ const WorldMap = () => {
                 });
             }),
         );
+        //Auto zoom & pan to fit all markers
+        debugger;
+        map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
         return () => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());

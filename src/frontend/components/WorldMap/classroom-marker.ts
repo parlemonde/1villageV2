@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { getGravatarUrl } from '@frontend/components/Avatar/Avatar';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -68,7 +67,6 @@ interface GetClassroomMarkerArgs {
     canvas: HTMLDivElement;
 }
 export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
-    debugger;
     const classroom = classroomVT?.classroom;
     const markerId = v4();
     const avatarUrl = classroom?.avatarUrl || getGravatarUrl(`classroom-${classroom?.id}@parlemonde.org`, 40);
