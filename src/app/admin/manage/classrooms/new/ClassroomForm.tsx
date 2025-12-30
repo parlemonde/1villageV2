@@ -46,10 +46,7 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
     const [hasAddressChanged, setHasAddressChanged] = useState(false);
 
     const { data: villages } = useSWR<Village[]>('/api/villages', jsonFetcher);
-    const { data: teachers } = useSWR<User[]>(
-        `/api/users${serializeToQueryUrl({ role: 'teacher', teacherId: isEditMode ? classroom?.teacherId : null })}`,
-        jsonFetcher,
-    );
+    const { data: teachers } = useSWR<User[]>(`/api/users${serializeToQueryUrl({ role: 'teacher' })}`, jsonFetcher);
 
     const hasValidationErrors = !village || !teacher || !schoolName || !address;
     const isDisabled = hasValidationErrors || isLoading;

@@ -4,7 +4,7 @@ import { classrooms } from '@server/database/schemas/classrooms';
 import { users } from '@server/database/schemas/users';
 import type { User } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq, and, isNull, or } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger, parseAsString } from 'nuqs/server';
@@ -57,19 +57,8 @@ const getAllUsers = async (): Promise<User[]> => {
     return (await db.select(userColumns).from(users).orderBy(users.id)) as User[];
 };
 
-const getAllTeachersWithoutClassroom = async (teacherId: string | null): Promise<User[]> => {
-    const conditions = [and(eq(users.role, 'teacher'), isNull(classrooms.teacherId))];
-
-    if (teacherId) {
-        conditions.push(eq(users.id, teacherId));
-    }
-
-    return await db
-        .select(userColumns)
-        .from(users)
-        .leftJoin(classrooms, eq(users.id, classrooms.teacherId))
-        .where(or(...conditions))
-        .orderBy(users.id);
+const getAllTeachers = async (): Promise<User[]> => {
+    return await db.select(userColumns).from(users).where(eq(users.role, 'teacher'));
 };
 
 export const GET = async ({ nextUrl }: NextRequest) => {
@@ -79,7 +68,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId, role, teacherId } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, role } = loadSearchParams(nextUrl.searchParams);
 
     if (villageId !== null) {
         return NextResponse.json(await getVillageUsers(villageId));
@@ -89,7 +78,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         }
 
         if (role === 'teacher') {
-            return NextResponse.json(await getAllTeachersWithoutClassroom(teacherId));
+            return NextResponse.json(await getAllTeachers());
         }
 
         return NextResponse.json(await getAllUsers());
