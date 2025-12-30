@@ -9,11 +9,11 @@ import Pelico from '@frontend/svg/pelico/pelico-neutre.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import type { Village } from '@server/database/schemas/villages';
 import useSWR from 'swr';
 
 import styles from './media-filters.module.css';
-import { Classroom } from '@server/database/schemas/classrooms';
 
 interface MediaFiltersProps {
     isPelico: boolean;

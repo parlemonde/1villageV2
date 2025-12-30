@@ -18,7 +18,11 @@ export function ClassroomsTable() {
     //const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
-    const { data: classrooms, isLoading, mutate: _ } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
+    const {
+        data: classrooms,
+        isLoading,
+        mutate: _,
+    } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
     //const userToDelete = users?.find((user) => user.id === userToDeleteId);
 

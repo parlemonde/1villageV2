@@ -70,6 +70,10 @@ const onSaveDraft = async (activity: Partial<Activity>, getSavedId: (id: number)
     onCancelPreviousPromise = () => {};
 };
 
+const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
+    onSaveDraft(activity, getSavedId, setDraftStep).catch();
+}, 2000);
+
 export const ActivityProvider = ({ children }: { children: React.ReactNode }) => {
     const { village } = useContext(VillageContext);
     const { classroom } = useContext(UserContext);
@@ -78,14 +82,6 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const pathname = usePathname();
 
     const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
-
-    const onSaveDraftDebounced = debounce((getSavedId: (id: number) => void, setDraftStep: (step: number) => void) => {
-        const activity = localActivityRef.current;
-        if (!activity) {
-            return;
-        }
-        onSaveDraft(activity, getSavedId, setDraftStep).catch();
-    }, 2000);
 
     // Use a following ref for the activity to use in callbacks and effects without causing re-renders
     const localActivityRef = useRef<Partial<Activity> | undefined>(undefined);
@@ -100,18 +96,21 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                 ...newActivity,
                 id: localActivityRef?.current?.id || newActivity?.id,
             };
-            localActivityRef.current = updatedActivity;
             setLocalActivity(updatedActivity);
             if (newActivity.type && newActivity.phase !== undefined && (newActivity.publishDate === null || newActivity.publishDate === undefined)) {
-                onSaveDraftDebounced((id) => {
-                    if (localActivityRef.current) {
-                        // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
-                        setLocalActivity({ ...localActivityRef.current, id });
-                    }
-                }, setDraftStep);
+                onSaveDraftDebounced(
+                    { ...updatedActivity, draftUrl: pathname },
+                    (id) => {
+                        if (localActivityRef.current) {
+                            // Use the following ref here instead of the previous update, because by the time the update is done, the activity might be updated
+                            setLocalActivity({ ...localActivityRef.current, id });
+                        }
+                    },
+                    setDraftStep,
+                );
             }
         },
-        [setLocalActivity, localActivityRef, onSaveDraftDebounced],
+        [setLocalActivity, pathname],
     );
 
     const onCreateActivity = useCallback(
