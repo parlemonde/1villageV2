@@ -3,7 +3,7 @@
 
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { LngLatBounds, type Map } from 'maplibre-gl';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
 import { useFullScreen } from './use-full-screen';
@@ -11,20 +11,33 @@ import { initWorldMap } from './world';
 import styles from './world-map.module.css';
 
 const WorldMap = () => {
-    const [map, setMap] = useState<Map | null>(null);
+    //const [map, setMap] = useState<Map | null>(null);
+    //A ref to store the MapLibre instance (persists across renders)
+    const mapRef = useRef<Map | null>(null);
+    const map: Map | null = mapRef.current;
+    debugger;
+
     const canvasRef = useRef<HTMLDivElement | null>(null);
     const { containerRef, fullScreenButton } = useFullScreen(() => {
+        debugger;
         map?.stop();
     });
     const { classroomsMap } = useContext(VillageContext);
 
     useEffect(() => {
+        debugger; //mounted useEffect
+        //Prevent creating the map more than once
+        if (mapRef.current) return;
+
         const canvas = canvasRef.current;
         if (!canvas) {
             return () => {};
         }
+
         const { map, dispose } = initWorldMap(canvas);
-        setMap(map);
+        //Store the Map persistently accross renders
+        mapRef.current = map;
+        //setMap(map);
         let animationFrame: number | null = null;
         const render = () => {
             let newLng = map.getCenter().lng - 90;
@@ -48,14 +61,26 @@ const WorldMap = () => {
             if (animationFrame !== null) {
                 cancelAnimationFrame(animationFrame);
             }
+            //Cleanup
+            debugger;
+            mapRef.current = null;
         };
     }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        const map: Map | null = mapRef.current;
+        debugger; //useEffect [???map???, classroomsMap]
         if (!map || !canvas) {
             return () => {};
         }
+
+        mapRef.current?.on('load', () => {
+            //Auto zoom & pan to fit all markers
+            debugger;
+            if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
+        });
+
         const bounds = new LngLatBounds();
         const markers = Object.values(classroomsMap)
             .filter((classroom) => classroom?.classroom !== undefined)
@@ -72,15 +97,14 @@ const WorldMap = () => {
                 });
             }),
         );
-        //Auto zoom & pan to fit all markers
-        debugger;
-        map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
+
         return () => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [map, classroomsMap]);
+    }, [classroomsMap]);
 
+    debugger;
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
             <div ref={canvasRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>
