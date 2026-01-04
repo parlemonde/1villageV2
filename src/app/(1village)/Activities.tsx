@@ -7,12 +7,10 @@ import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
-import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 export const Activities = () => {
-    const t = useExtracted('app.(1village).Activities');
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
     const [phase] = usePhase();
     const [filters, setFilters] = useState<ActivityFiltersState>({
@@ -42,12 +40,6 @@ export const Activities = () => {
     return (
         <div>
             <ActivityFilters filters={filters} setFilters={setFilters} />
-            <h1>
-                {t('Hello, {firstName}', {
-                    firstName: 'John',
-                })}
-            </h1>
-            {t('Look ma, no keys!')}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {activities?.map((activity) => (
                     <ActivityCard

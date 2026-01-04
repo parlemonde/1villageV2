@@ -6,12 +6,14 @@ import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import PelicoReflechit from '@frontend/svg/pelico/pelico-reflechit.svg';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import { Activities } from './Activities';
 import styles from './page.module.css';
 
 export default function Home() {
+    const t = useExtracted('app.(1village)');
     const { village } = useContext(VillageContext);
     const [phase] = usePhase();
 
@@ -41,7 +43,7 @@ export default function Home() {
                 <WorldMap />
             </div>
             <div style={{ margin: '8px 16px 32px 16px' }}>
-                <Title marginBottom="sm">Dernières activités</Title>
+                <Title marginBottom="sm">{t('Dernières activités')}</Title>
                 <Activities />
             </div>
         </>

@@ -2,6 +2,7 @@
 
 import { Input } from '@frontend/components/ui/Form';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import { useExtracted } from 'next-intl';
 import React from 'react';
 
 import { ActivityCountriesSelect } from './ActivityCountriesSelect/ActivityCountriesSelect';
@@ -20,9 +21,10 @@ interface ActivityFiltersProps {
     setFilters: React.Dispatch<React.SetStateAction<ActivityFiltersState>>;
 }
 export const ActivityFilters = ({ filters, setFilters }: ActivityFiltersProps) => {
+    const t = useExtracted('ActivityFilters');
     return (
         <div className={styles.activityFilters}>
-            <span className={styles.filtersLabel}>Filtres :</span>
+            <span className={styles.filtersLabel}>{t('Filtres :')}</span>
             <ActivityTypeSelect
                 selectedTypes={filters.activityTypes}
                 setSelectedTypes={(activityTypes) => {
@@ -51,7 +53,7 @@ export const ActivityFilters = ({ filters, setFilters }: ActivityFiltersProps) =
             <span style={{ flex: '1 1 300px' }}>
                 <Input
                     isFullWidth
-                    placeholder="Rechercher"
+                    placeholder={t('Rechercher')}
                     size="sm"
                     value={filters.search}
                     onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}

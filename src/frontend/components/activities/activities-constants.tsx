@@ -1,14 +1,35 @@
+'use client';
+
 import EnigmeIcon from '@frontend/svg/activities/enigme.svg';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import { useExtracted } from 'next-intl';
+import React from 'react';
 
-export const ACTIVITY_NAMES: Record<ActivityType, string> = {
-    libre: 'Contenu libre',
-    jeu: 'Jeu',
-    enigme: 'Énigme',
-    indice: 'Indice',
+export const useActivityName = () => {
+    const t = useExtracted('activities-constants');
+    const getActivityName = React.useCallback(
+        (type: ActivityType): string => {
+            switch (type) {
+                case 'libre':
+                    return t('Contenu libre');
+                case 'jeu':
+                    return t('Jeu');
+                case 'enigme':
+                    return t('Énigme');
+                case 'indice':
+                    return t('Indice');
+            }
+        },
+        [t],
+    );
+    return { getActivityName };
+};
+export const ActivityName = ({ type }: { type: ActivityType }): React.ReactNode => {
+    const { getActivityName } = useActivityName();
+    return getActivityName(type);
 };
 
 export const ACTIVITY_LABELS: Record<ActivityType, string> = {

@@ -1,5 +1,5 @@
 import { ActivityView } from '@frontend/components/activities/ActivityView';
-import { ACTIVITY_NAMES } from '@frontend/components/activities/activities-constants';
+import { ActivityName } from '@frontend/components/activities/activities-constants';
 import { Link } from '@frontend/components/ui/Link';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
@@ -47,7 +47,7 @@ export default async function ActivityPage({ params }: ServerPageProps) {
                 </Link>
                 <ChevronRightIcon width={20} height={20} />
                 <span className={styles.activityBreadcrumbItem}>
-                    Activité - {activity.type === 'libre' && activity.isPelico ? 'Message de Pélico' : ACTIVITY_NAMES[activity.type]}
+                    Activité - {activity.type === 'libre' && activity.isPelico ? 'Message de Pélico' : <ActivityName type={activity.type} />}
                 </span>
             </div>
             <div style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>

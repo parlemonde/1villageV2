@@ -1,24 +1,25 @@
+import path from 'path';
+
 /**
  * Converts a file path to the expected namespace format.
  * e.g., src/app/(1village)/Activities.tsx -> app.(1village).Activities
+ *       src/frontend/components/path/to/MyComponent.tsx -> MyComponent
  */
 function filePathToNamespace(filePath) {
-    // Get the path relative to src/
     const srcIndex = filePath.indexOf('src/');
     if (srcIndex === -1) {
         return null;
     }
+    const relativePath = filePath.slice(srcIndex + 4); // Remove 'src/'
 
-    let relativePath = filePath.slice(srcIndex + 4); // Remove 'src/'
-
-    // Remove file extension
-    relativePath = relativePath.replace(/\.(tsx?|jsx?|mjs|cjs)$/, '');
-
-    // Remove /index suffix if present
-    relativePath = relativePath.replace(/\/index$/, '');
-
-    // Convert slashes to dots
-    return relativePath.replace(/\//g, '.');
+    if (relativePath.startsWith('app')) {
+        return path.parse(relativePath).dir.replace(/\//g, '.');
+    } else if (relativePath.startsWith('frontend')) {
+        const extension = path.extname(relativePath);
+        return path.basename(relativePath, extension);
+    } else {
+        return null;
+    }
 }
 
 /** @type {import('eslint').ESLint.Plugin} */
