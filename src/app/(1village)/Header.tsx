@@ -15,7 +15,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
@@ -50,6 +50,7 @@ export const Header = () => {
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
                     <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
+                    <DropdownMenuItem label="Paramètres" href="/parametres" icon={MixerHorizontalIcon} />
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>

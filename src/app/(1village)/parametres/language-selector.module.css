@@ -1,0 +1,147 @@
+.container {
+    width: 100%;
+}
+
+.errorCard {
+    background-color: var(--error-background);
+    border: 1px solid var(--error-color);
+    margin-bottom: 16px;
+    padding: 12px 16px;
+}
+
+.errorText {
+    color: var(--error-color);
+    margin: 0;
+    font-size: 0.9375rem;
+}
+
+.languageGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.languageCard {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid var(--grey-300);
+    padding: 16px;
+    background-color: white;
+}
+
+.languageCard:hover {
+    border-color: var(--primary-500);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.selectedCard {
+    border-color: var(--primary-color);
+    background-color: var(--primary-50);
+}
+
+.selectedCard:hover {
+    border-color: var(--primary-color);
+}
+
+.languageContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.languageInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.languageLabel {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--font-color);
+}
+
+.languageCode {
+    font-size: 0.875rem;
+    color: var(--font-detail-color);
+}
+
+.defaultBadge {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 8px;
+    background-color: var(--primary-100);
+    color: var(--primary-700);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.checkIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.checkIcon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinnerInner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-200);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.savingMessage {
+    text-align: center;
+    padding: 16px;
+    background-color: var(--primary-50);
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.savingMessage p {
+    margin: 0;
+    color: var(--primary-700);
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+.helpText {
+    color: var(--font-detail-color);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .languageGrid {
+        grid-template-columns: 1fr;
+    }
+}
