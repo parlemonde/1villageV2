@@ -10,7 +10,11 @@ import { useFullScreen } from './use-full-screen';
 import { initWorldMap } from './world';
 import styles from './world-map.module.css';
 
-const WorldMap = () => {
+interface WorldMapProps {
+    applyZoom?: boolean; // optional boolean flag
+}
+
+const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
     //const [map, setMap] = useState<Map | null>(null);
     //A ref to store the MapLibre instance (persists across renders)
     const mapRef = useRef<Map | null>(null);
@@ -75,13 +79,14 @@ const WorldMap = () => {
             return () => {};
         }
 
-        mapRef.current?.on('load', () => {
+        const bounds = new LngLatBounds();
+
+        mapRef.current?.once('load', () => {
             //Auto zoom & pan to fit all markers
             debugger;
-            if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
+            if (applyZoom && !bounds.isEmpty()) map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
         });
 
-        const bounds = new LngLatBounds();
         const markers = Object.values(classroomsMap)
             .filter((classroom) => classroom?.classroom !== undefined)
             .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
@@ -102,7 +107,7 @@ const WorldMap = () => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [classroomsMap]);
+    }, [applyZoom, classroomsMap]);
 
     debugger;
     return (
