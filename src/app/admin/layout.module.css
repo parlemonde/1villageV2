@@ -6,6 +6,10 @@ body:has(.adminLayout) {
     min-width: 320px;
     position: relative;
     align-self: stretch;
+
+    @media (max-width: 850px) {
+        display: none;
+    }
 }
 .adminSidebarStickyContent {
     position: sticky;
