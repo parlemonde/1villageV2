@@ -22,7 +22,7 @@ export const ActivitySidePanel = () => {
         <div className={styles.activitySidePanel}>
             {activity && <ActivityView activity={activity} showDetails={false} />}
             <div className={styles.WorldMapContainer}>
-                <WorldMap />
+                <WorldMap activity={activity} />
             </div>
         </div>
     );

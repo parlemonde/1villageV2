@@ -1,7 +1,8 @@
-/* eslint-disable no-debugger */
 'use client';
 
+import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import type { Activity } from '@server/database/schemas/activities';
 import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef } from 'react';
 
@@ -11,25 +12,23 @@ import { initWorldMap } from './world';
 import styles from './world-map.module.css';
 
 interface WorldMapProps {
-    applyZoom?: boolean; // optional boolean flag
+    activity?: Activity | null;
 }
 
-const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
+const WorldMap = ({ activity = null }: WorldMapProps) => {
     //const [map, setMap] = useState<Map | null>(null);
     //A ref to store the MapLibre instance (persists across renders)
     const mapRef = useRef<Map | null>(null);
     const map: Map | null = mapRef.current;
-    debugger;
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
     const { containerRef, fullScreenButton } = useFullScreen(() => {
-        debugger;
         map?.stop();
     });
     const { classroomsMap } = useContext(VillageContext);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
-        debugger; //mounted useEffect
         //Prevent creating the map more than once
         if (mapRef.current) return;
 
@@ -66,7 +65,6 @@ const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
                 cancelAnimationFrame(animationFrame);
             }
             //Cleanup
-            debugger;
             mapRef.current = null;
         };
     }, []);
@@ -74,7 +72,6 @@ const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
     useEffect(() => {
         const canvas = canvasRef.current;
         const map: Map | null = mapRef.current;
-        debugger; //useEffect [???map???, classroomsMap]
         if (!map || !canvas) {
             return () => {};
         }
@@ -83,12 +80,13 @@ const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
 
         mapRef.current?.once('load', () => {
             //Auto zoom & pan to fit all markers
-            debugger;
-            if (applyZoom && !bounds.isEmpty()) map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
+            if (activity !== null && !bounds.isEmpty()) map.fitBounds(bounds, { padding: 50, maxZoom: 10, duration: 1000 });
         });
 
         const markers = Object.values(classroomsMap)
-            .filter((classroom) => classroom?.classroom !== undefined)
+            .filter((classroom) => {
+                return activity === null || classroom?.classroom.id === activity?.classroomId || classroom?.classroom.teacherId === user.id;
+            })
             .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
         markers.forEach((marker) => {
             marker.marker.addTo(map);
@@ -107,9 +105,8 @@ const WorldMap = ({ applyZoom = true }: WorldMapProps) => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [applyZoom, classroomsMap]);
+    }, [classroomsMap, activity]);
 
-    debugger;
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
             <div ref={canvasRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>

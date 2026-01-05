@@ -38,7 +38,7 @@ export default function Home() {
     return (
         <>
             <div className={styles.WorldMapContainer}>
-                <WorldMap applyZoom={false} />
+                <WorldMap />
             </div>
             <div style={{ margin: '8px 16px 32px 16px' }}>
                 <Title marginBottom="sm">Dernières activités</Title>
