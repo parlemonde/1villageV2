@@ -8,23 +8,22 @@ import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { Language } from '@server/database/schemas/languages';
 import { deleteLanguage } from '@server-actions/languages/delete-language';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import styles from './languages-table.module.css';
 
 interface LanguagesTableProps {
     languages: Language[];
+    progressPerLanguages: Record<string, number>;
 }
 
-export function LanguagesTable({ languages }: LanguagesTableProps) {
+export function LanguagesTable({ languages, progressPerLanguages }: LanguagesTableProps) {
     const router = useRouter();
     const [languageToDeleteCode, setLanguageToDeleteCode] = useState<string | null>(null);
     const [isDeletingLanguage, setIsDeletingLanguage] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const languageToDelete = languages.find((lang) => lang.code === languageToDeleteCode);
-
-    const progressPerLanguages: Record<string, number> = useMemo(() => ({}), []);
 
     const handleDeleteLanguage = async () => {
         if (languageToDeleteCode === null) {

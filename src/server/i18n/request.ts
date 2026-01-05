@@ -44,7 +44,7 @@ export const fetchMessages = async (locale: string, defaultToNull?: boolean) => 
 
 export default getRequestConfig(async () => {
     const store = await cookies();
-    const locale = store.get('locale')?.value || 'en';
+    const locale = store.get('locale')?.value || 'fr';
     const messages = await fetchMessages(locale);
 
     return {

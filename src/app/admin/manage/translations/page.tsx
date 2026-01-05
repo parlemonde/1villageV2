@@ -5,6 +5,7 @@ import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
 import { languages } from '@server/database/schemas/languages';
+import { getAllProgress } from '@server/i18n/get-progress';
 import { asc } from 'drizzle-orm';
 
 import { AddLanguageButton } from './AddLanguageButton';
@@ -13,6 +14,7 @@ import styles from './page.module.css';
 
 export default async function AdminManageTranslationsPage() {
     const availableLanguages = await db.select().from(languages).orderBy(asc(languages.createdAt));
+    const progressPerLanguages = await getAllProgress(availableLanguages.map((l) => l.code));
 
     return (
         <PageContainer>
@@ -21,7 +23,7 @@ export default async function AdminManageTranslationsPage() {
                 <Title className={styles.title}>Gestion des traductions</Title>
                 <AddLanguageButton existingLanguages={availableLanguages.map((l) => l.code)} />
             </div>
-            <LanguagesTable languages={availableLanguages} />
+            <LanguagesTable languages={availableLanguages} progressPerLanguages={progressPerLanguages} />
             <Button
                 as="a"
                 color="primary"
