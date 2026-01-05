@@ -1,4 +1,4 @@
-import { getArchiveFolders } from '@app/archives/[...filepath]/route';
+import { getArchiveFolders } from '@app/api/archives/[...filepath]/route';
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { Button } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
@@ -20,7 +20,7 @@ export default async function AdminManageArchivePage() {
             <ul className={styles.listArchives}>
                 {archives.map((archive, index) => (
                     <li key={index}>
-                        <Link href={`/archives/${archive}/index.html`} passHref target="_blank">
+                        <Link href={`/api/archives/${archive}/`} passHref>
                             {archive}
                         </Link>
                     </li>
