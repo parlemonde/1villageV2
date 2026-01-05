@@ -2,32 +2,44 @@ import { getDynamoDBItem } from '@server/aws/dynamodb';
 import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
 
-const isObject = (value: unknown): value is Record<string, unknown> => {
+export const isObject = (value: unknown): value is Record<string, unknown> => {
     return typeof value === 'object' && value !== null;
 };
 
-const combineMessagesWithDefault = (messages: Record<string, unknown>, defaults: Record<string, unknown>): Record<string, unknown> => {
+const combineMessagesWithDefault = (
+    messages: Record<string, unknown>,
+    defaults: Record<string, unknown>,
+    defaultToNull = false,
+): Record<string, unknown> => {
     const result: Record<string, unknown> = {};
     for (const key of Object.keys(defaults)) {
         const defaultValue = defaults[key];
         const messageValue = messages[key];
         if (isObject(defaultValue)) {
-            result[key] = combineMessagesWithDefault(isObject(messageValue) ? messageValue : {}, defaultValue);
+            result[key] = combineMessagesWithDefault(isObject(messageValue) ? messageValue : {}, defaultValue, defaultToNull);
         } else {
-            result[key] = key in messages ? messageValue : defaultValue;
+            result[key] = key in messages ? messageValue : defaultToNull ? null : defaultValue;
         }
     }
     return result;
 };
 
-const fetchMessages = async (locale: string) => {
-    const defaultMessages = (await import(`./messages/en.json`)).default;
+export const getDefaultMessages = async () => {
+    return (await import(`./messages/en.json`)).default;
+};
+
+export const fetchMessages = async (locale: string, defaultToNull?: boolean) => {
+    const defaultMessages = await getDefaultMessages();
+    let messages: unknown = {};
     try {
-        const messages = await getDynamoDBItem<string>(`locale-${locale}.json`);
-        return messages ? combineMessagesWithDefault(JSON.parse(messages), defaultMessages) : defaultMessages;
+        const result = await getDynamoDBItem<string>(`locale-${locale}.json`);
+        if (result) {
+            messages = JSON.parse(result);
+        }
     } catch {
-        return defaultMessages;
+        // Ignore
     }
+    return combineMessagesWithDefault(isObject(messages) ? messages : {}, defaultMessages, defaultToNull);
 };
 
 export default getRequestConfig(async () => {

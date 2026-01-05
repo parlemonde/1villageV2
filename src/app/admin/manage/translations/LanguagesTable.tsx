@@ -5,35 +5,43 @@ import { IconButton } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import type { Language } from '@server/database/schemas/languages';
+import { deleteLanguage } from '@server-actions/languages/delete-language';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 import styles from './languages-table.module.css';
 
-// Dummy data for available languages with translation progress
-const DUMMY_LANGUAGES = [
-    { code: 'fr', name: 'Français', translationProgress: 100, isDefault: true },
-    { code: 'en', name: 'English', translationProgress: 75, isDefault: false },
-    { code: 'de', name: 'Deutsch', translationProgress: 30, isDefault: false },
-];
+interface LanguagesTableProps {
+    languages: Language[];
+}
 
-export function LanguagesTable() {
+export function LanguagesTable({ languages }: LanguagesTableProps) {
+    const router = useRouter();
     const [languageToDeleteCode, setLanguageToDeleteCode] = useState<string | null>(null);
     const [isDeletingLanguage, setIsDeletingLanguage] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
-    const languageToDelete = DUMMY_LANGUAGES.find((lang) => lang.code === languageToDeleteCode);
+    const languageToDelete = languages.find((lang) => lang.code === languageToDeleteCode);
+
+    const progressPerLanguages: Record<string, number> = useMemo(() => ({}), []);
 
     const handleDeleteLanguage = async () => {
         if (languageToDeleteCode === null) {
             return;
         }
         setIsDeletingLanguage(true);
+        setDeleteError(null);
 
-        // TODO: Implement actual delete API call
-        // Simulating API call with timeout
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        setIsDeletingLanguage(false);
-        setLanguageToDeleteCode(null);
+        try {
+            await deleteLanguage(languageToDeleteCode);
+            router.refresh(); // Refresh the page data
+        } catch (error) {
+            setDeleteError(error instanceof Error ? error.message : 'Une erreur est survenue');
+        } finally {
+            setIsDeletingLanguage(false);
+            setLanguageToDeleteCode(null);
+        }
     };
 
     return (
@@ -45,39 +53,33 @@ export function LanguagesTable() {
                         header: 'Langue',
                         accessor: (language) => (
                             <div>
-                                {language.name}
+                                {language.label}
                                 {language.isDefault && <span className={styles.defaultBadge}>Par défaut</span>}
                             </div>
                         ),
                         isSortable: true,
-                        getSortValue: (language) => language.name,
+                        getSortValue: (language) => language.label,
                     },
                     {
                         id: 'progress',
                         header: 'Status des traductions',
                         accessor: (language) => {
+                            const progress = language.isDefault ? 100 : progressPerLanguages[language.code] || 0;
                             const progressClass =
-                                language.translationProgress === 100
-                                    ? styles.progressFillComplete
-                                    : language.translationProgress >= 70
-                                      ? styles.progressFillPartial
-                                      : styles.progressFillLow;
+                                progress === 100 ? styles.progressFillComplete : progress >= 70 ? styles.progressFillPartial : styles.progressFillLow;
 
                             return (
                                 <div className={styles.progressContainer}>
                                     <div className={styles.progressBar}>
-                                        <div
-                                            className={`${styles.progressFill} ${progressClass}`}
-                                            style={{ width: `${language.translationProgress}%` }}
-                                        />
+                                        <div className={`${styles.progressFill} ${progressClass}`} style={{ width: `${progress}%` }} />
                                     </div>
-                                    <span className={styles.progressText}>{language.translationProgress}%</span>
+                                    <span className={styles.progressText}>{progress}%</span>
                                 </div>
                             );
                         },
                         width: '300px',
                         isSortable: true,
-                        getSortValue: (language) => language.translationProgress,
+                        getSortValue: (language) => (language.isDefault ? 100 : progressPerLanguages[language.code] || 0),
                     },
                     {
                         id: 'actions',
@@ -112,7 +114,7 @@ export function LanguagesTable() {
                         cellPadding: '0 8px',
                     },
                 ]}
-                data={DUMMY_LANGUAGES}
+                data={languages}
                 isLoading={false}
                 emptyState="Aucune langue disponible"
             />
@@ -126,10 +128,13 @@ export function LanguagesTable() {
                 isLoading={isDeletingLanguage}
             >
                 {languageToDelete !== undefined && (
-                    <p>
-                        Êtes-vous sûr de vouloir supprimer la langue <strong>{languageToDelete.name}</strong> ? Cette action est irréversible et
-                        supprimera toutes les traductions associées.
-                    </p>
+                    <>
+                        <p>
+                            Êtes-vous sûr de vouloir supprimer la langue <strong>{languageToDelete.label}</strong> ? Cette action est irréversible et
+                            supprimera toutes les traductions associées.
+                        </p>
+                        {deleteError && <p style={{ color: 'var(--error-color)', marginTop: '8px' }}>{deleteError}</p>}
+                    </>
                 )}
             </Modal>
         </div>

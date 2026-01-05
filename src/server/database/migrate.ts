@@ -7,6 +7,7 @@ import postgres from 'postgres';
 import { db } from './database';
 import { auth } from '../lib/auth';
 import { auth_sessions } from './schemas/auth-schemas';
+import { languages } from './schemas/languages';
 import { users } from './schemas/users';
 
 const DATABASE_URL = getEnvVariable('DATABASE_URL');
@@ -63,10 +64,26 @@ async function createAdminUser(): Promise<void> {
     }
 }
 
+async function insertDefaultLanguage(): Promise<void> {
+    const result = await db.query.languages.findFirst({
+        where: eq(languages.code, 'fr'),
+    });
+    if (result === undefined) {
+        await db.insert(languages).values([
+            {
+                code: 'fr',
+                label: 'Français',
+                isDefault: true,
+            },
+        ]);
+    }
+}
+
 const start = async () => {
     await createDatabase();
     await migrate(db, { migrationsFolder: './drizzle' });
     await createAdminUser();
+    await insertDefaultLanguage();
 };
 
 start()
