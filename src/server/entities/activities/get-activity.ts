@@ -6,37 +6,41 @@ import { activities } from '@server/database/schemas/activities';
 import type { FreeActivity, GameActivity, PuzzleActivity } from '@server/database/schemas/activity-types';
 import { eq } from 'drizzle-orm';
 
-function mapToActivity(raw: Activity | null): Activity | null {
-    if (!raw) return null;
+type DbActivity = typeof activities.$inferSelect;
 
-    switch (raw.type) {
+function mapToActivity(dbActivity: DbActivity): Activity | null {
+    if (!dbActivity) return null;
+
+    switch (dbActivity.type) {
         case 'libre':
             return {
-                ...raw,
+                ...dbActivity,
                 type: 'libre',
-                data: raw.data as FreeActivity['data'],
+                data: dbActivity.data as FreeActivity['data'],
             };
         case 'jeu':
             return {
-                ...raw,
+                ...dbActivity,
                 type: 'jeu',
-                data: raw.data as GameActivity['data'],
+                data: dbActivity.data as GameActivity['data'],
             };
         case 'enigme':
             return {
-                ...raw,
+                ...dbActivity,
                 type: 'enigme',
-                data: raw.data as PuzzleActivity['data'],
+                data: dbActivity.data as PuzzleActivity['data'],
             };
         default:
-            return null;
+            throw new Error(`Unknown activity type: ${dbActivity.type}`);
     }
 }
 
 export async function getActivity(activityId: number): Promise<Activity | null> {
-    const activity = await db.query.activities.findFirst({
+    const dbActivity: DbActivity | undefined = await db.query.activities.findFirst({
         where: eq(activities.id, activityId),
     });
 
-    return mapToActivity(activity);
+    if (!dbActivity) return null;
+
+    return mapToActivity(dbActivity);
 }

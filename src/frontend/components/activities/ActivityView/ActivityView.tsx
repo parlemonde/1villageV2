@@ -27,7 +27,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
             <ActivityHeader
                 activity={activity}
                 user={usersMap[activity.userId]}
-                classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId]?.classroom : undefined}
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}

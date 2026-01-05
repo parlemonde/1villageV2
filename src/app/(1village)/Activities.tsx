@@ -46,7 +46,7 @@ export const Activities = () => {
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
-                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId]?.classroom : undefined}
                     />
                 ))}
             </div>
