@@ -11,6 +11,7 @@ import isoLanguages from '../../app/admin/manage/translations/iso-639-languages.
 interface IsoLanguage {
     code: string;
     name: string;
+    nameInLanguage: string;
 }
 
 export const addLanguage = async (languageCode: string): Promise<void> => {
@@ -35,6 +36,7 @@ export const addLanguage = async (languageCode: string): Promise<void> => {
     await db.insert(languages).values({
         code: languageCode,
         label: languageData.name,
+        labelInLanguage: languageData.nameInLanguage,
         isDefault: false,
     });
 

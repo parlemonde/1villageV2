@@ -1,5 +1,5 @@
 {
-  "id": "cdb5d556-94c6-4119-a40d-d90b7e2d3b35",
+  "id": "016a70a6-72f0-4c81-9aa7-13ab838cfe87",
   "prevId": "c7d15019-09e2-4389-ae01-30fba2cc1640",
   "version": "7",
   "dialect": "postgresql",
@@ -588,6 +588,12 @@
         },
         "label": {
           "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label_in_language": {
+          "name": "label_in_language",
           "type": "text",
           "primaryKey": false,
           "notNull": true

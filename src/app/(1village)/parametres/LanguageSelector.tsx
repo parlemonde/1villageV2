@@ -56,7 +56,7 @@ export function LanguageSelector({ currentLocale, languages }: LanguageSelectorP
                         >
                             <div className={styles.languageContent}>
                                 <div className={styles.languageInfo}>
-                                    <h4 className={styles.languageLabel}>{language.label}</h4>
+                                    <h4 className={styles.languageLabel}>{language.labelInLanguage}</h4>
                                     <span className={styles.languageCode}>{language.code.toUpperCase()}</span>
                                     {language.isDefault && <span className={styles.defaultBadge}>Par défaut</span>}
                                 </div>

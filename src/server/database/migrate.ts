@@ -73,6 +73,7 @@ async function insertDefaultLanguage(): Promise<void> {
             {
                 code: 'fr',
                 label: 'Français',
+                labelInLanguage: 'Français',
                 isDefault: true,
             },
         ]);
