@@ -1,16 +1,16 @@
 'use client';
 
-import { ActivityStepPreview } from "@frontend/components/activities/ActivityStepPreview";
-import { ContentViewer } from "@frontend/components/content/ContentViewer";
-import { Button } from "@frontend/components/ui/Button";
-import { Loader } from "@frontend/components/ui/Loader";
-import { PageContainer } from "@frontend/components/ui/PageContainer";
-import { Steps } from "@frontend/components/ui/Steps";
-import { Title } from "@frontend/components/ui/Title";
-import { ActivityContext } from "@frontend/contexts/activityContext";
-import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
+import { ContentViewer } from '@frontend/components/content/ContentViewer';
+import { Button } from '@frontend/components/ui/Button';
+import { Loader } from '@frontend/components/ui/Loader';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
+import { useContext, useState } from 'react';
 
 export default function CreerUnIndiceStep3() {
     const router = useRouter();
@@ -40,15 +40,15 @@ export default function CreerUnIndiceStep3() {
         } finally {
             setIsSubmiting(false);
         }
-    }
+    };
 
     return (
         <PageContainer>
             <Steps
                 steps={[
                     { label: report || 'Reportage', href: '/creer-un-reportage/2', status: isFirstStepDone ? 'success' : 'warning' },
-                    { label: "Créer le reportage", href: '/creer-un-reportage/2', status: isSecondStepDone ? 'success' : 'warning' },
-                    { label: "Pré-visualiser", href: '/creer-un-reportage/3' },
+                    { label: 'Créer le reportage', href: '/creer-un-reportage/2', status: isSecondStepDone ? 'success' : 'warning' },
+                    { label: 'Pré-visualiser', href: '/creer-un-reportage/3' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
@@ -74,11 +74,17 @@ export default function CreerUnIndiceStep3() {
             >
                 <ContentViewer content={activity.data?.content} activityId={activity.id} />
             </ActivityStepPreview>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
                 <Button as="a" href="/creer-un-reportage/2" color="primary" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
-                <Button color="primary" variant="contained" label={activity.publishDate ? "Modifier" : "Publier"} disabled={!isValid} onClick={onSubmit} />
+                <Button
+                    color="primary"
+                    variant="contained"
+                    label={activity.publishDate ? 'Modifier' : 'Publier'}
+                    disabled={!isValid}
+                    onClick={onSubmit}
+                />
             </div>
             {isSubmiting && <Loader isLoading={isSubmiting} />}
         </PageContainer>
-    )
+    );
 }
