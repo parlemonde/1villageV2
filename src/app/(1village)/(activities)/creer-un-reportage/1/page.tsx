@@ -1,23 +1,24 @@
 'use client';
 
+import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import { Button } from '@frontend/components/ui/Button';
+import { Input } from '@frontend/components/ui/Form';
+import { Select } from '@frontend/components/ui/Form/Select';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
-import { Activity } from '@server/database/schemas/activities';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
+import type { Activity } from '@server/database/schemas/activities';
 import { useContext } from 'react';
 import useSWR from 'swr';
+
 import { DEFAULT_REPORTS } from '../page';
-import { Select } from '@frontend/components/ui/Form/Select';
-import { Input } from '@frontend/components/ui/Form';
-import { ActivityCard } from '@frontend/components/activities/ActivityCard';
-import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
-import { Button } from '@frontend/components/ui/Button';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 const CUSTOM_REPORT_VALUE = '__CUSTOM_REPORT__';
 

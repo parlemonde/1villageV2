@@ -1,20 +1,20 @@
 'use client';
 
-import PaysagesIcon from '@frontend/svg/indices/paysages.svg';
-import ArtIcon from '@frontend/svg/indices/art.svg';
-import LieuxViesIcon from '@frontend/svg/indices/lieux-de-vie.svg';
-import LanguesIcon from '@frontend/svg/indices/langues.svg';
-import FloreFauneIcon from '@frontend/svg/indices/flore-faune.svg';
-import LoisirsJeuxIcon from '@frontend/svg/indices/loisirs-jeux.svg';
-import CuisineIcon from '@frontend/svg/indices/cuisine.svg';
-import TraditionsIcon from '@frontend/svg/indices/tradition.svg';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
-
-import styles from './page.module.css';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
+import ArtIcon from '@frontend/svg/indices/art.svg';
+import CuisineIcon from '@frontend/svg/indices/cuisine.svg';
+import FloreFauneIcon from '@frontend/svg/indices/flore-faune.svg';
+import LanguesIcon from '@frontend/svg/indices/langues.svg';
+import LieuxViesIcon from '@frontend/svg/indices/lieux-de-vie.svg';
+import LoisirsJeuxIcon from '@frontend/svg/indices/loisirs-jeux.svg';
+import PaysagesIcon from '@frontend/svg/indices/paysages.svg';
+import TraditionsIcon from '@frontend/svg/indices/tradition.svg';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
-import { UserContext } from '@frontend/contexts/userContext';
-import { ActivityContext } from '@frontend/contexts/activityContext';
+
+import styles from './page.module.css';
 
 export const DEFAULT_REPORTS: {
     name: string;
