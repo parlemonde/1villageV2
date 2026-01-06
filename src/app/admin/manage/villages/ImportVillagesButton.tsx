@@ -20,7 +20,14 @@ export function ImportVillagesButton() {
 
     return (
         <>
-            <Button variant="contained" color="primary" leftIcon={<DownloadIcon />} hideLabelOnMobile label="Importer les villages-mondes" onClick={onImportVillages} />
+            <Button
+                variant="contained"
+                color="primary"
+                leftIcon={<DownloadIcon />}
+                hideLabelOnMobile
+                label="Importer les villages-mondes"
+                onClick={onImportVillages}
+            />
             <Loader isLoading={isImporting} />
         </>
     );
