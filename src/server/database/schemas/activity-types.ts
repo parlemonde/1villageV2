@@ -42,7 +42,7 @@ type ReportActivity = {
         customReport?: string;
         content?: AnyContent[];
     } | null;
-}
+};
 
 export type Activities = FreeActivity | GameActivity | PuzzleActivity | ReportActivity;
 export type ActivityType = Activities['type'];

@@ -17,8 +17,8 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 
 export const DEFAULT_REPORTS: {
-    name: string,
-    icon: React.ReactNode
+    name: string;
+    icon: React.ReactNode;
 }[] = [
     { name: 'Nos paysages', icon: <PaysagesIcon /> },
     { name: 'Nos arts', icon: <ArtIcon /> },
@@ -28,7 +28,7 @@ export const DEFAULT_REPORTS: {
     { name: 'Nos loisirs et jeux', icon: <LoisirsJeuxIcon /> },
     { name: 'Nos cuisines', icon: <CuisineIcon /> },
     { name: 'Nos traditions', icon: <TraditionsIcon /> },
-]
+];
 
 export default function CreerUnReportagePage() {
     const router = useRouter();
@@ -45,7 +45,7 @@ export default function CreerUnReportagePage() {
                         className={styles.themeLink}
                         onClick={() => {
                             onCreateActivity('reportage', isPelico, {
-                                defaultReport: theme.name
+                                defaultReport: theme.name,
                             });
                             router.push('/creer-un-reportage/1');
                         }}
@@ -65,5 +65,5 @@ export default function CreerUnReportagePage() {
                 </button>
             </div>
         </PageContainer>
-    )
+    );
 }

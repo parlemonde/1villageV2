@@ -17,6 +17,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     enigme: () => null,
     indice: HintView,
     reportage: ReportView
+    reportage: ReportView,
 };
 
 interface ActivityViewProps {

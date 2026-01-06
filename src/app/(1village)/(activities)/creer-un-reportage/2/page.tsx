@@ -1,13 +1,13 @@
 'use client';
 
-import { ContentEditor } from "@frontend/components/content/ContentEditor";
-import { Button } from "@frontend/components/ui/Button";
-import { PageContainer } from "@frontend/components/ui/PageContainer";
-import { Steps } from "@frontend/components/ui/Steps";
-import { Title } from "@frontend/components/ui/Title";
-import { ActivityContext } from "@frontend/contexts/activityContext";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { useContext } from "react";
+import { ContentEditor } from '@frontend/components/content/ContentEditor';
+import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { useContext } from 'react';
 
 export default function CreerUnReportageStep2() {
     const { activity, setActivity } = useContext(ActivityContext);
@@ -37,7 +37,7 @@ export default function CreerUnReportageStep2() {
             <div style={{ marginTop: '16px' }}>
                 <ContentEditor
                     content={activity.data?.content}
-                    setContent={(content) => setActivity({ ...activity, data: { ...activity.data, content }})}
+                    setContent={(content) => setActivity({ ...activity, data: { ...activity.data, content } })}
                     activityId={activity.id}
                 />
                 <div style={{ textAlign: 'right', marginTop: '16px' }}>
