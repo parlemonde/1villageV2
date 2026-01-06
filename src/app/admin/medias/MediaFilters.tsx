@@ -83,15 +83,17 @@ export function MediaFilters({
                 }}
             />
             <Select placeholder="Classes" options={classroomOptions} size="sm" value={classroom} onChange={setClassroom} />
-            <div className={styles['pelico-checkbox']} onClick={() => setIsPelico(!isPelico)}>
-                <Checkbox name={'isPelico'} label={<IconButton icon={Pelico} size="sm" variant="borderless" />} isChecked={isPelico} />
+            <div className={styles.iconsContainer}>
+                <div className={styles['pelico-checkbox']} onClick={() => setIsPelico(!isPelico)}>
+                    <Checkbox name={'isPelico'} label={<IconButton icon={Pelico} size="sm" variant="borderless" />} isChecked={isPelico} />
+                </div>
+                <Button
+                    label={<ReloadIcon width={18} height={18} style={{ minWidth: '24px' }} color={'var(--primary-color)'} />}
+                    size="md"
+                    variant="borderless"
+                    onClick={resetFilters}
+                />
             </div>
-            <Button
-                label={<ReloadIcon width={18} height={18} style={{ minWidth: '24px' }} color={'var(--primary-color)'} />}
-                size="md"
-                variant="borderless"
-                onClick={resetFilters}
-            />
         </div>
     );
 }

@@ -20,7 +20,7 @@ export function MediasGrid({ items, isLoading, resetFilters }: MediaGridProps) {
             <div className={styles.empty}>
                 <div className={styles.pelicoSearch}>
                     <p className={styles.text}>Oups ! Aucun contenu ne correspond à ta recherche</p>
-                    <PelicoSearch />
+                    <PelicoSearch className={styles.pelico} />
                 </div>
                 <Button className={styles.button} color="primary" label="Réinitialiser les filtres" onClick={resetFilters} />
             </div>
