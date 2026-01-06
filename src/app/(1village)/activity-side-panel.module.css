@@ -13,7 +13,21 @@
     height: 280px;
     max-height: 50vh;
     background-color: black;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-radius: 10px;
     overflow: hidden;
+    background-color: var(--primary-300);
+    padding: 10px;
+}
+
+.avatar {
+    background-color: var(--primary-300);
+    padding: 10px;
+    border-radius: 10px;   
+}
+
+.ficheProf {
+    background-color: transparent;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
 }
