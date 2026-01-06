@@ -134,31 +134,32 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
 
         setUpdateErrorMessage('');
         setIsUpdating(true);
-        try {
-            const classroomData = await prepareClassroomData();
-            if (!classroomData || !classroom) {
-                return;
-            }
-
-            const [updatedClassroom] = await updateClassroom({
-                teacherId: user.id,
-                id: classroom.id,
-                level: classroomData.currentLevel,
-                name: classroomData.currentSchoolName,
-                address: classroomData.currentAddress,
-                countryCode: classroomData.currentCountry,
-                coordinates: {
-                    latitude: classroomData.currentCoordinates.latitude,
-                    longitude: classroomData.currentCoordinates.longitude,
-                },
-            });
-            updateClassroomAndInvalidateContext(updatedClassroom);
-            handleClose();
-        } catch {
-            setUpdateErrorMessage('Une erreur est survenue lors de la mise à jour de votre classe');
-        } finally {
-            setIsUpdating(false);
+        const classroomData = await prepareClassroomData();
+        if (!classroomData || !classroom) {
+            return;
         }
+
+        const { data, error } = await updateClassroom({
+            teacherId: user.id,
+            id: classroom.id,
+            level: classroomData.currentLevel,
+            name: classroomData.currentSchoolName,
+            address: classroomData.currentAddress,
+            countryCode: classroomData.currentCountry,
+            coordinates: {
+                latitude: classroomData.currentCoordinates.latitude,
+                longitude: classroomData.currentCoordinates.longitude,
+            },
+        });
+        if (error) {
+            setUpdateErrorMessage(error.message);
+            setIsUpdating(false);
+            return;
+        }
+
+        const updatedClassroom = data![0];
+        updateClassroomAndInvalidateContext(updatedClassroom);
+        handleClose();
     };
 
     return (

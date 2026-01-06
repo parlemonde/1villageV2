@@ -12,7 +12,7 @@ import type { User, UserRole } from '@server/database/schemas/users';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import styles from './user-form.module.css';
+import styles from '../../manage.module.css';
 
 const ROLE_LABELS: Record<UserRole, string> = {
     admin: 'Admin',

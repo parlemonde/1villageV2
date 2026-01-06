@@ -7,6 +7,7 @@ import styles from './country-select.module.css';
 
 interface CountrySelectProps extends Omit<SelectProps, 'options'> {
     onChange: (country: string) => void;
+    filter?: (country: string) => boolean;
 }
 
 export function CountrySelect(props: CountrySelectProps) {
@@ -20,9 +21,12 @@ export function CountrySelect(props: CountrySelectProps) {
         isFullWidth = false,
         placeholder = 'Choisir un pays',
         disabled = false,
+        filter,
     } = props;
 
-    const countryOptions = Object.entries(COUNTRIES).map(([key, value]) => ({
+    const filteredCountries = filter ? Object.entries(COUNTRIES).filter(([key, _]) => key && filter(key)) : Object.entries(COUNTRIES);
+
+    const countryOptions = filteredCountries.map(([key, value]) => ({
         label: (
             <div className={styles.countryOptions}>
                 <span className={styles.countryFlag}>
