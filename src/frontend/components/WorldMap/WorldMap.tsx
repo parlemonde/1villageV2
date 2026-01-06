@@ -16,7 +16,6 @@ interface WorldMapProps {
 }
 
 const WorldMap = ({ activity = null }: WorldMapProps) => {
-    //const [map, setMap] = useState<Map | null>(null);
     //A ref to store the MapLibre instance (persists across renders)
     const mapRef = useRef<Map | null>(null);
     const map: Map | null = mapRef.current;
@@ -40,7 +39,6 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         const { map, dispose } = initWorldMap(canvas);
         //Store the Map persistently accross renders
         mapRef.current = map;
-        //setMap(map);
         let animationFrame: number | null = null;
         const render = () => {
             let newLng = map.getCenter().lng - 90;
@@ -105,7 +103,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [classroomsMap, activity]);
+    }, [classroomsMap, activity, user.id]);
 
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
