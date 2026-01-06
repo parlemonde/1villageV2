@@ -35,6 +35,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const isConfirmDisabled = isUpdating || hasValidationErrors;
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentLevel(classroom?.level || '');
         setCurrentSchoolName(classroom?.name || '');
         setCurrentAddress(classroom?.address || '');
