@@ -236,6 +236,8 @@
     .leftIcon svg + span {
         display: none;
     }
+.inlineFlex {
+    display: inline-flex;
 }
 
 @media (min-width: 850px) {

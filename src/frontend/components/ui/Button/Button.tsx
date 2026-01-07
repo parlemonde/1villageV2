@@ -77,7 +77,7 @@ const ButtonWithRef = (
             ) : (
                 leftIcon
             )}
-            <span className={classNames({ [styles[`hideLabelOnMobile`]]: hideLabelOnMobile })}>{label}</span>
+            <span className={classNames(styles.inlineFlex, { [styles[`hideLabelOnMobile`]]: hideLabelOnMobile })}>{label}</span>
             {!isLoading && rightIcon}
         </>
     );
