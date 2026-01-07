@@ -17,6 +17,10 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+.button > span {
+    display: inline-flex;
+}
+
 .variant-contained {
     box-shadow:
         rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
@@ -226,6 +230,12 @@
 
 .isTabletUpOnly {
     display: none;
+}
+
+@media (max-width: 850px) {
+    .leftIcon svg + span {
+        display: none;
+    }
 }
 
 @media (min-width: 850px) {
