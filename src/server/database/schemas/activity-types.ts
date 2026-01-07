@@ -34,7 +34,6 @@ type HintActivity = {
     } | null;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity;
 type ReportActivity = {
     type: 'reportage';
     data: {
@@ -44,7 +43,7 @@ type ReportActivity = {
     } | null;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | ReportActivity;
+export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
