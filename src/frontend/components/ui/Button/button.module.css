@@ -232,10 +232,6 @@
     display: none;
 }
 
-@media (max-width: 850px) {
-    .leftIcon svg + span {
-        display: none;
-    }
 .inlineFlex {
     display: inline-flex;
 }
@@ -251,7 +247,6 @@
 
 @media (max-width: 850px) {
     .hideLabelOnMobile {
-        display: none;
-        
+        display: none !important;
     }
 }

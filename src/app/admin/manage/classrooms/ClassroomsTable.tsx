@@ -154,6 +154,6 @@ export function ClassroomsTable() {
                     </p>
                 )}
             </Modal>
-        </div>
+        </>
     );
 }

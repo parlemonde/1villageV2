@@ -35,8 +35,13 @@ body:has(.adminLayout) {
 
 .adminMainContent {
     width: 100%;
+    max-width: calc(100% - 320px - 16px); /* 320px (sidebar width) + 16px (margin) */
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 2px 0 rgba(186, 186, 186, 0.8);
     margin-bottom: 16px;
+
+    @media (max-width: 850px) {
+        max-width: 100%;
+    }
 }
