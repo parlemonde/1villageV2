@@ -1,6 +1,5 @@
 'use client';
 
-import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import { LngLatBounds, type Map } from 'maplibre-gl';
@@ -25,7 +24,6 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         map?.stop();
     });
     const { classroomsMap } = useContext(VillageContext);
-    const { user } = useContext(UserContext);
 
     useEffect(() => {
         //Prevent creating the map more than once
