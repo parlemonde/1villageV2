@@ -83,7 +83,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
 
         const markers = Object.values(classroomsMap)
             .filter((classroom) => {
-                return activity === null || classroom?.classroom.id === activity?.classroomId || classroom?.classroom.teacherId === user.id;
+                return activity === null || classroom?.classroom.teacherId === activity.userId;
             })
             .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
         markers.forEach((marker) => {
@@ -103,7 +103,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [classroomsMap, activity, user.id]);
+    }, [classroomsMap, activity]);
 
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
