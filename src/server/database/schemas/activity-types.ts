@@ -21,7 +21,9 @@ type GameActivity = {
 type PuzzleActivity = {
     type: 'enigme';
     data: {
-        text: string;
+        defaultPuzzle?: string;
+        customPuzzle?: string;
+        content?: AnyContent[];
     } | null;
 };
 
