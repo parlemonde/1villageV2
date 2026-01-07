@@ -11,6 +11,7 @@ import type { ActivityContentCardProps } from './activity-card.types';
 import { ActivityHeader } from '../ActivityHeader';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
+import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
     return null;
@@ -21,6 +22,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     indice: HintCard,
     jeu: EmptyContentCard,
     enigme: EmptyContentCard,
+    reportage: ReportCard,
 };
 
 interface ActivityCardProps {
