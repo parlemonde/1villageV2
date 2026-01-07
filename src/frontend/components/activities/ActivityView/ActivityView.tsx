@@ -14,12 +14,13 @@ import { FreeContentView } from './views/FreeContentView';
 import { GameView } from './views/GameView';
 import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
+import { PuzzleView } from './views/PuzzleView';
 import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
     jeu: GameView,
-    enigme: () => null,
+    enigme: PuzzleView,
     indice: HintView,
     reportage: ReportView,
     mascotte: MascotView,
