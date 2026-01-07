@@ -33,7 +33,7 @@ export function ClassroomsTable() {
     });
 
     return (
-        <div>
+        <>
             <Input
                 iconAdornment={<MagnifyingGlassIcon style={{ width: '20px', height: 'auto' }} fill="currentColor" />}
                 iconAdornmentProps={{
@@ -154,6 +154,6 @@ export function ClassroomsTable() {
                     </p>
                 )}
             </Modal>
-        </div>
+        </>
     );
 }

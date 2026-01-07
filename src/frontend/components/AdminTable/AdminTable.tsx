@@ -104,164 +104,166 @@ export const AdminTable = <T,>({ columns, data, isLoading = false, emptyState }:
     }
 
     return (
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    {columns.map((column) =>
-                        column.isSortable ? (
-                            <th
-                                key={column.id}
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => {
-                                    if (sortColumn === column.id) {
-                                        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-                                    } else {
-                                        setSortColumn(column.id);
-                                        setSortDirection('asc');
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
+        <div className={styles.tableContainer}>
+            <table className={styles.table}>
+                <thead>
+                    <tr>
+                        {columns.map((column) =>
+                            column.isSortable ? (
+                                <th
+                                    key={column.id}
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => {
                                         if (sortColumn === column.id) {
                                             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
                                         } else {
                                             setSortColumn(column.id);
                                             setSortDirection('asc');
                                         }
-                                    }
-                                }}
-                                className={classNames(styles.headerCell, styles.sortableHeaderCell)}
-                                align={column.align || 'left'}
-                                style={{ width: column.width, minWidth: column.width }}
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            if (sortColumn === column.id) {
+                                                setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+                                            } else {
+                                                setSortColumn(column.id);
+                                                setSortDirection('asc');
+                                            }
+                                        }
+                                    }}
+                                    className={classNames(styles.headerCell, styles.sortableHeaderCell)}
+                                    align={column.align || 'left'}
+                                    style={{ width: column.width, minWidth: column.width }}
+                                >
+                                    <div className={styles.headerCellContent}>
+                                        <span>{column.header}</span>
+                                        {sortColumn === column.id && sortDirection === 'desc' ? (
+                                            <ArrowDownIcon />
+                                        ) : (
+                                            <ArrowUpIcon className={classNames({ [styles.hiddenSortIcon]: sortColumn !== column.id })} />
+                                        )}
+                                    </div>
+                                </th>
+                            ) : (
+                                <th
+                                    key={column.id}
+                                    className={classNames(styles.headerCell)}
+                                    align={column.align || 'left'}
+                                    style={{ width: column.width, minWidth: column.width }}
+                                >
+                                    {column.header}
+                                </th>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {isLoading ? (
+                        <tr>
+                            <td
+                                className={classNames(styles.cell, styles.lastCell)}
+                                colSpan={columns.length}
+                                align="center"
+                                style={{ padding: '32px 0' }}
                             >
-                                <div className={styles.headerCellContent}>
-                                    <span>{column.header}</span>
-                                    {sortColumn === column.id && sortDirection === 'desc' ? (
-                                        <ArrowDownIcon />
-                                    ) : (
-                                        <ArrowUpIcon className={classNames({ [styles.hiddenSortIcon]: sortColumn !== column.id })} />
-                                    )}
+                                <CircularProgress size={25} />
+                            </td>
+                        </tr>
+                    ) : data.length === 0 ? (
+                        <tr>
+                            <td
+                                className={classNames(styles.cell, styles.lastCell)}
+                                colSpan={columns.length}
+                                align="center"
+                                style={{ padding: '32px 0' }}
+                            >
+                                <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                                    <PelicoSearchIcon width={100} height={100} />
+                                    <span style={{ fontSize: '16px', fontWeight: 500, color: 'var(--primary-color)' }}>
+                                        {emptyState || 'Cette table est vide !'}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    ) : (
+                        paginatedData.map((row, index) => (
+                            <tr key={index} className={styles.row}>
+                                {columns.map((column) => (
+                                    <td
+                                        key={column.id}
+                                        className={classNames(styles.cell, {
+                                            [styles.lastCell]: index === data.length - 1,
+                                        })}
+                                        align={column.align || 'left'}
+                                        style={{ padding: column.cellPadding }}
+                                    >
+                                        <CellAccessor column={column} row={row} index={index} />
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
+                    )}
+                    {data.length > 0 && !isLoading && (
+                        <tr style={{ backgroundColor: 'white' }}>
+                            <th colSpan={columns.length} align="right">
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                    <span style={{ marginRight: 16 }}>Lignes par pages:</span>
+                                    <Select
+                                        value={`${pageSize}`}
+                                        onChange={(value) => {
+                                            setPageSize(Number(value));
+                                        }}
+                                        options={[
+                                            { label: '5', value: '5' },
+                                            { label: '10', value: '10' },
+                                            { label: '25', value: '25' },
+                                            { label: '50', value: '50' },
+                                            { label: '100', value: '100' },
+                                        ]}
+                                        style={{
+                                            borderTop: 'none',
+                                            borderLeft: 'none',
+                                            borderRight: 'none',
+                                            borderRadius: 0,
+                                            padding: '4px',
+                                            fontWeight: 400,
+                                            fontSize: '14px',
+                                            lineHeight: '20px',
+                                            width: '60px',
+                                        }}
+                                    />
+                                    <span style={{ margin: '0 16px' }}>
+                                        {total === 0 ? 0 : (pageIndex - 1) * pageSize + 1}-{Math.min(total, pageIndex * pageSize)} sur {total}
+                                    </span>
+                                    <IconButton
+                                        marginY="xs"
+                                        marginLeft="sm"
+                                        aria-label="previous"
+                                        onClick={() => {
+                                            setPageIndex(pageIndex - 1);
+                                        }}
+                                        variant="borderless"
+                                        disabled={pageIndex === 1}
+                                        icon={ChevronLeftIcon}
+                                    ></IconButton>
+                                    <IconButton
+                                        marginY="xs"
+                                        marginRight="sm"
+                                        aria-label="next"
+                                        onClick={() => {
+                                            setPageIndex(pageIndex + 1);
+                                        }}
+                                        disabled={pageIndex * pageSize >= total}
+                                        variant="borderless"
+                                        icon={ChevronRightIcon}
+                                    ></IconButton>
                                 </div>
                             </th>
-                        ) : (
-                            <th
-                                key={column.id}
-                                className={classNames(styles.headerCell)}
-                                align={column.align || 'left'}
-                                style={{ width: column.width, minWidth: column.width }}
-                            >
-                                {column.header}
-                            </th>
-                        ),
-                    )}
-                </tr>
-            </thead>
-            <tbody>
-                {isLoading ? (
-                    <tr>
-                        <td
-                            className={classNames(styles.cell, styles.lastCell)}
-                            colSpan={columns.length}
-                            align="center"
-                            style={{ padding: '32px 0' }}
-                        >
-                            <CircularProgress size={25} />
-                        </td>
-                    </tr>
-                ) : data.length === 0 ? (
-                    <tr>
-                        <td
-                            className={classNames(styles.cell, styles.lastCell)}
-                            colSpan={columns.length}
-                            align="center"
-                            style={{ padding: '32px 0' }}
-                        >
-                            <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-                                <PelicoSearchIcon width={100} height={100} />
-                                <span style={{ fontSize: '16px', fontWeight: 500, color: 'var(--primary-color)' }}>
-                                    {emptyState || 'Cette table est vide !'}
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                ) : (
-                    paginatedData.map((row, index) => (
-                        <tr key={index} className={styles.row}>
-                            {columns.map((column) => (
-                                <td
-                                    key={column.id}
-                                    className={classNames(styles.cell, {
-                                        [styles.lastCell]: index === data.length - 1,
-                                    })}
-                                    align={column.align || 'left'}
-                                    style={{ padding: column.cellPadding }}
-                                >
-                                    <CellAccessor column={column} row={row} index={index} />
-                                </td>
-                            ))}
                         </tr>
-                    ))
-                )}
-                {data.length > 0 && !isLoading && (
-                    <tr style={{ backgroundColor: 'white' }}>
-                        <th colSpan={columns.length} align="right">
-                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                                <span style={{ marginRight: 16 }}>Lignes par pages:</span>
-                                <Select
-                                    value={`${pageSize}`}
-                                    onChange={(value) => {
-                                        setPageSize(Number(value));
-                                    }}
-                                    options={[
-                                        { label: '5', value: '5' },
-                                        { label: '10', value: '10' },
-                                        { label: '25', value: '25' },
-                                        { label: '50', value: '50' },
-                                        { label: '100', value: '100' },
-                                    ]}
-                                    style={{
-                                        borderTop: 'none',
-                                        borderLeft: 'none',
-                                        borderRight: 'none',
-                                        borderRadius: 0,
-                                        padding: '4px',
-                                        fontWeight: 400,
-                                        fontSize: '14px',
-                                        lineHeight: '20px',
-                                        width: '60px',
-                                    }}
-                                />
-                                <span style={{ margin: '0 16px' }}>
-                                    {total === 0 ? 0 : (pageIndex - 1) * pageSize + 1}-{Math.min(total, pageIndex * pageSize)} sur {total}
-                                </span>
-                                <IconButton
-                                    marginY="xs"
-                                    marginLeft="sm"
-                                    aria-label="previous"
-                                    onClick={() => {
-                                        setPageIndex(pageIndex - 1);
-                                    }}
-                                    variant="borderless"
-                                    disabled={pageIndex === 1}
-                                    icon={ChevronLeftIcon}
-                                ></IconButton>
-                                <IconButton
-                                    marginY="xs"
-                                    marginRight="sm"
-                                    aria-label="next"
-                                    onClick={() => {
-                                        setPageIndex(pageIndex + 1);
-                                    }}
-                                    disabled={pageIndex * pageSize >= total}
-                                    variant="borderless"
-                                    icon={ChevronRightIcon}
-                                ></IconButton>
-                            </div>
-                        </th>
-                    </tr>
-                )}
-            </tbody>
-        </table>
+                    )}
+                </tbody>
+            </table>
+        </div>
     );
 };

@@ -1,19 +1,23 @@
+.tableContainer {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+}
 .table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0px;
-    table-layout: fixed;
     margin: 16px 0;
-    width: 100%;
     box-sizing: border-box;
     font-size: 15px;
     font-family: var(--font-roboto), Arial, sans-serif;
     font-weight: 400;
+    display: table;
 }
 .headerCell {
     font-weight: 700;
     padding: 8px;
-    max-width: 0;
     border-top: 1px solid var(--grey-300);
     border-bottom: 1px solid var(--primary-500);
     user-select: none;

@@ -55,6 +55,7 @@ export const Header = () => {
                                 size="md"
                                 isUpperCase={false}
                                 label="Mes ressources"
+                                hideLabelOnMobile
                                 as="a"
                                 href="https://prof.parlemonde.org/les-ressources/"
                             />
@@ -65,6 +66,7 @@ export const Header = () => {
                                 size="md"
                                 isUpperCase={false}
                                 label="Ma messagerie"
+                                hideLabelOnMobile
                                 as="a"
                                 href="https://prof.parlemonde.org/la-salle/"
                             />
