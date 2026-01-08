@@ -22,12 +22,12 @@
 .avatar {
     background-color: var(--primary-300);
     padding: 10px;
-    border-radius: 10px;   
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 .ficheProf {
     background-color: transparent;
-    padding: 10px;
     border-radius: 10px;
     margin-top: 10px;
 }

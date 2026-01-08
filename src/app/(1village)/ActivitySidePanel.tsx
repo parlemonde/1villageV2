@@ -27,23 +27,23 @@ export const ActivitySidePanel = () => {
 
     return (
         <div className={styles.activitySidePanel}>
-            <div className={styles.avatar}>{activity && <ActivityView activity={activity} showDetails={false} />}</div>
-
-            {isMediator && (
-                <div className={styles.ficheProf}>
-                    <div style={{ width: '100%', textAlign: 'center' }}>
-                        <Button
-                            as="a"
-                            href={`https://prof.parlemonde.org/les-professeurs-partenaires/${formatPseudo}/profile`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ overflow: 'hidden', marginBottom: '10px', textAlign: 'center' }}
-                            variant="outlined"
-                            label="Voir la fiche du professeur"
-                        ></Button>
+            <div className={styles.avatar}>{activity && <ActivityView activity={activity} showDetails={false} />}
+                {isMediator && (
+                    <div className={styles.ficheProf}>
+                        <div style={{ width: '100%', textAlign: 'center' }}>
+                            <Button
+                                as="a"
+                                href={`https://prof.parlemonde.org/les-professeurs-partenaires/${formatPseudo}/profile`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{ overflow: 'hidden', marginBottom: '10px', textAlign: 'center' }}
+                                variant="outlined"
+                                label="Voir la fiche du professeur"
+                            ></Button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <div className={styles.WorldMapContainer}>
                 <WorldMap activity={activity} />
