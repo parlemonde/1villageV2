@@ -77,13 +77,15 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         mapRef.current?.once('load', () => {
             //Auto zoom & pan to fit all markers
             if (activity !== null && !bounds.isEmpty()) {
-                map.setMaxZoom(10);     //Zoom at city level, not street
+                //Zoom at city level, not street
+                map.setMaxZoom(10);
                 map.fitBounds(bounds, { padding: 60, duration: 1000 });
             };
         });
 
         mapRef.current?.once('idle', () => {
-            map.setMaxZoom(18);    //Restore max zoom after fitBounds
+            //Restore max zoom after fitBounds
+            map.setMaxZoom(18);    
         });
 
         const markers = Object.values(classroomsMap)
