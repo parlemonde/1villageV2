@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 'use client';
 
 import { WorldMap } from '@frontend/components/WorldMap';
@@ -13,16 +12,14 @@ import useSWR from 'swr';
 import styles from './activity-side-panel.module.css';
 
 export const ActivitySidePanel = () => {
-    //const { user } = useContext(UserContext);
     const pathname = usePathname();
     const params = useParams();
     const activityId = Number(params?.id);
 
     const { data: activity } = useSWR<Activity>(activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
-    debugger;
     const formatPseudo = activityUser?.name.replace(' ', '-');
-    const isMediator = activityUser?.role === 'admin' || activityUser?.role === 'mediator';
+    const showTeacherSheet = activityUser?.role === 'teacher';
 
     const isOnActivityPage = pathname.startsWith('/activities/');
 
@@ -32,7 +29,7 @@ export const ActivitySidePanel = () => {
         <div className={styles.activitySidePanel}>
             <div className={styles.avatar}>
                 {activity && <ActivityView activity={activity} showDetails={false} />}
-                {isMediator && (
+                {showTeacherSheet && (
                     <div className={styles.ficheProf}>
                         <div style={{ width: '100%', textAlign: 'center' }}>
                             <Button
