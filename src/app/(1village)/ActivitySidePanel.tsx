@@ -1,25 +1,28 @@
+/* eslint-disable no-debugger */
 'use client';
 
 import { WorldMap } from '@frontend/components/WorldMap';
 import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
-import { UserContext } from '@frontend/contexts/userContext';
+import { jsonFetcher } from '@lib/json-fetcher';
+import type { Activity } from '@server/database/schemas/activities';
+import type { User } from '@server/database/schemas/users';
 import { useParams, usePathname } from 'next/navigation';
-import { useContext } from 'react';
 import useSWR from 'swr';
 
 import styles from './activity-side-panel.module.css';
 
 export const ActivitySidePanel = () => {
-    const { user } = useContext(UserContext);
+    //const { user } = useContext(UserContext);
     const pathname = usePathname();
     const params = useParams();
     const activityId = Number(params?.id);
-    const formatPseudo = user.name.replace(' ', '-');
 
-    const isMediator = user?.role === 'admin' || user?.role === 'mediator';
-
-    const { data: activity } = useSWR(activityId ? `/api/activity/${activityId}` : null, (url) => fetch(url).then((res) => res.json()));
+    const { data: activity } = useSWR<Activity>(activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
+    const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
+    debugger;
+    const formatPseudo = activityUser?.name.replace(' ', '-');
+    const isMediator = activityUser?.role === 'admin' || activityUser?.role === 'mediator';
 
     const isOnActivityPage = pathname.startsWith('/activities/');
 
@@ -28,7 +31,7 @@ export const ActivitySidePanel = () => {
     return (
         <div className={styles.activitySidePanel}>
             <div className={styles.avatar}>
-                activity && <ActivityView activity={activity} showDetails={false} />
+                {activity && <ActivityView activity={activity} showDetails={false} />}
                 {isMediator && (
                     <div className={styles.ficheProf}>
                         <div style={{ width: '100%', textAlign: 'center' }}>

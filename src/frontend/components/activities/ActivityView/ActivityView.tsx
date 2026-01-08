@@ -21,6 +21,9 @@ interface ActivityViewProps {
 }
 export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps) => {
     const { usersMap, classroomsMap } = useContext(VillageContext);
+
+    if (!activity) return null;
+
     const ContentView = CONTENT_VIEWS[activity.type];
     return (
         <>
