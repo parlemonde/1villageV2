@@ -27,7 +27,9 @@ export const ActivitySidePanel = () => {
 
     return (
         <div className={styles.activitySidePanel}>
-            <div className={styles.avatar}>{activity && <ActivityView activity={activity} showDetails={false} />}
+            <div className={styles.avatar}>{
+                activity && <ActivityView activity={activity} showDetails={false} />
+            }
                 {isMediator && (
                     <div className={styles.ficheProf}>
                         <div style={{ width: '100%', textAlign: 'center' }}>

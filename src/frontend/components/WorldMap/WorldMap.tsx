@@ -80,12 +80,12 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
                 //Zoom at city level, not street
                 map.setMaxZoom(10);
                 map.fitBounds(bounds, { padding: 60, duration: 1000 });
-            };
+            }
         });
 
         mapRef.current?.once('idle', () => {
             //Restore max zoom after fitBounds
-            map.setMaxZoom(18);    
+            map.setMaxZoom(18);
         });
 
         const markers = Object.values(classroomsMap)
