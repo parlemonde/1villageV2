@@ -9,6 +9,7 @@ export const ACTIVITY_NAMES: Record<ActivityType, string> = {
     jeu: 'Jeu',
     enigme: 'Énigme',
     indice: 'Indice',
+    mascotte: 'Mascotte',
 };
 
 export const ACTIVITY_LABELS: Record<ActivityType, string> = {
@@ -16,6 +17,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     jeu: 'Créer un jeu',
     enigme: 'Créer une énigme',
     indice: 'Créer un indice',
+    mascotte: 'Créer la mascotte',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -23,6 +25,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     jeu: 'lancé un jeu',
     enigme: 'créé une énigme',
     indice: 'créé un indice',
+    mascotte: 'créé la mascotte',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -30,6 +33,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     jeu: GameIcon,
     enigme: EnigmeIcon,
     indice: HintIcon,
+    mascotte: null,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -37,6 +41,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu',
     enigme: '/creer-une-enigme',
     indice: '/creer-un-indice',
+    mascotte: '/creer-la-mascotte',
 };
 
 export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
@@ -44,4 +49,5 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu/3',
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
+    mascotte: '/creer-la-mascotte/5',
 };

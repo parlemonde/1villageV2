@@ -1,0 +1,48 @@
+.line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.paragraph {
+    margin-bottom: 32px;
+}
+
+.imageUploadForm {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 32px;
+}
+
+.imagePreview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 30%;
+}
+
+.description {
+    width: 70%;
+}
+
+.image {
+    cursor: pointer;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.svg {
+    width: 150px;
+    height: 150px;
+    background: var(--grey-100);
+    padding: 48px;
+}
+
+.field {
+    gap: 8px;
+}
