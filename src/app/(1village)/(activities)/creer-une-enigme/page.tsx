@@ -36,7 +36,7 @@ export default function CreerUneEnigmePage() {
                         className={styles.themeLink}
                         onClick={() => {
                             onCreateActivity('enigme', isPelico, {
-                                defaultPuzzle: theme.name,
+                                defaultTheme: theme.name,
                             });
                             router.push('/creer-une-enigme/1');
                         }}
