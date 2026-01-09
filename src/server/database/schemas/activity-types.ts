@@ -58,8 +58,8 @@ export type GameActivity<T = Game> = {
 export type PuzzleActivity = {
     type: 'enigme';
     data: {
-        defaultPuzzle?: string;
-        customPuzzle?: string;
+        defaultTheme?: string;
+        customTheme?: string;
         content?: AnyContent[];
     } | null;
 };
