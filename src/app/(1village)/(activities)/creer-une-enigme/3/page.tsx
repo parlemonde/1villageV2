@@ -21,7 +21,7 @@ export default function CreerUneEnigmeStep3() {
         return null;
     }
 
-    const puzzle = activity.data?.defaultPuzzle || activity.data?.customPuzzle;
+    const puzzle = activity.data?.defaultTheme || activity.data?.customTheme;
     const isFirstStepDone = !!puzzle;
     const isSecondStepDone = (activity.data?.content || []).length > 0;
     const isValid = isFirstStepDone && isSecondStepDone;

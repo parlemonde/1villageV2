@@ -9,7 +9,7 @@ export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
     }
     const firstImageUrl = (activity.data?.content || []).find((content) => content.type === 'image')?.imageUrl;
     const firstHtmlText = (activity.data?.content || []).find((content) => content.type === 'html')?.html;
-    const puzzle = activity.data?.defaultPuzzle || activity.data?.customPuzzle;
+    const puzzle = activity.data?.defaultTheme || activity.data?.customTheme;
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'stretch' }}>

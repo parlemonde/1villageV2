@@ -44,14 +44,14 @@ export default function CreerUneEnigmeStep1() {
         return null;
     }
 
-    const defaultPuzzle = activity.data?.defaultPuzzle;
-    const useCustomPuzzle = !defaultPuzzle;
-    const puzzle = useCustomPuzzle ? activity.data?.customPuzzle : defaultPuzzle;
-    const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultPuzzle === activity.data?.defaultPuzzle);
+    const defaultTheme = activity.data?.defaultTheme;
+    const useCustomTheme = !defaultTheme;
+    const puzzle = useCustomTheme ? activity.data?.customTheme : defaultTheme;
+    const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
 
     const selectOptions = DEFAULT_PUZZLES.map((puzzle) => ({ label: puzzle.name, value: puzzle.name }));
-    if (defaultPuzzle && !selectOptions.some((option) => option.value === defaultPuzzle)) {
-        selectOptions.push({ label: defaultPuzzle, value: defaultPuzzle });
+    if (defaultTheme && !selectOptions.some((option) => option.value === defaultTheme)) {
+        selectOptions.push({ label: defaultTheme, value: defaultTheme });
     }
     selectOptions.push({ label: 'Autre thème', value: CUSTOM_PUZZLE_VALUE });
 
@@ -73,28 +73,28 @@ export default function CreerUneEnigmeStep1() {
             </Title>
             <Select
                 options={selectOptions}
-                value={activity.data?.defaultPuzzle || CUSTOM_PUZZLE_VALUE}
+                value={activity.data?.defaultTheme || CUSTOM_PUZZLE_VALUE}
                 onChange={(newValue) => {
                     if (newValue === CUSTOM_PUZZLE_VALUE) {
-                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultPuzzle: undefined, customPuzzle: '' } });
+                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: undefined, customTheme: '' } });
                     } else {
-                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultPuzzle: newValue } });
+                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: newValue } });
                     }
                 }}
             />
             <Title variant="h2" marginTop="lg" marginBottom="md">
-                {useCustomPuzzle ? "Présenter un autre type d'énigme :" : <>Énigmes des pélicopains sur ce thème :</>}
+                {useCustomTheme ? "Présenter un autre type d'énigme :" : <>Énigmes des pélicopains sur ce thème :</>}
             </Title>
-            {useCustomPuzzle ? (
+            {useCustomTheme ? (
                 <>
                     <p>Indiquez quel autre type d&apos;énigme vous souhaitez présenter :</p>
                     <Input
                         placeholder="Devinez..."
                         isFullWidth
                         marginY="md"
-                        value={activity.data?.customPuzzle || ''}
+                        value={activity.data?.customTheme || ''}
                         onChange={(e) => {
-                            setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customPuzzle: e.target.value } });
+                            setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
                         }}
                     />
                 </>
