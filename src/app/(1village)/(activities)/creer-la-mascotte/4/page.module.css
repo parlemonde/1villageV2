@@ -1,0 +1,17 @@
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.checkboxContainer {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-right: 20%;
+    text-align: right;
+    
+    @media (max-width: 1150px) {
+        text-align: left;
+        margin: 16px 0;
+    }
+}
