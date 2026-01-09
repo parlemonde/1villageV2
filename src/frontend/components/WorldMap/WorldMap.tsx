@@ -3,7 +3,7 @@
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import { LngLatBounds, type Map } from 'maplibre-gl';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
 import { useFullScreen } from './use-full-screen';
@@ -12,6 +12,17 @@ import styles from './world-map.module.css';
 
 interface WorldMapProps {
     activity?: Activity | null;
+}
+
+function fitToBounds(map: maplibregl.Map, activity: any, bounds: maplibregl.LngLatBounds) {
+    // Auto zoom & pan to fit all markers
+    debugger;
+    if (activity !== null && !bounds.isEmpty()) {
+        // Zoom at city level, not street
+        debugger;
+        map.setMaxZoom(10);
+        map.fitBounds(bounds, { padding: 60, duration: 1000 });
+    }
 }
 
 const WorldMap = ({ activity = null }: WorldMapProps) => {
@@ -74,20 +85,6 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
 
         const bounds = new LngLatBounds();
 
-        mapRef.current?.once('load', () => {
-            //Auto zoom & pan to fit all markers
-            if (activity !== null && !bounds.isEmpty()) {
-                //Zoom at city level, not street
-                map.setMaxZoom(10);
-                map.fitBounds(bounds, { padding: 60, duration: 1000 });
-            }
-        });
-
-        mapRef.current?.once('idle', () => {
-            //Restore max zoom after fitBounds
-            map.setMaxZoom(18);
-        });
-
         const markers = Object.values(classroomsMap)
             .filter((classroom) => {
                 return activity === null || classroom?.classroom.teacherId === activity.userId;
@@ -105,6 +102,20 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
                 });
             }),
         );
+
+        mapRef.current?.once('load', () => {
+            debugger;
+            fitToBounds(map, activity, bounds);
+        });
+
+        debugger;
+        fitToBounds(map, activity, bounds);
+
+        mapRef.current?.once('idle', () => {
+            //Restore max zoom after fitBounds
+            debugger;
+            map.setMaxZoom(18);
+        });
 
         return () => {
             markers.forEach((marker) => marker.dispose());
