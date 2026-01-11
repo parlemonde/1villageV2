@@ -15,9 +15,10 @@ import { useMemo, useContext, useState } from 'react';
 
 export default function FreeContentStep2() {
     const { user: currentUser } = useContext(UserContext);
-    const { activity, setActivity } = useContext(ActivityContext);
+    const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
+    const isPelico = currentUser.role === 'admin' || currentUser.role === 'mediator';
     const currentDate = useMemo(() => new Date(), []);
 
     if (!activity || activity.type !== 'libre') {
@@ -96,10 +97,12 @@ export default function FreeContentStep2() {
                     />
                 )}
                 <UploadImageModal
+                    getActivityId={getOrCreateDraft}
                     isOpen={isUploadImageModalOpen}
                     onClose={() => setIsUploadImageModalOpen(false)}
                     initialImageUrl={activity.data?.cardImageUrl}
                     onNewImage={(imageUrl) => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: imageUrl } })}
+                    isPelicoImage={isPelico}
                 />
             </div>
             {activity.data?.cardImageUrl && (

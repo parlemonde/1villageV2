@@ -6,7 +6,7 @@ import { activities } from '@server/database/schemas/activities';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, isNull } from 'drizzle-orm';
 
-export const saveDraft = async (activity: Partial<Activity>): Promise<number | undefined> => {
+export const saveDraft = async (activity: Partial<Activity>): Promise<number> => {
     const user = await getCurrentUser();
     if (!user) {
         throw new Error('Unauthorized');
