@@ -51,7 +51,7 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
             </Link>
         ) : (
             <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <Image loader={({ src }) => src} alt="Avatar" src={imgSrc} width={dimension} height={dimension} />
+                <Image unoptimized={imgSrc.startsWith('https')} alt="Avatar" src={imgSrc} width={dimension} height={dimension} />
             </div>
         );
     }

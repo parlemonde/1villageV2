@@ -36,7 +36,6 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                 {item.mediaUrl && (
                     <div className={styles['card-image-container']}>
                         <Image
-                            loader={({ src }) => src}
                             fill
                             unoptimized={mediaUri.startsWith('https')}
                             className={styles['card-image']}

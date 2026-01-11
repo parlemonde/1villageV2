@@ -13,7 +13,7 @@ interface UploadDocumentModalProps {
     isPelicoDocument?: boolean;
     onClose: () => void;
     onNewDocument?: (documentUrl: string) => void;
-    getActivityId: () => Promise<number>;
+    getActivityId: () => Promise<number | null>;
 }
 
 const isValidDocumentUrl = (url: string) => {

@@ -19,7 +19,7 @@ interface UploadVideoModalProps {
     isPelicoVideo?: boolean;
     onClose: () => void;
     onNewVideo?: (videoUrl: string) => void;
-    getActivityId: () => Promise<number>;
+    getActivityId: () => Promise<number | null>;
 }
 export const UploadVideoModal = ({
     isOpen,

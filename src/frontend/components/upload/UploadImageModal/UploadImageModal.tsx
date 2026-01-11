@@ -14,7 +14,7 @@ interface UploadImageModalProps {
     isPelicoImage?: boolean;
     onClose: () => void;
     onNewImage?: (imageUrl: string) => void;
-    getActivityId: () => Promise<number>;
+    getActivityId: () => Promise<number | null>;
 }
 
 export const UploadImageModal = ({ isOpen, initialImageUrl = null, isPelicoImage, onClose, onNewImage, getActivityId }: UploadImageModalProps) => {

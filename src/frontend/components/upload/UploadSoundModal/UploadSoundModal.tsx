@@ -14,7 +14,7 @@ interface UploadSoundModalProps {
     isPelicoSound?: boolean;
     onClose: () => void;
     onNewSound?: (soundUrl: string) => void;
-    getActivityId: () => Promise<number>;
+    getActivityId: () => Promise<number | null>;
 }
 
 const isValidSoundUrl = (url: string) => {

@@ -29,7 +29,7 @@ interface ContentEditorProps {
     content?: Content;
     setContent: (content: Content) => void;
     activityId?: number;
-    getActivityId: () => Promise<number>;
+    getActivityId: () => Promise<number | null>;
 }
 
 export const ContentEditor = ({ content = DEFAULT_CONTENT, setContent, activityId, getActivityId }: ContentEditorProps) => {

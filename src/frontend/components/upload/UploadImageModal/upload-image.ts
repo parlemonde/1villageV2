@@ -1,9 +1,9 @@
-export async function uploadImage(file: File | Blob, isPelicoImage?: boolean, activityId?: number): Promise<string> {
+export async function uploadImage(file: File | Blob, isPelicoImage?: boolean, activityId?: number | null): Promise<string> {
     const formData = new FormData();
     formData.append('image', file);
 
     if (activityId) {
-        formData.append('activityId', activityId.toString());
+        formData.append('activityId', activityId?.toString() || '');
     }
 
     if (isPelicoImage) {
