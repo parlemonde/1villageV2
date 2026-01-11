@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoVideo = formData.get('isPelicoVideo') === 'true';
+        const activityId = formData.get('activityId');
 
         if (!currentUser) {
             return new NextResponse(null, {
@@ -62,6 +63,7 @@ export async function POST(request: NextRequest) {
             metadata: {
                 originalFilePath: fileName,
             },
+            activityId: activityId ? Number(activityId) : null,
         });
 
         await invokeTranscodeVideosLambda(USE_S3 ? { key: fileName, bucket: getEnvVariable('S3_BUCKET_NAME') } : { filePath: fileName });

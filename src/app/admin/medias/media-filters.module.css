@@ -1,0 +1,44 @@
+.filters {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+    width: 80%;
+    margin-bottom: 32px;
+
+    @media (max-width: 1500px) {
+        width: 100%;
+    }
+    
+}
+.pelico-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 6px;
+}
+.pelico-checkbox:hover {
+    background-color: var(--grey-100);
+}
+
+.iconsContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+@media(max-width: 850px) {
+    .filters {
+        flex-direction: column;
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    .iconsContainer {
+        justify-content: space-between;
+    }
+
+    .filters button:not(:last-child) {
+        width: 100%;
+    }
+}

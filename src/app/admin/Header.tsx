@@ -1,5 +1,6 @@
 'use client';
 
+import { BackDrop } from '@frontend/components/ui/BackDrop';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Dropdown } from '@frontend/components/ui/Dropdown';
 import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuItem';
@@ -7,16 +8,25 @@ import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { ExitIcon, HamburgerMenuIcon, HomeIcon } from '@radix-ui/react-icons';
 import { logout } from '@server-actions/authentication/logout';
-import React from 'react';
+import React, { useState } from 'react';
 
+import { AdminMobileNavigation } from './Navigation';
 import styles from './header.module.css';
 
 export const Header = () => {
+    const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+
     return (
         <div className={styles.headerContainer}>
             <header className={styles.header}>
                 <div className={styles.menuButton}>
-                    <IconButton icon={HamburgerMenuIcon} variant="borderless" size="lg" className={styles.menuButton} />
+                    <IconButton
+                        icon={HamburgerMenuIcon}
+                        variant="borderless"
+                        size="lg"
+                        className={styles.menuButton}
+                        onClick={() => setIsHamburgerOpen(!isHamburgerOpen)}
+                    />
                 </div>
                 <div style={{ flex: '1 1 0' }}>
                     <div className={styles.logoContainer}>
@@ -30,6 +40,11 @@ export const Header = () => {
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>
+            {isHamburgerOpen && (
+                <BackDrop onClick={() => setIsHamburgerOpen(false)}>
+                    <AdminMobileNavigation onClose={() => setIsHamburgerOpen(false)} />
+                </BackDrop>
+            )}
         </div>
     );
 };

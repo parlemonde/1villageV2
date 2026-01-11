@@ -14,6 +14,7 @@ export type ButtonProps = {
     label: string | React.ReactNode;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    hideLabelOnMobile?: boolean;
     color?: 'primary' | 'secondary' | 'warning' | 'error' | 'grey';
     variant?: 'outlined' | 'contained' | 'borderless';
     size?: 'sm' | 'md' | 'lg';
@@ -35,6 +36,7 @@ const ButtonWithRef = (
         size = 'md',
         leftIcon,
         rightIcon,
+        hideLabelOnMobile = false,
         isFullWidth,
         isUpperCase = true,
         className,
@@ -74,7 +76,7 @@ const ButtonWithRef = (
             ) : (
                 leftIcon
             )}
-            {label}
+            <span className={classNames(styles.inlineFlex, { [styles[`hideLabelOnMobile`]]: hideLabelOnMobile })}>{label}</span>
             {!isLoading && rightIcon}
         </>
     );

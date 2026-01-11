@@ -31,6 +31,7 @@ export default function AdminManageVillagesPage() {
                     color="secondary"
                     leftIcon={<PlusIcon />}
                     label="Nouveau village-monde"
+                    hideLabelOnMobile
                 />
             </div>
             <VillagesTable />

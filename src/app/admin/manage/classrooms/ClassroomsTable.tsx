@@ -7,6 +7,7 @@ import { Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
@@ -17,7 +18,11 @@ export function ClassroomsTable() {
     const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
-    const { data: classrooms, isLoading, mutate } = useSWR<ClassroomVillageTeacher[]>('/api/classrooms', jsonFetcher);
+    const {
+        data: classrooms,
+        isLoading,
+        mutate,
+    } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
     const classroomToDelete = classrooms?.find((classroom) => classroom.classroom.id === classroomToDeleteId);
 
@@ -33,7 +38,7 @@ export function ClassroomsTable() {
     });
 
     return (
-        <div>
+        <>
             <Input
                 iconAdornment={<MagnifyingGlassIcon style={{ width: '20px', height: 'auto' }} fill="currentColor" />}
                 iconAdornmentProps={{
@@ -154,6 +159,6 @@ export function ClassroomsTable() {
                     </p>
                 )}
             </Modal>
-        </div>
+        </>
     );
 }
