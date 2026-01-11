@@ -24,7 +24,7 @@ export function CountrySelect(props: CountrySelectProps) {
         filter,
     } = props;
 
-    const filteredCountries = filter ? Object.entries(COUNTRIES).filter(([key, _]) => filter(key)) : Object.entries(COUNTRIES);
+    const filteredCountries = filter ? Object.entries(COUNTRIES).filter(([key, _]) => key && filter(key)) : Object.entries(COUNTRIES);
 
     const countryOptions = filteredCountries.map(([key, value]) => ({
         label: (

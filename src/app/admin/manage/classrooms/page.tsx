@@ -29,6 +29,7 @@ export default function AdminManageClassroomsPage() {
                     color="secondary"
                     leftIcon={<PlusIcon />}
                     label="Ajouter une classe"
+                    hideLabelOnMobile
                 />
             </div>
             <ClassroomsTable />

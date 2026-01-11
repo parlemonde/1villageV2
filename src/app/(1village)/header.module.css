@@ -24,10 +24,21 @@
     border-radius: 10px;
 }
 
-.menuButton {
+.navContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+    position: relative;
+}
+
+.teacherButtonContainer {
     position: absolute;
-    left: 8px;
-    top: 6px;
+    margin: 0;
+    right: 0;
+}
+
+.menuButton {
     width: 34px;
     height: 34px;
     display: none;
@@ -36,7 +47,6 @@
 .logoContainer {
     display: flex;
     align-items: center;
-    width: 100%;
     justify-content: flex-start;
 }
 
@@ -49,12 +59,15 @@
         border-radius: 0;
         box-shadow: none;
         border-bottom: 1px solid var(--grey-200);
+        position: relative;
+    }
+    .navContainer {
+        justify-content: center;
     }
     .menuButton {
         display: block;
-    }
-    .logoContainer {
-        justify-content: center;
+        position: absolute;
+        z-index: 1;
     }
 }
 

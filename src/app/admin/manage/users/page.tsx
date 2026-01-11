@@ -29,6 +29,7 @@ export default function AdminManageUsersPage() {
                     color="secondary"
                     leftIcon={<PlusIcon />}
                     label="Ajouter un utilisateur"
+                    hideLabelOnMobile
                 />
             </div>
             <UsersTable />

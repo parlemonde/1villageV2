@@ -14,7 +14,6 @@ type NominatimQuery =
 
 export interface NominatimPlace {
     address: {
-        city: string;
         country_code: string;
     };
     lat: string;

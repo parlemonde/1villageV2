@@ -17,6 +17,10 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+.button > span {
+    display: inline-flex;
+}
+
 .variant-contained {
     box-shadow:
         rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
@@ -228,11 +232,21 @@
     display: none;
 }
 
+.inlineFlex {
+    display: inline-flex;
+}
+
 @media (min-width: 850px) {
     .isTabletUpOnly {
         display: flex;
     }
     .isMobileOnly {
         display: none;
+    }
+}
+
+@media (max-width: 850px) {
+    .hideLabelOnMobile {
+        display: none !important;
     }
 }
