@@ -77,7 +77,7 @@ export const Header = () => {
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
                     <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
-                    <DropdownMenuItem label="Paramètres" href="/parametres" icon={MixerHorizontalIcon} />
+                    {user?.role === 'admin' && <DropdownMenuItem label="Paramètres" href="/parametres" icon={MixerHorizontalIcon} />}
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>

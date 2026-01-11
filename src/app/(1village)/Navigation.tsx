@@ -217,15 +217,19 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                     },
-                    {
-                        icon: <MixerHorizontalIcon />,
-                        label: 'Paramètres',
-                        href: '/parametres',
-                        isActive: firstPath === 'parametres',
-                        onClick: () => {
-                            onClose();
-                        },
-                    },
+                    ...(user?.role === 'admin'
+                        ? [
+                              {
+                                  icon: <MixerHorizontalIcon />,
+                                  label: 'Paramètres',
+                                  href: '/parametres',
+                                  isActive: firstPath === 'parametres',
+                                  onClick: () => {
+                                      onClose();
+                                  },
+                              },
+                          ]
+                        : []),
                     {
                         hasSeparatorTop: true,
                         icon: <ExitIcon />,
