@@ -1,6 +1,6 @@
 'use client';
 
-import { ACTIVITY_NAMES } from '@frontend/components/activities/activities-constants';
+import { useActivityName } from '@frontend/components/activities/activities-constants';
 import { Button } from '@frontend/components/ui/Button/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -42,6 +42,8 @@ export const ActivityPhasesTable = ({ phases }: ActivityPhasesTableProps) => {
         initialPhase2Activities.join(',') !== phase2Activities.join(',') ||
         initialPhase3Activities.join(',') !== phase3Activities.join(',');
 
+    const { getActivityName } = useActivityName();
+
     return (
         <div>
             <Loader isLoading={isSaving} />
@@ -74,7 +76,7 @@ export const ActivityPhasesTable = ({ phases }: ActivityPhasesTableProps) => {
                 <tbody>
                     {ACTIVITY_TYPES_ENUM.map((activityType) => (
                         <tr className={styles.row} key={activityType}>
-                            <td className={styles.cell}>{ACTIVITY_NAMES[activityType] || activityType}</td>
+                            <td className={styles.cell}>{getActivityName(activityType)}</td>
                             <td className={styles.cell}>
                                 <span style={{ display: 'flex', justifyContent: 'center' }}>
                                     <Checkbox

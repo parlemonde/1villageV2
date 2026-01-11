@@ -9,18 +9,20 @@ import UncheckedIcon from '@frontend/svg/uncheckedIcon.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import classNames from 'clsx';
+import { useExtracted } from 'next-intl';
 import { DropdownMenu } from 'radix-ui';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
 
 import styles from './activity-type-select.module.css';
-import { ACTIVITY_NAMES } from '../../activities-constants';
+import { useActivityName } from '../../activities-constants';
 
 interface ActivityTypeSelectProps {
     selectedTypes: ActivityType[];
     setSelectedTypes: (types: ActivityType[]) => void;
 }
 export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: ActivityTypeSelectProps) => {
+    const t = useExtracted('common');
     const { village } = useContext(VillageContext);
     const [phase] = usePhase();
     const { data: availableTypesForPhase = [] } = useSWR<ActivityType[]>(
@@ -55,19 +57,21 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
         previousAvailableTypes.current = availableTypes;
     }, [availableTypes, selectedTypes, setSelectedTypes]);
 
+    const { getActivityName } = useActivityName();
+
     return (
         <Dropdown
             trigger={
                 <button className={styles.trigger}>
-                    <span>Activités:</span>
+                    <span>{t('Activités :')}</span>
                     <span className={styles.chipsContainer}>
                         {showAllAsSelected ? (
-                            <span className={styles.chip}>Toutes</span>
+                            <span className={styles.chip}>{t('Toutes')}</span>
                         ) : (
                             <>
                                 {selectedTypes.slice(0, 2).map((type) => (
                                     <span key={type} className={styles.chip}>
-                                        {ACTIVITY_NAMES[type] || type}
+                                        {getActivityName(type)}
                                     </span>
                                 ))}
                                 {selectedTypes.length > 2 && <span className={styles.chip}>+{selectedTypes.length - 2}</span>}
@@ -98,7 +102,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
                         <UncheckedIcon className={styles.checkbox} />
                     </span>
                 )}
-                Toutes
+                {t('Toutes')}
             </DropdownMenu.CheckboxItem>
             <DropdownMenu.Separator className={styles.separator} />
             {availableTypes.map((type) => (
@@ -127,8 +131,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
                             <UncheckedIcon className={styles.checkbox} />
                         </span>
                     )}
-
-                    {ACTIVITY_NAMES[type] || type}
+                    {getActivityName(type)}
                 </DropdownMenu.CheckboxItem>
             ))}
         </Dropdown>

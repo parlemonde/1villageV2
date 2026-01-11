@@ -45,3 +45,5 @@ tmp
 server-transcode-videos/target
 
 .package-lock.json
+
+src/server/i18n/messages

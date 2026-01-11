@@ -17,7 +17,8 @@
     "typecheck": "next typegen && tsc --noEmit -p .",
     "db:migrate": "dotenvx run -- tsx src/server/database/migrate.ts",
     "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "i18n:extract": "tsx src/server/i18n/extract.mts"
   },
   "dependencies": {
     "@aws-sdk/util-dynamodb": "^3.958.0",
@@ -37,6 +38,7 @@
     "maplibre-gl": "5.15.0",
     "mime-types": "^3.0.2",
     "next": "16.1.1",
+    "next-intl": "^4.6.1",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "nuqs": "^2.8.6",
@@ -102,6 +104,17 @@
     "overrides": {
       "@types/react": "19.2.7",
       "@types/react-dom": "19.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "esbuild",
+      "maplibre-gl",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "volta": {
+    "node": "24.12.0"
   }
 }

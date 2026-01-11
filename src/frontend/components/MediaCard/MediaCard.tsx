@@ -11,7 +11,7 @@ import React from 'react';
 
 import styles from './media-card.module.css';
 import { CountryFlag } from '../CountryFlag';
-import { ACTIVITY_NAMES } from '../activities/activities-constants';
+import { useActivityName } from '../activities/activities-constants';
 import type { MarginProps, PaddingProps } from '../ui/css-styles';
 
 export type MediaCardProps = {
@@ -29,6 +29,8 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
 
     const fileExtension = mediaUri.split('.').pop();
     const fileName = `${item.activityType}_${item.villageName.replace(/ /g, '_')}_${item.activityId}.${fileExtension}`;
+
+    const { getActivityName } = useActivityName();
 
     return (
         <div className={classNames(styles.card, { [styles[`width-${props.width}`]]: props.width })}>
@@ -56,7 +58,7 @@ export function MediaCard({ item, ...props }: MediaCardProps) {
                                     &nbsp;
                                     {COUNTRIES[item.classroomCountry]}
                                 </div>
-                                {ACTIVITY_NAMES[item.activityType]}
+                                {getActivityName(item.activityType)}
                             </>
                         )}
                     </div>

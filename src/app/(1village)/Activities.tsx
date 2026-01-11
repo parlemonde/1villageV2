@@ -7,7 +7,7 @@ import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 export const Activities = () => {

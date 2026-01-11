@@ -16,7 +16,6 @@
     "**/.next",
     "**/.postgres-data",
     "**/.dynamodb",
-    "**/node_modules",
     "**/tmp",
     "**/.open-next",
     "**/.vscode",

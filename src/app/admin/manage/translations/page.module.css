@@ -1,0 +1,13 @@
+.headerContainer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.title {
+    flex: 1 1 0;
+}

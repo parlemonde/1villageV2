@@ -1,6 +1,6 @@
 'use client';
 
-import { ACTIVITY_NAMES } from '@frontend/components/activities/activities-constants';
+import { useActivityName } from '@frontend/components/activities/activities-constants';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
@@ -9,6 +9,7 @@ import Pelico from '@frontend/svg/pelico/pelico-neutre.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { Village } from '@server/database/schemas/villages';
 import useSWR from 'swr';
@@ -48,9 +49,10 @@ export function MediaFilters({
     );
     const currentVillage = currentVillageResponse?.[0];
 
-    const activityOptions = Object.entries(ACTIVITY_NAMES).map(([key, value]) => ({
-        label: value,
-        value: key,
+    const { getActivityName } = useActivityName();
+    const activityOptions = ACTIVITY_TYPES_ENUM.map((type) => ({
+        label: getActivityName(type),
+        value: type,
     }));
 
     const { data: villages } = useSWR<Village[]>('/api/villages', jsonFetcher);

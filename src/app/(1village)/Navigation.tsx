@@ -14,7 +14,7 @@ import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
-import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
@@ -217,6 +217,19 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                     },
+                    ...(user?.role === 'admin'
+                        ? [
+                              {
+                                  icon: <MixerHorizontalIcon />,
+                                  label: 'Paramètres',
+                                  href: '/parametres',
+                                  isActive: firstPath === 'parametres',
+                                  onClick: () => {
+                                      onClose();
+                                  },
+                              },
+                          ]
+                        : []),
                     {
                         hasSeparatorTop: true,
                         icon: <ExitIcon />,

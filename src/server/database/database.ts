@@ -8,6 +8,7 @@ import { activities } from './schemas/activities';
 import { phaseActivityTypes } from './schemas/activity-types';
 import { auth_sessions, auth_accounts, auth_verifications } from './schemas/auth-schemas';
 import { classrooms } from './schemas/classrooms';
+import { languages } from './schemas/languages';
 import { medias } from './schemas/medias';
 import { sessions } from './schemas/sessions';
 import { students } from './schemas/students';
@@ -23,6 +24,7 @@ export const db = registerService('db', () =>
         schema: {
             users,
             classrooms,
+            languages,
             villages,
             activities,
             students,
