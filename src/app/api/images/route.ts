@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
             activityId: activityId ? Number(activityId) : null,
         });
 
-        return Response.json({ url: `/${fileName}` });
+        return Response.json({ url: `/${fileName}`, id: uuid });
     } catch {
         return new NextResponse('Unknown error happened', {
             status: 500,

@@ -4,9 +4,11 @@ import EnigmeIcon from '@frontend/svg/activities/enigme.svg';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
+import MascotIcon from '@frontend/svg/activities/mascot.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useExtracted } from 'next-intl';
 import React from 'react';
+import type { UserRole } from '@server/database/schemas/users';
 
 export const useActivityName = () => {
     const t = useExtracted('activities-constants');
@@ -37,7 +39,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     jeu: 'Créer un jeu',
     enigme: 'Créer une énigme',
     indice: 'Créer un indice',
-    mascotte: 'Créer la mascotte',
+    mascotte: 'Créer sa mascotte',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -45,7 +47,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     jeu: 'lancé un jeu',
     enigme: 'créé une énigme',
     indice: 'créé un indice',
-    mascotte: 'créé la mascotte',
+    mascotte: 'créé sa mascotte',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -53,7 +55,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     jeu: GameIcon,
     enigme: EnigmeIcon,
     indice: HintIcon,
-    mascotte: null,
+    mascotte: MascotIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -61,7 +63,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu',
     enigme: '/creer-une-enigme',
     indice: '/creer-un-indice',
-    mascotte: '/creer-la-mascotte',
+    mascotte: '/creer-sa-mascotte',
 };
 
 export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
@@ -69,5 +71,14 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu/3',
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
-    mascotte: '/creer-la-mascotte/5',
+    mascotte: '/creer-sa-mascotte/5',
+};
+
+// null means all roles
+export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
+    libre: null,
+    jeu: null,
+    enigme: null,
+    indice: null,
+    mascotte: ['teacher'],
 };

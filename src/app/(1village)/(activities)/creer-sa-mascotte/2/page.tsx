@@ -18,7 +18,7 @@ import { useContext, useState } from 'react';
 import styles from './page.module.css';
 import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
-export default function CreerLaMascotteStep2() {
+export default function CreerSaMascotteStep2() {
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
 
@@ -71,7 +71,7 @@ export default function CreerLaMascotteStep2() {
 
     const goToNextStep = () => {
         saveActivity();
-        router.push('/creer-la-mascotte/3');
+        router.push('/creer-sa-mascotte/3');
     };
 
     return (
@@ -81,13 +81,13 @@ export default function CreerLaMascotteStep2() {
                     steps={[
                         {
                             label: 'Votre classe',
-                            href: '/creer-la-mascotte/1',
+                            href: '/creer-sa-mascotte/1',
                             status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                         },
-                        { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-la-mascotte/2' },
-                        { label: 'Langues et monnaies', href: '/creer-la-mascotte/3' },
-                        { label: 'Le web de Pélico', href: '/creer-la-mascotte/4' },
-                        { label: 'Pré-visualiser', href: '/creer-la-mascotte/5' },
+                        { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-sa-mascotte/2' },
+                        { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
+                        { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
+                        { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
                     ]}
                     activeStep={2}
                     marginTop="xl"
@@ -111,7 +111,7 @@ export default function CreerLaMascotteStep2() {
                         ) : (
                             <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
                         )}
-                        <p>Image de votre affiche ou décoration</p>
+                        <p style={{ textAlign: 'center' }}>Image de votre affiche ou décoration</p>
                     </div>
                     <div className={styles.right}>
                         <Field
@@ -187,7 +187,15 @@ export default function CreerLaMascotteStep2() {
                 <Field
                     marginBottom="xl"
                     label="Dans quels pays rêve-t-elle de voyager ?"
-                    input={<MultiSelect isFullWidth value={favoriteCountries} onChange={setFavoriteCountries} options={countriesOptions} />}
+                    input={
+                        <MultiSelect
+                            placeholder="Choisir les pays"
+                            isFullWidth
+                            value={favoriteCountries}
+                            onChange={setFavoriteCountries}
+                            options={countriesOptions}
+                        />
+                    }
                 />
                 <Field
                     className={styles.field}
@@ -214,7 +222,7 @@ export default function CreerLaMascotteStep2() {
                 <div className={styles.buttons}>
                     <Button
                         as="a"
-                        href="/creer-la-mascotte/1"
+                        href="/creer-sa-mascotte/1"
                         color="primary"
                         variant="outlined"
                         label="Étape précédente"
