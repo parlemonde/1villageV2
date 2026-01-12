@@ -111,7 +111,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [classroomsMap, activity]);
+    }, [classroomsMap, activity, map]);
 
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
