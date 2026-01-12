@@ -14,34 +14,40 @@ interface AccordionProps {
     items: AccordionItem[];
 }
 
+interface AccordionTriggerProps {
+    children: React.ReactNode;
+    className?: string;
+}
+
+interface AccordionContentProps {
+    children: React.ReactNode;
+    className?: string;
+}
+
 export const Accordion = ({ items }: AccordionProps) => (
     <RadixAccordion.Root className="AccordionRoot" type="single" defaultValue="item-0" collapsible>
         {items.map((item, index) => (
             <RadixAccordion.Item className="AccordionItem" value={`item-${index}`} key={`item-${index}`}>
-                <AccordionTrigger>{item.title}</AccordionTrigger>
-                <AccordionContent>{item.content}</AccordionContent>
+                <AccordionTrigger className="AccordionTrigger">{item.title}</AccordionTrigger>
+                <AccordionContent className="AccordionContent">{item.content}</AccordionContent>
             </RadixAccordion.Item>
         ))}
     </RadixAccordion.Root>
 );
 
-const AccordionTrigger = React.forwardRef(({ children, className, ...props }, forwardedRef) => {
-    AccordionTrigger.displayName = 'AccordionTrigger';
-    return (
-        <RadixAccordion.Header className="AccordionHeader">
-            <RadixAccordion.Trigger className={classNames('AccordionTrigger', className)} {...props} ref={forwardedRef}>
-                {children}
-                <ChevronDownIcon className="AccordionChevron" aria-hidden />
-            </RadixAccordion.Trigger>
-        </RadixAccordion.Header>
-    );
-});
+const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerProps>(({ children, className, ...props }, forwardedRef) => (
+    <RadixAccordion.Header className="AccordionHeader">
+        <RadixAccordion.Trigger className={classNames('AccordionTrigger', className)} {...props} ref={forwardedRef}>
+            {children}
+            <ChevronDownIcon className="AccordionChevron" aria-hidden />
+        </RadixAccordion.Trigger>
+    </RadixAccordion.Header>
+));
+AccordionTrigger.displayName = 'AccordionTrigger';
 
-const AccordionContent = React.forwardRef(({ children, className, ...props }, forwardedRef) => {
-    AccordionContent.displayName = 'AccordionContent';
-    return (
-        <RadixAccordion.Content className={classNames('AccordionContent', className)} {...props} ref={forwardedRef}>
-            <div className="AccordionContentText">{children}</div>
-        </RadixAccordion.Content>
-    );
-});
+const AccordionContent = React.forwardRef<HTMLDivElement, AccordionContentProps>(({ children, className, ...props }, forwardedRef) => (
+    <RadixAccordion.Content className={classNames('AccordionContent', className)} {...props} ref={forwardedRef}>
+        <div className="AccordionContentText">{children}</div>
+    </RadixAccordion.Content>
+));
+AccordionContent.displayName = 'AccordionContent';
