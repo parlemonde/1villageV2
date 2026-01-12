@@ -14,7 +14,7 @@ interface WorldMapProps {
     activity?: Activity | null;
 }
 
-function fitToBounds(map: maplibregl.Map, activity: any, bounds: maplibregl.LngLatBounds) {
+function fitToBounds(map: maplibregl.Map, activity: Activity | null, bounds: maplibregl.LngLatBounds) {
     // Auto zoom & pan to fit all markers
     if (activity !== null && !bounds.isEmpty()) {
         // Zoom at city level, not street
