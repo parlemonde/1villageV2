@@ -26,11 +26,10 @@ function fitToBounds(map: maplibregl.Map, activity: Activity | null, bounds: map
 const WorldMap = ({ activity = null }: WorldMapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
     const mapRef = useRef<Map | null>(null);
-    const map: Map | null = mapRef.current;
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
     const { containerRef, fullScreenButton } = useFullScreen(() => {
-        map?.stop();
+        mapRef.current?.stop();
     });
     const { classroomsMap } = useContext(VillageContext);
 
@@ -122,13 +121,13 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
             <div ref={canvasRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>
             <div style={{ position: 'absolute', left: 8, top: 8, display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {map && (
+                {mapRef.current && (
                     <>
                         <button
                             className={styles.button}
                             onClick={() => {
-                                map.stop();
-                                map.zoomIn();
+                                mapRef.current?.stop();
+                                mapRef.current?.zoomIn();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -139,8 +138,8 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
                         <button
                             className={`${styles.button} ${styles.bottom}`}
                             onClick={() => {
-                                map.stop();
-                                map.zoomOut();
+                                mapRef.current?.stop();
+                                mapRef.current?.zoomOut();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
