@@ -5,24 +5,23 @@ import { Accordion as RadixAccordion } from 'radix-ui';
 import * as React from 'react';
 import './accordion.module.css';
 
-export const Accordion = () => (
-    <RadixAccordion.Root className="AccordionRoot" type="single" defaultValue="item-1" collapsible>
-        <RadixAccordion.Item className="AccordionItem" value="item-1">
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
-            <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
-        </RadixAccordion.Item>
+interface AccordionItem {
+    title: string;
+    content: string;
+}
 
-        <RadixAccordion.Item className="AccordionItem" value="item-2">
-            <AccordionTrigger>Is it unstyled?</AccordionTrigger>
-            <AccordionContent>Yes. It's unstyled by default, giving you freedom over the look and feel.</AccordionContent>
-        </RadixAccordion.Item>
+interface AccordionProps {
+    items: AccordionItem[];
+}
 
-        <RadixAccordion.Item className="AccordionItem" value="item-3">
-            <AccordionTrigger>Can it be animated?</AccordionTrigger>
-            <RadixAccordion.Content className="AccordionContent">
-                <div className="AccordionContentText">Yes! You can animate the Accordion with CSS or JavaScript.</div>
-            </RadixAccordion.Content>
-        </RadixAccordion.Item>
+export const Accordion = ({ items }: AccordionProps) => (
+    <RadixAccordion.Root className="AccordionRoot" type="single" defaultValue="item-0" collapsible>
+        {items.map((item, index) => (
+            <RadixAccordion.Item className="AccordionItem" value={`item-${index}`} key={`item-${index}`}>
+                <AccordionTrigger>{item.title}</AccordionTrigger>
+                <AccordionContent>{item.content}</AccordionContent>
+            </RadixAccordion.Item>
+        ))}
     </RadixAccordion.Root>
 );
 
