@@ -7,12 +7,14 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
 import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
-export default function CreerLaMascotteStep4() {
+export default function CreerSaMascotteStep4() {
+    const router = useRouter();
     const { activity } = useContext(ActivityContext);
 
     const [hasAgreed, setHasAgreed] = useState(false);
@@ -27,21 +29,21 @@ export default function CreerLaMascotteStep4() {
                 steps={[
                     {
                         label: 'Votre classe',
-                        href: '/creer-la-mascotte/1',
+                        href: '/creer-sa-mascotte/1',
                         status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
                         label: activity.data?.mascot?.name || 'Votre mascotte',
-                        href: '/creer-la-mascotte/2',
+                        href: '/creer-sa-mascotte/2',
                         status: MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
                     {
                         label: 'Langues et monnaies',
-                        href: '/creer-la-mascotte/3',
+                        href: '/creer-sa-mascotte/3',
                         status: MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Le web de Pélico', href: '/creer-la-mascotte/4' },
-                    { label: 'Pré-visualiser', href: '/creer-la-mascotte/5' },
+                    { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
+                    { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={4}
                 marginTop="xl"
@@ -81,15 +83,15 @@ export default function CreerLaMascotteStep4() {
             <div className={styles.buttons}>
                 <Button
                     as="a"
-                    href="/creer-la-mascotte/3"
+                    href="/creer-sa-mascotte/3"
                     color="primary"
                     variant="outlined"
                     label="Étape précédente"
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
-                    as="a"
-                    href="/creer-la-mascotte/5"
+                    onClick={() => router.push('/creer-sa-mascotte/5')}
+                    disabled={!hasAgreed}
                     color="primary"
                     variant="outlined"
                     label="Étape suivante"

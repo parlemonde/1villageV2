@@ -15,14 +15,16 @@ import { useContext, useState } from 'react';
 import styles from './page.module.css';
 import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
-export default function CreerLaMascotteStep3() {
+export default function CreerSaMascotteStep3() {
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
 
-    const [spokenByAll, setSpokenByAll] = useState<string[]>([]);
-    const [spokenBySome, setSpokenBySome] = useState<string[]>([]);
-    const [taught, setTaught] = useState<string[]>([]);
-    const [currencies, setCurrencies] = useState<string[]>([]);
+    const mascotData = activity?.type === 'mascotte' ? activity.data : null;
+
+    const [spokenByAll, setSpokenByAll] = useState<string[]>(mascotData?.languages?.spokenByAll || []);
+    const [spokenBySome, setSpokenBySome] = useState<string[]>(mascotData?.languages?.spokenBySome || []);
+    const [taught, setTaught] = useState<string[]>(mascotData?.languages?.taught || []);
+    const [currencies, setCurrencies] = useState<string[]>(mascotData?.languages?.currencies || []);
 
     if (!activity || activity.type !== 'mascotte') {
         return null;
@@ -41,12 +43,23 @@ export default function CreerLaMascotteStep3() {
     const isValid = spokenByAll.length > 0 && spokenBySome.length > 0 && taught.length > 0 && currencies.length > 0;
 
     const saveActivity = () => {
-        // TODO
+        setActivity({
+            ...activity,
+            data: {
+                ...activity.data,
+                languages: {
+                    spokenByAll,
+                    spokenBySome,
+                    taught,
+                    currencies,
+                },
+            },
+        });
     };
 
     const goToNextStep = () => {
         saveActivity();
-        router.push('/creer-la-mascotte/4');
+        router.push('/creer-sa-mascotte/4');
     };
 
     return (
@@ -55,17 +68,17 @@ export default function CreerLaMascotteStep3() {
                 steps={[
                     {
                         label: 'Votre classe',
-                        href: '/creer-la-mascotte/1',
+                        href: '/creer-sa-mascotte/1',
                         status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
                         label: activity.data?.mascot?.name || 'Votre mascotte',
-                        href: '/creer-la-mascotte/2',
+                        href: '/creer-sa-mascotte/2',
                         status: MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Langues et monnaies', href: '/creer-la-mascotte/3' },
-                    { label: 'Le web de Pélico', href: '/creer-la-mascotte/4' },
-                    { label: 'Pré-visualiser', href: '/creer-la-mascotte/5' },
+                    { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
+                    { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
+                    { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
@@ -108,7 +121,7 @@ export default function CreerLaMascotteStep3() {
             <div className={styles.buttons}>
                 <Button
                     as="a"
-                    href="/creer-la-mascotte/2"
+                    href="/creer-sa-mascotte/2"
                     color="primary"
                     variant="outlined"
                     label="Étape précédente"

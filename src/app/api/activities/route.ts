@@ -10,6 +10,7 @@ import type { NextRequest } from 'next/server';
 import { parseAsBoolean, createLoader, parseAsArrayOf, parseAsString, parseAsInteger, parseAsStringEnum } from 'nuqs/server';
 
 const activitiesSearchParams = {
+    activityId: parseAsInteger,
     search: parseAsString,
     phase: parseAsInteger,
     type: parseAsArrayOf(parseAsStringEnum<ActivityType>(ACTIVITY_TYPES_ENUM)),
@@ -25,7 +26,14 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
+    const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
+
+    if (activityId) {
+        const result = await db.query.activities.findFirst({
+            where: eq(activities.id, activityId),
+        });
+        return NextResponse.json(result);
+    }
 
     // Users should only access their own village activities
     if ((villageId === null || villageId === -1) && user.role !== 'admin') {

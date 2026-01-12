@@ -12,8 +12,11 @@ export const MASCOT_STEPS_VALIDATORS = {
             activity.data?.classroom?.teachers?.totalCount !== undefined &&
             activity.data?.classroom?.school?.classroomsCount !== undefined &&
             activity.data?.classroom?.school?.studentsCount !== undefined &&
-            !!activity.data?.mascot?.imageUrl?.trim() &&
-            !!activity.data?.mascot?.description?.trim()
+            !!activity.data?.classroom?.imageUrl?.trim() &&
+            !!activity.data?.classroom?.description?.trim() &&
+            activity.data.classroom.students.totalCount ==
+                activity.data.classroom.students.malesCount + activity.data.classroom.students.femalesCount &&
+            activity.data.classroom.teachers.totalCount == activity.data.classroom.teachers.malesCount + activity.data.classroom.teachers.femalesCount
         );
     },
 

@@ -71,6 +71,9 @@ export type MascotActivity = {
                 classroomsCount?: number;
                 studentsCount?: number;
             };
+            alias?: string;
+            imageUrl?: string;
+            description?: string;
         };
         languages?: {
             spokenByAll?: string[];

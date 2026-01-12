@@ -10,14 +10,13 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import PlusIcon from '@frontend/svg/plus.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
 
-export default function CreerLaMascotteStep1() {
+export default function CreerSaMascotteStep1() {
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
     const { user, classroom } = useContext(UserContext);
@@ -35,8 +34,8 @@ export default function CreerLaMascotteStep1() {
     const [classroomsCount, setClassroomsCount] = useState(mascotData?.classroom?.school?.classroomsCount);
     const [schoolStudentsCount, setSchoolStudentsCount] = useState(mascotData?.classroom?.school?.studentsCount);
 
-    const [imageUrl, setImageUrl] = useState<string>(mascotData?.mascot?.imageUrl || '');
-    const [description, setDescription] = useState(mascotData?.mascot?.description || '');
+    const [imageUrl, setImageUrl] = useState<string>(mascotData?.classroom?.imageUrl || '');
+    const [description, setDescription] = useState(mascotData?.classroom?.description || '');
     const [isOpen, setIsOpen] = useState(false);
 
     const classroomStudentsCountError =
@@ -66,20 +65,20 @@ export default function CreerLaMascotteStep1() {
         Number(classroomsCount) > 0 &&
         Number(schoolStudentsCount) > 0 &&
         imageUrl.trim().length > 0 &&
-        description.trim().length > 0;
+        description.trim().length > 0 &&
+        Number(classroomStudentsCount) === Number(maleStudentsCount) + Number(femaleStudentsCount) &&
+        Number(totalTeachers) === Number(maleTeachersCount) + Number(femaleTeachersCount);
 
     const goToNextStep = () => {
         saveActivity();
-        router.push('/creer-la-mascotte/2');
+        router.push('/creer-sa-mascotte/2');
     };
 
     const saveActivity = () => {
-        updateClassroom({ id: classroom?.id, alias: classroomAlias });
         setActivity({
             ...activity,
             data: {
                 ...activity.data,
-                mascot: { ...activity.data?.mascot, imageUrl, description },
                 classroom: {
                     ...activity.data?.classroom,
                     students: {
@@ -89,6 +88,9 @@ export default function CreerLaMascotteStep1() {
                         malesCount: maleStudentsCount,
                         meanAge: meanAge,
                     },
+                    alias: classroomAlias,
+                    imageUrl: imageUrl,
+                    description: description,
                     teachers: {
                         ...activity.data?.classroom?.teachers,
                         totalCount: totalTeachers,
@@ -110,11 +112,11 @@ export default function CreerLaMascotteStep1() {
             <PageContainer>
                 <Steps
                     steps={[
-                        { label: 'Votre classe', href: '/creer-la-mascotte/1' },
-                        { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-la-mascotte/2' },
-                        { label: 'Langues et monnaies', href: '/creer-la-mascotte/3' },
-                        { label: 'Le web de Pélico', href: '/creer-la-mascotte/4' },
-                        { label: 'Pré-visualiser', href: '/creer-la-mascotte/5' },
+                        { label: 'Votre classe', href: '/creer-sa-mascotte/1' },
+                        { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-sa-mascotte/2' },
+                        { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
+                        { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
+                        { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
                     ]}
                     activeStep={1}
                     marginTop="xl"
@@ -134,17 +136,41 @@ export default function CreerLaMascotteStep1() {
                             hasError={classroomStudentsCountError}
                             type="number"
                             value={classroomStudentsCount ?? ''}
-                            onChange={(e) => setClassroomStudentsCount(parseInt(e.target.value))}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setClassroomStudentsCount(value);
+                            }}
                         />
                         <p>élèves, dont</p>
-                        <Input type="number" value={femaleStudentsCount ?? ''} onChange={(e) => setFemaleStudentsCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={femaleStudentsCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setFemaleStudentsCount(value);
+                            }}
+                        />
                         <p> filles et</p>
-                        <Input type="number" value={maleStudentsCount ?? ''} onChange={(e) => setMaleStudentsCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={maleStudentsCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setMaleStudentsCount(value);
+                            }}
+                        />
                         <p> garçons.</p>
                     </div>
                     <div className={styles.line}>
                         <p>En moyenne, l&apos;âge des enfants de notre classe est</p>
-                        <Input type="number" value={meanAge ?? ''} onChange={(e) => setMeanAge(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={meanAge ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setMeanAge(value);
+                            }}
+                        />
                         <p> ans.</p>
                     </div>
                     <div className={styles.line}>
@@ -153,19 +179,50 @@ export default function CreerLaMascotteStep1() {
                             hasError={totalTeachersError}
                             type="number"
                             value={totalTeachers ?? ''}
-                            onChange={(e) => setTotalTeachers(parseInt(e.target.value))}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setTotalTeachers(value);
+                            }}
                         />
                         <p> professeur(s), dont</p>
-                        <Input type="number" value={femaleTeachersCount ?? ''} onChange={(e) => setFemaleTeachersCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={femaleTeachersCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setFemaleTeachersCount(value);
+                            }}
+                        />
                         <p> femme(s) et</p>
-                        <Input type="number" value={maleTeachersCount ?? ''} onChange={(e) => setMaleTeachersCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={maleTeachersCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setMaleTeachersCount(value);
+                            }}
+                        />
                         <p> homme(s).</p>
                     </div>
                     <div className={styles.line}>
                         <p>Dans notre école, il y a</p>
-                        <Input type="number" value={classroomsCount ?? ''} onChange={(e) => setClassroomsCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={classroomsCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setClassroomsCount(value);
+                            }}
+                        />
                         <p> classes, et</p>
-                        <Input type="number" value={schoolStudentsCount ?? ''} onChange={(e) => setSchoolStudentsCount(parseInt(e.target.value))} />
+                        <Input
+                            type="number"
+                            value={schoolStudentsCount ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                                setSchoolStudentsCount(value);
+                            }}
+                        />
                         <p> élèves.</p>
                     </div>
                 </div>
