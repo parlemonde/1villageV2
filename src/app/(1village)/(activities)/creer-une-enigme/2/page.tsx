@@ -10,7 +10,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext } from 'react';
 
 export default function CreerUneEnigmeStep2() {
-    const { activity, setActivity } = useContext(ActivityContext);
+    const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
 
     if (!activity || activity.type !== 'enigme') {
         return null;
@@ -39,6 +39,7 @@ export default function CreerUneEnigmeStep2() {
                     content={activity.data?.content}
                     setContent={(content) => setActivity({ ...activity, data: { ...activity.data, content } })}
                     activityId={activity.id}
+                    getActivityId={getOrCreateDraft}
                 />
                 <div style={{ textAlign: 'right', marginTop: '16px' }}>
                     <Button as="a" href="/creer-une-enigme/3" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
