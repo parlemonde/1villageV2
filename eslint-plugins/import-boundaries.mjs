@@ -1,14 +1,6 @@
 import * as path from 'path';
 
 /**
- * ESLint plugin to enforce import boundaries between frontend and server code.
- *
- * Rule 1: Files in src/frontend can only import types from @server/* modules
- * Rule 2: Files in src/server can only import types from @frontend/* modules
- * Rule 3: Files in src/frontend, src/server, and src/server-actions can only import types from @app/* modules
- */
-
-/**
  * Checks if an import is a type-only import
  */
 function isTypeOnlyImport(node) {
