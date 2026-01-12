@@ -16,10 +16,8 @@ interface WorldMapProps {
 
 function fitToBounds(map: maplibregl.Map, activity: any, bounds: maplibregl.LngLatBounds) {
     // Auto zoom & pan to fit all markers
-    debugger;
     if (activity !== null && !bounds.isEmpty()) {
         // Zoom at city level, not street
-        debugger;
         map.setMaxZoom(10);
         map.fitBounds(bounds, { padding: 60, duration: 1000 });
     }
@@ -104,16 +102,13 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         );
 
         mapRef.current?.once('load', () => {
-            debugger;
             fitToBounds(map, activity, bounds);
         });
 
-        debugger;
         fitToBounds(map, activity, bounds);
 
         mapRef.current?.once('idle', () => {
             //Restore max zoom after fitBounds
-            debugger;
             map.setMaxZoom(18);
         });
 
