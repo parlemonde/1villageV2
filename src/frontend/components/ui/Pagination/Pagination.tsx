@@ -1,6 +1,6 @@
+import { Button } from '@frontend/components/ui/Button';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
-import { Button } from '../Button';
 import styles from './pagination.module.css';
 
 interface PaginationProps {

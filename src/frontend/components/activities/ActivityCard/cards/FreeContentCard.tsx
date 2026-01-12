@@ -1,6 +1,5 @@
+import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
 import { Button } from '@frontend/components/ui/Button';
-
-import type { ActivityContentCardProps } from '../activity-card.types';
 
 export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     if (activity.type !== 'libre') {

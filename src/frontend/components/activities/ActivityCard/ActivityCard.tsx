@@ -1,5 +1,6 @@
 'use client';
 
+import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -8,7 +9,6 @@ import classNames from 'clsx';
 
 import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
-import { ActivityHeader } from '../ActivityHeader';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
 

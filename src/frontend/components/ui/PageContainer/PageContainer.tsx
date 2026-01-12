@@ -1,9 +1,9 @@
 'use client';
 
+import { Title } from '@frontend/components/ui/Title';
 import classNames from 'clsx';
 
 import styles from './PageContainer.module.css';
-import { Title } from '../Title';
 
 interface PageContainerProps {
     title?: string;

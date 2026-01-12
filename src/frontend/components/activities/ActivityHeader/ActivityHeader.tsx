@@ -2,6 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
@@ -12,7 +13,6 @@ import classNames from 'clsx';
 import { useContext } from 'react';
 
 import styles from './activity-header.module.css';
-import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '../activities-constants';
 
 const toFormattedDate = (date: string | null): string => {
     return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';

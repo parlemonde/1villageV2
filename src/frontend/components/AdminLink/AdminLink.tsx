@@ -1,7 +1,7 @@
+import { Link } from '@frontend/components/ui/Link';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 import styles from './admin-link.module.css';
-import { Link } from '../ui/Link';
 
 interface AdminLinkProps {
     href: string;

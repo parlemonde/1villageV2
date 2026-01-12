@@ -1,7 +1,7 @@
+import { getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import * as React from 'react';
 
-import { getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '../css-styles';
 import styles from './field.module.css';
 
 type FieldProps = {

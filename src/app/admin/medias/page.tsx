@@ -4,7 +4,7 @@ import type { MediaLibraryResponse } from '@app/api/media-library/route';
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Pagination } from '@frontend/components/ui/Pagination/Pagination';
-import { downloadFile } from '@lib/download-file';
+import { downloadFile } from '@frontend/lib/download-file';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { DownloadIcon } from '@radix-ui/react-icons';

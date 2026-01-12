@@ -1,12 +1,11 @@
 'use client';
 
 import 'leaflet/dist/leaflet.css';
+import { getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '@frontend/components/ui/css-styles';
 import L from 'leaflet';
 import type { RefObject } from 'react';
 import { useMemo, useRef } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-
-import { getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '../ui/css-styles';
 
 const DEFAULT_ICON = L.icon({
     iconUrl: '/static/images/marker-icon.png',

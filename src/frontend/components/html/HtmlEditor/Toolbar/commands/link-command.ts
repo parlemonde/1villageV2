@@ -1,8 +1,8 @@
+import { schema } from '@frontend/components/html/HtmlEditor/schema';
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
 
 import { isTextSelection } from './is-text-selection';
-import { schema } from '../../schema';
 
 export const getLinkAtSelection = (state: EditorState) => {
     let title = '';

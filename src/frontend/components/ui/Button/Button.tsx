@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/refs -- Rule is broken... */
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Link } from '@frontend/components/ui/Link';
+import type { MarginProps } from '@frontend/components/ui/css-styles';
+import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import * as React from 'react';
 import type { JSX } from 'react';
 
 import styles from './button.module.css';
-import { CircularProgress } from '../CircularProgress';
-import type { MarginProps } from '../css-styles';
-import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '../css-styles';
 
 export type ButtonProps = {
     as?: 'button' | 'a' | 'label';

@@ -1,9 +1,9 @@
+import type { MarginProps, PaddingProps } from '@frontend/components/ui/css-styles';
+import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import * as React from 'react';
 
 import styles from './title.module.css';
-import type { MarginProps, PaddingProps } from '../css-styles';
-import { getMarginAndPaddingStyle } from '../css-styles';
 
 type TitleProps = {
     id?: string;

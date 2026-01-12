@@ -1,5 +1,6 @@
 'use client';
 
+import styles from '@app/admin/manage/manage.module.css';
 import { Button } from '@frontend/components/ui/Button/Button';
 import { IconButton } from '@frontend/components/ui/Button/IconButton';
 import { Field } from '@frontend/components/ui/Form/Field';
@@ -11,8 +12,6 @@ import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import type { User, UserRole } from '@server/database/schemas/users';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-
-import styles from '../../manage.module.css';
 
 const ROLE_LABELS: Record<UserRole, string> = {
     admin: 'Admin',

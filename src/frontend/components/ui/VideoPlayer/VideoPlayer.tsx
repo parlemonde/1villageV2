@@ -1,14 +1,14 @@
 'use client';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { AspectRatio } from 'radix-ui';
 import React, { useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import videojs from 'video.js';
-import 'videojs-hls-quality-selector'; // Should be loaded after video.js
-import 'videojs-youtube'; // Should be loaded after video.js
 import type Player from 'video.js/dist/types/player';
 
-import { CircularProgress } from '../CircularProgress';
+import 'videojs-hls-quality-selector'; // Should be loaded after video.js
+import 'videojs-youtube'; // Should be loaded after video.js
 
 const isHlsReady = async (src: string) =>
     fetch(

@@ -1,9 +1,8 @@
+import { schema } from '@frontend/components/html/HtmlEditor/schema';
 import { setBlockType as setBlockTypeCommand } from 'prosemirror-commands';
 import type { Node } from 'prosemirror-model';
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
-
-import { schema } from '../../schema';
 
 const pCommand = setBlockTypeCommand(schema.nodes.paragraph, {});
 const h2Command = setBlockTypeCommand(schema.nodes.heading, { level: 2 });

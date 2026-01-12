@@ -1,12 +1,12 @@
+import { IconButton } from '@frontend/components/ui/Button';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
+import { Select } from '@frontend/components/ui/Form/Select';
 import PelicoSearchIcon from '@frontend/svg/pelico/pelico-search.svg';
 import { ArrowDownIcon, ArrowUpIcon, ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import React from 'react';
 
 import styles from './admin-table.module.css';
-import { IconButton } from '../ui/Button';
-import { CircularProgress } from '../ui/CircularProgress';
-import { Select } from '../ui/Form/Select';
 
 export interface AdminTableColumn<T> {
     id: string;

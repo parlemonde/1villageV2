@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
+import { auth } from '@server/lib/auth';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { eq } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
 
 import { db } from './database';
-import { auth } from '../lib/auth';
 import { auth_sessions } from './schemas/auth-schemas';
 import { languages } from './schemas/languages';
 import { users } from './schemas/users';

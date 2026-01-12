@@ -1,6 +1,6 @@
+import type { Content } from '@frontend/components/content/content.types';
 import React from 'react';
 
-import type { Content } from '../content.types';
 import { AnyContentViewer } from './AnyContentViewer';
 
 interface ContentViewerProps {

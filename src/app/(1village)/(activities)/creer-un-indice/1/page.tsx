@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_HINTS } from '@app/(1village)/(activities)/creer-un-indice/page';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
@@ -17,8 +18,6 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
-
-import { DEFAULT_HINTS } from '../page';
 
 const CUSTOM_HINT_VALUE = '__CUSTOM_HINT__';
 
