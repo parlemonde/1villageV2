@@ -3,7 +3,7 @@
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import { LngLatBounds, type Map } from 'maplibre-gl';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
 import { useFullScreen } from './use-full-screen';
@@ -25,26 +25,23 @@ function fitToBounds(map: maplibregl.Map, activity: Activity | null, bounds: map
 
 const WorldMap = ({ activity = null }: WorldMapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
-    const mapRef = useRef<Map | null>(null);
-
+    const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
+    
     const { containerRef, fullScreenButton } = useFullScreen(() => {
-        mapRef.current?.stop();
+        map?.stop();
     });
     const { classroomsMap } = useContext(VillageContext);
 
     useEffect(() => {
-        //Prevent creating the map more than once
-        if (mapRef.current) return;
-
         const canvas = canvasRef.current;
         if (!canvas) {
             return () => {};
         }
 
         const { map, dispose } = initWorldMap(canvas);
-        //Store the Map persistently accross renders
-        mapRef.current = map;
+        setMap(map);
+
         let animationFrame: number | null = null;
         const render = () => {
             let newLng = map.getCenter().lng - 90;
@@ -69,13 +66,12 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
                 cancelAnimationFrame(animationFrame);
             }
             //Cleanup
-            mapRef.current = null;
+            setMap(null);
         };
     }, []);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const map: Map | null = mapRef.current;
         if (!map || !canvas) {
             return () => {};
         }
@@ -100,13 +96,13 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
             }),
         );
 
-        mapRef.current?.once('load', () => {
+        map.once('load', () => {
             fitToBounds(map, activity, bounds);
         });
 
         fitToBounds(map, activity, bounds);
 
-        mapRef.current?.once('idle', () => {
+        map.once('idle', () => {
             //Restore max zoom after fitBounds
             map.setMaxZoom(18);
         });
@@ -121,13 +117,13 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
             <div ref={canvasRef} style={{ width: '100%', height: '100%', backgroundColor: 'black' }}></div>
             <div style={{ position: 'absolute', left: 8, top: 8, display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {mapRef.current && (
+                {map && (
                     <>
                         <button
                             className={styles.button}
                             onClick={() => {
-                                mapRef.current?.stop();
-                                mapRef.current?.zoomIn();
+                                map?.stop();
+                                map?.zoomIn();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -138,8 +134,8 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
                         <button
                             className={`${styles.button} ${styles.bottom}`}
                             onClick={() => {
-                                mapRef.current?.stop();
-                                mapRef.current?.zoomOut();
+                                map?.stop();
+                                map?.zoomOut();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
