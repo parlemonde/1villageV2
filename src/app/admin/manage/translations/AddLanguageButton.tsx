@@ -5,9 +5,8 @@ import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { addLanguage } from '@server-actions/languages/add-language';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useState, useMemo } from 'react';
-
-import isoLanguages from './iso-639-languages.json';
 
 interface AddLanguageButtonProps {
     existingLanguages: string[];

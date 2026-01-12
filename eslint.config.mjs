@@ -5,6 +5,7 @@ import eslintPrettier from 'eslint-plugin-prettier/recommended';
 import eslintTS from 'typescript-eslint';
 
 import i18nNamespacePlugin from './eslint-plugins/i18n-namespace.mjs';
+import importBoundariesPlugin from './eslint-plugins/import-boundaries.mjs';
 
 const eslintConfig = defineConfig([
     ...eslintNextVitals,
@@ -14,10 +15,17 @@ const eslintConfig = defineConfig([
     {
         plugins: {
             'i18n-namespace': i18nNamespacePlugin,
+            'import-boundaries': importBoundariesPlugin,
         },
         rules: {
             // Validate namespace for useExtracted/getExtracted
             'i18n-namespace/valid-namespace': 'error',
+            // Import boundary rules
+            'import-boundaries/frontend-restricted-imports': 'error',
+            'import-boundaries/lib-restricted-imports': 'error',
+            'import-boundaries/server-restricted-imports': 'error',
+            'import-boundaries/server-actions-restricted-imports': 'error',
+            'import-boundaries/enforce-import-aliases': 'error',
             // Disallow useTranslations from next-intl, use useExtracted instead
             'no-restricted-imports': [
                 'error',

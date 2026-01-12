@@ -1,12 +1,12 @@
+import { Button } from '@frontend/components/ui/Button';
+import { IconButton } from '@frontend/components/ui/Button/IconButton';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { Dialog } from 'radix-ui';
 import React from 'react';
 
 import styles from './modal.module.css';
-import { Button } from '../Button';
-import { IconButton } from '../Button/IconButton';
-import { CircularProgress } from '../CircularProgress';
 
 type ModalProps = {
     isOpen: boolean;

@@ -1,5 +1,6 @@
 'use client';
 
+import styles from '@app/admin/manage/manage.module.css';
 import type { NominatimPlace } from '@app/api/geo/route';
 import { Map } from '@frontend/components/Map';
 import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
@@ -18,8 +19,6 @@ import type { User } from 'better-auth';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
-
-import styles from '../../manage.module.css';
 
 interface ClassroomFormProps {
     classroom?: Classroom;

@@ -1,11 +1,11 @@
 'use client';
 
+import { ALIGN_VALUES, schema } from '@frontend/components/html/HtmlEditor/schema';
 import { Node, Schema } from 'prosemirror-model';
 import { DOMSerializer } from 'prosemirror-model';
 import { useSyncExternalStore } from 'react';
 
 import styles from './html-viewer.module.css';
-import { ALIGN_VALUES, schema } from '../HtmlEditor/schema';
 
 // Use a custom view schema to override the default behavior of the paragraph node to DOM
 const viewSchema = new Schema({

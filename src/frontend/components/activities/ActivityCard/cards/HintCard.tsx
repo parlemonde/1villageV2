@@ -1,7 +1,6 @@
+import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
-
-import type { ActivityContentCardProps } from '../activity-card.types';
 
 export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     if (activity.type !== 'indice') {

@@ -1,8 +1,8 @@
+import type { AnyContent, AnyContentType } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button';
 import { ImageIcon, TextIcon, VideoIcon, FileIcon, SpeakerLoudIcon, DashboardIcon } from '@radix-ui/react-icons';
 
 import styles from './add-content-card.module.css';
-import type { AnyContent, AnyContentType } from '../content.types';
 
 interface AddContentButtonProps {
     icon: React.ReactNode;

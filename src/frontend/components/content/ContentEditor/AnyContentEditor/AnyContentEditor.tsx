@@ -1,3 +1,5 @@
+import { AnyContentViewer } from '@frontend/components/content/ContentViewer/AnyContentViewer';
+import type { AnyContent } from '@frontend/components/content/content.types';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
@@ -5,8 +7,6 @@ import { DragHandleDots2Icon, Pencil1Icon, TrashIcon } from '@radix-ui/react-ico
 import classNames from 'clsx';
 
 import styles from './any-content-editor.module.css';
-import { AnyContentViewer } from '../../ContentViewer/AnyContentViewer';
-import type { AnyContent } from '../../content.types';
 
 interface AnyContentEditorProps {
     content: AnyContent;

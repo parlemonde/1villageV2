@@ -1,5 +1,6 @@
 'use client';
 
+import { useActivityName } from '@frontend/components/activities/activities-constants';
 import { Dropdown } from '@frontend/components/ui/Dropdown';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
@@ -15,7 +16,6 @@ import React, { useContext } from 'react';
 import useSWR from 'swr';
 
 import styles from './activity-type-select.module.css';
-import { useActivityName } from '../../activities-constants';
 
 interface ActivityTypeSelectProps {
     selectedTypes: ActivityType[];

@@ -1,9 +1,9 @@
+import { schema } from '@frontend/components/html/HtmlEditor/schema';
 import type { Mark, Node } from 'prosemirror-model';
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
 
 import { isTextSelection } from './is-text-selection';
-import { schema } from '../../schema';
 
 export const setColor = (state: EditorState, color: string, dispatch?: EditorView['dispatch']) => {
     if (!dispatch) {

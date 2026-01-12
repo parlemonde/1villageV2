@@ -1,8 +1,7 @@
+import type { AnyContent } from '@frontend/components/content/content.types';
 import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
 import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
-
-import type { AnyContent } from '../../content.types';
 
 interface AnyContentViewerProps {
     content: AnyContent;

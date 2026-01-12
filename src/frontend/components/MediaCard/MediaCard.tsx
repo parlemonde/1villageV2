@@ -1,18 +1,17 @@
 'use client';
 
 import type { MediaLibraryItem } from '@app/api/media-library/route';
-import { downloadFile } from '@lib/download-file';
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { useActivityName } from '@frontend/components/activities/activities-constants';
+import type { MarginProps, PaddingProps } from '@frontend/components/ui/css-styles';
+import { downloadFile } from '@frontend/lib/download-file';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { DownloadIcon } from '@radix-ui/react-icons';
-import { getEnvVariable } from '@server/lib/get-env-variable';
 import classNames from 'clsx';
 import Image from 'next/image';
 import React from 'react';
 
 import styles from './media-card.module.css';
-import { CountryFlag } from '../CountryFlag';
-import { useActivityName } from '../activities/activities-constants';
-import type { MarginProps, PaddingProps } from '../ui/css-styles';
 
 export type MediaCardProps = {
     item: MediaLibraryItem;
@@ -23,9 +22,8 @@ export type MediaCardProps = {
     MarginProps;
 
 export function MediaCard({ item, ...props }: MediaCardProps) {
-    const hostUrl = getEnvVariable('HOST_URL');
     const mediaUri = item.mediaMetadata && 'originalFilePath' in item.mediaMetadata ? (item.mediaMetadata.originalFilePath as string) : item.mediaUrl;
-    const downloadLink = `${hostUrl}/${mediaUri}`;
+    const downloadLink = `/${mediaUri}`;
 
     const fileExtension = mediaUri.split('.').pop();
     const fileName = `${item.activityType}_${item.villageName.replace(/ /g, '_')}_${item.activityId}.${fileExtension}`;

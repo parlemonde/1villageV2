@@ -1,10 +1,10 @@
+import type { MarginProps } from '@frontend/components/ui/css-styles';
+import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import { Switch as RadixSwitch } from 'radix-ui';
 import { useId } from 'react';
 
 import styles from './switch.module.css';
-import type { MarginProps } from '../css-styles';
-import { getMarginAndPaddingStyle } from '../css-styles';
 
 interface SwitchProps extends MarginProps {
     label?: string;

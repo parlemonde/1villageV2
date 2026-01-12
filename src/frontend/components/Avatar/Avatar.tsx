@@ -1,5 +1,6 @@
 'use client';
 
+import { Link } from '@frontend/components/ui/Link';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
@@ -7,7 +8,6 @@ import crypto from 'crypto';
 import Image from 'next/image';
 
 import styles from './avatar.module.css';
-import { Link } from '../ui/Link';
 
 export const getGravatarUrl = (email: string, size: number) => {
     const hash = crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex');

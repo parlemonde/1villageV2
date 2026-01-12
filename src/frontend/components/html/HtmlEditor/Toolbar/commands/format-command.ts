@@ -1,9 +1,8 @@
+import { schema } from '@frontend/components/html/HtmlEditor/schema';
 import { chainCommands, toggleMark } from 'prosemirror-commands';
 import type { Mark } from 'prosemirror-model';
 import type { Command, EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
-
-import { schema } from '../../schema';
 
 export const FORMAT_COMMANDS = {
     bold: toggleMark(schema.marks.bold),

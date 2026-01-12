@@ -6,7 +6,7 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-import isoLanguages from '../../app/admin/manage/translations/iso-639-languages.json';
+import isoLanguages from './iso-639-languages.json';
 
 interface IsoLanguage {
     code: string;

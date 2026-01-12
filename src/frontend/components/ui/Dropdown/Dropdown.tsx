@@ -1,9 +1,9 @@
+import type { Size } from '@frontend/components/ui/css-styles';
+import { SIZES } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import { DropdownMenu } from 'radix-ui';
 
 import styles from './dropdown.module.css';
-import type { Size } from '../css-styles';
-import { SIZES } from '../css-styles';
 
 interface DropdownProps {
     /** The trigger element to open the dropdown. It should be a button. */

@@ -1,11 +1,11 @@
 'use client';
+import type { MarginProps } from '@frontend/components/ui/css-styles';
+import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import classNames from 'clsx';
 import * as React from 'react';
 import type { JSX } from 'react';
 
 import styles from './input.module.css';
-import type { MarginProps } from '../css-styles';
-import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '../css-styles';
 
 type InputProps = {
     color?: 'primary' | 'secondary';

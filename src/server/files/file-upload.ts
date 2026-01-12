@@ -1,9 +1,9 @@
+import { deleteS3File, getS3File, getS3FileData, listS3Files, uploadS3File } from '@server/aws/s3';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import type { Readable, Stream } from 'node:stream';
 
 import type { FileData } from './files.types';
 import { deleteLocalFile, getLocalFile, getLocalFileData, listLocalFiles, uploadLocalFile } from './local';
-import { deleteS3File, getS3File, getS3FileData, listS3Files, uploadS3File } from '../aws/s3';
 
 export const USE_S3 = getEnvVariable('S3_BUCKET_NAME') !== '';
 

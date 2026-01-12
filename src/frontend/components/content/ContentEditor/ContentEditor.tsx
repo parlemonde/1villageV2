@@ -1,5 +1,7 @@
 'use client';
 
+import { AddContentCard } from '@frontend/components/content/AddContentCard';
+import type { AnyContent, AnyContentType, Content } from '@frontend/components/content/content.types';
 import { Modal } from '@frontend/components/ui/Modal';
 import { SelectH5pModal } from '@frontend/components/upload/SelectH5pModal';
 import { UploadDocumentModal } from '@frontend/components/upload/UploadDocumentModal';
@@ -11,9 +13,7 @@ import React, { useContext, useState } from 'react';
 import isEqual from 'react-fast-compare';
 import { v4 } from 'uuid';
 
-import { AddContentCard } from '../AddContentCard';
 import { AnyContentEditor } from './AnyContentEditor';
-import type { AnyContent, AnyContentType, Content } from '../content.types';
 
 const DEFAULT_CONTENT: AnyContent[] = [
     {

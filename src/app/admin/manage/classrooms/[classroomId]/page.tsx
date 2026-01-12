@@ -1,3 +1,4 @@
+import { ClassroomForm } from '@app/admin/manage/classrooms/new/ClassroomForm';
 import { Breadcrumbs } from '@frontend/components/ui/Breadcrumbs/Breadcrumbs';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
@@ -5,8 +6,6 @@ import { db } from '@server/database';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-
-import { ClassroomForm } from '../new/ClassroomForm';
 
 interface ServerPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
