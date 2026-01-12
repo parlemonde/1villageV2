@@ -1,25 +1,30 @@
-'use client';
+﻿'use client';
 
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { AdminTable } from '@frontend/components/AdminTable';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
+import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
 import useSWR from 'swr';
 
 export function ClassroomsTable() {
-    //const { user: currentUser } = useContext(UserContext);
-
-    //const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
-    //const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
+    const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
+    const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
-    const { data: classrooms, isLoading, mutate: _ } = useSWR<ClassroomVillageTeacher[]>('/api/classrooms', jsonFetcher);
+    const {
+        data: classrooms,
+        isLoading,
+        mutate,
+    } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
-    //const userToDelete = users?.find((user) => user.id === userToDeleteId);
+    const classroomToDelete = classrooms?.find((classroom) => classroom.classroom.id === classroomToDeleteId);
 
     const filteredClassrooms = classrooms?.filter((classroom) => {
         const cls = classroom.classroom;
@@ -33,7 +38,7 @@ export function ClassroomsTable() {
     });
 
     return (
-        <div>
+        <>
             <Input
                 iconAdornment={<MagnifyingGlassIcon style={{ width: '20px', height: 'auto' }} fill="currentColor" />}
                 iconAdornmentProps={{
@@ -111,7 +116,7 @@ export function ClassroomsTable() {
                                         variant="borderless"
                                         color="error"
                                         icon={TrashIcon}
-                                        //onClick={() => setClassroomToDeleteId(classroom.id)}
+                                        onClick={() => setClassroomToDeleteId(classroom.classroom.id)}
                                     />
                                 </Tooltip>
                             </>
@@ -125,6 +130,35 @@ export function ClassroomsTable() {
                 isLoading={isLoading && classrooms === undefined}
                 emptyState="Aucune classe trouvée !"
             />
-        </div>
+            <Modal
+                isOpen={classroomToDelete !== undefined}
+                onClose={() => setClassroomToDeleteId(null)}
+                title="Supprimer la classe"
+                confirmLabel="Supprimer"
+                confirmLevel="error"
+                onConfirm={async () => {
+                    if (classroomToDeleteId === null) {
+                        return;
+                    }
+                    try {
+                        setIsDeletingClassroom(true);
+                        await deleteClassroom(classroomToDeleteId);
+                        await mutate(); // refresh the classrooms list
+                    } catch (error) {
+                        console.error(error);
+                    } finally {
+                        setIsDeletingClassroom(false);
+                        setClassroomToDeleteId(null);
+                    }
+                }}
+                isLoading={isDeletingClassroom}
+            >
+                {classroomToDelete !== undefined && (
+                    <p>
+                        Êtes-vous sûr de vouloir supprimer la classe <strong>{classroomToDelete.classroom.name}</strong> ?
+                    </p>
+                )}
+            </Modal>
+        </>
     );
 }

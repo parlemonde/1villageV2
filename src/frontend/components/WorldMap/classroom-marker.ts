@@ -44,7 +44,7 @@ const MarkerSVG = ({
         <img src="${avatarUrl}" alt="Marker" style="width: 100%; height: 100%; object-fit: cover;">
     </div>
     <div id="popover-${markerId}" style="display: none; position: absolute; top: 0; left: 0; width: 350px; background-color: white; transform: translate(-50%, calc(-100% - 4px)); border-radius: 8px; padding: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        <div style="display: flex; align-items: center; gap: 8px">    
+        <div style="display: flex; align-items: center; gap: 8px">
             <img src="${avatarUrl}" alt="avatar" style="flex-basis: 40px;width: 40px; height: 40px; border-radius: 20px; object-fit: cover;background-color: var(--grey-100);border: 1px solid var(--grey-100);">
             <div>
                 <h2 style="margin: 0; padding: 0;">${classroom?.name}</h2>
@@ -85,23 +85,30 @@ export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerAr
         lng: classroom?.coordinates?.longitude || 0,
         lat: classroom?.coordinates?.latitude || 0,
     });
+    const setPopoverPosition = (popover: HTMLElement) => {
+        const popoverBoundingClientRect = popover.getBoundingClientRect();
+        const popoverTop = popoverBoundingClientRect.top;
+        const canvasTop = canvas.getBoundingClientRect().top;
+        const computedPopoverTop =
+            popover.style.transform === `translate(-50%, calc(-100% - 4px))` ? popoverTop : popoverTop - 40 - popoverBoundingClientRect.height - 4;
+        if (computedPopoverTop - 4 < canvasTop) {
+            popover.style.transform = `translate(-50%, 40px)`;
+        } else {
+            popover.style.transform = `translate(-50%, calc(-100% - 4px))`;
+        }
+    };
+    const onMouseMove = () => {
+        const popover = el.querySelector(`#popover-${markerId}`);
+        if (popover && popover instanceof HTMLElement) {
+            setPopoverPosition(popover);
+        }
+    };
     const onMouseEnter = () => {
         const elOpacity = el.style.opacity;
         const popover = el.querySelector(`#popover-${markerId}`);
         if (popover && popover instanceof HTMLElement && elOpacity === '1') {
             popover.style.display = 'block';
-            const popoverBoundingClientRect = popover.getBoundingClientRect();
-            const popoverTop = popoverBoundingClientRect.top;
-            const canvasTop = canvas.getBoundingClientRect().top;
-            const computedPopoverTop =
-                popover.style.transform === `translate(-50%, calc(-100% - 4px))`
-                    ? popoverTop
-                    : popoverTop - 40 - popoverBoundingClientRect.height - 4;
-            if (computedPopoverTop - 4 < canvasTop) {
-                popover.style.transform = `translate(-50%, 40px)`;
-            } else {
-                popover.style.transform = `translate(-50%, calc(-100% - 4px))`;
-            }
+            setPopoverPosition(popover);
         }
     };
     const onMouseLeave = () => {
@@ -110,6 +117,7 @@ export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerAr
             popover.style.display = 'none';
         }
     };
+    el.addEventListener('mousemove', onMouseMove);
     el.addEventListener('mouseenter', onMouseEnter);
     el.addEventListener('mouseleave', onMouseLeave);
     let onClick: ((event: MouseEvent) => void) | undefined;
@@ -131,6 +139,7 @@ export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerAr
     return {
         marker,
         dispose: () => {
+            el.removeEventListener('mousemove', onMouseMove);
             el.removeEventListener('mouseenter', onMouseEnter);
             el.removeEventListener('mouseleave', onMouseLeave);
             el.removeEventListener('click', onMarkerClick);

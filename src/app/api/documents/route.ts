@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoDocument = formData.get('isPelicoDocument') === 'true';
+        const activityId = formData.get('activityId');
 
         if (!currentUser) {
             return new NextResponse(null, {
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
             type: 'pdf',
             url: fileName,
             isPelico: isPelicoDocument,
+            activityId: activityId ? Number(activityId) : null,
         });
 
         return Response.json({ url: `/${fileName}` });

@@ -14,7 +14,7 @@ import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
-import { AvatarIcon, GearIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
@@ -80,19 +80,22 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const [phase] = usePhase();
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+    const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
-    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
+
+    if (isPelico) {
+        activityTypes = activityTypes.filter((type) => type !== 'libre');
+    }
 
     // Do not display navigation on activity page
     if (pathname.startsWith('/activities/')) {
         return null;
     }
 
-    const avatar = (
-        <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
-    );
+    const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
     const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath)).filter((item) => item !== null);
 
@@ -108,12 +111,12 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                             <CountryFlag
                                 key={village.activePhase === 1 ? `mistery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1 && user?.role !== 'admin' && user?.role !== 'mediator'}
+                                isMystery={village.activePhase === 1 && !isPelico}
                             />
                         ))}
                 </div>
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
-                    <Menu items={getMenuItems(firstPath, undefined, avatar, user?.role === 'admin' || user?.role === 'mediator')} />
+                    <Menu items={getMenuItems(firstPath, undefined, avatar, isPelico)} />
                 </div>
                 {activityMenuItems.length > 0 && (
                     <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
@@ -138,14 +141,17 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const { village } = useContext(VillageContext);
     const pathname = usePathname();
     const firstPath = pathname.split('/')[1];
+    const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
-    const avatar = (
-        <Avatar user={user} classroom={classroom} isPelico={user?.role === 'admin' || user?.role === 'mediator'} size="sm" isLink={false} />
-    );
+    const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
+
+    if (isPelico) {
+        activityTypes = activityTypes.filter((type) => type !== 'libre');
+    }
 
     const activityMenuItems = activityTypes
         .map((type) =>
@@ -170,7 +176,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             <CountryFlag
                                 key={village.activePhase === 1 ? `mistery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1 && user?.role !== 'admin' && user?.role !== 'mediator'}
+                                isMystery={village.activePhase === 1 && !isPelico}
                             />
                         ))}
                 </div>
@@ -184,7 +190,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                         avatar,
-                        user?.role === 'admin' || user?.role === 'mediator',
+                        isPelico,
                     ),
                     ...activityMenuItems,
                     ...(user?.role === 'admin'
@@ -211,6 +217,19 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                     },
+                    ...(user?.role === 'admin'
+                        ? [
+                              {
+                                  icon: <MixerHorizontalIcon />,
+                                  label: 'Paramètres',
+                                  href: '/parametres',
+                                  isActive: firstPath === 'parametres',
+                                  onClick: () => {
+                                      onClose();
+                                  },
+                              },
+                          ]
+                        : []),
                     {
                         hasSeparatorTop: true,
                         icon: <ExitIcon />,

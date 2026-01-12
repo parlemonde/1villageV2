@@ -14,13 +14,21 @@ interface UploadSoundModalProps {
     isPelicoSound?: boolean;
     onClose: () => void;
     onNewSound?: (soundUrl: string) => void;
+    getActivityId: () => Promise<number | null>;
 }
 
 const isValidSoundUrl = (url: string) => {
     return url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:') || url.startsWith('/media/audios');
 };
 
-export const UploadSoundModal = ({ isOpen, initialSoundUrl = null, isPelicoSound = false, onClose, onNewSound }: UploadSoundModalProps) => {
+export const UploadSoundModal = ({
+    isOpen,
+    initialSoundUrl = null,
+    isPelicoSound = false,
+    onClose,
+    onNewSound,
+    getActivityId,
+}: UploadSoundModalProps) => {
     const [soundUrlOrFile, setSoundUrlOrFile] = useState<string | File | null>(initialSoundUrl);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [duration, setDuration] = useState(0);
@@ -50,7 +58,8 @@ export const UploadSoundModal = ({ isOpen, initialSoundUrl = null, isPelicoSound
             onNewSound?.(soundUrlOrFile);
         } else {
             setIsSubmitting(true);
-            const uploadedSoundUrl = await uploadSound(soundUrlOrFile, isPelicoSound, duration);
+            const activityId = await getActivityId();
+            const uploadedSoundUrl = await uploadSound(soundUrlOrFile, isPelicoSound, duration, activityId);
             onNewSound?.(uploadedSoundUrl);
             setIsSubmitting(false);
         }

@@ -10,11 +10,17 @@ import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { ActivityHeader } from '../ActivityHeader';
 import { FreeContentCard } from './cards/FreeContentCard';
+import { HintCard } from './cards/HintCard';
+
+const EmptyContentCard = () => {
+    return null;
+};
 
 const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = {
     libre: FreeContentCard,
-    jeu: () => null,
-    enigme: () => null,
+    indice: HintCard,
+    jeu: EmptyContentCard,
+    enigme: EmptyContentCard,
 };
 
 interface ActivityCardProps {
@@ -29,13 +35,13 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shou
     if (!user || !activity.type) {
         return null;
     }
-    const ContentCard = CONTENT_CARDS[activity.type] || (() => null);
+    const ContentCard = CONTENT_CARDS[activity.type] || EmptyContentCard;
     return (
         <div className={classNames(styles.activityCard, { [styles.isPinned]: activity.isPinned })}>
             <ActivityHeader activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
-                    {<ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />}
+                    <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />
                 </div>
             )}
         </div>

@@ -1,0 +1,47 @@
+.defaultBadge {
+    margin-left: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: var(--primary-100);
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.progressContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.progressBar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--grey-200);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.progressFill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.progressFillComplete {
+    background-color: var(--success-color);
+}
+
+.progressFillPartial {
+    background-color: var(--warning-color);
+}
+
+.progressFillLow {
+    background-color: var(--error-color);
+}
+
+.progressText {
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-width: 45px;
+}

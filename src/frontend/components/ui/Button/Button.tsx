@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs -- Rule is broken... */
 import { Link } from '@frontend/components/ui/Link';
 import classNames from 'clsx';
 import * as React from 'react';
@@ -13,6 +14,7 @@ export type ButtonProps = {
     label: string | React.ReactNode;
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
+    hideLabelOnMobile?: boolean;
     color?: 'primary' | 'secondary' | 'warning' | 'error' | 'grey';
     variant?: 'outlined' | 'contained' | 'borderless';
     size?: 'sm' | 'md' | 'lg';
@@ -34,6 +36,7 @@ const ButtonWithRef = (
         size = 'md',
         leftIcon,
         rightIcon,
+        hideLabelOnMobile = false,
         isFullWidth,
         isUpperCase = true,
         className,
@@ -73,13 +76,13 @@ const ButtonWithRef = (
             ) : (
                 leftIcon
             )}
-            {label}
+            <span className={classNames(styles.inlineFlex, { [styles[`hideLabelOnMobile`]]: hideLabelOnMobile })}>{label}</span>
             {!isLoading && rightIcon}
         </>
     );
     if (as === 'a' && buttonProps.href?.startsWith('/')) {
         return (
-            <Link {...buttonProps} ref={buttonProps.ref as React.Ref<HTMLAnchorElement>} href={buttonProps.href as string}>
+            <Link {...buttonProps} ref={ref as React.Ref<HTMLAnchorElement>} href={buttonProps.href as string}>
                 {children}
             </Link>
         );

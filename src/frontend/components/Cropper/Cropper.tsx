@@ -86,6 +86,7 @@ export const Cropper = ({ imageUrl, cropperRef }: CropperProps) => {
     // Observe the canvas size and initialize the cropper when the canvas size changes
     const resizeObserver = React.useMemo<ResizeObserver>(
         () =>
+            // eslint-disable-next-line react-hooks/refs -- Rules seems to be broken. This callback is not called during render.
             new ResizeObserver((entries) => {
                 for (const entry of entries) {
                     if (entry.target.id === canvasId) {

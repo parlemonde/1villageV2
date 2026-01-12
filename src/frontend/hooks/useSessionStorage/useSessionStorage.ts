@@ -5,7 +5,7 @@ import * as React from 'react';
 import { getFromSessionStorage, setToSessionStorage, UPDATE_EVENT_NAME } from './session-storage';
 
 export function useSessionStorage<T>(key: string, initialValue: T): [T, (newItem: T) => void, boolean] {
-    const isLoadingRef = React.useRef(true);
+    const [isLoading, setIsLoading] = React.useState(true);
     const item = React.useSyncExternalStore(
         (callback) => {
             window.addEventListener('storage', callback); // cross-tab events
@@ -16,7 +16,9 @@ export function useSessionStorage<T>(key: string, initialValue: T): [T, (newItem
             };
         },
         () => {
-            isLoadingRef.current = false;
+            if (isLoading) {
+                setIsLoading(false);
+            }
             return (getFromSessionStorage(key) as T) || initialValue;
         },
         () => initialValue,
@@ -29,5 +31,5 @@ export function useSessionStorage<T>(key: string, initialValue: T): [T, (newItem
         [key],
     );
 
-    return [item, setItem, isLoadingRef.current];
+    return [item, setItem, isLoading];
 }

@@ -15,7 +15,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
@@ -36,20 +36,48 @@ export const Header = () => {
                         icon={HamburgerMenuIcon}
                         variant="borderless"
                         size="lg"
+                        color="primary"
                         className={styles.menuButton}
                         onClick={() => setIsOpen(!isOpen)}
                     />
                 </div>
-                <div style={{ flex: '1 1 0' }}>
+                <div className={styles.navContainer}>
                     <div className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </div>
+                    {user?.role === 'teacher' && (
+                        <div className={styles.teacherButtonContainer}>
+                            <Button
+                                leftIcon={<DrawingPinIcon width="24" height="24" />}
+                                variant="borderless"
+                                color="primary"
+                                size="md"
+                                isUpperCase={false}
+                                label="Mes ressources"
+                                hideLabelOnMobile
+                                as="a"
+                                href="https://prof.parlemonde.org/les-ressources/"
+                            />
+                            <Button
+                                leftIcon={<ChatBubbleIcon width="24" height="24" />}
+                                variant="borderless"
+                                color="primary"
+                                size="md"
+                                isUpperCase={false}
+                                label="Ma messagerie"
+                                hideLabelOnMobile
+                                as="a"
+                                href="https://prof.parlemonde.org/la-salle/"
+                            />
+                        </div>
+                    )}
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
                     <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
+                    {user?.role === 'admin' && <DropdownMenuItem label="Paramètres" href="/parametres" icon={MixerHorizontalIcon} />}
                     <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>

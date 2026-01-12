@@ -5,7 +5,7 @@ import * as React from 'react';
 import { getFromLocalStorage, setToLocalStorage, UPDATE_EVENT_NAME } from './local-storage';
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (newItem: T) => void, boolean] {
-    const isLoadingRef = React.useRef(true);
+    const [isLoading, setIsLoading] = React.useState(true);
     const item = React.useSyncExternalStore(
         (callback) => {
             window.addEventListener('storage', callback); // cross-tab events
@@ -16,7 +16,9 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (newItem: 
             };
         },
         () => {
-            isLoadingRef.current = false;
+            if (isLoading) {
+                setIsLoading(false);
+            }
             return (getFromLocalStorage(key) as T) || initialValue;
         },
         () => initialValue,
@@ -29,5 +31,5 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (newItem: 
         [key],
     );
 
-    return [item, setItem, isLoadingRef.current];
+    return [item, setItem, isLoading];
 }
