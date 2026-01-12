@@ -105,7 +105,7 @@ export default function CreerUnIndiceStep1() {
                             key={activity.id}
                             activity={activity}
                             user={usersMap[activity.userId]}
-                            classroom={activity.classroomId ? classroomsMap[activity.classroomId] : undefined}
+                            classroom={activity.classroomId ? classroomsMap[activity.classroomId]?.classroom : undefined}
                         />
                     ))}
                     {activities.length === 0 && (
