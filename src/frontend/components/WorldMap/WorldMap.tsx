@@ -3,7 +3,7 @@
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import { LngLatBounds, type Map } from 'maplibre-gl';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
 import { useFullScreen } from './use-full-screen';
