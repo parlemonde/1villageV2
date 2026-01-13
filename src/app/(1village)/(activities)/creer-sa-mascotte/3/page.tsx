@@ -1,5 +1,7 @@
 'use client';
 
+import { mascotActivityHelpers } from '@app/(1village)/(activities)/creer-sa-mascotte/helpers';
+import { MASCOT_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-sa-mascotte/validators';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, MultiSelect } from '@frontend/components/ui/Form';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -10,21 +12,13 @@ import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import { LANGUAGES } from '@lib/iso-639-languages-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 import styles from './page.module.css';
-import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
 export default function CreerSaMascotteStep3() {
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
-
-    const mascotData = activity?.type === 'mascotte' ? activity.data : null;
-
-    const [spokenByAll, setSpokenByAll] = useState<string[]>(mascotData?.languages?.spokenByAll || []);
-    const [spokenBySome, setSpokenBySome] = useState<string[]>(mascotData?.languages?.spokenBySome || []);
-    const [taught, setTaught] = useState<string[]>(mascotData?.languages?.taught || []);
-    const [currencies, setCurrencies] = useState<string[]>(mascotData?.languages?.currencies || []);
 
     if (!activity || activity.type !== 'mascotte') {
         return null;
@@ -40,27 +34,7 @@ export default function CreerSaMascotteStep3() {
         label: currency[1],
     }));
 
-    const isValid = spokenByAll.length > 0 && spokenBySome.length > 0 && taught.length > 0 && currencies.length > 0;
-
-    const saveActivity = () => {
-        setActivity({
-            ...activity,
-            data: {
-                ...activity.data,
-                languages: {
-                    spokenByAll,
-                    spokenBySome,
-                    taught,
-                    currencies,
-                },
-            },
-        });
-    };
-
-    const goToNextStep = () => {
-        saveActivity();
-        router.push('/creer-sa-mascotte/4');
-    };
+    const { setLanguages } = mascotActivityHelpers(activity, setActivity);
 
     return (
         <PageContainer>
@@ -94,7 +68,14 @@ export default function CreerSaMascotteStep3() {
                     </label>
                 }
                 marginBottom="md"
-                input={<MultiSelect value={spokenByAll} onChange={setSpokenByAll} options={languagesOptions} isFullWidth />}
+                input={
+                    <MultiSelect
+                        value={activity?.data?.languages?.spokenByAll || []}
+                        onChange={(languages) => setLanguages('spokenByAll', languages)}
+                        options={languagesOptions}
+                        isFullWidth
+                    />
+                }
             />
             <Field
                 label={
@@ -103,12 +84,26 @@ export default function CreerSaMascotteStep3() {
                     </label>
                 }
                 marginBottom="md"
-                input={<MultiSelect value={spokenBySome} onChange={setSpokenBySome} options={languagesOptions} isFullWidth />}
+                input={
+                    <MultiSelect
+                        value={activity?.data?.languages?.spokenBySome || []}
+                        onChange={(languages) => setLanguages('spokenBySome', languages)}
+                        options={languagesOptions}
+                        isFullWidth
+                    />
+                }
             />
             <Field
                 label="Quelles sont les langues étrangères apprises par les enfants de votre classe ?"
                 marginBottom="md"
-                input={<MultiSelect value={taught} onChange={setTaught} options={languagesOptions} isFullWidth />}
+                input={
+                    <MultiSelect
+                        value={activity?.data?.languages?.taught || []}
+                        onChange={(languages) => setLanguages('taught', languages)}
+                        options={languagesOptions}
+                        isFullWidth
+                    />
+                }
             />
             <Title variant="h2" marginBottom="md">
                 Monnaies utilisées dans votre classe
@@ -116,7 +111,14 @@ export default function CreerSaMascotteStep3() {
             <Field
                 label="Quelles sont les monnaies utilisées par les enfants de votre classe ?"
                 marginBottom="md"
-                input={<MultiSelect value={currencies} onChange={setCurrencies} options={currenciesOptions} isFullWidth />}
+                input={
+                    <MultiSelect
+                        value={activity?.data?.languages?.currencies || []}
+                        onChange={(languages) => setLanguages('currencies', languages)}
+                        options={currenciesOptions}
+                        isFullWidth
+                    />
+                }
             />
             <div className={styles.buttons}>
                 <Button
@@ -128,8 +130,8 @@ export default function CreerSaMascotteStep3() {
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
-                    disabled={!isValid}
-                    onClick={goToNextStep}
+                    disabled={!MASCOT_STEPS_VALIDATORS.isStep3Valid(activity)}
+                    onClick={() => router.push('/creer-sa-mascotte/4')}
                     color="primary"
                     variant="outlined"
                     label="Étape suivante"

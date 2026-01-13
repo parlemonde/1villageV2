@@ -47,7 +47,7 @@ export type MascotActivity = {
             favoriteSport?: string;
         };
         classroom?: {
-            students: {
+            students?: {
                 totalCount?: number;
                 malesCount?: number;
                 femalesCount?: number;
@@ -72,6 +72,7 @@ export type MascotActivity = {
             taught?: string[];
             currencies?: string[];
         };
+        hasAcceptedRules?: boolean;
     };
 };
 
