@@ -10,7 +10,6 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { UserContext } from '@frontend/contexts/userContext';
 import PlusIcon from '@frontend/svg/plus.svg';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
@@ -23,7 +22,6 @@ import styles from './page.module.css';
 export default function CreerSaMascotteStep2() {
     const router = useRouter();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
-    const { user } = useContext(UserContext);
 
     const [isOpen, setIsOpen] = useState(false);
 
