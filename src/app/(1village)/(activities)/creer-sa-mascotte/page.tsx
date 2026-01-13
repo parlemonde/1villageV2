@@ -13,7 +13,7 @@ export default function CreerSaMascottePage() {
     const { user, classroom } = useContext(UserContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
 
-    const hasMascot = !!classroom?.avatarUrl;
+    const hasMascot = !!classroom?.mascotteId;
 
     useEffect(() => {
         const getMascot = async () => {
@@ -31,10 +31,14 @@ export default function CreerSaMascottePage() {
         };
 
         if (hasMascot) {
-            editMascot();
+            editMascot().then(() => router.push('/creer-sa-mascotte/1'));
         } else {
-            onCreateActivity('mascotte', isPelico);
+            onCreateActivity('mascotte', isPelico, {
+                classroom: {
+                    alias: classroom?.alias || '',
+                },
+            });
+            router.push('/creer-sa-mascotte/1');
         }
-        router.push('/creer-sa-mascotte/1');
-    }, [isPelico, onCreateActivity, router, setActivity, hasMascot, classroom?.mascotteId]);
+    }, [isPelico, onCreateActivity, router, setActivity, hasMascot, classroom?.mascotteId, classroom?.alias]);
 }

@@ -5,7 +5,7 @@ import type { SelectProps } from './Select';
 import { Select } from './Select';
 
 interface CountrySelectProps extends Omit<SelectProps, 'options'> {
-    onChange: (country: string | string[]) => void;
+    onChange: (country: string) => void;
     filter?: (country: string) => boolean;
 }
 
