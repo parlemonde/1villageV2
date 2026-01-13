@@ -1,9 +1,9 @@
-import { deleteS3File, getS3File, getS3FileData, listS3Files, uploadS3File } from '@server/aws/s3';
+import { deleteS3File, getS3File, getS3FileData, listS3Files, listS3Folders, uploadS3File } from '@server/aws/s3';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import type { Readable, Stream } from 'node:stream';
 
 import type { FileData } from './files.types';
-import { deleteLocalFile, getLocalFile, getLocalFileData, listLocalFiles, uploadLocalFile } from './local';
+import { deleteLocalFile, getLocalFile, getLocalFileData, listLocalFiles, listLocalFolders, uploadLocalFile } from './local';
 
 export const USE_S3 = getEnvVariable('S3_BUCKET_NAME') !== '';
 
@@ -64,5 +64,13 @@ export async function listFiles(
         return {
             files: await listLocalFiles(prefix),
         };
+    }
+}
+
+export async function listFolders(prefix: string): Promise<string[]> {
+    if (USE_S3) {
+        return listS3Folders(prefix);
+    } else {
+        return listLocalFolders(prefix);
     }
 }
