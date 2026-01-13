@@ -27,7 +27,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
-    
+
     const { containerRef, fullScreenButton } = useFullScreen(() => {
         map?.stop();
     });
@@ -80,7 +80,10 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
 
         const markers = Object.values(classroomsMap)
             .filter((classroom) => {
-                return activity === null || classroom?.classroom.teacherId === activity.userId;
+                if (classroom === undefined) return false;
+
+                const cls = 'classroom' in classroom ? classroom?.classroom : classroom;
+                return activity === null || cls?.teacherId === activity.userId;
             })
             .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
         markers.forEach((marker) => {

@@ -50,18 +50,23 @@ const getAllClassrooms = async (): Promise<Classroom[]> => {
     return await db.select().from(classrooms).orderBy(classrooms.id);
 };
 
-const buildQuery = async (villageId: number | null, country: string | null, withVillage: boolean) => {
+const buildQuery = async (
+    villageId: number | null,
+    country: string | null,
+    withVillage: boolean,
+): Promise<Classroom[] | ClassroomVillageTeacher[]> => {
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
-    } else if (villageId) {
+    }
+    if (villageId) {
         if (withVillage) {
             return await getVillageClassroomsWithVillage(villageId);
         }
         return await getVillageClassrooms(villageId);
-    } else if (country) {
+    }
+    if (country) {
         return await getCountryClassrooms(country);
     }
-
     return await getAllClassrooms();
 };
 

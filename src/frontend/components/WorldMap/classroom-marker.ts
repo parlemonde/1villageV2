@@ -63,11 +63,17 @@ export interface DisposableMarker extends Disposable {
     setClickHandler: (handler: (event: MouseEvent) => void) => void;
 }
 interface GetClassroomMarkerArgs {
-    classroomVT: ClassroomVillageTeacher | undefined;
+    classroomVT: Classroom | ClassroomVillageTeacher | undefined;
     canvas: HTMLDivElement;
 }
 export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
-    const classroom = classroomVT?.classroom;
+    let classroom: Classroom | undefined;
+    if (classroomVT !== undefined && 'classroom' in classroomVT) {
+        classroom = classroomVT.classroom;
+    } else {
+        classroom = classroomVT as Classroom | undefined;
+    }
+
     const markerId = v4();
     const avatarUrl = classroom?.avatarUrl || getGravatarUrl(`classroom-${classroom?.id}@parlemonde.org`, 40);
 

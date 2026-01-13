@@ -7,6 +7,7 @@ import { usePhase } from '@frontend/hooks/usePhase';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
+import { getClassroomFromMap } from '@server/helpers/get-classroom';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
@@ -46,7 +47,7 @@ export const Activities = () => {
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
-                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId]?.classroom : undefined}
+                        classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
                     />
                 ))}
             </div>
