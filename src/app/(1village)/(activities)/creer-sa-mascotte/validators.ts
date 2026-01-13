@@ -33,10 +33,14 @@ export const MASCOT_STEPS_VALIDATORS = {
 
     isStep3Valid: (activity: Partial<MascotActivity>) => {
         return (
-            activity.data?.languages?.spokenByAll !== undefined &&
-            activity.data?.languages?.spokenBySome !== undefined &&
-            activity.data?.languages?.taught !== undefined &&
-            activity.data?.languages?.currencies !== undefined
+            (activity.data?.languages?.spokenByAll || []).length > 0 &&
+            (activity.data?.languages?.spokenBySome || []).length > 0 &&
+            (activity.data?.languages?.taught || []).length > 0 &&
+            (activity.data?.languages?.currencies || []).length > 0
         );
+    },
+
+    isStep4Valid: (activity: Partial<MascotActivity>) => {
+        return activity?.data?.hasAcceptedRules;
     },
 };

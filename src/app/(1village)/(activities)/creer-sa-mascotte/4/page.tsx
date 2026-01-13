@@ -1,5 +1,7 @@
 'use client';
 
+import { mascotActivityHelpers } from '@app/(1village)/(activities)/creer-sa-mascotte/helpers';
+import { MASCOT_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-sa-mascotte/validators';
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -8,20 +10,19 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 
 import styles from './page.module.css';
-import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
 export default function CreerSaMascotteStep4() {
     const router = useRouter();
-    const { activity } = useContext(ActivityContext);
-
-    const [hasAgreed, setHasAgreed] = useState(false);
+    const { activity, setActivity } = useContext(ActivityContext);
 
     if (!activity || activity.type !== 'mascotte') {
         return null;
     }
+
+    const { setHasAcceptedRules } = mascotActivityHelpers(activity, setActivity);
 
     return (
         <PageContainer>
@@ -76,8 +77,8 @@ export default function CreerSaMascotteStep4() {
                 <Checkbox
                     label="Nous avons compris et nous sommes d'accord avec les conseils de Pélico !"
                     name="hasAgreed"
-                    onChange={() => setHasAgreed(!hasAgreed)}
-                    isChecked={hasAgreed}
+                    onChange={() => setHasAcceptedRules(!activity?.data?.hasAcceptedRules)}
+                    isChecked={activity?.data?.hasAcceptedRules}
                 />
             </div>
             <div className={styles.buttons}>
@@ -91,7 +92,7 @@ export default function CreerSaMascotteStep4() {
                 />
                 <Button
                     onClick={() => router.push('/creer-sa-mascotte/5')}
-                    disabled={!hasAgreed}
+                    disabled={!activity?.data?.hasAcceptedRules}
                     color="primary"
                     variant="outlined"
                     label="Étape suivante"

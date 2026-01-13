@@ -1,5 +1,7 @@
 'use client';
 
+import { mascotActivityHelpers } from '@app/(1village)/(activities)/creer-sa-mascotte/helpers';
+import { MASCOT_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-sa-mascotte/validators';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input, MultiSelect, TextArea } from '@frontend/components/ui/Form';
 import { CountryOption } from '@frontend/components/ui/Form/CountryOption';
@@ -8,6 +10,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { UserContext } from '@frontend/contexts/userContext';
 import PlusIcon from '@frontend/svg/plus.svg';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
@@ -16,21 +19,11 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
-import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
 export default function CreerSaMascotteStep2() {
     const router = useRouter();
-    const { activity, setActivity } = useContext(ActivityContext);
-
-    const mascotData = activity?.type === 'mascotte' ? activity.data : null;
-
-    const [mascotName, setMascotName] = useState(mascotData?.mascot?.name || '');
-    const [mascotDescription, setMascotDescription] = useState(mascotData?.mascot?.description || '');
-    const [personalityTraits, setPersonalityTraits] = useState<string[]>(mascotData?.mascot?.personalityTraits || []);
-    const [favoriteCountries, setFavoriteCountries] = useState<string[]>(mascotData?.mascot?.favoriteCountries || []);
-    const [favoriteGame, setFavoriteGame] = useState<string>(mascotData?.mascot?.favoriteGame || '');
-    const [favoriteSport, setFavoriteSport] = useState<string>(mascotData?.mascot?.favoriteSport || '');
-    const [imageUrl, setImageUrl] = useState<string>(mascotData?.mascot?.imageUrl || '');
+    const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
+    const { user } = useContext(UserContext);
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -38,41 +31,13 @@ export default function CreerSaMascotteStep2() {
         return null;
     }
 
-    const isValid =
-        mascotName.trim().length > 0 &&
-        mascotDescription.trim().length > 0 &&
-        personalityTraits.length == 3 &&
-        favoriteCountries.length > 0 &&
-        favoriteGame.length > 0 &&
-        favoriteSport.length > 0;
-
     const countriesOptions = Object.entries(COUNTRIES).map(([key, value]) => ({
         label: <CountryOption id={key} value={value} key={key} />,
         value: key,
+        searchValue: value,
     }));
 
-    const saveActivity = () => {
-        setActivity({
-            ...activity,
-            data: {
-                ...activity.data,
-                mascot: {
-                    name: mascotName,
-                    description: mascotDescription,
-                    personalityTraits: personalityTraits,
-                    favoriteCountries: favoriteCountries,
-                    favoriteGame: favoriteGame,
-                    favoriteSport: favoriteSport,
-                    imageUrl: imageUrl,
-                },
-            },
-        });
-    };
-
-    const goToNextStep = () => {
-        saveActivity();
-        router.push('/creer-sa-mascotte/3');
-    };
+    const { setMascot } = mascotActivityHelpers(activity, setActivity);
 
     return (
         <>
@@ -96,22 +61,24 @@ export default function CreerSaMascotteStep2() {
                 <Title variant="h2" marginBottom="md">
                     Qui êtes-vous ? Choisissez une mascotte qui vous ressemble collectivement !
                 </Title>
-                <div className={styles.left}>
-                    <div className={styles.imagePreview}>
-                        {imageUrl ? (
-                            <Image
-                                className={styles.image}
-                                src={imageUrl}
-                                unoptimized
-                                alt="Placeholder"
-                                width={150}
-                                height={150}
-                                onClick={() => setIsOpen(true)}
-                            />
-                        ) : (
-                            <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
-                        )}
-                        <p style={{ textAlign: 'center' }}>Image de votre affiche ou décoration</p>
+                <div className={styles.mascotUpload}>
+                    <div className={styles.left}>
+                        <div className={styles.imagePreview}>
+                            {activity?.data?.mascot?.imageUrl ? (
+                                <Image
+                                    className={styles.image}
+                                    src={activity?.data?.mascot?.imageUrl}
+                                    unoptimized={activity?.data?.mascot?.imageUrl.startsWith('https')}
+                                    alt="Placeholder"
+                                    width={150}
+                                    height={150}
+                                    onClick={() => setIsOpen(true)}
+                                />
+                            ) : (
+                                <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
+                            )}
+                            <p style={{ textAlign: 'center' }}>Image de votre mascotte</p>
+                        </div>
                     </div>
                     <div className={styles.right}>
                         <Field
@@ -119,10 +86,11 @@ export default function CreerSaMascotteStep2() {
                             label="Nom"
                             input={
                                 <Input
+                                    isFullWidth
                                     type="text"
-                                    value={mascotName || ''}
+                                    value={activity?.data?.mascot?.name || ''}
                                     onChange={(e) => {
-                                        setMascotName(e.target.value);
+                                        setMascot('name', e.target.value);
                                     }}
                                 />
                             }
@@ -134,9 +102,9 @@ export default function CreerSaMascotteStep2() {
                                     placeholder="Description"
                                     size="md"
                                     isFullWidth
-                                    value={mascotDescription || ''}
+                                    value={activity?.data?.mascot?.description || ''}
                                     onChange={(e) => {
-                                        setMascotDescription(e.target.value);
+                                        setMascot('description', e.target.value);
                                     }}
                                 />
                             }
@@ -149,38 +117,32 @@ export default function CreerSaMascotteStep2() {
                         <Input
                             type="text"
                             isFullWidth
-                            value={personalityTraits[0] || ''}
-                            onChange={(e) =>
-                                setPersonalityTraits((prev) => {
-                                    const newPersonalityTraits = [...prev];
-                                    newPersonalityTraits[0] = e.target.value;
-                                    return newPersonalityTraits;
-                                })
-                            }
+                            value={activity?.data?.mascot?.personalityTraits?.[0] || ''}
+                            onChange={(e) => {
+                                const personalityTraits = [...(activity?.data?.mascot?.personalityTraits || [])];
+                                personalityTraits[0] = e.target.value;
+                                setMascot('personalityTraits', personalityTraits);
+                            }}
                         />
                         <Input
                             type="text"
                             isFullWidth
-                            value={personalityTraits[1] || ''}
-                            onChange={(e) =>
-                                setPersonalityTraits((prev) => {
-                                    const newPersonalityTraits = [...prev];
-                                    newPersonalityTraits[1] = e.target.value;
-                                    return newPersonalityTraits;
-                                })
-                            }
+                            value={activity?.data?.mascot?.personalityTraits?.[1] || ''}
+                            onChange={(e) => {
+                                const personalityTraits = [...(activity?.data?.mascot?.personalityTraits || [])];
+                                personalityTraits[1] = e.target.value;
+                                setMascot('personalityTraits', personalityTraits);
+                            }}
                         />
                         <Input
                             type="text"
                             isFullWidth
-                            value={personalityTraits[2] || ''}
-                            onChange={(e) =>
-                                setPersonalityTraits((prev) => {
-                                    const newPersonalityTraits = [...prev];
-                                    newPersonalityTraits[2] = e.target.value;
-                                    return newPersonalityTraits;
-                                })
-                            }
+                            value={activity?.data?.mascot?.personalityTraits?.[2] || ''}
+                            onChange={(e) => {
+                                const personalityTraits = [...(activity?.data?.mascot?.personalityTraits || [])];
+                                personalityTraits[2] = e.target.value;
+                                setMascot('personalityTraits', personalityTraits);
+                            }}
                         />
                     </div>
                 </fieldset>
@@ -191,8 +153,8 @@ export default function CreerSaMascotteStep2() {
                         <MultiSelect
                             placeholder="Choisir les pays"
                             isFullWidth
-                            value={favoriteCountries}
-                            onChange={setFavoriteCountries}
+                            value={activity?.data?.mascot?.favoriteCountries || []}
+                            onChange={(countries) => setMascot('favoriteCountries', countries)}
                             options={countriesOptions}
                         />
                     }
@@ -204,7 +166,12 @@ export default function CreerSaMascotteStep2() {
                     input={
                         <div className={styles.line}>
                             <p>Notre mascotte joue</p>
-                            <Input isFullWidth type="text" value={favoriteGame} onChange={(e) => setFavoriteGame(e.target.value)} />
+                            <Input
+                                isFullWidth
+                                type="text"
+                                value={activity?.data?.mascot?.favoriteGame || ''}
+                                onChange={(e) => setMascot('favoriteGame', e.target.value)}
+                            />
                         </div>
                     }
                 />
@@ -215,7 +182,12 @@ export default function CreerSaMascotteStep2() {
                     input={
                         <div className={styles.line}>
                             <p>Notre mascotte pratique</p>
-                            <Input isFullWidth type="text" value={favoriteSport} onChange={(e) => setFavoriteSport(e.target.value)} />
+                            <Input
+                                isFullWidth
+                                type="text"
+                                value={activity?.data?.mascot?.favoriteSport || ''}
+                                onChange={(e) => setMascot('favoriteSport', e.target.value)}
+                            />
                         </div>
                     }
                 />
@@ -229,8 +201,8 @@ export default function CreerSaMascotteStep2() {
                         leftIcon={<ChevronLeftIcon />}
                     />
                     <Button
-                        disabled={!isValid}
-                        onClick={goToNextStep}
+                        disabled={!MASCOT_STEPS_VALIDATORS.isStep2Valid(activity)}
+                        onClick={() => router.push('/creer-sa-mascotte/3')}
                         color="primary"
                         variant="outlined"
                         label="Étape suivante"
@@ -239,9 +211,10 @@ export default function CreerSaMascotteStep2() {
                 </div>
             </PageContainer>
             <UploadImageModal
+                getActivityId={getOrCreateDraft}
                 isOpen={isOpen}
-                initialImageUrl={imageUrl}
-                onNewImage={(imageUrl) => setImageUrl(imageUrl)}
+                initialImageUrl={activity?.data?.mascot?.imageUrl}
+                onNewImage={(imageUrl) => setMascot('imageUrl', imageUrl)}
                 onClose={() => setIsOpen(false)}
             />
         </>

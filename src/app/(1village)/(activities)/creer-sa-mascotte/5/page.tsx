@@ -1,5 +1,6 @@
 'use client';
 
+import { MASCOT_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-sa-mascotte/validators';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -18,7 +19,6 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
-import { MASCOT_STEPS_VALIDATORS } from '../validators';
 
 export default function CreerSaMascotteStep5() {
     const router = useRouter();
@@ -34,7 +34,8 @@ export default function CreerSaMascotteStep5() {
     const isValid =
         MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) &&
         MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) &&
-        MASCOT_STEPS_VALIDATORS.isStep3Valid(activity);
+        MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) &&
+        MASCOT_STEPS_VALIDATORS.isStep4Valid(activity);
 
     const onSubmit = async () => {
         setIsSubmitting(true);
@@ -83,7 +84,11 @@ export default function CreerSaMascotteStep5() {
                         href: '/creer-sa-mascotte/3',
                         status: MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4', status: 'success' },
+                    {
+                        label: 'Le web de Pélico',
+                        href: '/creer-sa-mascotte/4',
+                        status: MASCOT_STEPS_VALIDATORS.isStep4Valid(activity) ? 'success' : 'warning',
+                    },
                     { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={5}
@@ -102,10 +107,10 @@ export default function CreerSaMascotteStep5() {
             >
                 <p>Nous sommes {classroom?.name}</p>
                 <p>
-                    Nous sommes {activity.data?.classroom?.students.totalCount}, dont {activity.data?.classroom?.students.femalesCount} fille(s) et{' '}
-                    {activity.data?.classroom?.students.malesCount} garçon(s).
+                    Nous sommes {activity.data?.classroom?.students?.totalCount}, dont {activity.data?.classroom?.students?.femalesCount} fille(s) et{' '}
+                    {activity.data?.classroom?.students?.malesCount} garçon(s).
                 </p>
-                <p>En moyenne, l&apos;âge des enfants de notre classe est {activity.data?.classroom?.students.meanAge} ans</p>
+                <p>En moyenne, l&apos;âge des enfants de notre classe est {activity.data?.classroom?.students?.meanAge} ans</p>
                 <p>
                     Nous avons {activity.data?.classroom?.teachers?.totalCount} professeur(s), dont {activity.data?.classroom?.teachers?.femalesCount}{' '}
                     femme(s) et {activity.data?.classroom?.teachers?.malesCount} homme(s).

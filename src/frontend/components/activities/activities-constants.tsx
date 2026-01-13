@@ -7,9 +7,9 @@ import HintIcon from '@frontend/svg/activities/hint.svg';
 import MascotIcon from '@frontend/svg/activities/mascot.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import type { UserRole } from '@server/database/schemas/users';
 import { useExtracted } from 'next-intl';
 import React from 'react';
-import type { UserRole } from '@server/database/schemas/users';
 
 export const useActivityName = () => {
     const t = useExtracted('activities-constants');
@@ -26,6 +26,8 @@ export const useActivityName = () => {
                     return t('Indice');
                 case 'reportage':
                     return t('Reportage');
+                case 'mascotte':
+                    return t('Mascotte');
             }
         },
         [t],

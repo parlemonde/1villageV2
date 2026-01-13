@@ -1,20 +1,22 @@
 'use client';
 
-import type { ThemeConfig } from 'react-select';
+import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
+import type { FilterOptionOption, ThemeConfig } from 'react-select';
 import Select from 'react-select';
 
 import type { SelectProps } from './Select';
-import { getMarginAndPaddingStyle } from '../css-styles';
-
-interface MultiSelectProps extends Omit<SelectProps, 'value' | 'onChange'> {
-    value: string[];
-    onChange: (value: string[]) => void;
-}
 
 type Option = {
     label: React.ReactNode;
     value: string;
+    searchValue?: string;
 };
+
+interface MultiSelectProps extends Omit<SelectProps, 'value' | 'onChange' | 'options'> {
+    value: string[];
+    onChange: (value: string[]) => void;
+    options: Option[];
+}
 
 export const MultiSelect = (props: MultiSelectProps) => {
     const {
@@ -68,6 +70,11 @@ export const MultiSelect = (props: MultiSelectProps) => {
         },
     } as const;
 
+    const customFilterOption = (option: FilterOptionOption<Option>, inputValue: string) => {
+        const searchBy = option.data.searchValue || option.label?.toString() || option.value;
+        return searchBy.toLowerCase().includes(inputValue.toLowerCase());
+    };
+
     return (
         <Select<Option, true>
             isMulti
@@ -77,6 +84,8 @@ export const MultiSelect = (props: MultiSelectProps) => {
                 const selectedOptions = e.map((option) => option.value);
                 onChange(selectedOptions);
             }}
+            filterOption={customFilterOption}
+            getOptionValue={(option) => option.value}
             options={options}
             isDisabled={disabled}
             styles={{
