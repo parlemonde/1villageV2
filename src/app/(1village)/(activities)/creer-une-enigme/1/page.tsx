@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_THEMES } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { useTranslatableThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
@@ -22,6 +22,7 @@ import useSWR from 'swr';
 const CUSTOM_PUZZLE_VALUE = '__CUSTOM_PUZZLE__';
 
 export default function CreerUneEnigmeStep1() {
+    const { DEFAULT_THEMES } = useTranslatableThemes();
     const { activity, setActivity } = useContext(ActivityContext);
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
     const { data: allActivities = [] } = useSWR<Activity[]>(

@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_THEMES } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { useTranslatableThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -14,6 +14,7 @@ export default function CreerUneEnigmePage() {
     const { user } = React.useContext(UserContext);
     const { onCreateActivity } = React.useContext(ActivityContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
+    const { DEFAULT_THEMES } = useTranslatableThemes();
     return (
         <PageContainer title="Sur quelle thématique sera votre énigme ?">
             <div className={styles.themesContainer}>
