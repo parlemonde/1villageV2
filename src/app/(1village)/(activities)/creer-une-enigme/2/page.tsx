@@ -25,7 +25,8 @@ export default function CreerUneEnigmeStep2() {
                 steps={[
                     { label: themeName || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
-                    { label: 'Pré-visualiser', href: '/creer-une-enigme/3' },
+                    { label: 'Réponse', href: '/creer-une-enigme/3' },
+                    { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={2}
                 marginTop="xl"
