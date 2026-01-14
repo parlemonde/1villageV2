@@ -2,6 +2,7 @@
 
 import { CountryFlag } from '@frontend/components/CountryFlag/CountryFlag';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
+import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import PelicoNeutreIcon from '@frontend/svg/pelico/pelico-neutre.svg';
@@ -17,7 +18,11 @@ interface ActivityCountriesSelectProps {
 }
 export const ActivityCountriesSelect = ({ selectedCountries, isPelico, setSelectedCountries, setIsPelico }: ActivityCountriesSelectProps) => {
     const { village } = useContext(VillageContext);
+    const { user, classroom } = useContext(UserContext);
     const [phase] = usePhase();
+
+    const isPelicoUser = user?.role === 'admin' || user?.role === 'mediator';
+    const isMystery = (countryCode: string) => village?.activePhase === 1 && !isPelicoUser && classroom?.countryCode !== countryCode;
 
     const availableCountries = useMemo<string[]>(() => village?.countries ?? [], [village]);
     const selectedCountriesSet = new Set(selectedCountries);
@@ -47,11 +52,11 @@ export const ActivityCountriesSelect = ({ selectedCountries, isPelico, setSelect
 
     return (
         <div className={styles.activityCountriesSelect}>
-            {village?.countries.map((country) => (
+            {village?.countries.map((country, index) => (
                 <Checkbox
-                    key={country}
+                    key={isMystery(country) ? `mystery-${index}` : country}
                     name={country}
-                    label={<CountryFlag country={country} size="medium" />}
+                    label={<CountryFlag country={country} size="medium" isMystery={isMystery(country)} />}
                     isChecked={selectedCountriesSet.has(country)}
                     size="md"
                     onChange={() => {
