@@ -10,11 +10,14 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import styles from './page.module.css';
 
 export default function CreerSaMascotteStep4() {
+    const t = useExtracted('app.(1village).(activities).creer-sa-mascotte.4');
+    const tCommon = useExtracted('common');
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
 
@@ -29,53 +32,54 @@ export default function CreerSaMascotteStep4() {
             <Steps
                 steps={[
                     {
-                        label: 'Votre classe',
+                        label: t('Votre classe'),
                         href: '/creer-sa-mascotte/1',
                         status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: activity.data?.mascot?.name || 'Votre mascotte',
+                        label: activity.data?.mascot?.name || t('Votre mascotte'),
                         href: '/creer-sa-mascotte/2',
                         status: MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: 'Langues et monnaies',
+                        label: t('Langues et monnaies'),
                         href: '/creer-sa-mascotte/3',
                         status: MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
-                    { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
+                    { label: t('Le web de Pélico'), href: '/creer-sa-mascotte/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={4}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Les règles d&apos;1Village !
+                {t("Les règles d'1Village !")}
             </Title>
             <p>
-                {activity.data?.mascot?.name} est votre mascotte sur 1Village. C&apos;est grâce à elle que les autres classes vous reconnaîtront toute
-                l&apos;année !
+                {activity.data?.mascot?.name}{' '}
+                {t("est votre mascotte sur 1Village. C'est grâce à elle que les autres classes vous reconnaîtront toute l'année !")}
             </p>
             <br />
             <p>
-                {activity.data?.mascot?.name}, tout comme moi Pélico, est désormais un citoyen d&apos;internet ! Et comme à la maison ou à
-                l&apos;école, il y a certaines règles à respecter sur internet et sur 1Village. Pour les découvrir, vous pouvez réaliser
-                l&apos;activité &quot;La citoyenneté internet&quot; de note catalogue d&apos;activités !
+                {activity.data?.mascot?.name},{' '}
+                {t(
+                    "tout comme moi Pélico, est désormais un citoyen d'internet ! Et comme à la maison ou à l'école, il y a certaines règles à respecter sur internet et sur 1Village. Pour les découvrir, vous pouvez réaliser l'activité \"La citoyenneté internet\" de note catalogue d'activités !",
+                )}
             </p>
             <br />
-            <p>Mais en attendant, j&apos;ai quelques conseils à vous donner ! Sur internet et 1Village :</p>
+            <p>{t("Mais en attendant, j'ai quelques conseils à vous donner ! Sur internet et 1Village :")}</p>
             <br />
-            <p>📝 Il faut faire attention à ce que nous partageons et à ce que nous disons car cela impacte les autres citoyens d&apos;internet.</p>
+            <p>📝 {t("Il faut faire attention à ce que nous partageons et à ce que nous disons car cela impacte les autres citoyens d'internet.")}</p>
             <br />
-            <p>🕶️ Il ne faut pas partager des photos de ses camarades et des pélicopains sans leur permission.</p>
+            <p>🕶️ {t('Il ne faut pas partager des photos de ses camarades et des pélicopains sans leur permission.')}</p>
             <br />
-            <p>🤔 Enfin, il ne faut pas croire tout ce qu&apos;on peut lire, voir ou écouter car certaines informations peuvent être fausses.</p>
+            <p>🤔 {t("Enfin, il ne faut pas croire tout ce qu'on peut lire, voir ou écouter car certaines informations peuvent être fausses.")}</p>
             <br />
-            <p>Avez-vous bien comprismes conseils les pélicopains ?</p>
+            <p>{t('Avez-vous bien compris mes conseils les pélicopains ?')}</p>
             <div className={styles.checkboxContainer}>
                 <Checkbox
-                    label="Nous avons compris et nous sommes d'accord avec les conseils de Pélico !"
+                    label={t("Nous avons compris et nous sommes d'accord avec les conseils de Pélico !")}
                     name="hasAgreed"
                     onChange={() => setHasAcceptedRules(!activity?.data?.hasAcceptedRules)}
                     isChecked={activity?.data?.hasAcceptedRules}
@@ -87,7 +91,7 @@ export default function CreerSaMascotteStep4() {
                     href="/creer-sa-mascotte/3"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
@@ -95,7 +99,7 @@ export default function CreerSaMascotteStep4() {
                     disabled={!activity?.data?.hasAcceptedRules}
                     color="primary"
                     variant="outlined"
-                    label="Étape suivante"
+                    label={tCommon('Étape suivante')}
                     rightIcon={<ChevronRightIcon />}
                 />
             </div>
