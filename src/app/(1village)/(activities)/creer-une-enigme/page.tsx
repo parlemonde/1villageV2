@@ -1,26 +1,13 @@
 'use client';
 
+import { DEFAULT_THEMES } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import EvenementIcon from '@frontend/svg/enigmes/evenement-mystere.svg';
-import LocalisationIcon from '@frontend/svg/enigmes/localisation-mystere.svg';
-import ObjetIcon from '@frontend/svg/enigmes/objet-mystere.svg';
-import PersonaliteIcon from '@frontend/svg/enigmes/personalite-mystere.svg';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import styles from './page.module.css';
-
-export const DEFAULT_PUZZLES: {
-    name: string;
-    icon: React.ReactNode;
-}[] = [
-    { name: 'Objet mystère', icon: <ObjetIcon /> },
-    { name: 'Évènement mystère', icon: <EvenementIcon /> },
-    { name: 'Personnalité mystère', icon: <PersonaliteIcon /> },
-    { name: 'Lieu mystère', icon: <LocalisationIcon /> },
-];
 
 export default function CreerUneEnigmePage() {
     const router = useRouter();
@@ -30,7 +17,7 @@ export default function CreerUneEnigmePage() {
     return (
         <PageContainer title="Sur quelle thématique sera votre énigme ?">
             <div className={styles.themesContainer}>
-                {DEFAULT_PUZZLES.map((theme) => (
+                {DEFAULT_THEMES.map((theme) => (
                     <button
                         key={theme.name}
                         className={styles.themeLink}
