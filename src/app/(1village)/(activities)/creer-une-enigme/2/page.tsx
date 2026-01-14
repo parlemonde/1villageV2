@@ -16,14 +16,14 @@ export default function CreerUneEnigmeStep2() {
         return null;
     }
 
-    const puzzle = activity.data?.defaultTheme || activity.data?.customTheme;
-    const isFirstStepDone = !!puzzle;
+    const themeName = activity.data?.defaultTheme || activity.data?.customTheme;
+    const isFirstStepDone = !!themeName;
 
     return (
         <PageContainer>
             <Steps
                 steps={[
-                    { label: puzzle || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
+                    { label: themeName || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
                     { label: 'Pré-visualiser', href: '/creer-une-enigme/3' },
                 ]}
