@@ -14,6 +14,7 @@ import PlusIcon from '@frontend/svg/plus.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
@@ -26,6 +27,8 @@ const isValidCount = (count1?: number, count2?: number, totalCount?: number) => 
 };
 
 export default function CreerSaMascotteStep1() {
+    const t = useExtracted('app.(1village).(activities).creer-sa-mascotte.1');
+    const tCommon = useExtracted('common');
     const router = useRouter();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
     const { user } = useContext(UserContext);
@@ -47,6 +50,9 @@ export default function CreerSaMascotteStep1() {
         activity?.data?.classroom?.teachers?.totalCount,
     );
 
+    const womanTerm = activity.data?.classroom?.students?.femalesCount === 1 ? t('femme') : t('femmes');
+    const manTerm = activity.data?.classroom?.students?.malesCount === 1 ? t('homme') : t('hommes');
+
     const { setClassroom, setClassroomStudents, setTeachers, setSchool } = mascotActivityHelpers(activity, setActivity);
 
     return (
@@ -54,26 +60,26 @@ export default function CreerSaMascotteStep1() {
             <PageContainer>
                 <Steps
                     steps={[
-                        { label: 'Votre classe', href: '/creer-sa-mascotte/1' },
+                        { label: t('Votre classe'), href: '/creer-sa-mascotte/1' },
                         { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-sa-mascotte/2' },
-                        { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
-                        { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
-                        { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
+                        { label: t('Langues et monnaies'), href: '/creer-sa-mascotte/3' },
+                        { label: t('Le web de Pélico'), href: '/creer-sa-mascotte/4' },
+                        { label: tCommon('Pré-visualiser'), href: '/creer-sa-mascotte/5' },
                     ]}
                     activeStep={1}
                     marginTop="xl"
                     marginBottom="md"
                 />
                 <Title variant="h2" marginBottom="md">
-                    Qui est dans votre classe ?
+                    {t('Qui est dans votre classe ?')}
                 </Title>
                 <div className={styles.paragraph}>
                     <div className={styles.line}>
-                        <p>Nous sommes</p>
+                        <p>{t('Nous sommes')}</p>
                         <Input type="text" value={activity.data?.classroom?.alias} onChange={(e) => setClassroom('alias', e.target.value)} />
                     </div>
                     <div className={styles.line}>
-                        <p>Nous sommes</p>
+                        <p>{t('Nous sommes')}</p>
                         <Input
                             hasError={classroomStudentsCountError}
                             type="number"
@@ -83,7 +89,9 @@ export default function CreerSaMascotteStep1() {
                                 setClassroomStudents('totalCount', value);
                             }}
                         />
-                        <p>élèves, dont</p>
+                        <p>
+                            {t('élèves')} {t('dont')}
+                        </p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.students?.femalesCount ?? ''}
@@ -92,7 +100,10 @@ export default function CreerSaMascotteStep1() {
                                 setClassroomStudents('femalesCount', value);
                             }}
                         />
-                        <p> filles et</p>
+                        <p>
+                            {' '}
+                            {t('fille(s)')} {t('et')}
+                        </p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.students?.malesCount ?? ''}
@@ -101,10 +112,10 @@ export default function CreerSaMascotteStep1() {
                                 setClassroomStudents('malesCount', value);
                             }}
                         />
-                        <p> garçons.</p>
+                        <p> {t('garçon(s)')}.</p>
                     </div>
                     <div className={styles.line}>
-                        <p>En moyenne, l&apos;âge des enfants de notre classe est</p>
+                        <p>{t("En moyenne, l'âge des enfants de notre classe est")}</p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.students?.meanAge ?? ''}
@@ -113,10 +124,10 @@ export default function CreerSaMascotteStep1() {
                                 setClassroomStudents('meanAge', value);
                             }}
                         />
-                        <p> ans.</p>
+                        <p> {t('ans')}.</p>
                     </div>
                     <div className={styles.line}>
-                        <p>Nous avons</p>
+                        <p>{t('Nous avons')}</p>
                         <Input
                             hasError={totalTeachersError}
                             type="number"
@@ -126,7 +137,10 @@ export default function CreerSaMascotteStep1() {
                                 setTeachers('totalCount', value);
                             }}
                         />
-                        <p> professeur(s), dont</p>
+                        <p>
+                            {' '}
+                            {t('professeur(s)')} {t('dont')}
+                        </p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.teachers?.femalesCount ?? ''}
@@ -135,7 +149,10 @@ export default function CreerSaMascotteStep1() {
                                 setTeachers('femalesCount', value);
                             }}
                         />
-                        <p> femme(s) et</p>
+                        <p>
+                            {' '}
+                            {womanTerm} {t('et')}
+                        </p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.teachers?.malesCount ?? ''}
@@ -144,10 +161,10 @@ export default function CreerSaMascotteStep1() {
                                 setTeachers('malesCount', value);
                             }}
                         />
-                        <p> homme(s).</p>
+                        <p> {manTerm}.</p>
                     </div>
                     <div className={styles.line}>
-                        <p>Dans notre école, il y a</p>
+                        <p>{t('Dans notre école, il y a')}</p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.school?.classroomsCount ?? ''}
@@ -156,7 +173,10 @@ export default function CreerSaMascotteStep1() {
                                 setSchool('classroomsCount', value);
                             }}
                         />
-                        <p> classes, et</p>
+                        <p>
+                            {' '}
+                            {t('classe(s)')} {t('et')}
+                        </p>
                         <Input
                             type="number"
                             value={activity?.data?.classroom?.school?.studentsCount ?? ''}
@@ -165,15 +185,16 @@ export default function CreerSaMascotteStep1() {
                                 setSchool('studentsCount', value);
                             }}
                         />
-                        <p> élèves.</p>
+                        <p> {t('élèves')}.</p>
                     </div>
                 </div>
                 <Title variant="h2" marginBottom="md">
-                    À quoi ressemble votre classe ?
+                    {t('À quoi ressemble votre classe ?')}
                 </Title>
                 <p>
-                    Pour donner un aperçu de votre classe aux pélicopains, choisissez la photo d&apos;une affiche ou d&apos;une décoration accrochée
-                    aux murs !
+                    {t(
+                        "Pour donner un aperçu de votre classe aux pélicopains, choisissez la photo d'une affiche ou d'une décoration accrochée aux murs !",
+                    )}
                 </p>
                 <div className={styles.imageUploadForm}>
                     <div className={styles.imagePreview}>
@@ -190,17 +211,17 @@ export default function CreerSaMascotteStep1() {
                         ) : (
                             <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
                         )}
-                        <p>Image de votre affiche ou décoration</p>
+                        <p>{t('Image de votre affiche ou décoration')}</p>
                     </div>
                     <div className={styles.description}>
                         <Field
                             className={styles.field}
-                            label="Que représente cette photo et pourquoi l'avoir choisie ?"
+                            label={t("Que représente cette photo et pourquoi l'avoir choisie ?")}
                             input={
                                 <TextArea
                                     size="md"
                                     isFullWidth
-                                    placeholder="Description de votre image"
+                                    placeholder={t('Description de votre image')}
                                     value={activity?.data?.classroom?.description ?? ''}
                                     onChange={(e) => setClassroom('description', e.target.value)}
                                 />
@@ -213,7 +234,7 @@ export default function CreerSaMascotteStep1() {
                         disabled={!MASCOT_STEPS_VALIDATORS.isStep1Valid(activity)}
                         onClick={() => router.push('/creer-sa-mascotte/2')}
                         color="primary"
-                        label="Étape suivante"
+                        label={tCommon('Étape suivante')}
                         rightIcon={<ChevronRightIcon />}
                     ></Button>
                 </div>

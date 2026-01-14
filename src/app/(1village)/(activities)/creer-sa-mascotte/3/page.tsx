@@ -12,11 +12,14 @@ import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import { LANGUAGES } from '@lib/iso-639-languages-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import styles from './page.module.css';
 
 export default function CreerSaMascotteStep3() {
+    const t = useExtracted('app.(1village).(activities).creer-sa-mascotte.3');
+    const tCommon = useExtracted('common');
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
 
@@ -41,30 +44,30 @@ export default function CreerSaMascotteStep3() {
             <Steps
                 steps={[
                     {
-                        label: 'Votre classe',
+                        label: t('Votre classe'),
                         href: '/creer-sa-mascotte/1',
                         status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: activity.data?.mascot?.name || 'Votre mascotte',
+                        label: activity.data?.mascot?.name || t('Votre mascotte'),
                         href: '/creer-sa-mascotte/2',
                         status: MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
-                    { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
-                    { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
+                    { label: t('Langues et monnaies'), href: '/creer-sa-mascotte/3' },
+                    { label: t('Le web de Pélico'), href: '/creer-sa-mascotte/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Langues parlées dans votre classe
+                {t('Langues parlées dans votre classe')}
             </Title>
             <Field
                 label={
                     <label>
-                        Quelles sont les langues parlées couramment par <strong>tous les enfants</strong> de votre classe ?
+                        {t('Quelles sont les langues parlées couramment par')} <strong>{t('tous les enfants')}</strong> {t('de votre classe ?')}
                     </label>
                 }
                 marginBottom="md"
@@ -80,7 +83,7 @@ export default function CreerSaMascotteStep3() {
             <Field
                 label={
                     <label>
-                        Quelles sont les langues parlées couramment par <strong>au moins un enfant</strong> de votre classe ?
+                        {t('Quelles sont les langues parlées couramment par')} <strong>{t('au moins un enfant')}</strong> {t('de votre classe ?')}
                     </label>
                 }
                 marginBottom="md"
@@ -94,7 +97,7 @@ export default function CreerSaMascotteStep3() {
                 }
             />
             <Field
-                label="Quelles sont les langues étrangères apprises par les enfants de votre classe ?"
+                label={t('Quelles sont les langues étrangères apprises par les enfants de votre classe ?')}
                 marginBottom="md"
                 input={
                     <MultiSelect
@@ -106,10 +109,10 @@ export default function CreerSaMascotteStep3() {
                 }
             />
             <Title variant="h2" marginBottom="md">
-                Monnaies utilisées dans votre classe
+                {t('Monnaies utilisées dans votre classe')}
             </Title>
             <Field
-                label="Quelles sont les monnaies utilisées par les enfants de votre classe ?"
+                label={t('Quelles sont les monnaies utilisées par les enfants de votre classe ?')}
                 marginBottom="md"
                 input={
                     <MultiSelect
@@ -126,7 +129,7 @@ export default function CreerSaMascotteStep3() {
                     href="/creer-sa-mascotte/2"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
@@ -134,7 +137,7 @@ export default function CreerSaMascotteStep3() {
                     onClick={() => router.push('/creer-sa-mascotte/4')}
                     color="primary"
                     variant="outlined"
-                    label="Étape suivante"
+                    label={tCommon('Étape suivante')}
                     rightIcon={<ChevronRightIcon />}
                 />
             </div>
