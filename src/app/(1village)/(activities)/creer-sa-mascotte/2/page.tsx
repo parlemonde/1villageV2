@@ -15,11 +15,14 @@ import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
 
 export default function CreerSaMascotteStep2() {
+    const t = useExtracted('app.(1village).(activities).creer-sa-mascotte.2');
+    const tCommon = useExtracted('common');
     const router = useRouter();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
 
@@ -43,21 +46,21 @@ export default function CreerSaMascotteStep2() {
                 <Steps
                     steps={[
                         {
-                            label: 'Votre classe',
+                            label: t('Votre classe'),
                             href: '/creer-sa-mascotte/1',
                             status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                         },
-                        { label: activity.data?.mascot?.name || 'Votre mascotte', href: '/creer-sa-mascotte/2' },
-                        { label: 'Langues et monnaies', href: '/creer-sa-mascotte/3' },
-                        { label: 'Le web de Pélico', href: '/creer-sa-mascotte/4' },
-                        { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
+                        { label: activity.data?.mascot?.name || t('Votre mascotte'), href: '/creer-sa-mascotte/2' },
+                        { label: t('Langues et monnaies'), href: '/creer-sa-mascotte/3' },
+                        { label: t('Le web de Pélico'), href: '/creer-sa-mascotte/4' },
+                        { label: tCommon('Pré-visualiser'), href: '/creer-sa-mascotte/5' },
                     ]}
                     activeStep={2}
                     marginTop="xl"
                     marginBottom="md"
                 />
                 <Title variant="h2" marginBottom="md">
-                    Qui êtes-vous ? Choisissez une mascotte qui vous ressemble collectivement !
+                    {t('Qui êtes-vous ? Choisissez une mascotte qui vous ressemble collectivement !')}
                 </Title>
                 <div className={styles.mascotUpload}>
                     <div className={styles.left}>
@@ -75,13 +78,13 @@ export default function CreerSaMascotteStep2() {
                             ) : (
                                 <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
                             )}
-                            <p style={{ textAlign: 'center' }}>Image de votre mascotte</p>
+                            <p style={{ textAlign: 'center' }}>{t('Image de votre mascotte')}</p>
                         </div>
                     </div>
                     <div className={styles.right}>
                         <Field
                             marginBottom="md"
-                            label="Nom"
+                            label={t('Nom')}
                             input={
                                 <Input
                                     isFullWidth
@@ -94,7 +97,7 @@ export default function CreerSaMascotteStep2() {
                             }
                         />
                         <Field
-                            label="Que représente votre mascotte et pourquoi l'avoir choisie ?"
+                            label={t("Que représente votre mascotte et pourquoi l'avoir choisie ?")}
                             input={
                                 <TextArea
                                     placeholder="Description"
@@ -110,7 +113,7 @@ export default function CreerSaMascotteStep2() {
                     </div>
                 </div>
                 <fieldset className={styles.personalityTraits}>
-                    <legend>3 traits de personnalité de votre mascotte</legend>
+                    <legend>{t('3 traits de personnalité de votre mascotte')}</legend>
                     <div className={styles.row}>
                         <Input
                             type="text"
@@ -146,10 +149,10 @@ export default function CreerSaMascotteStep2() {
                 </fieldset>
                 <Field
                     marginBottom="xl"
-                    label="Dans quels pays rêve-t-elle de voyager ?"
+                    label={t('Dans quels pays rêve-t-elle de voyager ?')}
                     input={
                         <MultiSelect
-                            placeholder="Choisir les pays"
+                            placeholder={t('Choisir les pays')}
                             isFullWidth
                             value={activity?.data?.mascot?.favoriteCountries || []}
                             onChange={(countries) => setMascot('favoriteCountries', countries)}
@@ -160,10 +163,10 @@ export default function CreerSaMascotteStep2() {
                 <Field
                     className={styles.field}
                     marginBottom="xl"
-                    label="À quel jeu de récréation votre mascotte joue-t-telle le plus souvent ?"
+                    label={t('À quel jeu de récréation votre mascotte joue-t-telle le plus souvent ?')}
                     input={
                         <div className={styles.line}>
-                            <p>Notre mascotte joue</p>
+                            <p>{t('Notre mascotte joue')}</p>
                             <Input
                                 isFullWidth
                                 type="text"
@@ -176,10 +179,10 @@ export default function CreerSaMascotteStep2() {
                 <Field
                     className={styles.field}
                     marginBottom="md"
-                    label="Quels sports pratique-t-elle le plus souvent ?"
+                    label={t('Quels sports pratique-t-elle le plus souvent ?')}
                     input={
                         <div className={styles.line}>
-                            <p>Notre mascotte pratique</p>
+                            <p>{t('Notre mascotte pratique')}</p>
                             <Input
                                 isFullWidth
                                 type="text"
@@ -195,7 +198,7 @@ export default function CreerSaMascotteStep2() {
                         href="/creer-sa-mascotte/1"
                         color="primary"
                         variant="outlined"
-                        label="Étape précédente"
+                        label={tCommon('Étape précédente')}
                         leftIcon={<ChevronLeftIcon />}
                     />
                     <Button
@@ -203,7 +206,7 @@ export default function CreerSaMascotteStep2() {
                         onClick={() => router.push('/creer-sa-mascotte/3')}
                         color="primary"
                         variant="outlined"
-                        label="Étape suivante"
+                        label={tCommon('Étape suivante')}
                         rightIcon={<ChevronRightIcon />}
                     />
                 </div>

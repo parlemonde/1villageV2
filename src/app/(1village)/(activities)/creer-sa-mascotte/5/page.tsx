@@ -16,11 +16,14 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
 
 export default function CreerSaMascotteStep5() {
+    const t = useExtracted('app.(1village).(activities).creer-sa-mascotte.5');
+    const tCommon = useExtracted('common');
     const router = useRouter();
     const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
     const { classroom, setClassroom } = useContext(UserContext);
@@ -65,59 +68,68 @@ export default function CreerSaMascotteStep5() {
         }
     };
 
+    const manTerm = activity.data?.classroom?.teachers?.femalesCount === 1 ? t('homme') : t('hommes');
+    const womanTerm = activity.data?.classroom?.teachers?.malesCount === 1 ? t('femme') : t('femmes');
+
     return (
         <PageContainer>
             <Steps
                 steps={[
                     {
-                        label: 'Votre classe',
+                        label: t('Votre classe'),
                         href: '/creer-sa-mascotte/1',
                         status: MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: activity.data?.mascot?.name || 'Votre mascotte',
+                        label: activity.data?.mascot?.name || t('Votre mascotte'),
                         href: '/creer-sa-mascotte/2',
                         status: MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: 'Langues et monnaies',
+                        label: t('Langues et monnaies'),
                         href: '/creer-sa-mascotte/3',
                         status: MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: 'Le web de Pélico',
+                        label: t('Le web de Pélico'),
                         href: '/creer-sa-mascotte/4',
                         status: MASCOT_STEPS_VALIDATORS.isStep4Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: 'Pré-visualiser', href: '/creer-sa-mascotte/5' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-sa-mascotte/5' },
                 ]}
                 activeStep={5}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Pré-visualisez votre mascotte et publiez-la
+                {t('Pré-visualisez votre mascotte et publiez-la')}
             </Title>
-            <p>Relisez votre publication une dernière fois avant de la publier !</p>
+            <p>{t('Relisez votre publication une dernière fois avant de la publier !')}</p>
             <ActivityStepPreview
-                stepName="Votre classe"
+                stepName={t('Votre classe')}
                 href="/creer-sa-mascotte/1"
                 status={MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                <p>Nous sommes {classroom?.name}</p>
                 <p>
-                    Nous sommes {activity.data?.classroom?.students?.totalCount}, dont {activity.data?.classroom?.students?.femalesCount} fille(s) et{' '}
-                    {activity.data?.classroom?.students?.malesCount} garçon(s).
-                </p>
-                <p>En moyenne, l&apos;âge des enfants de notre classe est {activity.data?.classroom?.students?.meanAge} ans</p>
-                <p>
-                    Nous avons {activity.data?.classroom?.teachers?.totalCount} professeur(s), dont {activity.data?.classroom?.teachers?.femalesCount}{' '}
-                    femme(s) et {activity.data?.classroom?.teachers?.malesCount} homme(s).
+                    {t('Nous sommes')} {classroom?.name}.
                 </p>
                 <p>
-                    Dans notre école, il y a {activity.data?.classroom?.school?.classroomsCount} classes et{' '}
-                    {activity.data?.classroom?.school?.studentsCount} élèves
+                    {t('Nous sommes')} {activity.data?.classroom?.students?.totalCount}, {t('élèves')} {t('dont')}{' '}
+                    {activity.data?.classroom?.students?.femalesCount} {t('fille(s)')} {t('et')} {activity.data?.classroom?.students?.malesCount}{' '}
+                    {t('garçon(s)')}.
+                </p>
+                <p>
+                    {t("En moyenne, l'âge des enfants de notre classe est")} {activity.data?.classroom?.students?.meanAge} {t('ans')}.
+                </p>
+                <p>
+                    {t('Nous avons')} {activity.data?.classroom?.teachers?.totalCount} {t('professeur(s)')}, {t('dont')}{' '}
+                    {activity.data?.classroom?.teachers?.femalesCount} {womanTerm} {t('et')} {activity.data?.classroom?.teachers?.malesCount}{' '}
+                    {manTerm}.
+                </p>
+                <p>
+                    {t('Dans notre école, il y a')} {activity.data?.classroom?.school?.classroomsCount} {t('classes')} {t('et')}{' '}
+                    {activity.data?.classroom?.school?.studentsCount} {t('élèves')}.
                 </p>
                 {activity.data?.classroom?.imageUrl && (
                     <div className={styles.imageContainer}>
@@ -125,7 +137,7 @@ export default function CreerSaMascotteStep5() {
                             width={0}
                             height={0}
                             src={activity.data?.classroom?.imageUrl}
-                            alt={'Notre classe'}
+                            alt={t('Notre classe')}
                             sizes="100vw"
                             style={{ objectFit: 'cover', width: '100%', height: 'auto', margin: '16px 0' }}
                         />
@@ -134,7 +146,7 @@ export default function CreerSaMascotteStep5() {
                 <p>{activity.data?.mascot?.description}</p>
             </ActivityStepPreview>
             <ActivityStepPreview
-                stepName="Votre mascotte"
+                stepName={t('Votre mascotte')}
                 href="/creer-sa-mascotte/2"
                 status={MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
@@ -144,7 +156,7 @@ export default function CreerSaMascotteStep5() {
                         {activity.data?.mascot?.imageUrl && (
                             <Image
                                 src={activity.data?.mascot?.imageUrl}
-                                alt={'Notre mascotte'}
+                                alt={t('Notre mascotte')}
                                 width={150}
                                 height={150}
                                 style={{ objectFit: 'cover' }}
@@ -152,41 +164,46 @@ export default function CreerSaMascotteStep5() {
                         )}
                     </div>
                     <div className={styles.right}>
-                        <p>Notre mascotte s&apos;appelle {activity.data?.mascot?.name}, elle nous représente.</p>
+                        <p>
+                            {t("Notre mascotte s'appelle")} {activity.data?.mascot?.name}, {t('elle nous représente')}.
+                        </p>
                         <p>{activity.data?.mascot?.description}</p>
                         <p>
-                            {activity.data?.mascot?.name} est {activity.data?.mascot?.personalityTraits?.[0]},{' '}
-                            {activity.data?.mascot?.personalityTraits?.[1]} et {activity.data?.mascot?.personalityTraits?.[2]}.
+                            {activity.data?.mascot?.name} {t('est')} {activity.data?.mascot?.personalityTraits?.[0]},{' '}
+                            {activity.data?.mascot?.personalityTraits?.[1]} {t('et')} {activity.data?.mascot?.personalityTraits?.[2]}.
                         </p>
                         <p>
-                            Notre mascotte rêve d&apos;aller dans ces pays :{' '}
+                            {t("Notre mascotte rêve d'aller dans ces pays :")}{' '}
                             {activity.data?.mascot?.favoriteCountries?.map((country) => COUNTRIES[country]).join(', ')}.
                         </p>
                         <p>
-                            Notre mascotte joue {activity.data?.mascot?.favoriteGame} et pratique {activity.data?.mascot?.favoriteSport}.
+                            {t('Notre mascotte joue')} {activity.data?.mascot?.favoriteGame} {t('et')} {t('pratique')}{' '}
+                            {activity.data?.mascot?.favoriteSport}.
                         </p>
                     </div>
                 </div>
             </ActivityStepPreview>
             <ActivityStepPreview
-                stepName="Langues et monnaies"
+                stepName={t('Langues et monnaies')}
                 href="/creer-sa-mascotte/3"
                 status={MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
                 <p>
-                    Tous les enfants de notre classe parlent :{' '}
+                    {t('Tous les enfants de notre classe parlent :')}{' '}
                     {activity.data?.languages?.spokenByAll?.map((language) => LANGUAGES[language]).join(', ')}.
                 </p>
                 <p>
-                    Au moins un enfant de notre classe parle :{' '}
+                    {t('Au moins un enfant de notre classe parle :')}{' '}
                     {activity.data?.languages?.spokenBySome?.map((language) => LANGUAGES[language]).join(', ')}.
                 </p>
                 <p>
-                    {activity?.data?.mascot?.name}, comme tous les enfants de notre classe, apprend :{' '}
+                    {activity?.data?.mascot?.name}, {t('comme tous les enfants de notre classe, apprend :')}{' '}
                     {activity.data?.languages?.taught?.map((language) => LANGUAGES[language]).join(', ')}.
                 </p>
-                <p>Nous utilisons comme monnaie : {activity.data?.languages?.currencies?.map((currency) => CURRENCIES[currency]).join(', ')}.</p>
+                <p>
+                    {t('Nous utilisons comme monnaie :')} {activity.data?.languages?.currencies?.map((currency) => CURRENCIES[currency]).join(', ')}.
+                </p>
             </ActivityStepPreview>
             <div className={styles.buttons}>
                 <Button
@@ -194,13 +211,13 @@ export default function CreerSaMascotteStep5() {
                     href="/creer-sa-mascotte/3"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
                     color="primary"
                     variant="contained"
-                    label={activity.publishDate ? 'Modifier' : 'Publier'}
+                    label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
                     disabled={!isValid}
                     onClick={onSubmit}
                 />
