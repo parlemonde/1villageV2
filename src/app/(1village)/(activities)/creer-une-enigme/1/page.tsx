@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_PUZZLES } from '@app/(1village)/(activities)/creer-une-enigme/page';
+import { DEFAULT_THEMES } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
@@ -48,7 +48,7 @@ export default function CreerUneEnigmeStep1() {
     const themeName = useCustomTheme ? activity.data?.customTheme : defaultTheme;
     const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
 
-    const selectOptions = DEFAULT_PUZZLES.map((puzzle) => ({ label: puzzle.name, value: puzzle.name }));
+    const selectOptions = DEFAULT_THEMES.map((puzzle) => ({ label: puzzle.name, value: puzzle.name }));
     if (defaultTheme && !selectOptions.some((option) => option.value === defaultTheme)) {
         selectOptions.push({ label: defaultTheme, value: defaultTheme });
     }
