@@ -11,6 +11,7 @@ import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
+import { MascotCard } from './cards/MascotCard';
 
 const EmptyContentCard = () => {
     return null;
@@ -21,7 +22,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     indice: HintCard,
     jeu: EmptyContentCard,
     enigme: EmptyContentCard,
-    mascotte: EmptyContentCard,
+    mascotte: MascotCard,
 };
 
 interface ActivityCardProps {
