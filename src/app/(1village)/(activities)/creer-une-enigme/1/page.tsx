@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_PUZZLES } from '@app/(1village)/(activities)/creer-une-enigme/page';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
@@ -17,8 +18,6 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import { useContext } from 'react';
 import useSWR from 'swr';
-
-import { DEFAULT_PUZZLES } from '../page';
 
 const CUSTOM_PUZZLE_VALUE = '__CUSTOM_PUZZLE__';
 
@@ -46,7 +45,7 @@ export default function CreerUneEnigmeStep1() {
 
     const defaultTheme = activity.data?.defaultTheme;
     const useCustomTheme = !defaultTheme;
-    const puzzle = useCustomTheme ? activity.data?.customTheme : defaultTheme;
+    const themeName = useCustomTheme ? activity.data?.customTheme : defaultTheme;
     const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
 
     const selectOptions = DEFAULT_PUZZLES.map((puzzle) => ({ label: puzzle.name, value: puzzle.name }));
@@ -60,7 +59,7 @@ export default function CreerUneEnigmeStep1() {
             <BackButton href="/creer-une-enigme" label="Retour" />
             <Steps
                 steps={[
-                    { label: puzzle || 'Énigme', href: '/creer-une-enigme/1' },
+                    { label: themeName || 'Énigme', href: '/creer-une-enigme/1' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
                     { label: 'Pré-visualiser', href: '/creer-une-enigme/3' },
                 ]}
@@ -124,7 +123,7 @@ export default function CreerUneEnigmeStep1() {
                         >
                             <PelicoSearch style={{ width: '100px', height: 'auto' }} />
                             <p>
-                                Aucune énigme trouvée pour le thème <strong>{puzzle}</strong>.
+                                Aucune énigme trouvée pour le thème <strong>{themeName}</strong>.
                             </p>
                         </div>
                     )}
