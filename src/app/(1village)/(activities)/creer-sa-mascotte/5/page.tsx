@@ -68,9 +68,6 @@ export default function CreerSaMascotteStep5() {
         }
     };
 
-    const manTerm = activity.data?.classroom?.teachers?.femalesCount === 1 ? t('homme') : t('hommes');
-    const womanTerm = activity.data?.classroom?.teachers?.malesCount === 1 ? t('femme') : t('femmes');
-
     return (
         <PageContainer>
             <Steps
@@ -115,21 +112,38 @@ export default function CreerSaMascotteStep5() {
                     {t('Nous sommes')} {classroom?.name}.
                 </p>
                 <p>
-                    {t('Nous sommes')} {activity.data?.classroom?.students?.totalCount}, {t('élèves')} {t('dont')}{' '}
-                    {activity.data?.classroom?.students?.femalesCount} {t('fille(s)')} {t('et')} {activity.data?.classroom?.students?.malesCount}{' '}
-                    {t('garçon(s)')}.
+                    {t(
+                        'Nous sommes {studentsCount} élèves dont {girlsCount, plural, =0 {# fille} =1 {# fille} other {# filles}} et {boysCount, plural, =0 {# garçon} =1 {# garçon} other {# garçons}}.',
+                        {
+                            studentsCount: `${activity?.data?.classroom?.students?.totalCount}`,
+                            girlsCount: activity?.data?.classroom?.students?.femalesCount || 0,
+                            boysCount: activity?.data?.classroom?.students?.malesCount || 0,
+                        },
+                    )}
                 </p>
                 <p>
-                    {t("En moyenne, l'âge des enfants de notre classe est")} {activity.data?.classroom?.students?.meanAge} {t('ans')}.
+                    {t("En moyenne, l'âge des enfants de notre classe est {age} ans.", {
+                        age: `${activity?.data?.classroom?.students?.meanAge}`,
+                    })}
                 </p>
                 <p>
-                    {t('Nous avons')} {activity.data?.classroom?.teachers?.totalCount} {t('professeur(s)')}, {t('dont')}{' '}
-                    {activity.data?.classroom?.teachers?.femalesCount} {womanTerm} {t('et')} {activity.data?.classroom?.teachers?.malesCount}{' '}
-                    {manTerm}.
+                    {t(
+                        'Nous avons {teacherCount, plural, =1 {# professeur} other {# professeurs}} dont {womanCount, plural, =0 {# femme} =1 {# femme} other {# femmes}} et {manCount, plural, =0 {# homme} =1 {# homme} other {# hommes}}.',
+                        {
+                            teacherCount: activity?.data?.classroom?.teachers?.totalCount || 0,
+                            womanCount: activity?.data?.classroom?.teachers?.femalesCount || 0,
+                            manCount: activity?.data?.classroom?.teachers?.malesCount || 0,
+                        },
+                    )}
                 </p>
                 <p>
-                    {t('Dans notre école, il y a')} {activity.data?.classroom?.school?.classroomsCount} {t('classes')} {t('et')}{' '}
-                    {activity.data?.classroom?.school?.studentsCount} {t('élèves')}.
+                    {t(
+                        'Dans notre école, il y a {classroomsCount, plural, =1 {# classe} other {# classes}} et {studentsCount, plural, =1 {# élève} other {# élèves}}.',
+                        {
+                            classroomsCount: activity?.data?.classroom?.school?.classroomsCount || 0,
+                            studentsCount: activity?.data?.classroom?.school?.studentsCount || 0,
+                        },
+                    )}
                 </p>
                 {activity.data?.classroom?.imageUrl && (
                     <div className={styles.imageContainer}>
@@ -165,7 +179,9 @@ export default function CreerSaMascotteStep5() {
                     </div>
                     <div className={styles.right}>
                         <p>
-                            {t("Notre mascotte s'appelle")} {activity.data?.mascot?.name}, {t('elle nous représente')}.
+                            {t("Notre mascotte s'appelle {mascotName}, elle nous représente.", {
+                                mascotName: activity.data?.mascot?.name || '',
+                            })}
                         </p>
                         <p>{activity.data?.mascot?.description}</p>
                         <p>
@@ -177,8 +193,10 @@ export default function CreerSaMascotteStep5() {
                             {activity.data?.mascot?.favoriteCountries?.map((country) => COUNTRIES[country]).join(', ')}.
                         </p>
                         <p>
-                            {t('Notre mascotte joue')} {activity.data?.mascot?.favoriteGame} {t('et')} {t('pratique')}{' '}
-                            {activity.data?.mascot?.favoriteSport}.
+                            {t('Notre mascotte joue {favoriteGame} et pratique {favoriteSport}.', {
+                                favoriteGame: activity.data?.mascot?.favoriteGame || '',
+                                favoriteSport: activity.data?.mascot?.favoriteSport || '',
+                            })}
                         </p>
                     </div>
                 </div>

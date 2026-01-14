@@ -12,6 +12,7 @@ import type { ActivityContentViewProps } from './activity-view.types';
 import { FreeContentView } from './views/FreeContentView';
 import { HintView } from './views/HintView';
 import { ReportView } from './views/ReportView';
+import { MascotView } from './views/MascotView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
@@ -19,6 +20,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     enigme: () => null,
     indice: HintView,
     reportage: ReportView,
+    mascotte: MascotView,
 };
 
 interface ActivityViewProps {
