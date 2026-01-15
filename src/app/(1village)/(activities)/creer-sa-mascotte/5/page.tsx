@@ -112,14 +112,13 @@ export default function CreerSaMascotteStep5() {
                     {t('Nous sommes')} {classroom?.name}.
                 </p>
                 <p>
-                    {t(
-                        'Nous sommes {studentsCount} élèves dont {girlsCount, plural, =0 {# fille} =1 {# fille} other {# filles}} et {boysCount, plural, =0 {# garçon} =1 {# garçon} other {# garçons}}.',
-                        {
-                            studentsCount: `${activity?.data?.classroom?.students?.totalCount}`,
-                            girlsCount: activity?.data?.classroom?.students?.femalesCount || 0,
-                            boysCount: activity?.data?.classroom?.students?.malesCount || 0,
-                        },
-                    )}
+                    {t('Nous sommes {studentsCount} élèves, dont {girlsCount} {girls} et {boysCount} {boys}.', {
+                        studentsCount: `${activity?.data?.classroom?.students?.totalCount}`,
+                        girlsCount: `${activity?.data?.classroom?.students?.femalesCount}`,
+                        girls: activity?.data?.classroom?.students?.femalesCount === 1 ? t('fille') : t('filles'),
+                        boysCount: `${activity?.data?.classroom?.students?.malesCount}`,
+                        boys: activity?.data?.classroom?.students?.malesCount === 1 ? t('garçon') : t('garcons'),
+                    })}
                 </p>
                 <p>
                     {t("En moyenne, l'âge des enfants de notre classe est {age} ans.", {
@@ -127,23 +126,21 @@ export default function CreerSaMascotteStep5() {
                     })}
                 </p>
                 <p>
-                    {t(
-                        'Nous avons {teacherCount, plural, =1 {# professeur} other {# professeurs}} dont {womanCount, plural, =0 {# femme} =1 {# femme} other {# femmes}} et {manCount, plural, =0 {# homme} =1 {# homme} other {# hommes}}.',
-                        {
-                            teacherCount: activity?.data?.classroom?.teachers?.totalCount || 0,
-                            womanCount: activity?.data?.classroom?.teachers?.femalesCount || 0,
-                            manCount: activity?.data?.classroom?.teachers?.malesCount || 0,
-                        },
-                    )}
+                    {t('Nous avons {teacherCount} {teacher}, dont {womanCount} {woman} et {manCount} {man}.', {
+                        teacherCount: `${activity?.data?.classroom?.teachers?.totalCount}`,
+                        teacher: activity?.data?.classroom?.teachers?.totalCount === 1 ? t('professeur') : t('professeurs'),
+                        womanCount: `${activity?.data?.classroom?.teachers?.femalesCount}`,
+                        woman: activity?.data?.classroom?.teachers?.femalesCount === 1 ? t('femme') : t('femmes'),
+                        manCount: `${activity?.data?.classroom?.teachers?.malesCount}`,
+                        man: activity?.data?.classroom?.teachers?.malesCount === 1 ? t('homme') : t('hommes'),
+                    })}
                 </p>
                 <p>
-                    {t(
-                        'Dans notre école, il y a {classroomsCount, plural, =1 {# classe} other {# classes}} et {studentsCount, plural, =1 {# élève} other {# élèves}}.',
-                        {
-                            classroomsCount: activity?.data?.classroom?.school?.classroomsCount || 0,
-                            studentsCount: activity?.data?.classroom?.school?.studentsCount || 0,
-                        },
-                    )}
+                    {t('Dans notre école, il y a {classroomsCount} {classrooms} et {studentsCount} élèves.', {
+                        classroomsCount: `${activity?.data?.classroom?.school?.classroomsCount}`,
+                        classrooms: activity?.data?.classroom?.school?.classroomsCount === 1 ? t('classe') : t('classes'),
+                        studentsCount: `${activity?.data?.classroom?.school?.studentsCount}`,
+                    })}
                 </p>
                 {activity.data?.classroom?.imageUrl && (
                     <div className={styles.imageContainer}>
@@ -152,8 +149,8 @@ export default function CreerSaMascotteStep5() {
                             height={0}
                             src={activity.data?.classroom?.imageUrl}
                             alt={t('Notre classe')}
-                            sizes="100vw"
-                            style={{ objectFit: 'cover', width: '100%', height: 'auto', margin: '16px 0' }}
+                            sizes="600px"
+                            style={{ objectFit: 'cover', width: '600px', height: 'auto', margin: '16px 0' }}
                         />
                     </div>
                 )}
@@ -173,7 +170,7 @@ export default function CreerSaMascotteStep5() {
                                 alt={t('Notre mascotte')}
                                 width={150}
                                 height={150}
-                                style={{ objectFit: 'cover' }}
+                                style={{ objectFit: 'cover', borderRadius: '50%' }}
                             />
                         )}
                     </div>

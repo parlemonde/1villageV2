@@ -12,7 +12,7 @@
 }
 .activityStepPreviewContent {
     position: relative;
-    padding: 42px 16px 16px 16px;
+    padding: 16px;
     border: 1px dashed var(--grey-300);
     border-radius: 4px;
 }
