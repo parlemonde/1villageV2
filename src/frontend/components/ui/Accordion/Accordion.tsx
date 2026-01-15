@@ -1,25 +1,27 @@
 'use client';
+import type { MarginProps } from '@frontend/components/ui/css-styles';
+// import { getMarginAndPaddingProps, getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { Accordion as RadixAccordion } from 'radix-ui';
 import * as React from 'react';
 import './accordion.module.css';
 
-interface AccordionItem {
-    title: string;
-    content: string;
+interface AccordionItem extends MarginProps {
+    title: string | React.ReactNode;
+    content: string | React.ReactNode;
 }
 
-interface AccordionProps {
+interface AccordionProps extends MarginProps {
     items: AccordionItem[];
 }
 
-interface AccordionTriggerProps {
+interface AccordionTriggerProps extends MarginProps {
     children: React.ReactNode;
     className?: string;
 }
 
-interface AccordionContentProps {
+interface AccordionContentProps extends MarginProps {
     children: React.ReactNode;
     className?: string;
 }
