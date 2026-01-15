@@ -1,15 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-debugger */
 'use client';
 
+import { getWeather, OPEN_WEATHER_BASE_URL } from '@app/api/weather/weather.get';
+import { CountryFlag } from '@frontend/components/CountryFlag';
 import { WorldMap } from '@frontend/components/WorldMap';
 import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
 import { jsonFetcher } from '@lib/json-fetcher';
 import type { Activity } from '@server/database/schemas/activities';
 import type { User } from '@server/database/schemas/users';
+import Image from 'next/image';
 import { useParams, usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import styles from './activity-side-panel.module.css';
+import type { WeatherResponse } from '../../../types/weather.type';
 
 export const ActivitySidePanel = () => {
     const pathname = usePathname();
@@ -20,6 +27,24 @@ export const ActivitySidePanel = () => {
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
     const formatPseudo = activityUser?.name.replace(' ', '-');
     const showTeacherSheet = activityUser?.role === 'teacher';
+    //const { data: weather } = getWeather({ latitude: activityUser.position.lat, longitude: activityUser.position.lng });
+    debugger;
+
+    const [weather, setWeather] = useState<WeatherResponse | null>(null);
+
+    useEffect(() => {
+        debugger;
+        async function fetchWeather() {
+            debugger;
+            const data = await getWeather({ latitude: 5, longitude: 45 });
+            debugger;
+            setWeather(data);
+        }
+        fetchWeather();
+    }, []);
+
+    //const weather: WeatherResponse = await getWeather({ latitude: 5, longitude: 45 });
+    debugger;
 
     const isOnActivityPage = pathname.startsWith('/activities/');
 
@@ -49,6 +74,40 @@ export const ActivitySidePanel = () => {
             <div className={styles.WorldMapContainer}>
                 <WorldMap activity={activity} />
             </div>
+
+            {weather !== null && (
+                <div
+                    className="bg-secondary vertical-bottom-margin"
+                    style={{
+                        fontWeight: 'bold',
+                        padding: '1rem',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <div style={{ marginBottom: '1rem' }}>
+                        {/* <CountryFlag country={activityUser.country?.isoCode}></CountryFlag> {activityUser.city} */}
+                    </div>
+                    {/* {localTime} */}
+                    {weather && (
+                        <>
+                            <Image
+                                alt="meteo"
+                                layout="fixed"
+                                width="100"
+                                height="100"
+                                objectFit="contain"
+                                src={`${OPEN_WEATHER_BASE_URL}/img/wn/${weather.weather[0].icon}@2x.png`}
+                                unoptimized
+                            />
+                            {weather.main.temp}°C
+                        </>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
