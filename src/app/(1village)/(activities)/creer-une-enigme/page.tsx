@@ -30,7 +30,7 @@ export default function CreerUneEnigmePage() {
                         }}
                     >
                         {theme.icon}
-                        {theme.name}
+                        {theme.tname}
                     </button>
                 ))}
                 <button

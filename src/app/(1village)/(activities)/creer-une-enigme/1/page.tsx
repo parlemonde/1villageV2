@@ -1,8 +1,9 @@
 'use client';
 
-import { useTranslatableThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { useTranslatableThemes, useTranslatableSubthemes, type SubThemeItem } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import { Accordion } from '@frontend/components/ui/Accordion';
 import { Button } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
@@ -16,6 +17,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
+import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
@@ -23,6 +25,8 @@ const CUSTOM_PUZZLE_VALUE = '__CUSTOM_PUZZLE__';
 
 export default function CreerUneEnigmeStep1() {
     const { DEFAULT_THEMES } = useTranslatableThemes();
+    const DEFAULT_SUBTHEMES = useTranslatableSubthemes();
+    const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
     const { data: allActivities = [] } = useSWR<Activity[]>(
@@ -49,11 +53,14 @@ export default function CreerUneEnigmeStep1() {
     const themeName = useCustomTheme ? activity.data?.customTheme : defaultTheme;
     const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
 
-    const selectOptions = DEFAULT_THEMES.map((puzzle) => ({ label: puzzle.name, value: puzzle.name }));
+    const selectOptions = DEFAULT_THEMES.map((puzzle) => ({ label: puzzle.tname, value: puzzle.name }));
     if (defaultTheme && !selectOptions.some((option) => option.value === defaultTheme)) {
         selectOptions.push({ label: defaultTheme, value: defaultTheme });
     }
     selectOptions.push({ label: 'Autre thème', value: CUSTOM_PUZZLE_VALUE });
+    // selectOptions.push({ label: t('Autre thème'), value: CUSTOM_PUZZLE_VALUE });
+
+    const subthemes = (defaultTheme && DEFAULT_SUBTHEMES[defaultTheme]) || [];
 
     return (
         <PageContainer>
@@ -83,6 +90,47 @@ export default function CreerUneEnigmeStep1() {
                     }
                 }}
             />
+            {defaultTheme && (
+                <>
+                    <Title variant="h2" marginTop="lg" marginBottom="md">
+                        Veuillez préciser le thème <strong>{themeName}</strong>.
+                    </Title>
+                    {subthemes.length > 0 &&
+                        subthemes.map((subtheme: SubThemeItem, index: number) => (
+                            <Button
+                                key={`subtheme-button-${index}`}
+                                isFullWidth
+                                color="primary"
+                                variant="outlined"
+                                marginBottom="sm"
+                                label={subtheme.tname}
+                                value={subtheme.name}
+                                onClick={(e) => {
+                                    setActivity({
+                                        type: 'enigme',
+                                        ...activity,
+                                        data: { ...activity.data, defaultTheme: e.currentTarget.value },
+                                    });
+                                    router.push('/creer-une-enigme/2');
+                                }}
+                            />
+                        ))}
+                    <Accordion
+                        margin="none"
+                        items={[
+                            {
+                                title: (
+                                    <Title variant="h3" margin="xs">
+                                        Autre {themeName}
+                                    </Title>
+                                ),
+                                content: 'examples',
+                            },
+                        ]}
+                    />
+                </>
+            )}
+
             <Title variant="h2" marginTop="lg" marginBottom="md">
                 {useCustomTheme ? "Présenter un autre type d'énigme :" : <>Énigmes des pélicopains sur ce thème :</>}
             </Title>
