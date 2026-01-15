@@ -84,7 +84,7 @@ export default function CreerSaMascotteStep2() {
                     <div className={styles.right}>
                         <Field
                             marginBottom="md"
-                            label={t('Nom')}
+                            label={t('Quel est le nom de votre mascotte ?')}
                             input={
                                 <Input
                                     isFullWidth

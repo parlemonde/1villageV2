@@ -42,7 +42,7 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shou
     const ContentCard = CONTENT_CARDS[activity.type] || EmptyContentCard;
     return (
         <div className={classNames(styles.activityCard, { [styles.isPinned]: activity.isPinned })}>
-            <ActivityHeader activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
+            <ActivityHeader showIcon activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
                     <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />

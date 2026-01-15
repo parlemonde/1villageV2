@@ -50,8 +50,15 @@ export default function CreerSaMascotteStep1() {
         activity?.data?.classroom?.teachers?.totalCount,
     );
 
-    const womanTerm = activity.data?.classroom?.students?.femalesCount === 1 ? t('femme') : t('femmes');
-    const manTerm = activity.data?.classroom?.students?.malesCount === 1 ? t('homme') : t('hommes');
+    const studentTerm = activity.data?.classroom?.students?.totalCount === 1 ? t('élève') : t('élèves');
+    const girlTerm = activity.data?.classroom?.students?.femalesCount === 1 ? t('fille') : t('filles');
+    const boyTerm = activity.data?.classroom?.students?.malesCount === 1 ? t('garçon') : t('garçons');
+
+    const teacherTerm = activity.data?.classroom?.teachers?.totalCount === 1 ? t('professeur') : t('professeurs');
+    const womanTerm = activity.data?.classroom?.teachers?.femalesCount === 1 ? t('femme') : t('femmes');
+    const manTerm = activity.data?.classroom?.teachers?.malesCount === 1 ? t('homme') : t('hommes');
+
+    const classroomTerm = activity.data?.classroom?.school?.classroomsCount === 1 ? t('classe') : t('classes');
 
     const { setClassroom, setClassroomStudents, setTeachers, setSchool } = mascotActivityHelpers(activity, setActivity);
 
@@ -83,6 +90,7 @@ export default function CreerSaMascotteStep1() {
                         <Input
                             hasError={classroomStudentsCountError}
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.students?.totalCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -90,10 +98,11 @@ export default function CreerSaMascotteStep1() {
                             }}
                         />
                         <p>
-                            {t('élèves')} {t('dont')}
+                            {studentTerm}, {t('dont')}
                         </p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.students?.femalesCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -102,22 +111,24 @@ export default function CreerSaMascotteStep1() {
                         />
                         <p>
                             {' '}
-                            {t('fille(s)')} {t('et')}
+                            {girlTerm} {t('et')}
                         </p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.students?.malesCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
                                 setClassroomStudents('malesCount', value);
                             }}
                         />
-                        <p> {t('garçon(s)')}.</p>
+                        <p> {boyTerm}.</p>
                     </div>
                     <div className={styles.line}>
                         <p>{t("En moyenne, l'âge des enfants de notre classe est")}</p>
                         <Input
                             type="number"
+                            min="1"
                             value={activity?.data?.classroom?.students?.meanAge ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -131,6 +142,7 @@ export default function CreerSaMascotteStep1() {
                         <Input
                             hasError={totalTeachersError}
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.teachers?.totalCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -139,10 +151,11 @@ export default function CreerSaMascotteStep1() {
                         />
                         <p>
                             {' '}
-                            {t('professeur(s)')} {t('dont')}
+                            {teacherTerm} {t('dont')}
                         </p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.teachers?.femalesCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -155,6 +168,7 @@ export default function CreerSaMascotteStep1() {
                         </p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.teachers?.malesCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -167,6 +181,7 @@ export default function CreerSaMascotteStep1() {
                         <p>{t('Dans notre école, il y a')}</p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.school?.classroomsCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
@@ -175,17 +190,18 @@ export default function CreerSaMascotteStep1() {
                         />
                         <p>
                             {' '}
-                            {t('classe(s)')} {t('et')}
+                            {classroomTerm} {t('et')}
                         </p>
                         <Input
                             type="number"
+                            min="0"
                             value={activity?.data?.classroom?.school?.studentsCount ?? ''}
                             onChange={(e) => {
                                 const value = e.target.value === '' ? undefined : parseInt(e.target.value);
                                 setSchool('studentsCount', value);
                             }}
                         />
-                        <p> {t('élèves')}.</p>
+                        <p> {studentTerm}.</p>
                     </div>
                 </div>
                 <Title variant="h2" marginBottom="md">
