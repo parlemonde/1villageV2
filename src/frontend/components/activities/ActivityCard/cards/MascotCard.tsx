@@ -11,31 +11,28 @@ export const MascotCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
         return null;
     }
 
-    const studentsDescription = t(
-        'Nous sommes {studentsCount} élèves, dont {girlsCount, plural, =0 {# fille} =1 {# fille} other {# filles}} et {boysCount, plural, =0 {# garçon} =1 {# garçon} other {# garçons}}.',
-        {
-            studentsCount: `${activity?.data?.classroom?.students?.totalCount}`,
-            girlsCount: activity?.data?.classroom?.students?.femalesCount || 0,
-            boysCount: activity?.data?.classroom?.students?.malesCount || 0,
-        },
-    );
+    const studentsDescription = t('Nous sommes {studentsCount} élèves, dont {girlsCount} {girls} et {boysCount} {boys}.', {
+        studentsCount: `${activity?.data?.classroom?.students?.totalCount}`,
+        girlsCount: `${activity?.data?.classroom?.students?.femalesCount}`,
+        girls: activity?.data?.classroom?.students?.femalesCount === 1 ? t('fille') : t('filles'),
+        boysCount: `${activity?.data?.classroom?.students?.malesCount}`,
+        boys: activity?.data?.classroom?.students?.malesCount === 1 ? t('garçon') : t('garcons'),
+    });
 
-    const teachersDescription = t(
-        'Nous avons {teachers, plural, =0 {# professeur} =1 {# professeur} other {# professeurs}} dont {womenCount, plural, =0 {# femme} =1 {# femme} other {# femmes}} et {menCount, plural, =0 {# homme} =1 {# homme} other {# hommes}}.',
-        {
-            teachers: activity?.data?.classroom?.teachers?.totalCount || 0,
-            womenCount: activity?.data?.classroom?.teachers?.femalesCount || 0,
-            menCount: activity?.data?.classroom?.teachers?.malesCount || 0,
-        },
-    );
+    const teachersDescription = t('Nous avons {teacherCount} {teacher}, dont {womanCount} {woman} et {manCount} {man}.', {
+        teacherCount: `${activity?.data?.classroom?.teachers?.totalCount}`,
+        teacher: activity?.data?.classroom?.teachers?.totalCount === 1 ? t('professeur') : t('professeurs'),
+        womanCount: `${activity?.data?.classroom?.teachers?.femalesCount}`,
+        woman: activity?.data?.classroom?.teachers?.femalesCount === 1 ? t('femme') : t('femmes'),
+        manCount: `${activity?.data?.classroom?.teachers?.malesCount}`,
+        man: activity?.data?.classroom?.teachers?.malesCount === 1 ? t('homme') : t('hommes'),
+    });
 
-    const schoolDescription = t(
-        'Dans notre école, il y a {classroomsCount, plural, =1 {# classe} other {# classes}} et {studentsCount, plural, =1 {# élève} other {# élèves}}.',
-        {
-            classroomsCount: activity?.data?.classroom?.school?.classroomsCount || 0,
-            studentsCount: activity?.data?.classroom?.school?.studentsCount || 0,
-        },
-    );
+    const schoolDescription = t('Dans notre école, il y a {classroomsCount} {classrooms} et {studentsCount} élèves.', {
+        classroomsCount: `${activity?.data?.classroom?.school?.classroomsCount}`,
+        classrooms: activity?.data?.classroom?.school?.classroomsCount === 1 ? t('classe') : t('classes'),
+        studentsCount: `${activity?.data?.classroom?.school?.studentsCount}`,
+    });
 
     return (
         <>

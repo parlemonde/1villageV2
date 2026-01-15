@@ -41,9 +41,10 @@ interface ActivityHeaderProps {
     user?: User;
     classroom?: Classroom;
     className?: string;
+    showIcon?: boolean;
     showDetails?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className, showDetails = true }: ActivityHeaderProps) => {
+export const ActivityHeader = ({ user, classroom, activity, className, showIcon, showDetails = true }: ActivityHeaderProps) => {
     if (!activity.type) {
         return null;
     }
@@ -79,7 +80,7 @@ export const ActivityHeader = ({ user, classroom, activity, className, showDetai
                     </div>
                 )}
             </div>
-            {showDetails && Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
+            {showDetails && showIcon && Icon && <Icon style={{ width: '30px', height: 'auto', marginRight: 8, color: 'var(--primary-color)' }} />}
         </div>
     );
 };

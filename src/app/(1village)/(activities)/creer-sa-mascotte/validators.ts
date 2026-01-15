@@ -5,13 +5,13 @@ export const MASCOT_STEPS_VALIDATORS = {
         return (
             activity.data?.classroom?.students?.malesCount !== undefined &&
             activity.data?.classroom?.students?.femalesCount !== undefined &&
-            activity.data?.classroom?.students?.totalCount !== undefined &&
-            activity.data.classroom.students.meanAge !== undefined &&
+            activity.data?.classroom?.students?.totalCount &&
+            activity.data.classroom.students.meanAge &&
             activity.data?.classroom?.teachers?.malesCount !== undefined &&
             activity.data?.classroom?.teachers?.femalesCount !== undefined &&
-            activity.data?.classroom?.teachers?.totalCount !== undefined &&
-            activity.data?.classroom?.school?.classroomsCount !== undefined &&
-            activity.data?.classroom?.school?.studentsCount !== undefined &&
+            activity.data?.classroom?.teachers?.totalCount &&
+            activity.data?.classroom?.school?.classroomsCount &&
+            activity.data?.classroom?.school?.studentsCount &&
             !!activity.data?.classroom?.imageUrl?.trim() &&
             !!activity.data?.classroom?.description?.trim() &&
             activity.data.classroom.students.totalCount ==

@@ -7,7 +7,7 @@
 .checkboxContainer {
     margin-top: 16px;
     margin-bottom: 16px;
-    margin-right: 20%;
+    margin-right: 8%;
     text-align: right;
     
     @media (max-width: 1150px) {
