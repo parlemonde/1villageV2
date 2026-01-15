@@ -10,8 +10,8 @@ import { v4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
     try {
-        const currentUser = await getCurrentUser();
-        const formData = await request.formData();
+        const [currentUser, formData] = await Promise.all([getCurrentUser(), request.formData()]);
+
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoDocument = formData.get('isPelicoDocument') === 'true';
         const activityId = formData.get('activityId');
@@ -52,17 +52,19 @@ export async function POST(request: NextRequest) {
         const userDocumentId = isPelicoDocument ? 'pelico' : currentUser.id;
         const fileName = `media/documents/users/${userDocumentId}/${uuid}.${extension}`;
         const contentType = mime.lookup(fileName) || undefined;
-        await uploadFile(fileName, Buffer.from(await file.arrayBuffer()), contentType);
+        const fileBuffer = Buffer.from(await file.arrayBuffer());
 
-        // Insert media into database
-        await db.insert(medias).values({
-            id: uuid,
-            userId: currentUser.id,
-            type: 'pdf',
-            url: fileName,
-            isPelico: isPelicoDocument,
-            activityId: activityId ? Number(activityId) : null,
-        });
+        await Promise.all([
+            uploadFile(fileName, fileBuffer, contentType),
+            db.insert(medias).values({
+                id: uuid,
+                userId: currentUser.id,
+                type: 'pdf',
+                url: fileName,
+                isPelico: isPelicoDocument,
+                activityId: activityId ? Number(activityId) : null,
+            }),
+        ]);
 
         return Response.json({ url: `/${fileName}` });
     } catch {

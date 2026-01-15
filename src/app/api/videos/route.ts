@@ -12,8 +12,8 @@ import { v4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
     try {
-        const currentUser = await getCurrentUser();
-        const formData = await request.formData();
+        const [currentUser, formData] = await Promise.all([getCurrentUser(), request.formData()]);
+
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoVideo = formData.get('isPelicoVideo') === 'true';
         const activityId = formData.get('activityId');
@@ -49,22 +49,24 @@ export async function POST(request: NextRequest) {
         const userVideoId = isPelicoVideo ? 'pelico' : currentUser.id;
         const fileName = `media/videos/users/${userVideoId}/${uuid}/original.${extension}`;
         const contentType = mime.lookup(fileName) || undefined;
-        await uploadFile(fileName, Buffer.from(await file.arrayBuffer()), contentType);
+        const fileBuffer = Buffer.from(await file.arrayBuffer());
 
         const url = `media/videos/users/${userVideoId}/${uuid}/hls/master.m3u8`;
 
-        // Insert media into database
-        await db.insert(medias).values({
-            id: uuid,
-            userId: currentUser.id,
-            type: 'video',
-            url,
-            isPelico: isPelicoVideo,
-            metadata: {
-                originalFilePath: fileName,
-            },
-            activityId: activityId ? Number(activityId) : null,
-        });
+        await Promise.all([
+            uploadFile(fileName, fileBuffer, contentType),
+            db.insert(medias).values({
+                id: uuid,
+                userId: currentUser.id,
+                type: 'video',
+                url,
+                isPelico: isPelicoVideo,
+                metadata: {
+                    originalFilePath: fileName,
+                },
+                activityId: activityId ? Number(activityId) : null,
+            }),
+        ]);
 
         await invokeTranscodeVideosLambda(USE_S3 ? { key: fileName, bucket: getEnvVariable('S3_BUCKET_NAME') } : { filePath: fileName });
 

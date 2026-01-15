@@ -21,8 +21,8 @@ const getDuration = (value: FormDataEntryValue | null) => {
 
 export async function POST(request: NextRequest) {
     try {
-        const currentUser = await getCurrentUser();
-        const formData = await request.formData();
+        const [currentUser, formData] = await Promise.all([getCurrentUser(), request.formData()]);
+
         const file: FormDataEntryValue | null = formData.get('file');
         const isPelicoAudio = formData.get('isPelicoAudio') === 'true';
         const duration = getDuration(formData.get('duration'));
@@ -59,20 +59,22 @@ export async function POST(request: NextRequest) {
         const userAudioId = isPelicoAudio ? 'pelico' : currentUser.id;
         const fileName = `media/audios/users/${userAudioId}/${uuid}.${extension}`;
         const contentType = mime.lookup(fileName) || undefined;
-        await uploadFile(fileName, Buffer.from(await file.arrayBuffer()), contentType);
+        const fileBuffer = Buffer.from(await file.arrayBuffer());
 
-        // Insert media into database
-        await db.insert(medias).values({
-            id: uuid,
-            userId: currentUser.id,
-            type: 'audio',
-            url: fileName,
-            isPelico: isPelicoAudio,
-            metadata: {
-                duration,
-            },
-            activityId: activityId ? Number(activityId) : null,
-        });
+        await Promise.all([
+            uploadFile(fileName, fileBuffer, contentType),
+            db.insert(medias).values({
+                id: uuid,
+                userId: currentUser.id,
+                type: 'audio',
+                url: fileName,
+                isPelico: isPelicoAudio,
+                metadata: {
+                    duration,
+                },
+                activityId: activityId ? Number(activityId) : null,
+            }),
+        ]);
 
         return Response.json({ url: `/${fileName}` });
     } catch {
