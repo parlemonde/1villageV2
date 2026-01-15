@@ -22,13 +22,16 @@ export type ClassroomVillageTeacher = {
     teacherName: string | null;
 };
 
-const getVillageClassroomsWithVillage = async (villageId: number): Promise<ClassroomVillageTeacher[]> => {
-    return await db
+const getVillageClassroomsWithVillage = async (villageId: number | null): Promise<ClassroomVillageTeacher[]> => {
+    const query = db
         .select({ classroom: classrooms, villageName: villages?.name, teacherName: users.name })
         .from(classrooms)
         .leftJoin(villages, eq(villages.id, classrooms.villageId))
-        .leftJoin(users, eq(users.id, classrooms.teacherId))
-        .where(eq(classrooms.villageId, villageId));
+        .leftJoin(users, eq(users.id, classrooms.teacherId));
+
+    if (villageId !== null) query.where(eq(classrooms.villageId, villageId));
+
+    return await query;
 };
 
 const getVillageClassrooms = async (villageId: number): Promise<Classroom[]> => {
@@ -58,10 +61,10 @@ const buildQuery = async (
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
     }
+    if (withVillage) {
+        return await getVillageClassroomsWithVillage(null);
+    }
     if (villageId) {
-        if (withVillage) {
-            return await getVillageClassroomsWithVillage(villageId);
-        }
         return await getVillageClassrooms(villageId);
     }
     if (country) {
@@ -72,6 +75,7 @@ const buildQuery = async (
 
 export const GET = async ({ nextUrl }: NextRequest) => {
     const user = await getCurrentUser();
+
     if (!user) {
         return new NextResponse(null, { status: 401 });
     }

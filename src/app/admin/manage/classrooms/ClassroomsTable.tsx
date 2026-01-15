@@ -9,6 +9,7 @@ import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -22,12 +23,17 @@ export function ClassroomsTable() {
         data: classrooms,
         isLoading,
         mutate,
-    } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
+    } = useSWR<Classroom[] | ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
-    const classroomToDelete = classrooms?.find((classroom) => classroom.classroom.id === classroomToDeleteId);
+    const classroomToDelete = classrooms?.find((c) => {
+        const id = 'classroom' in c ? c.classroom.id : c.id;
+        return id === classroomToDeleteId;
+    });
 
     const filteredClassrooms = classrooms?.filter((classroom) => {
-        const cls = classroom.classroom;
+        if (classroom === undefined) return false;
+
+        const cls = 'classroom' in classroom ? classroom?.classroom : classroom;
 
         return (
             cls.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -36,6 +42,8 @@ export function ClassroomsTable() {
             cls.alias?.toLowerCase().includes(search.toLowerCase())
         );
     });
+
+    const classroomData = classroomToDelete && 'classroom' in classroomToDelete ? classroomToDelete.classroom : classroomToDelete;
 
     return (
         <>
@@ -99,28 +107,32 @@ export function ClassroomsTable() {
                     {
                         id: 'actions',
                         header: 'Actions',
-                        accessor: (classroom) => (
-                            <>
-                                <Tooltip content="Modifier la classe" hasArrow>
-                                    <IconButton
-                                        as="a"
-                                        href={`/admin/manage/classrooms/${classroom.classroom.id}`}
-                                        variant="borderless"
-                                        color="primary"
-                                        icon={Pencil1Icon}
-                                    />
-                                </Tooltip>
-                                <Tooltip content="Supprimer la classe" hasArrow /* isEnabled={user.id !== currentUser.id} */>
-                                    <IconButton
-                                        /*disabled={user.id === currentUser.id}*/
-                                        variant="borderless"
-                                        color="error"
-                                        icon={TrashIcon}
-                                        onClick={() => setClassroomToDeleteId(classroom.classroom.id)}
-                                    />
-                                </Tooltip>
-                            </>
-                        ),
+                        accessor: (classroom) => {
+                            const classroomId = 'classroom' in classroom ? classroom.classroom.id : classroom.id;
+
+                            return (
+                                <>
+                                    <Tooltip content="Modifier la classe" hasArrow>
+                                        <IconButton
+                                            as="a"
+                                            href={`/admin/manage/classrooms/${classroomId}`}
+                                            variant="borderless"
+                                            color="primary"
+                                            icon={Pencil1Icon}
+                                        />
+                                    </Tooltip>
+                                    <Tooltip content="Supprimer la classe" hasArrow /* isEnabled={user.id !== currentUser.id} */>
+                                        <IconButton
+                                            /*disabled={user.id === currentUser.id}*/
+                                            variant="borderless"
+                                            color="error"
+                                            icon={TrashIcon}
+                                            onClick={() => setClassroomToDeleteId(classroomId)}
+                                        />
+                                    </Tooltip>
+                                </>
+                            );
+                        },
                         width: '100px',
                         align: 'right',
                         cellPadding: '0 8px',
@@ -155,7 +167,7 @@ export function ClassroomsTable() {
             >
                 {classroomToDelete !== undefined && (
                     <p>
-                        Êtes-vous sûr de vouloir supprimer la classe <strong>{classroomToDelete.classroom.name}</strong> ?
+                        Êtes-vous sûr de vouloir supprimer la classe <strong>{classroomData?.name}</strong> ?
                     </p>
                 )}
             </Modal>
