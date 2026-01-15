@@ -12,34 +12,44 @@ import LoisirsJeuxIcon from '@frontend/svg/indices/loisirs-jeux.svg';
 import PaysagesIcon from '@frontend/svg/indices/paysages.svg';
 import TraditionsIcon from '@frontend/svg/indices/tradition.svg';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import styles from './page.module.css';
 
-export const DEFAULT_REPORTS: {
-    name: string;
-    icon: React.ReactNode;
-}[] = [
-    { name: 'Nos paysages', icon: <PaysagesIcon /> },
-    { name: 'Nos arts', icon: <ArtIcon /> },
-    { name: 'Nos lieux de vies', icon: <LieuxViesIcon /> },
-    { name: 'Nos langues', icon: <LanguesIcon /> },
-    { name: 'Notre flore et faune', icon: <FloreFauneIcon /> },
-    { name: 'Nos loisirs et jeux', icon: <LoisirsJeuxIcon /> },
-    { name: 'Nos cuisines', icon: <CuisineIcon /> },
-    { name: 'Nos traditions', icon: <TraditionsIcon /> },
-];
+export const useDefaultReports = () => {
+    const t = useExtracted('app.(1village).(activities).creer-un-reportage');
+
+    const DEFAULT_REPORTS: {
+        name: string;
+        icon: React.ReactNode;
+    }[] = [
+        { name: t('Nos paysages'), icon: <PaysagesIcon /> },
+        { name: t('Nos arts'), icon: <ArtIcon /> },
+        { name: t('Nos lieux de vies'), icon: <LieuxViesIcon /> },
+        { name: t('Nos langues'), icon: <LanguesIcon /> },
+        { name: t('Notre flore et faune'), icon: <FloreFauneIcon /> },
+        { name: t('Nos loisirs et jeux'), icon: <LoisirsJeuxIcon /> },
+        { name: t('Nos cuisines'), icon: <CuisineIcon /> },
+        { name: t('Nos traditions'), icon: <TraditionsIcon /> },
+    ];
+
+    return DEFAULT_REPORTS;
+};
 
 export default function CreerUnReportagePage() {
+    const t = useExtracted('app.(1village).(activities).creer-un-reportage');
     const router = useRouter();
     const { user } = useContext(UserContext);
     const { onCreateActivity } = useContext(ActivityContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
 
+    const reports = useDefaultReports();
+
     return (
-        <PageContainer title="Sur quel thème souhaitez-vous réaliser votre reportage ?">
+        <PageContainer title={t('Sur quel thème souhaitez-vous réaliser votre reportage ?')}>
             <div className={styles.themesContainer}>
-                {DEFAULT_REPORTS.map((theme) => (
+                {reports.map((theme) => (
                     <button
                         key={theme.name}
                         className={styles.themeLink}
@@ -61,7 +71,7 @@ export default function CreerUnReportagePage() {
                         router.push('/creer-un-reportage/1');
                     }}
                 >
-                    Créer un reportage sur un autre thème
+                    {t('Créer un reportage sur un autre thème')}
                 </button>
             </div>
         </PageContainer>

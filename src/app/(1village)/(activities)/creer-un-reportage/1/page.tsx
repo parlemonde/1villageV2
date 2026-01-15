@@ -1,5 +1,6 @@
 'use client';
 
+import { useDefaultReports } from '@app/(1village)/(activities)/creer-un-reportage/page';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
@@ -15,16 +16,21 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 import useSWR from 'swr';
-
-import { DEFAULT_REPORTS } from '../page';
 
 const CUSTOM_REPORT_VALUE = '__CUSTOM_REPORT__';
 
 export default function CreerUnReportageStep1() {
+    const t = useExtracted('app.(1village).(activities).creer-un-reportage.1');
+    const tCommon = useExtracted('common');
+
     const { activity, setActivity } = useContext(ActivityContext);
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
+
+    const reports = useDefaultReports();
+
     const { data: allActivities = [] } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({ villageId: village.id, countries: village.countries, isPelico: true, type: ['reportage'] })}`
@@ -44,20 +50,20 @@ export default function CreerUnReportageStep1() {
     const report = useCustomReport ? activity.data?.customReport : defaultReport;
     const activities = allActivities.filter((a) => a.type === 'reportage' && a.data?.defaultReport === activity.data?.defaultReport);
 
-    const selectOptions = DEFAULT_REPORTS.map((report) => ({ label: report.name, value: report.name }));
+    const selectOptions = reports.map((report) => ({ label: report.name, value: report.name }));
     if (defaultReport && !selectOptions.some((option) => option.value === defaultReport)) {
         selectOptions.push({ label: defaultReport, value: defaultReport });
     }
-    selectOptions.push({ label: 'Autre thème', value: CUSTOM_REPORT_VALUE });
+    selectOptions.push({ label: t('Autre thème'), value: CUSTOM_REPORT_VALUE });
 
     return (
         <PageContainer>
             <BackButton href="/creer-un-reportage" label="Retour" />
             <Steps
                 steps={[
-                    { label: 'Reportage', href: '/creer-un-reportage/1' },
-                    { label: 'Créer le reportage', href: '/creer-un-reportage/2' },
-                    { label: 'Pré-visualiser', href: '/creer-un-reportage/3' },
+                    { label: t('Reportage'), href: '/creer-un-reportage/1' },
+                    { label: t('Créer le reportage'), href: '/creer-un-reportage/2' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-un-reportage/3' },
                 ]}
                 activeStep={1}
                 marginTop="xl"
@@ -78,13 +84,13 @@ export default function CreerUnReportageStep1() {
                 }}
             />
             <Title variant="h2" marginTop="lg" marginBottom="md">
-                {useCustomReport ? 'Présenter un autre type de reportage :' : 'Indices des pélicopains sur ce thème :'}
+                {useCustomReport ? t('Présenter un autre type de reportage') : t('Indices des pélicopains sur ce thème')} :
             </Title>
             {useCustomReport ? (
                 <>
-                    <p>Indiquez quel autre type de reportage vous souhaitez présenter :</p>
+                    <p>{t('Indiquez quel autre type de reportage vous souhaitez présenter')} :</p>
                     <Input
-                        placeholder="Nos monuments"
+                        placeholder={t('Nos monuments')}
                         isFullWidth
                         marginY="md"
                         value={activity.data?.customReport || ''}
@@ -119,14 +125,14 @@ export default function CreerUnReportageStep1() {
                         >
                             <PelicoSearch style={{ width: '100px', height: 'auto' }} />
                             <p>
-                                Aucun reportage trouvé pour le thème <strong>{report}</strong>
+                                {t('Aucun reportage trouvé pour le thème')} <strong>{report}</strong>
                             </p>
                         </div>
                     )}
                 </>
             )}
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
-                <Button as="a" href="/creer-un-reportage/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />} />
+                <Button as="a" href="/creer-un-reportage/2" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
             </div>
         </PageContainer>
     );

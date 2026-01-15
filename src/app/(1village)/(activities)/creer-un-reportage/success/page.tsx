@@ -1,8 +1,11 @@
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
+import { getExtracted } from 'next-intl/server';
 
-export default function CreerUnReportageSuccess() {
+export default async function CreerUnReportageSuccess() {
+    const t = await getExtracted('app.(1village).(activities).creer-un-reportage.success');
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px', gap: '48px' }}>
             <div
@@ -16,7 +19,7 @@ export default function CreerUnReportageSuccess() {
                     borderRadius: '8px',
                 }}
             >
-                <Title variant="h3">Votre reportage a été publié avec succès !</Title>
+                <Title variant="h3">{t('Votre reportage a été publié avec succès !')}</Title>
                 <PelicoSouriant style={{ width: '160px', height: 'auto' }} />
             </div>
             <Button as="a" href="/" color="primary" label="Retour à l'accueil" />

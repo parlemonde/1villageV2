@@ -22,6 +22,8 @@ export const useActivityName = () => {
                     return t('Énigme');
                 case 'indice':
                     return t('Indice');
+                case 'reportage':
+                    return t('Reportage');
             }
         },
         [t],

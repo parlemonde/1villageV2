@@ -10,9 +10,13 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 export default function CreerUnIndiceStep3() {
+    const t = useExtracted('app.(1village).(activities).creer-un-reportage.3');
+    const tCommon = useExtracted('common');
+
     const router = useRouter();
     const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
     const [isSubmiting, setIsSubmiting] = useState(false);
@@ -46,20 +50,20 @@ export default function CreerUnIndiceStep3() {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: report || 'Reportage', href: '/creer-un-reportage/2', status: isFirstStepDone ? 'success' : 'warning' },
-                    { label: 'Créer le reportage', href: '/creer-un-reportage/2', status: isSecondStepDone ? 'success' : 'warning' },
-                    { label: 'Pré-visualiser', href: '/creer-un-reportage/3' },
+                    { label: report || t('Reportage'), href: '/creer-un-reportage/2', status: isFirstStepDone ? 'success' : 'warning' },
+                    { label: t('Créer le reportage'), href: '/creer-un-reportage/2', status: isSecondStepDone ? 'success' : 'warning' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-un-reportage/3' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Pré-visualisez votre reportage et publiez-le :
+                {t('Pré-visualisez votre reportage et publiez-le')} :
             </Title>
-            <p>Relisez votre publication une dernière fois avant de la publier !</p>
+            <p>{t('Relisez votre publication une dernière fois avant de la publier !')} </p>
             <ActivityStepPreview
-                stepName="Reportage"
+                stepName={tCommon('Reportage')}
                 href="/creer-un-reportage/1"
                 status={isFirstStepDone ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
@@ -67,7 +71,7 @@ export default function CreerUnIndiceStep3() {
                 {report}
             </ActivityStepPreview>
             <ActivityStepPreview
-                stepName="Contenu"
+                stepName={tCommon('Contenu')}
                 href="/creer-un-reportage/2"
                 status={isSecondStepDone ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
@@ -75,11 +79,11 @@ export default function CreerUnIndiceStep3() {
                 <ContentViewer content={activity.data?.content} activityId={activity.id} />
             </ActivityStepPreview>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
-                <Button as="a" href="/creer-un-reportage/2" color="primary" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
+                <Button as="a" href="/creer-un-reportage/2" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
                 <Button
                     color="primary"
                     variant="contained"
-                    label={activity.publishDate ? 'Modifier' : 'Publier'}
+                    label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
                     disabled={!isValid}
                     onClick={onSubmit}
                 />
