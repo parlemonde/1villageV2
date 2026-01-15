@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-debugger */
 'use client';
 
@@ -76,24 +75,12 @@ export const ActivitySidePanel = () => {
             </div>
 
             {weather !== null && (
-                <div
-                    className="bg-secondary vertical-bottom-margin"
-                    style={{
-                        fontWeight: 'bold',
-                        padding: '1rem',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                    }}
-                >
-                    <div style={{ marginBottom: '1rem' }}>
-                        {/* <CountryFlag country={activityUser.country?.isoCode}></CountryFlag> {activityUser.city} */}
-                    </div>
+                <div className={styles.weather}>
+                    <div style={{ marginBottom: '1rem' }}>{<CountryFlag country={weather.sys.country}></CountryFlag> /*{activityUser.city}*/}</div>
                     {/* {localTime} */}
                     {weather && (
                         <>
+                            <h2>{weather.name}</h2>
                             <Image
                                 alt="meteo"
                                 layout="fixed"
