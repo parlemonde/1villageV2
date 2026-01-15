@@ -1,6 +1,5 @@
+import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
-
-import type { ActivityContentViewProps } from '../activity-view.types';
 
 export const ReportView = ({ activity }: ActivityContentViewProps) => {
     if (activity.type !== 'reportage') {
