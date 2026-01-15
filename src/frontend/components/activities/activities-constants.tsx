@@ -21,6 +21,8 @@ export const useActivityName = () => {
                     return t('Énigme');
                 case 'indice':
                     return t('Indice');
+                case 'defi':
+                    return t('Défi');
             }
         },
         [t],
@@ -37,6 +39,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     jeu: 'Créer un jeu',
     enigme: 'Créer une énigme',
     indice: 'Créer un indice',
+    defi: 'Lancer un defi',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -44,6 +47,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     jeu: 'lancé un jeu',
     enigme: 'créé une énigme',
     indice: 'créé un indice',
+    defi: 'lancé un defi',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -51,6 +55,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     jeu: GameIcon,
     enigme: EnigmeIcon,
     indice: HintIcon,
+    defi: null,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -58,6 +63,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu',
     enigme: '/creer-une-enigme',
     indice: '/creer-un-indice',
+    defi: '/lancer-un-defi',
 };
 
 export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
@@ -65,4 +71,5 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
     jeu: '/creer-un-jeu/3',
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
+    defi: '/lancer-un-defi/3',
 };
