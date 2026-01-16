@@ -76,7 +76,7 @@ export default function LancerUnDefiCulinaireStep4() {
             <Title variant="h2" marginBottom="md">
                 {t('Pré-visualiser votre défi et publiez-le')}
             </Title>
-            <p>{t('Relisez votre publication une dernière fois avant de la publier !')}</p>
+            <p>{tCommon('Relisez votre publication une dernière fois avant de la publier !')}</p>
             <ActivityStepPreview
                 stepName={t('Votre  plat')}
                 href="/lancer-un-defi/culinaire/1"
@@ -111,7 +111,7 @@ export default function LancerUnDefiCulinaireStep4() {
                 status={CULINARY_CHALLENGE_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                <ContentViewer content={activity.data.content} />
+                <ContentViewer content={activity.data.content} activityId={activity.id} />
             </ActivityStepPreview>
             <ActivityStepPreview
                 stepName={t('Le défi lancé aux pélicopains')}

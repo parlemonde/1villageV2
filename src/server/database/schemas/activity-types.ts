@@ -128,6 +128,7 @@ export type LinguisticChallenge = {
 
 export type EcologicalChallenge = {
     theme: 'ecologique';
+    action?: string;
     content?: AnyContent[];
     challengeKind?: string;
 };

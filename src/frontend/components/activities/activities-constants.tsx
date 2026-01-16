@@ -1,5 +1,6 @@
 'use client';
 
+import ChallengeIcon from '@frontend/svg/activities/challenge.svg';
 import EnigmeIcon from '@frontend/svg/activities/enigme.svg';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
@@ -68,7 +69,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     indice: HintIcon,
     mascotte: MascotIcon,
     reportage: ReportageIcon,
-    defi: null,
+    defi: ChallengeIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
