@@ -1,8 +1,8 @@
 'use client';
 
 import { ChooseOptionButton } from '@app/(1village)/(activities)/lancer-un-defi/ChooseOptionButton';
-import { isCulinaryChallenge } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/helpers';
-import { CULINARY_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/validators';
+import { isEcologicalChallenge } from '@app/(1village)/(activities)/lancer-un-defi/ecologique/helpers';
+import { ECOLOGICAL_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/ecologique/validators';
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -16,16 +16,16 @@ import { useContext } from 'react';
 import styles from './page.module.css';
 
 const useChallenges = () => {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.3');
+    const t = useExtracted('app.(1village).(activities).lancer-un-defi.ecologique.3');
 
     const CHALLENGES = [
         {
-            title: t('Réaliser notre recette à votre tour'),
-            description: t('Les pélicopains devront créer une présentation sous forme de texte, son, image ou vidéo.'),
+            title: t('Réaliser cette action pour la planète à votre tour'),
+            description: t('Les pélicopains devront refaire cette action chez eux.'),
         },
         {
-            title: t('Présentez-nous une de vos recettes traditionnelles'),
-            description: t('Les pélicopains devront créer une présentation sous form de texte, son, image ou vidéo.'),
+            title: t('Imaginer et réaliser une nouvelle action pour la planète'),
+            description: t('Les pélicopains devront réaliser une autre action.'),
         },
         {
             title: t('Un autre défi'),
@@ -36,31 +36,23 @@ const useChallenges = () => {
     return CHALLENGES;
 };
 
-export default function LancerUnDefiCulinaireStep3() {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.3');
+export default function LancerUnDefiEcologiqueStep3() {
+    const t = useExtracted('app.(1village).(activities).lancer-un-defi.ecologique.3');
     const tCommon = useExtracted('common');
 
     const router = useRouter();
 
-    const challenges = useChallenges();
-
     const { activity, setActivity } = useContext(ActivityContext);
 
-    if (!activity || !isCulinaryChallenge(activity)) {
+    const challenges = useChallenges();
+
+    if (!activity || !isEcologicalChallenge(activity)) {
         return null;
     }
 
     const goToNextStep = (challengeKind: string) => {
-        setActivity({
-            ...activity,
-            data: {
-                ...activity.data,
-                theme: 'culinaire',
-                challengeKind,
-            },
-        });
-
-        router.push('/lancer-un-defi/culinaire/4');
+        setActivity({ ...activity, data: { ...activity.data, theme: 'ecologique', challengeKind } });
+        router.push('/lancer-un-defi/ecologique/4');
     };
 
     return (
@@ -68,17 +60,17 @@ export default function LancerUnDefiCulinaireStep3() {
             <Steps
                 steps={[
                     {
-                        label: t('Votre  plat'),
-                        href: '/lancer-un-defi/culinaire/1',
-                        status: CULINARY_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
+                        label: t('Votre geste pour la planète'),
+                        href: '/lancer-un-defi/ecologique/1',
+                        status: ECOLOGICAL_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: t('La recette'),
-                        href: '/lancer-un-defi/culinaire/2',
-                        status: CULINARY_CHALLENGE_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
+                        label: t("Description de l'action"),
+                        href: '/lancer-un-defi/ecologique/2',
+                        status: ECOLOGICAL_CHALLENGE_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
-                    { label: t('Le défi'), href: '/lancer-un-defi/culinaire/3' },
-                    { label: t('Pré-visualiser'), href: '/lancer-un-defi/culinaire/4' },
+                    { label: t('Le défi'), href: '/lancer-un-defi/ecologique/3' },
+                    { label: tCommon('Pré-visualiser'), href: '/lancer-un-defi/ecologique/4' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
@@ -97,7 +89,7 @@ export default function LancerUnDefiCulinaireStep3() {
                     />
                 ))}
             </div>
-            <Button as="a" href="/lancer-un-defi/culinaire/2" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
+            <Button as="a" href="/lancer-un-defi/ecologique/2" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
         </PageContainer>
     );
 }

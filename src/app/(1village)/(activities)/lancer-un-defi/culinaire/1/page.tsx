@@ -2,6 +2,7 @@
 
 import { culinaryChallengeHelpers, isCulinaryChallenge } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/helpers';
 import { CULINARY_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/validators';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input, TextArea } from '@frontend/components/ui/Form';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -36,6 +37,7 @@ export default function LancerUnDefiCulinaireStep1() {
     return (
         <>
             <PageContainer>
+                <BackButton href="/lancer-un-defi" label="Retour" />
                 <Steps
                     steps={[
                         { label: t('Votre  plat'), href: '/lancer-un-defi/culinaire/1' },
