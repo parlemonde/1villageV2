@@ -1,11 +1,11 @@
 .imageUploadForm {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    align-items: start;
     width: 100%;
     padding: 32px;
     gap: 32px;
+    
 }
 
 .imagePreview {
@@ -24,9 +24,17 @@
 }
 
 .svg {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     background: var(--grey-100);
     padding: 48px;
     color: var(--primary-color);
+}
+
+.imageDescription {
+    width: 100%;
+}
+
+.button {
+    text-align: right;
 }
