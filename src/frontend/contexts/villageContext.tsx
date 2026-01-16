@@ -6,6 +6,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
+import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import React, { createContext, useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -41,7 +42,8 @@ export const VillageProvider = ({ village, children }: React.PropsWithChildren<V
         () =>
             Object.fromEntries(
                 classrooms?.map((classroom) => {
-                    const classroomId = 'classroom' in classroom ? classroom.classroom.id : classroom.id;
+                    const cls: Classroom | undefined = getClassroomFromProp(classroom);
+                    const classroomId = cls?.id;
                     return [classroomId, classroom];
                 }) ?? [],
             ),

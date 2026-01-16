@@ -1,6 +1,7 @@
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { getGravatarUrl } from '@frontend/components/Avatar/Avatar';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import { Marker } from 'maplibre-gl';
 import { v4 } from 'uuid';
 
@@ -67,12 +68,7 @@ interface GetClassroomMarkerArgs {
     canvas: HTMLDivElement;
 }
 export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
-    let classroom: Classroom | undefined;
-    if (classroomVT !== undefined && 'classroom' in classroomVT) {
-        classroom = classroomVT.classroom;
-    } else {
-        classroom = classroomVT as Classroom | undefined;
-    }
+    const classroom: Classroom | undefined = getClassroomFromProp(classroomVT);
 
     const markerId = v4();
     const avatarUrl = classroom?.avatarUrl || getGravatarUrl(`classroom-${classroom?.id}@parlemonde.org`, 40);

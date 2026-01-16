@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 'use client';
 
 import { getWeather, OPEN_WEATHER_BASE_URL } from '@app/api/weather/weather.get';
@@ -7,7 +6,9 @@ import { WorldMap } from '@frontend/components/WorldMap';
 import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
 import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import Image from 'next/image';
 import { useParams, usePathname } from 'next/navigation';
@@ -24,6 +25,11 @@ export const ActivitySidePanel = () => {
 
     const { data: activity } = useSWR<Activity>(activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
+    const { data: activityClassroom } = useSWR<Classroom[]>(
+        `/api/classrooms${serializeToQueryUrl({ classroomId: activity?.classroomId })}`,
+        jsonFetcher,
+    );
+
     const formatPseudo = activityUser?.name.replace(' ', '-');
     const showTeacherSheet = activityUser?.role === 'teacher';
 
@@ -31,22 +37,28 @@ export const ActivitySidePanel = () => {
     const [localTime, setLocalTime] = useState<string | null>(null);
 
     useEffect(() => {
-        debugger;
+        if (!activityClassroom || !activityClassroom[0] || activityClassroom.length !== 1) return;
+
+        const classroom = activityClassroom[0];
+        if (!classroom) return;
+
+        const coords = classroom.coordinates;
+        if (coords === undefined || coords === null) return;
+
         async function fetchWeather() {
-            debugger;
-            const data = await getWeather({ latitude: 5, longitude: 45 });
-            debugger;
+            const data = await getWeather({
+                latitude: coords?.latitude,
+                longitude: coords?.longitude,
+            });
             setWeather(data);
         }
         fetchWeather();
-    }, []);
+    }, [activityClassroom]);
 
     useEffect(() => {
-        debugger;
         if (!weather) return;
 
         const updateLocalTime = () => {
-            debugger;
             const localTimestamp = (weather.dt + weather.timezone) * 1000;
             const localDate = new Date(localTimestamp);
 
@@ -62,7 +74,6 @@ export const ActivitySidePanel = () => {
         return () => clearInterval(interval);
     }, [weather]);
 
-    debugger;
     const isOnActivityPage = pathname.startsWith('/activities/');
 
     if (!isOnActivityPage) return null;

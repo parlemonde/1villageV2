@@ -2,6 +2,8 @@
 
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
+import type { Classroom } from '@server/database/schemas/classrooms';
+import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
@@ -82,7 +84,7 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
             .filter((classroom) => {
                 if (classroom === undefined) return false;
 
-                const cls = 'classroom' in classroom ? classroom?.classroom : classroom;
+                const cls: Classroom | undefined = getClassroomFromProp(classroom);
                 return activity === null || cls?.teacherId === activity.userId;
             })
             .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));

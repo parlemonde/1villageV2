@@ -10,12 +10,13 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
 import useSWR from 'swr';
 
 export function ClassroomsTable() {
-    const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | null>(null);
+    const [classroomToDeleteId, setClassroomToDeleteId] = useState<number | undefined>(undefined);
     const [isDeletingClassroom, setIsDeletingClassroom] = useState(false);
     const [search, setSearch] = useState('');
 
@@ -33,17 +34,17 @@ export function ClassroomsTable() {
     const filteredClassrooms = classrooms?.filter((classroom) => {
         if (classroom === undefined) return false;
 
-        const cls = 'classroom' in classroom ? classroom?.classroom : classroom;
+        const cls: Classroom | undefined = getClassroomFromProp(classroom);
 
         return (
-            cls.name.toLowerCase().includes(search.toLowerCase()) ||
-            cls.address.toLowerCase().includes(search.toLowerCase()) ||
-            cls.level?.toLowerCase().includes(search.toLowerCase()) ||
-            cls.alias?.toLowerCase().includes(search.toLowerCase())
+            cls?.name.toLowerCase().includes(search.toLowerCase()) ||
+            cls?.address.toLowerCase().includes(search.toLowerCase()) ||
+            cls?.level?.toLowerCase().includes(search.toLowerCase()) ||
+            cls?.alias?.toLowerCase().includes(search.toLowerCase())
         );
     });
 
-    const classroomData = classroomToDelete && 'classroom' in classroomToDelete ? classroomToDelete.classroom : classroomToDelete;
+    const classroomData: Classroom | undefined = getClassroomFromProp(classroomToDelete);
 
     return (
         <>
@@ -108,7 +109,8 @@ export function ClassroomsTable() {
                         id: 'actions',
                         header: 'Actions',
                         accessor: (classroom) => {
-                            const classroomId = 'classroom' in classroom ? classroom.classroom.id : classroom.id;
+                            const cls: Classroom | undefined = getClassroomFromProp(classroom);
+                            const classroomId = cls?.id;
 
                             return (
                                 <>
@@ -144,7 +146,7 @@ export function ClassroomsTable() {
             />
             <Modal
                 isOpen={classroomToDelete !== undefined}
-                onClose={() => setClassroomToDeleteId(null)}
+                onClose={() => setClassroomToDeleteId(undefined)}
                 title="Supprimer la classe"
                 confirmLabel="Supprimer"
                 confirmLevel="error"
@@ -160,7 +162,7 @@ export function ClassroomsTable() {
                         console.error(error);
                     } finally {
                         setIsDeletingClassroom(false);
-                        setClassroomToDeleteId(null);
+                        setClassroomToDeleteId(undefined);
                     }
                 }}
                 isLoading={isDeletingClassroom}

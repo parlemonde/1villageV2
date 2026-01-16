@@ -7,3 +7,9 @@ export function getClassroomFromMap(map: Partial<Record<number, Classroom | Clas
     if (entry && 'classroom' in entry) return entry.classroom;
     return undefined;
 }
+
+export function getClassroomFromProp(classroom: Classroom | ClassroomVillageTeacher | undefined): Classroom | undefined {
+    if (!classroom) return undefined;
+    const cls = 'classroom' in classroom ? classroom?.classroom : classroom;
+    return cls;
+}
