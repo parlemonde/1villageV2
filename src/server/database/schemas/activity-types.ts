@@ -34,30 +34,43 @@ type HintActivity = {
     } | null;
 };
 
-type ChallengeActivity = {
-    type: 'defi';
-    data:
-        | {
-              theme: 'culinaire';
-              dish?: {
-                  imageUrl?: string;
-                  name?: string;
-                  history?: string;
-                  description?: string;
-                  content?: AnyContent[];
-                  defi?: string;
-              };
-          }
-        | {
-              theme: 'linguistique';
-          }
-        | {
-              theme: 'ecologique';
-          }
-        | null;
+export type CulinaryChallenge = {
+    theme: 'culinaire';
+    dish?: {
+        imageUrl?: string;
+        name?: string;
+        history?: string;
+        description?: string;
+    };
+    content?: AnyContent[];
+    challengeKind?: string;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ChallengeActivity;
+export type LinguisticChallenge = {
+    theme: 'linguistique';
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type EcologicalChallenge = {
+    theme: 'ecologique';
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type ChallengeActivity<T extends CulinaryChallenge | LinguisticChallenge | EcologicalChallenge> = {
+    type: 'defi';
+    data: T;
+};
+
+export type Activities =
+    | FreeActivity
+    | GameActivity
+    | PuzzleActivity
+    | HintActivity
+    | ChallengeActivity<CulinaryChallenge>
+    | ChallengeActivity<LinguisticChallenge>
+    | ChallengeActivity<EcologicalChallenge>;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
