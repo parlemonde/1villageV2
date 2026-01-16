@@ -26,10 +26,9 @@ export const ActivitySidePanel = () => {
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
     const formatPseudo = activityUser?.name.replace(' ', '-');
     const showTeacherSheet = activityUser?.role === 'teacher';
-    //const { data: weather } = getWeather({ latitude: activityUser.position.lat, longitude: activityUser.position.lng });
-    debugger;
 
     const [weather, setWeather] = useState<WeatherResponse | null>(null);
+    const [localTime, setLocalTime] = useState<string | null>(null);
 
     useEffect(() => {
         debugger;
@@ -42,9 +41,28 @@ export const ActivitySidePanel = () => {
         fetchWeather();
     }, []);
 
-    //const weather: WeatherResponse = await getWeather({ latitude: 5, longitude: 45 });
-    debugger;
+    useEffect(() => {
+        debugger;
+        if (!weather) return;
 
+        const updateLocalTime = () => {
+            debugger;
+            const localTimestamp = (weather.dt + weather.timezone) * 1000;
+            const localDate = new Date(localTimestamp);
+
+            const hours = String(localDate.getUTCHours()).padStart(2, '0');
+            const minutes = String(localDate.getUTCMinutes()).padStart(2, '0');
+
+            setLocalTime(`${hours}h${minutes}`);
+        };
+
+        updateLocalTime();
+        const interval = setInterval(updateLocalTime, 10000);
+
+        return () => clearInterval(interval);
+    }, [weather]);
+
+    debugger;
     const isOnActivityPage = pathname.startsWith('/activities/');
 
     if (!isOnActivityPage) return null;
@@ -74,25 +92,23 @@ export const ActivitySidePanel = () => {
                 <WorldMap activity={activity} />
             </div>
 
-            {weather !== null && (
+            {weather && (
                 <div className={styles.weather}>
-                    <div style={{ marginBottom: '1rem' }}>{<CountryFlag country={weather.sys.country}></CountryFlag> /*{activityUser.city}*/}</div>
-                    {/* {localTime} */}
-                    {weather && (
-                        <>
-                            <h2>{weather.name}</h2>
-                            <Image
-                                alt="meteo"
-                                layout="fixed"
-                                width="100"
-                                height="100"
-                                objectFit="contain"
-                                src={`${OPEN_WEATHER_BASE_URL}/img/wn/${weather.weather[0].icon}@2x.png`}
-                                unoptimized
-                            />
-                            {weather.main.temp}°C
-                        </>
-                    )}
+                    <div className={styles.countryContainer}>
+                        <div>{<CountryFlag country={weather.sys.country}></CountryFlag>}</div>
+                        <div>{weather.name}</div>
+                    </div>
+                    <p>{localTime}</p>
+                    <Image
+                        alt="meteo"
+                        layout="fixed"
+                        width="100"
+                        height="100"
+                        objectFit="contain"
+                        src={`${OPEN_WEATHER_BASE_URL}/img/wn/${weather.weather[0].icon}@2x.png`}
+                        unoptimized
+                    />
+                    <p>{weather.main.temp}°C</p>
                 </div>
             )}
         </div>
