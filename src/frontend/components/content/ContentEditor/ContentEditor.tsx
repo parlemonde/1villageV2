@@ -22,7 +22,7 @@ const DEFAULT_CONTENT: AnyContent[] = [
     },
 ];
 
-const USER_ALLOWED_CONTENT_TYPES: AnyContentType[] = ['html', 'image', 'audio', 'video'];
+const USER_ALLOWED_CONTENT_TYPES: AnyContentType[] = ['html', 'image', 'audio', 'video', 'document'];
 const PELICO_ALLOWED_CONTENT_TYPES: AnyContentType[] = ['html', 'image', 'audio', 'video', 'document', 'h5p'];
 
 interface ContentEditorProps {
