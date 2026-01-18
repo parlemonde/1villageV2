@@ -22,66 +22,69 @@
 
     --bg-color: white;
 }
-.switchThumb[data-state="checked"] {
+.switchThumb[data-state='checked'] {
     left: 8px; /* = 34px + (14 - 38) / 2 - 38px */
 }
-.switchRoot:hover >.switchThumb {
+.switchRoot:hover > .switchThumb {
     background-color: rgba(0, 0, 0, 0.1);
 }
 .switchThumbCircle {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+    box-shadow:
+        rgba(0, 0, 0, 0.2) 0px 2px 1px -1px,
+        rgba(0, 0, 0, 0.14) 0px 1px 1px 0px,
+        rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
     background-color: var(--bg-color, white);
     width: 20px;
     height: 20px;
     border-radius: 50%;
 }
 
-.color-primary[data-state="checked"] {
+.color-primary[data-state='checked'] {
     background-color: var(--primary-400);
 }
-.color-primary > .switchThumb[data-state="checked"] {
+.color-primary > .switchThumb[data-state='checked'] {
     --bg-color: var(--primary-color);
 }
-.color-primary:hover > .switchThumb[data-state="checked"] {
+.color-primary:hover > .switchThumb[data-state='checked'] {
     background-color: rgba(236, 234, 249, 0.6);
 }
 
-.color-secondary[data-state="checked"] {
+.color-secondary[data-state='checked'] {
     background-color: var(--secondary-200);
 }
-.color-secondary > .switchThumb[data-state="checked"] {
+.color-secondary > .switchThumb[data-state='checked'] {
     --bg-color: var(--secondary-400);
 }
-.color-secondary:hover > .switchThumb[data-state="checked"] {
+.color-secondary:hover > .switchThumb[data-state='checked'] {
     background-color: rgba(128, 203, 196, 0.2);
 }
 
-.color-warning[data-state="checked"] {
+.color-warning[data-state='checked'] {
     background-color: var(--warning-300);
 }
-.color-warning > .switchThumb[data-state="checked"] {
+.color-warning > .switchThumb[data-state='checked'] {
     --bg-color: var(--warning-400);
 }
-.color-warning:hover > .switchThumb[data-state="checked"] {
+.color-warning:hover > .switchThumb[data-state='checked'] {
     background-color: rgba(176, 113, 13, 0.2);
 }
 
-.color-error[data-state="checked"] {
+.color-error[data-state='checked'] {
     background-color: var(--error-300);
 }
-.color-error > .switchThumb[data-state="checked"] {
+.color-error > .switchThumb[data-state='checked'] {
     --bg-color: var(--error-400);
 }
-.color-error:hover > .switchThumb[data-state="checked"] {
+.color-error:hover > .switchThumb[data-state='checked'] {
     background-color: rgba(217, 57, 57, 0.1);
 }
 
-.color-success[data-state="checked"] {
+.color-success[data-state='checked'] {
     background-color: rgb(150, 196, 150);
 }
-.color-success > .switchThumb[data-state="checked"] {
+.color-success > .switchThumb[data-state='checked'] {
     --bg-color: var(--success-color);
 }
-.color-success:hover > .switchThumb[data-state="checked"] {
+.color-success:hover > .switchThumb[data-state='checked'] {
     background-color: rgba(0, 128, 0, 0.1);
 }

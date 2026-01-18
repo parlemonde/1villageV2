@@ -20,7 +20,7 @@
     padding: 0 8px;
     font-size: 15px;
     font-weight: 400;
-    gap: 8px;   
+    gap: 8px;
     transition: width 150ms ease-in-out;
     cursor: pointer;
     background-color: white;

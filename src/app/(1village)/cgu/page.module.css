@@ -1,6 +1,6 @@
 .cguBlock {
-  padding: 0 20px 40px;
-  text-align: justify;
+    padding: 0 20px 40px;
+    text-align: justify;
 }
 
 .textCenter {
@@ -12,7 +12,7 @@
 }
 
 .textOrangeBackground {
-  background-color: var(--text-orange-background);
-  color: white;
-  display: inline-block;
+    background-color: var(--text-orange-background);
+    color: white;
+    display: inline-block;
 }

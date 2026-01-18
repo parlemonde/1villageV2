@@ -8,7 +8,6 @@
     @media (max-width: 1500px) {
         width: 100%;
     }
-    
 }
 .pelico-checkbox {
     display: flex;
@@ -27,7 +26,7 @@
     flex-direction: row;
 }
 
-@media(max-width: 850px) {
+@media (max-width: 850px) {
     .filters {
         flex-direction: column;
         flex-wrap: wrap;

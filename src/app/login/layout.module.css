@@ -42,7 +42,11 @@
 .title {
     color: var(--primary-color);
     font-size: 32px;
-    font-family: var(--font-alegreya-sans), Times New Roman, Times, serif;
+    font-family:
+        var(--font-alegreya-sans),
+        Times New Roman,
+        Times,
+        serif;
     font-weight: 500;
     margin-left: 8px;
 }

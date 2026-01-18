@@ -1,10 +1,9 @@
 .popoverContent {
-	width: 360px;
+    width: 360px;
     z-index: 101;
-	background-color: white;
-	border-radius: 4px;
+    background-color: white;
+    border-radius: 4px;
     border: 1px solid var(--grey-300);
     box-shadow: 0 2px 10px 0 var(--grey-300);
     padding: 4px;
 }
-
