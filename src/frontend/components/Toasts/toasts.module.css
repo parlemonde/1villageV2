@@ -1,0 +1,102 @@
+.toastViewport {
+    position: fixed;
+    top: 74px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 200;
+    outline: none;
+}
+
+@media (max-width: 850px) {
+    .toastViewport {
+        top: 68px;
+        width: calc(100% - 16px);
+        left: 8px;
+        transform: translateX(0);
+    }
+}
+
+.toast {
+    border-radius: 8px;
+    padding: 12px 8px 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-shadow: 2px 2px 4px 0px var(--primary-500);
+    background-color: var(--primary-300);
+    color: var(--font-color);
+}
+.toast--success {
+    background-color: var(--success-color);
+    box-shadow: 2px 2px 4px 0px #005400;
+    color: white;
+}
+.toast--error {
+    background-color: var(--error-color);
+    box-shadow: 2px 2px 4px 0px #871a1a;
+    color: white;
+}
+.toast--warning {
+    background-color: var(--warning-color);
+    box-shadow: 2px 2px 4px 0px #613e07;
+    color: white;
+}
+
+.toast[data-state='open'] {
+    animation: fadeIn 250ms ease-in;
+}
+
+.toast[data-swipe='move'] {
+    transform: translateX(var(--radix-toast-swipe-move-x));
+}
+
+.toast[data-swipe='cancel'] {
+    transform: translateX(0);
+    transition: transform 200ms ease-out;
+}
+
+.toast[data-swipe='end'] {
+    animation: swipeOut 100ms ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes swipeOut {
+    from {
+        transform: translateX(var(--radix-toast-swipe-end-x));
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.closeButton {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+}
+.closeButton:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}

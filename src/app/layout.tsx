@@ -1,3 +1,4 @@
+import { Toasts } from '@frontend/components/Toasts';
 import { NProgressDone } from '@frontend/components/ui/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import { getEnvVariable } from '@server/lib/get-env-variable';
@@ -71,7 +72,10 @@ export default async function RootLayout({
                 <noscript>You need to enable JavaScript to run this app.</noscript>
                 <NextIntlClientProvider>
                     <NuqsAdapter>
-                        <Tooltip.Provider delayDuration={0}>{children}</Tooltip.Provider>
+                        <Tooltip.Provider delayDuration={0}>
+                            {children}
+                            <Toasts />
+                        </Tooltip.Provider>
                     </NuqsAdapter>
                 </NextIntlClientProvider>
                 <Suspense>
