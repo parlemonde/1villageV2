@@ -1,5 +1,6 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { useActivityName } from '@frontend/components/activities/activities-constants';
 import { Button } from '@frontend/components/ui/Button/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
@@ -61,6 +62,10 @@ export const ActivityPhasesTable = ({ phases }: ActivityPhasesTableProps) => {
                             { phase: 3, activityTypes: phase3Activities },
                         ]);
                         setIsSaving(false);
+                        sendToast({
+                            message: 'Activités enregistrées avec succès',
+                            type: 'success',
+                        });
                     }}
                 />
             </div>
