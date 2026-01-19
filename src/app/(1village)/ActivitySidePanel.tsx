@@ -12,6 +12,7 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import Image from 'next/image';
 import { useParams, usePathname } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
@@ -22,6 +23,7 @@ export const ActivitySidePanel = () => {
     const pathname = usePathname();
     const params = useParams();
     const activityId = Number(params?.id);
+    const t = useExtracted('app.(1village)');
 
     const { data: activity } = useSWR<Activity>(activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
@@ -92,7 +94,7 @@ export const ActivitySidePanel = () => {
                                 rel="noopener noreferrer"
                                 style={{ overflow: 'hidden', marginBottom: '10px', textAlign: 'center' }}
                                 variant="outlined"
-                                label="Voir la fiche du professeur"
+                                label={t('Voir la fiche du professeur')}
                             ></Button>
                         </div>
                     </div>
