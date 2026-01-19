@@ -16,7 +16,7 @@ export default function CreerUneEnigmeStep2() {
         return null;
     }
 
-    const themeName = activity.data?.defaultTheme || activity.data?.customTheme;
+    const themeName = activity.data?.customTheme || activity.data?.defaultTheme;
     const isFirstStepDone = !!themeName;
 
     return (
