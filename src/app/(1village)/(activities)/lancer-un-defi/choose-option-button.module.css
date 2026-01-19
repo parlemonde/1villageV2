@@ -1,16 +1,14 @@
 .button {
-    cursor: pointer;
     border-radius: 10px;
     background-color: var(--grey-100);
     border: 1px solid var(--grey-200);
     padding: 16px 20px;
     text-align: left;
     line-height: 1.5rem;
+}
 
-    p {
-        font-weight: 500;
-    }
-
+.title {
+    font-weight: 500;
 }
 
 .button:hover {
@@ -19,6 +17,7 @@
 }
 
 .buttonContent {
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,4 +26,8 @@
 .icon {
     width: 24px;
     height: 40px
+}
+
+.dropdown {
+    padding-top: 32px;
 }

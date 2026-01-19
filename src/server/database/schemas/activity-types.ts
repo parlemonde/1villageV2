@@ -48,6 +48,9 @@ export type CulinaryChallenge = {
 
 export type LinguisticChallenge = {
     theme: 'linguistique';
+    language?: string;
+    languageKnowledge?: string;
+    textKind?: 'word' | 'idiom' | 'poem' | 'song' | string;
     content?: AnyContent[];
     challengeKind?: string;
 };

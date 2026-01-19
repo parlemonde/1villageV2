@@ -1,11 +1,17 @@
+'use client';
+
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
+import { ActivityContext } from '@frontend/contexts/activityContext';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
-import { getExtracted } from 'next-intl/server';
+import { useExtracted } from 'next-intl';
+import { useContext } from 'react';
 
-export default async function LancerUnnDefiSuccess() {
-    const t = await getExtracted('app.(1village).(activities).lancer-un-defi.success');
-    const tCommon = await getExtracted('common');
+export default function LancerUnnDefiSuccess() {
+    const t = useExtracted('app.(1village).(activities).lancer-un-defi.success');
+    const tCommon = useExtracted('common');
+
+    const { activity } = useContext(ActivityContext);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px', gap: '48px' }}>
@@ -20,7 +26,9 @@ export default async function LancerUnnDefiSuccess() {
                     borderRadius: '8px',
                 }}
             >
-                <Title variant="h3">{t('Votre défi a été publié avec succès !')}</Title>
+                <Title variant="h3">
+                    {activity?.publishDate ? t('Votre défi a été modifié avec succès !') : t('Votre défi a été publié avec succès !')}
+                </Title>
                 <PelicoSouriant style={{ width: '160px', height: 'auto' }} />
             </div>
             <Button as="a" href="/" color="primary" label={tCommon("Retour à l'accueil")} />
