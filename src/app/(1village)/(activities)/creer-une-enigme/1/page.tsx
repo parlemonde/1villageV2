@@ -1,6 +1,12 @@
 'use client';
 
-import { useTranslatableThemes, useTranslatableSubthemes, type SubThemeItem } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import {
+    useEnigmeThemes,
+    useEnigmeSubthemes,
+    CUSTOM_THEME_VALUE,
+    type ThemeName,
+    type SubThemeItem,
+} from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Accordion } from '@frontend/components/ui/Accordion';
@@ -23,11 +29,9 @@ import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
-const CUSTOM_PUZZLE_VALUE = 'Autre thème';
-
 export default function CreerUneEnigmeStep1() {
-    const { DEFAULT_THEMES } = useTranslatableThemes();
-    const DEFAULT_SUBTHEMES = useTranslatableSubthemes();
+    const DEFAULT_THEMES = useEnigmeThemes();
+    const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
@@ -50,26 +54,23 @@ export default function CreerUneEnigmeStep1() {
         return null;
     }
 
-    const defaultTheme = activity.data?.defaultTheme;
-    const useCustomTheme = defaultTheme === CUSTOM_PUZZLE_VALUE;
-    const themeName = activity.data?.customTheme || defaultTheme;
+    const defaultTheme: ThemeName = activity.data?.defaultTheme || CUSTOM_THEME_VALUE;
+    const useCustomTheme = defaultTheme === CUSTOM_THEME_VALUE;
     const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
+    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.tname, value: theme.name }));
+    const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
 
-    const selectOptions = DEFAULT_THEMES.map((puzzle) => ({ label: puzzle.tname, value: puzzle.name }));
-    if (defaultTheme && !selectOptions.some((option) => option.value === defaultTheme)) {
-        selectOptions.push({ label: defaultTheme, value: defaultTheme });
-    }
-    // selectOptions.push({ label: 'Autre thème', value: CUSTOM_PUZZLE_VALUE });
-    // selectOptions.push({ label: t('Autre thème'), value: CUSTOM_PUZZLE_VALUE });
-
-    const subthemes = (defaultTheme && DEFAULT_SUBTHEMES[defaultTheme]) || [];
+    const customTheme = activity.data?.customTheme;
+    const step1Theme = customTheme
+        ? DEFAULT_SUBTHEMES[defaultTheme]?.find((subtheme) => subtheme.name === customTheme)?.tname || customTheme
+        : DEFAULT_THEMES.find((theme) => theme.name === defaultTheme)?.tname;
 
     return (
         <PageContainer>
             <BackButton href="/creer-une-enigme" label="Retour" />
             <Steps
                 steps={[
-                    { label: themeName || 'Énigme', href: '/creer-une-enigme/1' },
+                    { label: step1Theme || 'Énigme', href: '/creer-une-enigme/1' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
                     { label: 'Réponse', href: '/creer-une-enigme/3' },
                     { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
@@ -83,13 +84,17 @@ export default function CreerUneEnigmeStep1() {
             </Title>
             <Select
                 options={selectOptions}
-                value={activity.data?.defaultTheme || CUSTOM_PUZZLE_VALUE}
+                value={activity.data?.defaultTheme || CUSTOM_THEME_VALUE}
                 onChange={(newValue) => {
                     // changing theme resets customTheme
-                    if (newValue === CUSTOM_PUZZLE_VALUE) {
-                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: CUSTOM_PUZZLE_VALUE, customTheme: '' } });
+                    if (newValue === CUSTOM_THEME_VALUE) {
+                        setActivity({
+                            type: 'enigme',
+                            ...activity,
+                            data: { ...activity.data, defaultTheme: CUSTOM_THEME_VALUE, customTheme: undefined },
+                        });
                     } else {
-                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: newValue, customTheme: '' } });
+                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: newValue, customTheme: undefined } });
                     }
                 }}
             />
@@ -112,7 +117,7 @@ export default function CreerUneEnigmeStep1() {
             ) : (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
-                        Veuillez préciser le thème <strong>{themeName}</strong>.
+                        Veuillez préciser le thème <strong>{step1Theme}</strong>.
                     </Title>
                     {subthemes.length > 0 &&
                         subthemes.map((subtheme: SubThemeItem, index: number) => (
@@ -151,7 +156,7 @@ export default function CreerUneEnigmeStep1() {
                                 },
                                 content: (
                                     <>
-                                        <p>Autre type dans le thème : {themeName}</p>
+                                        <p>Autre type dans le thème : {step1Theme}</p>
                                         <Input
                                             placeholder=""
                                             isFullWidth
@@ -205,7 +210,7 @@ export default function CreerUneEnigmeStep1() {
                     >
                         <PelicoSearch style={{ width: '100px', height: 'auto' }} />
                         <p>
-                            Aucune énigme trouvée pour le thème <strong>{themeName}</strong>.
+                            Aucune énigme trouvée pour le thème <strong>{step1Theme}</strong>.
                         </p>
                     </div>
                 )}
