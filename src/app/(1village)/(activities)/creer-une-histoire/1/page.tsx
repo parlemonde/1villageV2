@@ -1,51 +1,38 @@
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
 
-import AddIcon from '@mui/icons-material/Add';
-import { Grid, ButtonBase, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
-
-import { isStory } from 'src/activity-types/anyActivity';
-import { DEFAULT_STORY_DATA, ODD_CHOICE } from 'src/activity-types/story.constants';
-import { KeepRatio } from 'src/components/KeepRatio';
-import { Steps } from 'src/components/Steps';
-import { StepsButton } from 'src/components/StepsButtons';
-import { ImageModal } from 'src/components/activities/content/editors/ImageEditor/ImageModal';
-import { BackButton } from 'src/components/buttons/BackButton';
-import { DeleteButton } from 'src/components/buttons/DeleteButton';
-import { useImageStoryRequests } from 'src/services/useImagesStory';
-import { primaryColor, bgPage, errorColor } from 'src/styles/variables.const';
-import { ActivityStatus, ActivityType } from 'types/activity.type';
-import type { StoriesData } from 'types/story.type';
-import { ActivityContext } from '@frontend/contexts/activityContext';
-import { Title } from '@frontend/components/ui/Title';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { VillageContext } from '@frontend/contexts/villageContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { Button } from '@frontend/components/ui/Button';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { Title } from '@frontend/components/ui/Title';
+import { Steps } from '@frontend/components/ui/Steps';
+
+import styles from '../page.module.css';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 
 const StoryStep1 = () => {
-    const { activity, createNewActivity, setActivity } = useContext(ActivityContext);
-    if (!activity || activity.type !== 'libre') {
+    const { activity, onCreateActivity, onUpdateActivity } = useContext(ActivityContext);
+    if (!activity || activity.type !== 'histoire') {
         return null;
     }
 
-    const { selectedPhase } = useContext(VillageContext);
+    //const { selectedPhase } = useContext(VillageContext);
     const { deleteStoryImage } = useImageStoryRequests();
     const [isError, setIsError] = useState<boolean>(false);
     const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
     const [oDDChoice, setODDChoice] = useState('');
-    const data = (activity?.data as StoriesData) || { odd: ODD_CHOICE[0] };
-    const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
+    const data = (activity?.data as StoriesData) || { odd: oDDChoice[0] };
+    //const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
 
     // Create the story activity.
     const created = React.useRef(false);
     useEffect(() => {
         if (!created.current) {
-            if (!('edit' in router.query) || (activity && !isStory(activity))) {
+            if (!('edit' in router.query) || (activity && !(activity.type === 'histoire'))) {
                 created.current = true;
-                createNewActivity(
-                    ActivityType.STORY,
+                onCreateActivity(
+                    'histoire',
                     selectedPhase,
                     undefined,
                     {
@@ -57,12 +44,12 @@ const StoryStep1 = () => {
                 );
             }
         }
-    }, [activity, createNewActivity, router.query, selectedPhase]);
+    }, [activity, onCreateActivity]);
 
     // Update the "odd step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
         const { odd } = data;
-        setActivity({ data: { ...data, odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 } } });
+        //onUpdateActivity({ data: { ...data, odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 } } });
     };
 
     useEffect(() => {
@@ -75,25 +62,25 @@ const StoryStep1 = () => {
 
     return (
         <PageContainer>
-            <BackButton href="/creer-une-histoire" />
+            <BackButton href="/creer-une-histoire" label="Retour"/>
             <Steps
-                steps={['ODD', 'Objet', 'Lieu', 'Histoire', 'Prévisualisation']}
-                urls={[
-                    '/creer-une-histoire/1?edit',
-                    '/creer-une-histoire/2',
-                    '/creer-une-histoire/3',
-                    '/creer-une-histoire/4',
-                    '/creer-une-histoire/5',
+                steps={[
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
+                    { label: 'Objet', href: '/creer-une-histoire/2' },
+                    { label: 'Lieu', href: '/creer-une-histoire/3' },
+                    { label: 'Histoire', href: '/creer-une-histoire/4' },
+                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={0}
             />
+
             <div className="width-900">
                 <Title variant="h1" marginBottom="md">
                     Choisissez et dessinez l'objectif du développement durable à atteindre
                 </Title>
-                <Grid container>
-                    <Grid item xs={12} md={6}>
-                        <div style={{ marginTop: '1.5rem' }}>
+                <div className={styles['odd-container']}>
+                    <div className={styles['odd-column']}>
+                        <div className={styles['odd-image-wrapper']}>
                             <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
                                 <ButtonBase
                                     onClick={() => setIsImageModalOpen(true)}
@@ -156,7 +143,7 @@ const StoryStep1 = () => {
                                     onChange={(event: { target: { value: string } }) => {
                                         setODDChoice(event.target.value as string);
                                         const { odd } = data;
-                                        setActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
+                                        onUpdateActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
                                     }}
                                     label="Village"
                                 >
@@ -169,8 +156,8 @@ const StoryStep1 = () => {
                                 <FormHelperText>Choisissez votre ODD </FormHelperText>
                             </FormControl>
                         </div>
-                    </Grid>
-                </Grid>
+                    </div>
+                </div>
             </div>
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Button as="a" href="/creer-une-histoire/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
@@ -180,3 +167,6 @@ const StoryStep1 = () => {
 };
 
 export default StoryStep1;
+function useImageStoryRequests(): { deleteStoryImage: any } {
+    throw new Error('Function not implemented.');
+}

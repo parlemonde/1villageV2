@@ -2,3 +2,35 @@
     margin-top: 16px;
     margin-bottom: 16px;
 }
+
+
+.odd-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.odd-column {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+/* Equivalent to md={6} → 50% width on medium screens */
+@media (min-width: 960px) {
+    .odd-column {
+        width: 50%;
+    }
+}
+
+.odd-image-wrapper {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.odd-delete-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+}
