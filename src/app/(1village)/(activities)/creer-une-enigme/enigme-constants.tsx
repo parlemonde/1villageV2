@@ -5,7 +5,9 @@ import PersonaliteIcon from '@frontend/svg/enigmes/personalite-mystere.svg';
 import { useExtracted } from 'next-intl';
 import React from 'react';
 
-type ThemeName = 'Objet mystère' | 'Évènement mystère' | 'Personnalité mystère' | 'Lieu mystère';
+export const CUSTOM_THEME_VALUE = 'Autre thème';
+
+export type ThemeName = 'Objet mystère' | 'Évènement mystère' | 'Personnalité mystère' | 'Lieu mystère' | 'Autre thème';
 
 export type ThemeItem = {
     name: ThemeName;
@@ -18,32 +20,27 @@ export type SubThemeItem = {
     tname: string;
 };
 
-type UseTranslatableThemesReturn = {
-    DEFAULT_THEMES: ThemeItem[];
-};
-
-type UseTranslatableSubthemesReturn = Record<ThemeName, SubThemeItem[]>;
-
-export const useTranslatableThemes = (): UseTranslatableThemesReturn => {
+export const useEnigmeThemes = (): ThemeItem[] => {
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
-    return {
-        DEFAULT_THEMES: [
-            { name: 'Objet mystère', tname: t('Objet mystère'), icon: <ObjetIcon /> },
-            { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
-            { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
-            { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
-        ],
-    };
+    const DEFAULT_THEMES: ThemeItem[] = [
+        { name: 'Objet mystère', tname: t('Objet mystère'), icon: <ObjetIcon /> },
+        { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
+        { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
+        { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
+        { name: 'Autre thème', tname: t('Créer une énigme sur un autre thème'), icon: <></> },
+    ];
+
+    return DEFAULT_THEMES;
 };
 
-export const useTranslatableSubthemes = (): UseTranslatableSubthemesReturn => {
+export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
     const DEFAULT_SUBTHEMES: Record<ThemeName, SubThemeItem[]> = {
         'Objet mystère': [
             { name: 'Un jouet', tname: t('Un jouet') },
-            { name: 'Un ustentil', tname: t('Un ustentil') },
+            { name: 'Un ustensile', tname: t('Un ustensile') },
             { name: 'Un objet de culte', tname: t('Un objet de culte') },
             { name: 'Un instrument de musique', tname: t('Un instrument de musique') },
             { name: 'Un costume', tname: t('Un costume') },
@@ -65,6 +62,7 @@ export const useTranslatableSubthemes = (): UseTranslatableSubthemesReturn => {
             { name: ' Une salle de spectacle', tname: t(' Une salle de spectacle') },
             { name: " Un ouvrage d'art", tname: t(" Un ouvrage d'art") },
         ],
+        'Autre thème': [],
     };
 
     return DEFAULT_SUBTHEMES;
