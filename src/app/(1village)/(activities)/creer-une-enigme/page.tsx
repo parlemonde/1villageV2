@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslatableThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { useEnigmeThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -14,8 +14,7 @@ export default function CreerUneEnigmePage() {
     const { user } = React.useContext(UserContext);
     const { onCreateActivity } = React.useContext(ActivityContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
-    const { DEFAULT_THEMES } = useTranslatableThemes();
-    const CUSTOM_PUZZLE_VALUE = 'Autre thème';
+    const DEFAULT_THEMES = useEnigmeThemes();
 
     return (
         <PageContainer title="Sur quelle thématique sera votre énigme ?">
@@ -35,17 +34,6 @@ export default function CreerUneEnigmePage() {
                         {theme.tname}
                     </button>
                 ))}
-                <button
-                    className={styles.themeLink}
-                    onClick={() => {
-                        onCreateActivity('enigme', isPelico, {
-                            defaultTheme: CUSTOM_PUZZLE_VALUE, // use defaultTheme to store custom puzzle flow
-                        });
-                        router.push('/creer-une-enigme/1');
-                    }}
-                >
-                    Créer une énigme sur un autre thème
-                </button>
             </div>
         </PageContainer>
     );
