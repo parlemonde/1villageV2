@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -10,6 +10,9 @@ import { Steps } from '@frontend/components/ui/Steps';
 
 import styles from '../page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import { useRouter } from 'next/router';
+import { UserContext } from '@frontend/contexts/userContext';
+import { AspectRatio } from 'radix-ui';
 
 const StoryStep1 = () => {
     const { activity, onCreateActivity, onUpdateActivity } = useContext(ActivityContext);
@@ -24,24 +27,17 @@ const StoryStep1 = () => {
     const [oDDChoice, setODDChoice] = useState('');
     const data = (activity?.data as StoriesData) || { odd: oDDChoice[0] };
     //const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
+    const { user } = useContext(UserContext);
+    const isPelico = user.role === 'admin' || user.role === 'mediator';
+    const router = useRouter();
 
     // Create the story activity.
-    const created = React.useRef(false);
+    const created = useRef(false);
     useEffect(() => {
         if (!created.current) {
             if (!('edit' in router.query) || (activity && !(activity.type === 'histoire'))) {
                 created.current = true;
-                onCreateActivity(
-                    'histoire',
-                    selectedPhase,
-                    undefined,
-                    {
-                        ...DEFAULT_STORY_DATA,
-                    },
-                    null,
-                    null,
-                    undefined,
-                );
+                onCreateActivity('histoire', isPelico);
             }
         }
     }, [activity, onCreateActivity]);
@@ -60,9 +56,13 @@ const StoryStep1 = () => {
         }
     }, []);
 
+    function setIsUploadImageModalOpen(arg0: boolean): void {
+        throw new Error('Function not implemented.');
+    }
+
     return (
         <PageContainer>
-            <BackButton href="/creer-une-histoire" label="Retour"/>
+            <BackButton href="/creer-une-histoire" label="Retour" />
             <Steps
                 steps={[
                     { label: 'ODD', href: '/creer-une-histoire/1?edit' },
@@ -82,18 +82,23 @@ const StoryStep1 = () => {
                     <div className={styles['odd-column']}>
                         <div className={styles['odd-image-wrapper']}>
                             <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <ButtonBase
-                                    onClick={() => setIsImageModalOpen(true)}
-                                    style={{ width: '100%', color: `${isError ? errorColor : primaryColor}` }}
-                                >
-                                    <KeepRatio ratio={2 / 3} width="100%">
+                                <Button
+                                    marginLeft="sm"
+                                    label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                                    color="primary"
+                                    size="sm"
+                                    onClick={() => setIsUploadImageModalOpen(true)}
+                                    style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
+                                />
+                                <div style={{ width: '100%' }}>
+                                    <AspectRatio.Root ratio={2 / 3}>
                                         <div
                                             style={{
                                                 height: '100%',
                                                 width: '100%',
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                border: `1px solid ${isError ? errorColor : primaryColor}`,
+                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
                                                 borderRadius: '10px',
                                                 justifyContent: 'center',
                                             }}
@@ -110,8 +115,9 @@ const StoryStep1 = () => {
                                                 <AddIcon style={{ fontSize: '80px' }} />
                                             )}
                                         </div>
-                                    </KeepRatio>
-                                </ButtonBase>
+                                    </AspectRatio.Root>
+                                </div>
+
                                 {data.odd?.imageUrl && (
                                     <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
                                         <DeleteButton
@@ -121,7 +127,7 @@ const StoryStep1 = () => {
                                             }}
                                             confirmLabel="Êtes-vous sur de vouloir supprimer l'image ?"
                                             confirmTitle="Supprimer l'image"
-                                            style={{ backgroundColor: bgPage }}
+                                            style={{ backgroundColor: 'var(--background-color)' }}
                                         />
                                     </div>
                                 )}
@@ -143,7 +149,8 @@ const StoryStep1 = () => {
                                     onChange={(event: { target: { value: string } }) => {
                                         setODDChoice(event.target.value as string);
                                         const { odd } = data;
-                                        onUpdateActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
+                                        //onUpdateActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
+                                        onUpdateActivity();
                                     }}
                                     label="Village"
                                 >
