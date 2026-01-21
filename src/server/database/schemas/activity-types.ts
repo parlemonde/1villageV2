@@ -144,10 +144,12 @@ export type FreeThemeChallenge = {
     challengeKind?: string;
 };
 
-export type ChallengeActivity<T extends CulinaryChallenge | LinguisticChallenge | EcologicalChallenge | FreeThemeChallenge> = {
+type Challenges = CulinaryChallenge | LinguisticChallenge | EcologicalChallenge | FreeThemeChallenge;
+export type ChallengeActivity<T extends Challenges> = {
     type: 'defi';
     data: T;
 };
+export type ChallengeType = Challenges['theme'];
 
 export type Activities =
     | FreeActivity

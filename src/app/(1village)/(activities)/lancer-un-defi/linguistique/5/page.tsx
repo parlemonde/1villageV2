@@ -14,9 +14,10 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
-import { useContext, useState } from 'react';
+import { act, useContext, useState } from 'react';
 
 import styles from './page.module.css';
+import { sendToast } from '@frontend/components/Toasts';
 
 export default function LancerUnDefiLinguistiqueStep5() {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi.linguistique.5');
@@ -44,7 +45,10 @@ export default function LancerUnDefiLinguistiqueStep5() {
             }
             router.push('/lancer-un-defi/success');
         } catch (error) {
-            console.error(error);
+            sendToast({
+                type: 'error',
+                message: t('Une erreur est survenue lors de la publication de votre défi'),
+            })
         } finally {
             setIsSubmitting(false);
         }
@@ -90,7 +94,11 @@ export default function LancerUnDefiLinguistiqueStep5() {
                 status={LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                {t('Voilà')} {activity.data.textKind?.toLowerCase()} {t('en')} {language}, {t('une langue')} {activity.data.languageKnowledge}
+                {activity.data.language && activity.data.textKind && activity.data.languageKnowledge && (
+                    <>
+                        {t('Voilà')} {activity.data.textKind?.toLowerCase()} {t('en')} {language}, {t('une langue')} {activity.data.languageKnowledge}
+                    </>
+                )}
             </ActivityStepPreview>
             <ActivityStepPreview
                 stepName={t('Thème')}

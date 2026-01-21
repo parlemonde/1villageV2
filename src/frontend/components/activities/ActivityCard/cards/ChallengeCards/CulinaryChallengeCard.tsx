@@ -20,6 +20,7 @@ export const CulinaryChallengeCard = ({ activity }: ChallengeCardProps) => {
                         src={activity.data.dish?.imageUrl}
                         alt={activity.data.dish?.name ?? t('Image du plat')}
                         layout="fill"
+                        sizes="200px"
                         style={{ objectFit: 'fill' }}
                     />
                 </div>
