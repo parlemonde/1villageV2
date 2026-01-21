@@ -65,15 +65,7 @@ export default function AdminMediasPage() {
     return (
         <PageContainer title="Médiathèque">
             <div className={styles.downloadButtonContainer}>
-                <Button
-                    color="primary"
-                    label={
-                        <>
-                            <DownloadIcon /> Télécharger
-                        </>
-                    }
-                    onClick={downloadAll}
-                />
+                <Button color="primary" label="Télécharger" leftIcon={<DownloadIcon />} onClick={downloadAll} />
             </div>
             <MediaFilters
                 isPelico={isPelico}
