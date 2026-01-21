@@ -18,7 +18,8 @@ export const LinguisticChallengeCard = ({ activity }: ChallengeCardProps) => {
     return (
         <>
             <p style={{ fontWeight: '500', marginBottom: '16px' }}>
-                {t('Voilà un mot en {language}', { language: language })}, {t('une langue')} {activity.data.languageKnowledge}.
+                {t('Voilà un {textKind}', { textKind: activity.data.textKind?.toLowerCase() ?? '' })}
+                {' '}{t('en')} {language}, {t('une langue')} {activity.data.languageKnowledge}.
             </p>
             <p>
                 <strong>{t('Votre défi :')}</strong> {activity.data.challengeKind}

@@ -5,13 +5,14 @@ import { CulinaryChallengeCard } from './ChallengeCards/CulinaryChallengeCard';
 import { EcologicalChallengeCard } from './ChallengeCards/EcologicalChallengeCard';
 import { FreeThemeChallengeCard } from './ChallengeCards/FreeThemeChallengeCard';
 import { LinguisticChallengeCard } from './ChallengeCards/LinguisticChallengeCard';
+import { ChallengeType } from '@server/database/schemas/activity-types';
 
 export const ChallengeCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     if (activity.type !== 'defi') {
         return null;
     }
 
-    const CHALLENGE_CARDS: Record<string, React.FC<ActivityContentCardProps>> = {
+    const CHALLENGE_CARDS: Record<ChallengeType, React.FC<ActivityContentCardProps>> = {
         ecologique: EcologicalChallengeCard,
         linguistique: LinguisticChallengeCard,
         culinaire: CulinaryChallengeCard,
