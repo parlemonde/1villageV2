@@ -16,7 +16,7 @@ import { useContext } from 'react';
 import styles from './page.module.css';
 
 export default function LancerUnDefiCulinaireStep2() {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.2');
+    const t = useExtracted('app.(1village).(activities).lancer-un-defi.culinaire.2');
     const tCommon = useExtracted('common');
 
     const router = useRouter();

@@ -20,7 +20,7 @@ import styles from './page.module.css';
 
 export default function LancerUnDefiCulinaireStep1() {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi.culinaire.1');
-    const tCommon = useExtracted('app.(1village).(activities).common');
+    const tCommon = useExtracted('common');
 
     const router = useRouter();
 
@@ -74,7 +74,12 @@ export default function LancerUnDefiCulinaireStep1() {
                             label={t('Quel est le nom du plat ?')}
                             marginBottom="md"
                             input={
-                                <Input isFullWidth type="text" value={activity.data.dish?.name} onChange={(e) => setDish('name', e.target.value)} />
+                                <Input
+                                    isFullWidth
+                                    type="text"
+                                    value={activity.data.dish?.name ?? ''}
+                                    onChange={(e) => setDish('name', e.target.value)}
+                                />
                             }
                         />
                         <Field
@@ -83,7 +88,7 @@ export default function LancerUnDefiCulinaireStep1() {
                             input={
                                 <TextArea
                                     isFullWidth
-                                    value={activity.data.dish?.description}
+                                    value={activity.data.dish?.description ?? ''}
                                     onChange={(e) => setDish('description', e.target.value)}
                                 />
                             }
@@ -91,7 +96,13 @@ export default function LancerUnDefiCulinaireStep1() {
                         <Field
                             label={t('Pourquoi avoir choisi ce plat ?')}
                             marginBottom="md"
-                            input={<TextArea isFullWidth value={activity.data.dish?.history} onChange={(e) => setDish('history', e.target.value)} />}
+                            input={
+                                <TextArea
+                                    isFullWidth
+                                    value={activity.data.dish?.history ?? ''}
+                                    onChange={(e) => setDish('history', e.target.value)}
+                                />
+                            }
                         />
                     </div>
                 </div>

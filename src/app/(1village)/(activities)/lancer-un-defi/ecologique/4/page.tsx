@@ -110,6 +110,7 @@ export default function LancerUnDefiEcologiqueStep4() {
                 <Button
                     color="primary"
                     label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
+                    variant="contained"
                     onClick={onSubmit}
                     disabled={!ECOLOGICAL_CHALLENGE_VALIDATORS.areAllStepsValid(activity)}
                 />

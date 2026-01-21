@@ -105,11 +105,7 @@ export default function LancerUnDefiLinguistiqueStep2() {
                                         input={
                                             <Input
                                                 type="text"
-                                                value={
-                                                    textKinds.find((tk) => tk.value === activity.data.textKind) === undefined
-                                                        ? activity.data.textKind
-                                                        : ''
-                                                }
+                                                value={activity.data.textKind ?? ''}
                                                 onChange={(e) => setActivity({ ...activity, data: { ...activity.data, textKind: e.target.value } })}
                                             />
                                         }

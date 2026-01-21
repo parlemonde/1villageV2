@@ -7,6 +7,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
 
 import type { ActivityContentViewProps } from './activity-view.types';
+import { ChallengeView } from './views/ChallengeView';
 import { FreeContentView } from './views/FreeContentView';
 import { HintView } from './views/HintView';
 
@@ -15,6 +16,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     jeu: () => null,
     enigme: () => null,
     indice: HintView,
+    defi: ChallengeView,
 };
 
 interface ActivityViewProps {

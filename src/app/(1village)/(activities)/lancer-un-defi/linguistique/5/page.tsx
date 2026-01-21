@@ -128,6 +128,7 @@ export default function LancerUnDefiLinguistiqueStep5() {
                     disabled={!LINGUISTIC_CHALLENGE_VALIDATORS.areAllStepsValid(activity)}
                     onClick={onSubmit}
                     color="primary"
+                    variant="contained"
                     label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
                 />
             </div>
