@@ -118,7 +118,13 @@ export default function LancerUnDefiLinguistiqueStep4() {
                                     <Field
                                         label={t('Défi')}
                                         input={
-                                            <Input type="text" onChange={(e) => goToNextStep(e.target.value)} value={activity.data.challengeKind} />
+                                            <Input
+                                                type="text"
+                                                onChange={(e) =>
+                                                    setActivity({ ...activity, data: { ...activity.data, challengeKind: e.target.value } })
+                                                }
+                                                value={activity.data.challengeKind ?? ''}
+                                            />
                                         }
                                     />
                                     <Button

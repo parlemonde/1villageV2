@@ -136,7 +136,15 @@ export type EcologicalChallenge = {
     challengeKind?: string;
 };
 
-export type ChallengeActivity<T extends CulinaryChallenge | LinguisticChallenge | EcologicalChallenge> = {
+export type FreeThemeChallenge = {
+    theme: 'libre';
+    themeName?: string;
+    action?: string;
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type ChallengeActivity<T extends CulinaryChallenge | LinguisticChallenge | EcologicalChallenge | FreeThemeChallenge> = {
     type: 'defi';
     data: T;
 };
@@ -150,7 +158,8 @@ export type Activities =
     | MascotActivity
     | ChallengeActivity<CulinaryChallenge>
     | ChallengeActivity<LinguisticChallenge>
-    | ChallengeActivity<EcologicalChallenge>;
+    | ChallengeActivity<EcologicalChallenge>
+    | ChallengeActivity<FreeThemeChallenge>;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI

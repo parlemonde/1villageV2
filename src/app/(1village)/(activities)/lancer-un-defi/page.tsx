@@ -56,7 +56,9 @@ export default function LancerUnDefiPage() {
                 <button
                     className={styles.themeLink}
                     onClick={() => {
-                        onCreateActivity('defi', isPelico);
+                        onCreateActivity('defi', isPelico, {
+                            theme: 'libre',
+                        });
                         router.push('/lancer-un-defi/1');
                     }}
                 >

@@ -53,7 +53,7 @@ export default function LancerUnDefiLinguistiqueStep1() {
 
     return (
         <PageContainer>
-            <BackButton href="/lancer-un-defi/linguistique/1" />
+            <BackButton href="/lancer-un-defi" />
             <Steps
                 steps={[
                     { label: t('Langue'), href: '/lancer-un-defi/linguistique/1' },
