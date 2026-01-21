@@ -1,27 +1,16 @@
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React from 'react';
-
-import AddIcon from '@mui/icons-material/Add';
-import { TextField, Grid, ButtonBase } from '@mui/material';
-
-import { isStory } from 'src/activity-types/anyActivity';
-import { Base } from 'src/components/Base';
-import { PageLayout } from 'src/components/PageLayout';
-import { Steps } from 'src/components/Steps';
-import { StepsButton } from 'src/components/StepsButtons';
-import { ImageModal } from 'src/components/activities/content/editors/ImageEditor/ImageModal';
-import { getErrorSteps } from 'src/components/activities/storyChecks';
-import { DeleteButton } from 'src/components/buttons/DeleteButton';
-import { ActivityContext } from 'src/contexts/activityContext';
-import type { StoriesData, TaleElement } from 'types/story.type';
 import { AspectRatio } from 'radix-ui';
+import React from 'react';
 
 const StoryStep4 = () => {
     const router = useRouter();
     const { activity, updateActivity, save } = React.useContext(ActivityContext);
     const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
-    const data = (activity?.data as StoriesData) || null;
+    const data = (activity?.data as ActivityData<'histoire'>) || null;
 
     const errorSteps = React.useMemo(() => {
         const errors = [];
@@ -43,7 +32,7 @@ const StoryStep4 = () => {
     React.useEffect(() => {
         if (activity === null && !('activity-id' in router.query) && !sessionStorage.getItem('activity')) {
             router.push('/creer-une-histoire');
-        } else if (activity && !isStory(activity)) {
+        } else if (activity && !(activity.type === 'histoire')) {
             router.push('/creer-une-histoire');
         }
     }, [activity, router]);
@@ -66,99 +55,96 @@ const StoryStep4 = () => {
         router.push('/creer-une-histoire/5');
     };
 
-    if (data === null || activity === null || !isStory(activity)) {
+    if (data === null || activity === null || !(activity.type === 'histoire')) {
         return <div></div>;
     }
 
     return (
-        <Base>
-            <PageLayout>
-                <Steps
-                    steps={['ODD', 'Objet', 'Lieu', 'Histoire', 'Prévisualisation']}
-                    urls={[
-                        '/creer-une-histoire/1?edit',
-                        '/creer-une-histoire/2',
-                        '/creer-une-histoire/3',
-                        '/creer-une-histoire/4',
-                        '/creer-une-histoire/5',
-                    ]}
-                    activeStep={3}
-                    errorSteps={errorSteps}
-                />
-                <div className="width-900">
-                    <h1>Décrivez et dessinez votre village-monde idéal</h1>
-                    <p className="text">
-                        Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l’objectif du
-                        développement durable que vous avez choisi.
-                    </p>
-                    <Grid container>
-                        <Grid item xs={12} md={6}>
-                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <ButtonBase onClick={() => setIsImageModalOpen(true)} style={{ width: '100%', color: 'var(--primary-color)' }}>
-                                    <div style={{ width: '100%' }}>
-                                        <AspectRatio.Root ratio={2 / 3}>
-                                            <div
-                                                style={{
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    border: `1px solid 'var(--primary-color)'`,
-                                                    borderRadius: '10px',
-                                                    justifyContent: 'center',
-                                                }}
-                                            >
-                                                {data.tale?.imageStory ? (
-                                                    <Image
-                                                        layout="fill"
-                                                        objectFit="cover"
-                                                        alt="image de l'histoire"
-                                                        src={data.tale?.imageStory}
-                                                        unoptimized
-                                                    />
-                                                ) : (
-                                                    <AddIcon style={{ fontSize: '80px' }} />
-                                                )}
-                                            </div>
-                                        </AspectRatio.Root>
-                                    </div>
-                                </ButtonBase>
-                                {data.tale?.imageStory && (
-                                    <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                        <DeleteButton
-                                            onDelete={() => {
-                                                setImage('');
+        <PageContainer>
+            <Steps
+                steps={[
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
+                    { label: 'Objet', href: '/creer-une-histoire/2' },
+                    { label: 'Lieu', href: '/creer-une-histoire/3' },
+                    { label: 'Histoire', href: '/creer-une-histoire/4' },
+                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                ]}
+                activeStep={3}
+                errorSteps={errorSteps}
+            />
+            <div className="width-900">
+                <h1>Décrivez et dessinez votre village-monde idéal</h1>
+                <p className="text">
+                    Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l’objectif du
+                    développement durable que vous avez choisi.
+                </p>
+                <Grid container>
+                    <Grid item xs={12} md={6}>
+                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                            <ButtonBase onClick={() => setIsImageModalOpen(true)} style={{ width: '100%', color: 'var(--primary-color)' }}>
+                                <div style={{ width: '100%' }}>
+                                    <AspectRatio.Root ratio={2 / 3}>
+                                        <div
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                border: `1px solid 'var(--primary-color)'`,
+                                                borderRadius: '10px',
+                                                justifyContent: 'center',
                                             }}
-                                            confirmLabel="Êtes-vous sur de vouloir supprimer l'image ?"
-                                            confirmTitle="Supprimer l'image"
-                                            style={{ backgroundColor: 'var(--background-color)' }}
-                                        />
-                                    </div>
-                                )}
-                                <ImageModal
-                                    id={0}
-                                    isModalOpen={isImageModalOpen}
-                                    setIsModalOpen={setIsImageModalOpen}
-                                    imageUrl={data.tale?.imageStory || ''}
-                                    setImageUrl={setImage}
-                                />
-                            </div>
-                        </Grid>
-                        <TextField
-                            id="standard-multiline-static"
-                            label="Ecrivez l’histoire de votre village-monde idéal"
-                            rows={8}
-                            multiline
-                            value={data.tale?.tale || ''}
-                            onChange={dataChange('tale')}
-                            variant="outlined"
-                            style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                        />
+                                        >
+                                            {data.tale?.imageStory ? (
+                                                <Image
+                                                    layout="fill"
+                                                    objectFit="cover"
+                                                    alt="image de l'histoire"
+                                                    src={data.tale?.imageStory}
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <AddIcon style={{ fontSize: '80px' }} />
+                                            )}
+                                        </div>
+                                    </AspectRatio.Root>
+                                </div>
+                            </ButtonBase>
+                            {data.tale?.imageStory && (
+                                <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
+                                    <DeleteButton
+                                        onDelete={() => {
+                                            setImage('');
+                                        }}
+                                        confirmLabel="Êtes-vous sur de vouloir supprimer l'image ?"
+                                        confirmTitle="Supprimer l'image"
+                                        style={{ backgroundColor: 'var(--background-color)' }}
+                                    />
+                                </div>
+                            )}
+                            <ImageModal
+                                id={0}
+                                isModalOpen={isImageModalOpen}
+                                setIsModalOpen={setIsImageModalOpen}
+                                imageUrl={data.tale?.imageStory || ''}
+                                setImageUrl={setImage}
+                            />
+                        </div>
                     </Grid>
-                </div>
-                <StepsButton prev="/creer-une-histoire/3" next={onNext} />
-            </PageLayout>
-        </Base>
+                    <TextField
+                        id="standard-multiline-static"
+                        label="Ecrivez l’histoire de votre village-monde idéal"
+                        rows={8}
+                        multiline
+                        value={data.tale?.tale || ''}
+                        onChange={dataChange('tale')}
+                        variant="outlined"
+                        style={{ width: '100%', marginTop: '25px', color: 'primary' }}
+                    />
+                </Grid>
+            </div>
+            <StepsButton prev="/creer-une-histoire/3" next={onNext} />
+        </PageContainer>
     );
 };
 

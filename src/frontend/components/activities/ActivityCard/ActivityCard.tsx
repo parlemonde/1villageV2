@@ -21,6 +21,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     indice: HintCard,
     jeu: EmptyContentCard,
     enigme: EmptyContentCard,
+    histoire: EmptyContentCard,
 };
 
 interface ActivityCardProps {

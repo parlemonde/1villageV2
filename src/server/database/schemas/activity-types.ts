@@ -25,24 +25,40 @@ type PuzzleActivity = {
     } | null;
 };
 
-type HintActivity = {
-    type: 'indice';
-    data: {
-        defaultHint?: string;
-        customHint?: string;
-        content?: AnyContent[];
-    } | null;
+// Generic type for story elements and tale element
+type GenericStoryElement = {
+    imageId: number | null;
+    imageUrl: string | null;
+};
+
+// --- structure of each story ---
+type StoryElement = GenericStoryElement & {
+    description: string | null;
+    inspiredStoryId?: number | null;
+};
+
+// --- structure of each tale ---
+type TaleElement = {
+    imageId: number | null;
+    imageStory: string | null;
+    tale: string | null;
 };
 
 type StoryActivity = {
     type: 'histoire';
     data: {
-        text: string;
+        odd: StoryElement;
+        object: StoryElement;
+        place: StoryElement;
+        tale: TaleElement;
+        isOriginal: boolean;
     } | null;
 };
 
 export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | StoryActivity;
 export type ActivityType = Activities['type'];
+export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
+
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {

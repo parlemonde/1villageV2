@@ -1,31 +1,26 @@
-import Image from 'next/image';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-
-import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { Button } from '@frontend/components/ui/Button';
-import { ActivityContext } from '@frontend/contexts/activityContext';
-import { Title } from '@frontend/components/ui/Title';
-import { Steps } from '@frontend/components/ui/Steps';
-
-import styles from '../page.module.css';
+import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
-import { useRouter } from 'next/router';
+import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
+import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { AspectRatio } from 'radix-ui';
+import type { ActivityData } from '@server/database/schemas/activity-types';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { AspectRatio, Select } from 'radix-ui';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 const StoryStep1 = () => {
     const { activity, onCreateActivity, onUpdateActivity } = useContext(ActivityContext);
-    if (!activity || activity.type !== 'histoire') {
-        return null;
-    }
 
     //const { selectedPhase } = useContext(VillageContext);
     const { deleteStoryImage } = useImageStoryRequests();
     const [isError, setIsError] = useState<boolean>(false);
-    const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [oDDChoice, setODDChoice] = useState('');
-    const data = (activity?.data as StoriesData) || { odd: oDDChoice[0] };
+    const data = (activity?.data as ActivityData<'histoire'>) || { odd: oDDChoice[0] };
     //const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
     const { user } = useContext(UserContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
@@ -40,7 +35,7 @@ const StoryStep1 = () => {
                 onCreateActivity('histoire', isPelico);
             }
         }
-    }, [activity, onCreateActivity]);
+    }, [activity, isPelico, onCreateActivity, router.query]);
 
     // Update the "odd step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
@@ -55,6 +50,10 @@ const StoryStep1 = () => {
             window.sessionStorage.setItem(`story-step-1-next`, 'false');
         }
     }, []);
+
+    if (!activity || activity.type !== 'histoire') {
+        return null;
+    }
 
     function setIsUploadImageModalOpen(arg0: boolean): void {
         throw new Error('Function not implemented.');

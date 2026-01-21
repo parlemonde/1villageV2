@@ -1,8 +1,7 @@
-import Link from 'next/link';
-
-import PelicoSouriant from 'src/svg/pelico/pelico-souriant.svg';
-import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Button } from '@frontend/components/ui/Button';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import Link from 'next/link';
+import PelicoSouriant from 'src/svg/pelico/pelico-souriant.svg';
 
 const StorySuccess = () => {
     return (
