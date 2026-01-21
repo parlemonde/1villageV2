@@ -3,7 +3,7 @@ import LocalisationIcon from '@frontend/svg/enigmes/localisation-mystere.svg';
 import ObjetIcon from '@frontend/svg/enigmes/objet-mystere.svg';
 import PersonaliteIcon from '@frontend/svg/enigmes/personalite-mystere.svg';
 import { useExtracted } from 'next-intl';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 export const CUSTOM_THEME_VALUE = 'Autre thème';
 
@@ -23,47 +23,49 @@ export type SubThemeItem = {
 export const useEnigmeThemes = (): ThemeItem[] => {
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
-    const DEFAULT_THEMES: ThemeItem[] = [
-        { name: 'Objet mystère', tname: t('Objet mystère'), icon: <ObjetIcon /> },
-        { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
-        { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
-        { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
-        { name: 'Autre thème', tname: t('Créer une énigme sur un autre thème'), icon: <></> },
-    ];
-
-    return DEFAULT_THEMES;
+    return useMemo(
+        () => [
+            { name: 'Objet mystère', tname: t('Objet mystère'), icon: <ObjetIcon /> },
+            { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
+            { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
+            { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
+            { name: 'Autre thème', tname: t('Créer une énigme sur un autre thème'), icon: <></> },
+        ],
+        [t],
+    );
 };
 
 export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
-    const DEFAULT_SUBTHEMES: Record<ThemeName, SubThemeItem[]> = {
-        'Objet mystère': [
-            { name: 'Un jouet', tname: t('Un jouet') },
-            { name: 'Un ustensile', tname: t('Un ustensile') },
-            { name: 'Un objet de culte', tname: t('Un objet de culte') },
-            { name: 'Un instrument de musique', tname: t('Un instrument de musique') },
-            { name: 'Un costume', tname: t('Un costume') },
-        ],
-        'Évènement mystère': [
-            { name: 'Une fête de l’école', tname: t('Une fête de l’école') },
-            { name: 'Un festival', tname: t('Un festival') },
-            { name: 'Un fait historique', tname: t('Un fait historique') },
-            { name: 'Une fête nationale', tname: t('Une fête nationale') },
-        ],
-        'Personnalité mystère': [
-            { name: 'Un personnage historique', tname: t('Un personnage historique') },
-            { name: 'Un personnage de fiction', tname: t('Un personnage de fiction') },
-            { name: 'Un personnage contemporain', tname: t('Un personnage contemporain') },
-        ],
-        'Lieu mystère': [
-            { name: 'Un monument commémoratif', tname: t('Un monument commémoratif') },
-            { name: ' Un édifice remarquable', tname: t(' Un édifice remarquable') },
-            { name: ' Une salle de spectacle', tname: t(' Une salle de spectacle') },
-            { name: " Un ouvrage d'art", tname: t(" Un ouvrage d'art") },
-        ],
-        'Autre thème': [],
-    };
-
-    return DEFAULT_SUBTHEMES;
+    return useMemo(
+        () => ({
+            'Objet mystère': [
+                { name: 'Un jouet', tname: t('Un jouet') },
+                { name: 'Un ustensile', tname: t('Un ustensile') },
+                { name: 'Un objet de culte', tname: t('Un objet de culte') },
+                { name: 'Un instrument de musique', tname: t('Un instrument de musique') },
+                { name: 'Un costume', tname: t('Un costume') },
+            ],
+            'Évènement mystère': [
+                { name: 'Une fête de l’école', tname: t('Une fête de l’école') },
+                { name: 'Un festival', tname: t('Un festival') },
+                { name: 'Un fait historique', tname: t('Un fait historique') },
+                { name: 'Une fête nationale', tname: t('Une fête nationale') },
+            ],
+            'Personnalité mystère': [
+                { name: 'Un personnage historique', tname: t('Un personnage historique') },
+                { name: 'Un personnage de fiction', tname: t('Un personnage de fiction') },
+                { name: 'Un personnage contemporain', tname: t('Un personnage contemporain') },
+            ],
+            'Lieu mystère': [
+                { name: 'Un monument commémoratif', tname: t('Un monument commémoratif') },
+                { name: ' Un édifice remarquable', tname: t(' Un édifice remarquable') },
+                { name: ' Une salle de spectacle', tname: t(' Une salle de spectacle') },
+                { name: " Un ouvrage d'art", tname: t(" Un ouvrage d'art") },
+            ],
+            'Autre thème': [],
+        }),
+        [t],
+    );
 };
