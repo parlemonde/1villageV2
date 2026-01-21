@@ -19,9 +19,9 @@ export default function CreerUneEnigmePage() {
     return (
         <PageContainer title="Sur quelle thématique sera votre énigme ?">
             <div className={styles.themesContainer}>
-                {DEFAULT_THEMES.map((theme) => (
+                {DEFAULT_THEMES.map((theme, index) => (
                     <button
-                        key={theme.name}
+                        key={index}
                         className={styles.themeLink}
                         onClick={() => {
                             onCreateActivity('enigme', isPelico, {
