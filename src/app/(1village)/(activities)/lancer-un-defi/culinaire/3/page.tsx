@@ -1,8 +1,8 @@
 'use client';
 
-import { ChooseOptionButton } from '@app/(1village)/(activities)/lancer-un-defi/ChooseOptionButton';
 import { isCulinaryChallenge } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/helpers';
 import { CULINARY_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/culinaire/validators';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -93,7 +93,7 @@ export default function LancerUnDefiCulinaireStep3() {
             </Title>
             <div className={styles.container}>
                 {challenges.map((challenge, index) => (
-                    <ChooseOptionButton
+                    <ThemeSelectorButton
                         key={index}
                         title={challenge.title}
                         description={challenge.description}

@@ -6,7 +6,6 @@ import { UserContext } from '@frontend/contexts/userContext';
 import CulinaryIcon from '@frontend/svg/defi/culinaire.svg';
 import EcologicalIcon from '@frontend/svg/defi/ecologique.svg';
 import LinguisticIcon from '@frontend/svg/defi/linguistique.svg';
-import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
@@ -26,7 +25,6 @@ export const useChallengeThemes = () => {
 };
 
 export default function LancerUnDefiPage() {
-    const router = useRouter();
     const t = useExtracted('app.(1village).(activities).lancer-un-defi');
     const { user } = useContext(UserContext);
     const { onCreateActivity } = useContext(ActivityContext);
@@ -46,7 +44,6 @@ export default function LancerUnDefiPage() {
                             onCreateActivity('defi', isPelico, {
                                 theme: theme.name,
                             });
-                            router.push(theme.href);
                         }}
                     >
                         {theme.icon}
@@ -59,7 +56,6 @@ export default function LancerUnDefiPage() {
                         onCreateActivity('defi', isPelico, {
                             theme: 'libre',
                         });
-                        router.push('/lancer-un-defi/1');
                     }}
                 >
                     {t('Lancer un défi sur un thème libre')}

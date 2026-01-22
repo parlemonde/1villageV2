@@ -3,16 +3,16 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRef, useState } from 'react';
 
-import styles from './choose-option-button.module.css';
+import styles from './theme-selector-button.module.css';
 
-interface ChooseOptionButton {
+interface ThemeSelectorButtonProps {
     title: string;
     description?: string;
     onClick: () => void;
     dropdownContent?: React.ReactNode;
 }
 
-export const ChooseOptionButton = ({ title, description, onClick, dropdownContent }: ChooseOptionButton) => {
+export const ThemeSelectorButton = ({ title, description, onClick, dropdownContent }: ThemeSelectorButtonProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [height, setHeight] = useState(0);
     const ref = useRef<HTMLDivElement>(null);
