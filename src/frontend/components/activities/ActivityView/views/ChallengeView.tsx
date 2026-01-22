@@ -1,10 +1,10 @@
 import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
+import type { ChallengeType } from '@server/database/schemas/activity-types';
 
 import { CulinaryChallengeView } from './ChallengeViews/CulinaryChallengeView';
 import { EcologicalChallengeView } from './ChallengeViews/EcologicalChallengeView';
 import { FreeThemeChallengeView } from './ChallengeViews/FreeThemeChallengeView';
 import { LinguisticChallengeView } from './ChallengeViews/LinguisticChallengeView';
-import { ChallengeType } from '@server/database/schemas/activity-types';
 
 const CONTENT_VIEWS: Record<ChallengeType, React.FC<ActivityContentViewProps>> = {
     linguistique: LinguisticChallengeView,

@@ -2,6 +2,7 @@
 
 import { isLinguisticActivity } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/helpers';
 import { LINGUISTIC_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/validators';
+import { sendToast } from '@frontend/components/Toasts';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
@@ -14,10 +15,9 @@ import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
-import { act, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
-import { sendToast } from '@frontend/components/Toasts';
 
 export default function LancerUnDefiLinguistiqueStep5() {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi.linguistique.5');
@@ -44,11 +44,11 @@ export default function LancerUnDefiLinguistiqueStep5() {
                 onPublishActivity();
             }
             router.push('/lancer-un-defi/success');
-        } catch (error) {
+        } catch {
             sendToast({
                 type: 'error',
                 message: t('Une erreur est survenue lors de la publication de votre défi'),
-            })
+            });
         } finally {
             setIsSubmitting(false);
         }

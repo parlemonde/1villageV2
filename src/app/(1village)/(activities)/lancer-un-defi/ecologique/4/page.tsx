@@ -2,6 +2,7 @@
 
 import { isEcologicalChallenge } from '@app/(1village)/(activities)/lancer-un-defi/ecologique/helpers';
 import { ECOLOGICAL_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/ecologique/validators';
+import { sendToast } from '@frontend/components/Toasts';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
@@ -16,7 +17,6 @@ import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import styles from './page.module.css';
-import { sendToast } from '@frontend/components/Toasts';
 
 export default function LancerUnDefiEcologiqueStep4() {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi.ecologique.4');
@@ -40,11 +40,11 @@ export default function LancerUnDefiEcologiqueStep4() {
                 onPublishActivity();
             }
             router.push('/lancer-un-defi/success');
-        } catch (error) {
+        } catch {
             sendToast({
                 type: 'error',
                 message: t('Une erreur est survenue lors de la publication de votre défi'),
-            })
+            });
         } finally {
             setIsSubmitting(false);
         }
