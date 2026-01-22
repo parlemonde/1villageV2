@@ -11,16 +11,13 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 export default function CreerUneEnigmeStep4() {
     const router = useRouter();
     const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
     const [isSubmiting, setIsSubmiting] = useState(false);
-
-    if (!activity || activity.type !== 'enigme') {
-        return null;
-    }
 
     const defaultTheme: ThemeName = activity?.data?.defaultTheme || CUSTOM_THEME_VALUE;
     const customTheme: string = activity?.data?.customTheme || '';
@@ -30,6 +27,11 @@ export default function CreerUneEnigmeStep4() {
     const isSecondStepDone = (activity?.data?.content || []).length > 0;
     const isThirdStepDone = (activity?.data?.answer || []).length > 0;
     const isValid = isFirstStepDone && isSecondStepDone && isThirdStepDone;
+    const tCommon = useExtracted('common');
+
+    if (!activity || activity.type !== 'enigme') {
+        return null;
+    }
 
     const onSubmit = async () => {
         setIsSubmiting(true);
@@ -55,7 +57,7 @@ export default function CreerUneEnigmeStep4() {
                     { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
                     { label: 'Réponse', href: '/creer-une-enigme/3', status: isThirdStepDone ? 'success' : 'warning' },
-                    { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={4}
                 marginTop="xl"
@@ -95,13 +97,13 @@ export default function CreerUneEnigmeStep4() {
                     href="/creer-une-enigme/3"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
                     color="primary"
                     variant="contained"
-                    label={activity.publishDate ? 'Modifier' : 'Publier'}
+                    label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
                     disabled={!isValid}
                     onClick={onSubmit}
                 />
