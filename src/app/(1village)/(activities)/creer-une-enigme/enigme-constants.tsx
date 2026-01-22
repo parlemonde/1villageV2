@@ -29,7 +29,7 @@ export const useEnigmeThemes = (): ThemeItem[] => {
             { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
             { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
             { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
-            { name: 'Autre thème', tname: t('Créer une énigme sur un autre thème'), icon: <></> },
+            { name: 'Autre thème', tname: t('Autre thème'), icon: <></> },
         ],
         [t],
     );
@@ -68,4 +68,14 @@ export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
         }),
         [t],
     );
+};
+
+export const useGetStepThemeName = function (defaultTheme: ThemeName, customTheme?: string): string {
+    const DEFAULT_THEMES = useEnigmeThemes();
+    const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
+    return useMemo(() => {
+        return customTheme
+            ? DEFAULT_SUBTHEMES[defaultTheme]?.find((subtheme) => subtheme.name === customTheme)?.tname || customTheme
+            : DEFAULT_THEMES.find((theme) => theme.name === defaultTheme)?.tname || defaultTheme;
+    }, [defaultTheme, customTheme, DEFAULT_THEMES, DEFAULT_SUBTHEMES]);
 };
