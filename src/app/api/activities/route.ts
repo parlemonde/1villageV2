@@ -32,6 +32,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         const result = await db.query.activities.findFirst({
             where: eq(activities.id, activityId),
         });
+        if (!result) {
+            return new NextResponse(null, { status: 404 });
+        }
         return NextResponse.json(result);
     }
 

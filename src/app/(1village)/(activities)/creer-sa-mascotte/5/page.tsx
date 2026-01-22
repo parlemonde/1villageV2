@@ -11,13 +11,13 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
-import { LANGUAGES } from '@lib/iso-639-languages-french';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 
 import styles from './page.module.css';
 
@@ -33,12 +33,6 @@ export default function CreerSaMascotteStep5() {
     if (!activity || activity.type !== 'mascotte') {
         return null;
     }
-
-    const isValid =
-        MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) &&
-        MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) &&
-        MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) &&
-        MASCOT_STEPS_VALIDATORS.isStep4Valid(activity);
 
     const onSubmit = async () => {
         setIsSubmitting(true);
@@ -206,15 +200,15 @@ export default function CreerSaMascotteStep5() {
             >
                 <p>
                     {t('Tous les enfants de notre classe parlent :')}{' '}
-                    {activity.data?.languages?.spokenByAll?.map((language) => LANGUAGES[language]).join(', ')}.
+                    {activity.data?.languages?.spokenByAll?.map((language) => isoLanguages.find((l) => l.code === language)?.name).join(', ')}.
                 </p>
                 <p>
                     {t('Au moins un enfant de notre classe parle :')}{' '}
-                    {activity.data?.languages?.spokenBySome?.map((language) => LANGUAGES[language]).join(', ')}.
+                    {activity.data?.languages?.spokenBySome?.map((language) => isoLanguages.find((l) => l.code === language)?.name).join(', ')}.
                 </p>
                 <p>
                     {activity?.data?.mascot?.name}, {t('comme tous les enfants de notre classe, apprend :')}{' '}
-                    {activity.data?.languages?.taught?.map((language) => LANGUAGES[language]).join(', ')}.
+                    {activity.data?.languages?.taught?.map((language) => isoLanguages.find((l) => l.code === language)?.name).join(', ')}.
                 </p>
                 <p>
                     {t('Nous utilisons comme monnaie :')} {activity.data?.languages?.currencies?.map((currency) => CURRENCIES[currency]).join(', ')}.
@@ -233,7 +227,7 @@ export default function CreerSaMascotteStep5() {
                     color="primary"
                     variant="contained"
                     label={activity.publishDate ? tCommon('Modifier') : tCommon('Publier')}
-                    disabled={!isValid}
+                    disabled={!MASCOT_STEPS_VALIDATORS.areAllStepsValid(activity)}
                     onClick={onSubmit}
                 />
             </div>

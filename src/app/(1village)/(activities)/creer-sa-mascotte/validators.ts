@@ -43,4 +43,13 @@ export const MASCOT_STEPS_VALIDATORS = {
     isStep4Valid: (activity: Partial<MascotActivity>) => {
         return activity?.data?.hasAcceptedRules;
     },
+
+    areAllStepsValid: (activity: Partial<MascotActivity>) => {
+        return (
+            MASCOT_STEPS_VALIDATORS.isStep1Valid(activity) &&
+            MASCOT_STEPS_VALIDATORS.isStep2Valid(activity) &&
+            MASCOT_STEPS_VALIDATORS.isStep3Valid(activity) &&
+            MASCOT_STEPS_VALIDATORS.isStep4Valid(activity)
+        );
+    },
 };
