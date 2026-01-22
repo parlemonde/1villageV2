@@ -8,6 +8,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 export default function CreerUneEnigmeStep3() {
@@ -18,6 +19,7 @@ export default function CreerUneEnigmeStep3() {
 
     const isFirstStepDone = !!(activity?.data?.customTheme || activity?.data?.defaultTheme);
     const isSecondStepDone = (activity?.data?.content || []).length > 0;
+    const tCommon = useExtracted('common');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
@@ -30,7 +32,7 @@ export default function CreerUneEnigmeStep3() {
                     { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
                     { label: 'Réponse', href: '/creer-une-enigme/3' },
-                    { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
@@ -52,10 +54,16 @@ export default function CreerUneEnigmeStep3() {
                         href="/creer-une-enigme/2"
                         color="primary"
                         variant="outlined"
-                        label="Étape précédente"
+                        label={tCommon('Étape précédente')}
                         leftIcon={<ChevronLeftIcon />}
                     />
-                    <Button as="a" href="/creer-une-enigme/4" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
+                    <Button
+                        as="a"
+                        href="/creer-une-enigme/4"
+                        color="primary"
+                        label={tCommon('Étape suivante')}
+                        rightIcon={<ChevronRightIcon />}
+                    ></Button>
                 </div>
             </div>
         </PageContainer>

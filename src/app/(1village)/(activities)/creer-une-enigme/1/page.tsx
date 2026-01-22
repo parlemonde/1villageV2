@@ -27,6 +27,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import classNames from 'clsx';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
@@ -58,6 +59,7 @@ export default function CreerUneEnigmeStep1() {
 
     const customTheme = activity?.data?.customTheme;
     const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
+    const tCommon = useExtracted('common');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
@@ -71,7 +73,7 @@ export default function CreerUneEnigmeStep1() {
                     { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
                     { label: 'Réponse', href: '/creer-une-enigme/3' },
-                    { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={1}
                 marginTop="xl"
@@ -112,7 +114,13 @@ export default function CreerUneEnigmeStep1() {
                         }}
                     />
                     <div style={{ textAlign: 'right' }}>
-                        <Button as="a" href="/creer-une-enigme/2" color="secondary" label="Continuez" rightIcon={<ChevronRightIcon />}></Button>
+                        <Button
+                            as="a"
+                            href="/creer-une-enigme/2"
+                            color="secondary"
+                            label={tCommon('Continuez')}
+                            rightIcon={<ChevronRightIcon />}
+                        ></Button>
                     </div>
                 </>
             ) : (
@@ -217,7 +225,7 @@ export default function CreerUneEnigmeStep1() {
                 )}
             </>
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
-                <Button as="a" href="/creer-une-enigme/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
+                <Button as="a" href="/creer-une-enigme/2" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />}></Button>
             </div>
         </PageContainer>
     );
