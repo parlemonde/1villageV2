@@ -1,26 +1,29 @@
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
-import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
-import { Button } from '@frontend/components/ui/Button';
+import { Button, IconButton } from '@frontend/components/ui/Button';
+import { Field } from '@frontend/components/ui/Form';
+import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
+import { Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { AspectRatio, Select } from 'radix-ui';
+import { AspectRatio } from 'radix-ui';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 const StoryStep1 = () => {
-    const { activity, onCreateActivity, onUpdateActivity } = useContext(ActivityContext);
+    const { activity, onCreateActivity, setActivity, onUpdateActivity, getOrCreateDraft } = useContext(ActivityContext);
 
     //const { selectedPhase } = useContext(VillageContext);
     const { deleteStoryImage } = useImageStoryRequests();
     const [isError, setIsError] = useState<boolean>(false);
-    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+    const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [oDDChoice, setODDChoice] = useState('');
     const data = (activity?.data as ActivityData<'histoire'>) || { odd: oDDChoice[0] };
     //const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
@@ -80,7 +83,7 @@ const StoryStep1 = () => {
 
             <div className="width-900">
                 <Title variant="h1" marginBottom="md">
-                    Choisissez et dessinez l'objectif du développement durable à atteindre
+                    Choisissez et dessinez l&apos;objectif du développement durable à atteindre
                 </Title>
                 <div className={styles['odd-container']}>
                     <div className={styles['odd-column']}>
@@ -116,7 +119,7 @@ const StoryStep1 = () => {
                                                     unoptimized
                                                 />
                                             ) : (
-                                                <AddIcon style={{ fontSize: '80px' }} />
+                                                <IconButton as="a" href="" variant="borderless" color="primary" icon={Pencil1Icon} />
                                             )}
                                         </div>
                                     </AspectRatio.Root>
@@ -124,7 +127,14 @@ const StoryStep1 = () => {
 
                                 {data.odd?.imageUrl && (
                                     <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                        <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
+                                        <Button
+                                            marginLeft="sm"
+                                            label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                                            color="primary"
+                                            size="sm"
+                                            onClick={() => setIsUploadImageModalOpen(true)}
+                                            style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
+                                        />
                                         <Modal
                                             isOpen={isModalOpen}
                                             title={"Êtes-vous sur de vouloir supprimer l'image ?"}
@@ -139,16 +149,17 @@ const StoryStep1 = () => {
                                         ></Modal>
                                     </div>
                                 )}
-                                <ImageModal
-                                    id={0}
-                                    isModalOpen={isImageModalOpen}
-                                    setIsModalOpen={setIsImageModalOpen}
-                                    imageUrl={data.odd?.imageUrl || ''}
-                                    setImageUrl={setImage}
+                                <UploadImageModal
+                                    getActivityId={getOrCreateDraft}
+                                    isOpen={isUploadImageModalOpen}
+                                    onClose={() => setIsUploadImageModalOpen(false)}
+                                    initialImageUrl={activity.data?.cardImageUrl}
+                                    onNewImage={(imageUrl) => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: imageUrl } })}
+                                    isPelicoImage={isPelico}
                                 />
                             </div>
-                            <FormControl variant="outlined" className="full-width" style={{ marginTop: '1rem' }}>
-                                <InputLabel id="select-ODD">ODD</InputLabel>
+                            <fieldset /*variant="outlined"*/ className="full-width" style={{ marginTop: '1rem' }}>
+                                <label id="select-ODD">ODD</label>
                                 <Select
                                     error={isError && data?.odd?.description === ''}
                                     labelId="select-ODD"
@@ -162,14 +173,14 @@ const StoryStep1 = () => {
                                     }}
                                     label="Village"
                                 >
-                                    {(ODD_CHOICE || []).map((v: { choice: any }, index: number) => (
+                                    {/*(ODD_CHOICE || []).map((v: { choice: any }, index: number) => (
                                         <MenuItem value={v.choice} key={index + 1}>
                                             {v.choice}
                                         </MenuItem>
-                                    ))}
+                                    ))*/}
                                 </Select>
-                                <FormHelperText>Choisissez votre ODD </FormHelperText>
-                            </FormControl>
+                                <p>Choisissez votre ODD</p>
+                            </fieldset>
                         </div>
                     </div>
                 </div>

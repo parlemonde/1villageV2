@@ -1,18 +1,23 @@
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { Steps } from '@frontend/components/ui/Steps';
+import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
+import { Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { AspectRatio } from 'radix-ui';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 const StoryStep4 = () => {
     const router = useRouter();
-    const { activity, updateActivity, save } = React.useContext(ActivityContext);
+    const { activity, onUpdateActivity, save, getOrCreateDraft } = useContext(ActivityContext);
     const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
     const data = (activity?.data as ActivityData<'histoire'>) || null;
+    const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
     const errorSteps = React.useMemo(() => {
         const errors = [];
@@ -43,13 +48,15 @@ const StoryStep4 = () => {
         const value = event.target.value;
         const { tale } = data;
         const newData = { ...data, tale: { ...tale, [key]: value } };
-        updateActivity({ data: newData });
+        //onUpdateActivity({ data: newData });
+        onUpdateActivity();
     };
 
     // Update the "object step" image url, when upload an image.
     const setImage = (imageStory: string) => {
         const { tale } = data;
-        updateActivity({ data: { ...data, tale: { ...tale, imageStory } } });
+        //onUpdateActivity({ data: { ...data, tale: { ...tale, imageStory } } });
+        onUpdateActivity();
     };
 
     const onNext = () => {
@@ -78,7 +85,7 @@ const StoryStep4 = () => {
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={3}
-                errorSteps={errorSteps}
+                /*errorSteps={errorSteps}*/
             />
             <div className="width-900">
                 <h1>Décrivez et dessinez votre village-monde idéal</h1>
@@ -86,64 +93,61 @@ const StoryStep4 = () => {
                     Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l’objectif du
                     développement durable que vous avez choisi.
                 </p>
-                <Grid container>
-                    <Grid item xs={12} md={6}>
-                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                            <ButtonBase onClick={() => setIsImageModalOpen(true)} style={{ width: '100%', color: 'var(--primary-color)' }}>
-                                <div style={{ width: '100%' }}>
-                                    <AspectRatio.Root ratio={2 / 3}>
-                                        <div
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                border: `1px solid 'var(--primary-color)'`,
-                                                borderRadius: '10px',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            {data.tale?.imageStory ? (
-                                                <Image
-                                                    layout="fill"
-                                                    objectFit="cover"
-                                                    alt="image de l'histoire"
-                                                    src={data.tale?.imageStory}
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <AddIcon style={{ fontSize: '80px' }} />
-                                            )}
-                                        </div>
-                                    </AspectRatio.Root>
+                <div className="grid-container">
+                    <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                        <Button
+                            marginLeft="sm"
+                            label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                            color="primary"
+                            size="sm"
+                            onClick={() => setIsUploadImageModalOpen(true)}
+                            style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
+                        />
+                        <div style={{ width: '100%' }}>
+                            <AspectRatio.Root ratio={2 / 3}>
+                                <div
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        border: `1px solid 'var(--primary-color)'`,
+                                        borderRadius: '10px',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {data.tale?.imageStory ? (
+                                        <Image layout="fill" objectFit="cover" alt="image de l'histoire" src={data.tale?.imageStory} unoptimized />
+                                    ) : (
+                                        <IconButton as="a" href="" variant="borderless" color="primary" icon={Pencil1Icon} />
+                                    )}
                                 </div>
-                            </ButtonBase>
-                            {data.tale?.imageStory && (
-                                <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                    <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
-                                    <Modal
-                                        isOpen={isModalOpen}
-                                        title={"Êtes-vous sur de vouloir supprimer l'image ?"}
-                                        confirmLabel="Supprimer l'image"
-                                        onClose={() => {
-                                            setIsModalOpen(false);
-                                        }}
-                                        onConfirm={() => {
-                                            handleDelete();
-                                            setIsModalOpen(false);
-                                        }}
-                                    ></Modal>
-                                </div>
-                            )}
-                            <ImageModal
-                                id={0}
-                                isModalOpen={isImageModalOpen}
-                                setIsModalOpen={setIsImageModalOpen}
-                                imageUrl={data.tale?.imageStory || ''}
-                                setImageUrl={setImage}
-                            />
+                            </AspectRatio.Root>
                         </div>
-                    </Grid>
+                        {data.tale?.imageStory && (
+                            <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
+                                <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
+                                <Modal
+                                    isOpen={isModalOpen}
+                                    title={"Êtes-vous sur de vouloir supprimer l'image ?"}
+                                    confirmLabel="Supprimer l'image"
+                                    onClose={() => {
+                                        setIsModalOpen(false);
+                                    }}
+                                    onConfirm={() => {
+                                        handleDelete();
+                                        setIsModalOpen(false);
+                                    }}
+                                ></Modal>
+                            </div>
+                        )}
+                        <UploadImageModal
+                            isOpen={isImageModalOpen}
+                            initialImageUrl={data.tale?.imageStory || ''}
+                            onClose={() => setIsUploadImageModalOpen(false)}
+                            getActivityId={getOrCreateDraft}
+                        />
+                    </div>
                     <TextField
                         id="standard-multiline-static"
                         label="Ecrivez l’histoire de votre village-monde idéal"
@@ -154,7 +158,7 @@ const StoryStep4 = () => {
                         variant="outlined"
                         style={{ width: '100%', marginTop: '25px', color: 'primary' }}
                     />
-                </Grid>
+                </div>
             </div>
             <StepsButton prev="/creer-une-histoire/3" next={onNext} />
         </PageContainer>

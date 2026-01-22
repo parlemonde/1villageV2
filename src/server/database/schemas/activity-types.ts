@@ -32,7 +32,7 @@ type GenericStoryElement = {
 };
 
 // --- structure of each story ---
-type StoryElement = GenericStoryElement & {
+export type StoryElement = GenericStoryElement & {
     description: string | null;
     inspiredStoryId?: number | null;
 };

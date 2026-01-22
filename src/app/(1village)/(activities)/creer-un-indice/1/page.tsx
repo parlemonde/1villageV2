@@ -16,7 +16,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import useSWR from 'swr';
 
 const CUSTOM_HINT_VALUE = '__CUSTOM_HINT__';
