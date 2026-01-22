@@ -10,10 +10,10 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
-import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 
 import styles from './page.module.css';
 

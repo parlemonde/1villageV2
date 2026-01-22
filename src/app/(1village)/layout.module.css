@@ -23,7 +23,7 @@
     align-items: stretch;
     justify-content: flex-start;
     gap: 16px;
-    
+
     @media (max-width: 850px) {
         max-width: 100%;
     }

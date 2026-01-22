@@ -13,11 +13,11 @@ import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
-import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 
 import styles from './page.module.css';
 
