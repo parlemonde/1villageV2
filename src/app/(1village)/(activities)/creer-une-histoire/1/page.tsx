@@ -193,6 +193,6 @@ const StoryStep1 = () => {
 };
 
 export default StoryStep1;
-function useImageStoryRequests(): { deleteStoryImage: any } {
+function useImageStoryRequests(): { deleteStoryImage: unknown } {
     throw new Error('Function not implemented.');
 }

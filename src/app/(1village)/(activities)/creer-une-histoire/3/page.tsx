@@ -1,4 +1,5 @@
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -6,7 +7,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { Pencil1Icon } from '@radix-ui/react-icons';
-import type { ActivityData } from '@server/database/schemas/activity-types';
+import type { ActivityData, StoryElement } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { AspectRatio } from 'radix-ui';
