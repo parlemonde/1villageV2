@@ -1,7 +1,7 @@
 'use client';
 
-import { ChooseOptionButton } from '@app/(1village)/(activities)/lancer-un-defi/ChooseOptionButton';
 import { isEcologicalChallenge } from '@app/(1village)/(activities)/lancer-un-defi/ecologique/helpers';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -66,7 +66,7 @@ export default function LancerUnDefiEcologiqueStep1() {
             </Title>
             <div className={styles.container}>
                 {actions.map((action, index) => (
-                    <ChooseOptionButton key={index} title={action.title} onClick={() => goToNextStep(action.title)} />
+                    <ThemeSelectorButton key={index} title={action.title} onClick={() => goToNextStep(action.title)} />
                 ))}
             </div>
         </PageContainer>

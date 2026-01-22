@@ -4,6 +4,7 @@ import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Modal } from '@frontend/components/ui/Modal';
 import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
 import { debounce } from '@frontend/lib/debounce';
+import { getChallengeFormRoute } from '@frontend/lib/get-challenge-form-route';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -11,7 +12,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
 import { updateActivity } from '@server-actions/activities/update-activity';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserContext } from './userContext';
@@ -73,6 +74,7 @@ const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: 
 }, 2000);
 
 export const ActivityProvider = ({ children }: { children: React.ReactNode }) => {
+    const router = useRouter();
     const { village } = useContext(VillageContext);
     const { classroom } = useContext(UserContext);
     const [draftActivity, setDraftActivity] = useState<Activity | undefined>(undefined);
@@ -206,6 +208,10 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                 onConfirm={() => {
                     if (!draftActivity) {
                         return;
+                    }
+                    if (draftActivity.type === 'defi' && draftActivity?.data?.theme) {
+                        const route = getChallengeFormRoute(draftActivity.data.theme);
+                        router.push(route);
                     }
                     setLocalActivity(draftActivity);
                     setDraftActivity(undefined);

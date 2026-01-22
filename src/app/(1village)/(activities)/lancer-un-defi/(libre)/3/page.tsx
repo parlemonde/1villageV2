@@ -1,6 +1,6 @@
 'use client';
 
-import { ChooseOptionButton } from '@app/(1village)/(activities)/lancer-un-defi/ChooseOptionButton';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -84,7 +84,7 @@ export default function LancerUnDefiStep3() {
             </Title>
             <div className={styles.container}>
                 {challenges.map((c) => (
-                    <ChooseOptionButton
+                    <ThemeSelectorButton
                         key={c.value}
                         title={c.title}
                         description={c.description}

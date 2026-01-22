@@ -1,9 +1,9 @@
 'use client';
 
-import { ChooseOptionButton } from '@app/(1village)/(activities)/lancer-un-defi/ChooseOptionButton';
 import { useTextKind } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/2/page';
 import { isLinguisticActivity } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/helpers';
 import { LINGUISTIC_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/validators';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -107,7 +107,7 @@ export default function LancerUnDefiLinguistiqueStep4() {
             </Title>
             <div className={styles.container}>
                 {challengeKinds.map((challengeKind, index) => (
-                    <ChooseOptionButton
+                    <ThemeSelectorButton
                         key={index}
                         title={challengeKind.title}
                         description={challengeKind.description}
