@@ -12,6 +12,9 @@ import type { User } from '@server/database/schemas/users';
 import { deleteActivity } from '@server-actions/activities/delete-activity';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { deleteMascot } from '@server-actions/activities/delete-mascot';
+import { sendToast } from '@frontend/components/Toasts';
+import { UserContext } from '@frontend/contexts/userContext';
 
 interface MyActivitiesProps {
     activities: Activity[];
@@ -20,11 +23,13 @@ interface MyActivitiesProps {
 }
 export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps) => {
     const router = useRouter();
+    const { setClassroom } = React.useContext(UserContext);
     const [activityIdToDelete, setActivityIdToDelete] = React.useState<number | null>(null);
     const [isDeletingActivity, setIsDeletingActivity] = React.useState(false);
     const activityToDelete = activities.find((activity) => activity.id === activityIdToDelete);
     const draftActivities = activities.filter((activity) => activity.publishDate === null);
     const publishedActivities = activities.filter((activity) => activity.publishDate !== null);
+
 
     return (
         <>
@@ -82,14 +87,26 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         return;
                     }
                     setIsDeletingActivity(true);
-                    deleteActivity(activityIdToDelete)
-                        .catch(() => {
-                            // todo, display an error message
-                        })
-                        .finally(() => {
-                            setIsDeletingActivity(false);
-                            setActivityIdToDelete(null);
-                        });
+                    if (activityToDelete?.type === 'mascotte' && classroom) {
+                        deleteMascot(activityIdToDelete, classroom.id)
+                            .catch(() => {
+                                sendToast({ message: 'Une erreur est survenue lors de la suppression de la mascotte.', type: 'error' });
+                            })
+                            .finally(() => {
+                                setClassroom({ ...classroom, mascotteId: null, avatarUrl: null });
+                                setIsDeletingActivity(false);
+                                setActivityIdToDelete(null);
+                            });
+                    } else {
+                        deleteActivity(activityIdToDelete)
+                            .catch(() => {
+                                sendToast({ message: 'Une erreur est survenue lors de la suppression de l\'activité.', type: 'error' });
+                            })
+                            .finally(() => {
+                                setIsDeletingActivity(false);
+                                setActivityIdToDelete(null);
+                            });
+                    }
                 }}
                 width="lg"
             >

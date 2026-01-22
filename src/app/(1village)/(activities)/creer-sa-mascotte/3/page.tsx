@@ -9,11 +9,11 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
-import { LANGUAGES } from '@lib/iso-639-languages-french';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 
 import styles from './page.module.css';
 
@@ -27,9 +27,9 @@ export default function CreerSaMascotteStep3() {
         return null;
     }
 
-    const languagesOptions = Object.entries(LANGUAGES).map((language) => ({
-        value: language[0],
-        label: language[1],
+    const languagesOptions = isoLanguages.map((language) => ({
+        value: language.code,
+        label: language.name,
     }));
 
     const currenciesOptions = Object.entries(CURRENCIES).map((currency) => ({
