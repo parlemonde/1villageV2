@@ -103,13 +103,16 @@ export default function CreerUneEnigmeStep1() {
             ) : (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
-                        Veuillez préciser le thème <strong>{stepTheme}</strong>.
+                        Veuillez préciser le thème <strong>{defaultTheme}</strong>.
                     </Title>
                     {subthemes.length > 0 &&
                         subthemes.map((subtheme: SubThemeItem, index: number) => (
                             <ThemeSelectorButton
                                 key={`subtheme-button-${index}`}
                                 title={subtheme.tname}
+                                marginBottom="lg"
+                                paddingX="md"
+                                paddingY="sm"
                                 onClick={() => {
                                     setActivity({
                                         type: 'enigme',
@@ -123,9 +126,11 @@ export default function CreerUneEnigmeStep1() {
                     <ThemeSelectorButton
                         title={tCommon('Autre...')}
                         onClick={() => {}}
+                        paddingX="md"
+                        paddingY="sm"
                         dropdownContent={
                             <>
-                                <p>Autre type dans le thème : {stepTheme}</p>
+                                <p>Autre type dans le thème : {defaultTheme}</p>
                                 <Input
                                     placeholder=""
                                     isFullWidth
