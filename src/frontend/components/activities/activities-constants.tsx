@@ -6,6 +6,7 @@ import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
 import MascotIcon from '@frontend/svg/activities/mascot.svg';
+import QuestionIcon from '@frontend/svg/activities/question.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
 import type { ActivityType, GameType } from '@server/database/schemas/activity-types';
 import type { UserRole } from '@server/database/schemas/users';
@@ -31,6 +32,8 @@ export const useActivityName = () => {
                     return t('Mascotte');
                 case 'defi':
                     return t('Défi');
+                case 'question':
+                    return t('Question');
             }
         },
         [t],
@@ -50,6 +53,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     mascotte: 'Créer sa mascotte',
     reportage: 'Créer un reportage',
     defi: 'Lancer un defi',
+    question: 'Poser une question',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -60,6 +64,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     mascotte: 'créé sa mascotte',
     reportage: 'créé un reportage',
     defi: 'lancé un defi',
+    question: 'posé une question',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -70,6 +75,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     mascotte: MascotIcon,
     reportage: ReportageIcon,
     defi: ChallengeIcon,
+    question: QuestionIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -80,6 +86,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     mascotte: '/creer-sa-mascotte',
     reportage: '/creer-un-reportage',
     defi: '/lancer-un-defi',
+    question: '/poser-une-question/1',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);
@@ -100,6 +107,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     mascotte: '/creer-sa-mascotte/5',
     reportage: '/creer-un-reportage/3',
     defi: '/lancer-un-defi/3',
+    question: '/poser-une-question/3'
 };
 
 // null means all roles
