@@ -34,7 +34,14 @@ type HintActivity = {
     } | null;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity;
+type QuestionActivity = {
+    type: 'question';
+    data: {
+        questions: string[];
+    };
+};
+
+export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | QuestionActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
@@ -43,6 +50,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     jeu: true,
     enigme: true,
     indice: true,
+    question: true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 
