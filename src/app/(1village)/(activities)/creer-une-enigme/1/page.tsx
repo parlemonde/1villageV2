@@ -3,6 +3,7 @@
 import {
     useEnigmeThemes,
     useEnigmeSubthemes,
+    useGetStepThemeName,
     CUSTOM_THEME_VALUE,
     type ThemeName,
     type SubThemeItem,
@@ -50,27 +51,24 @@ export default function CreerUneEnigmeStep1() {
         },
     );
 
-    if (!activity || activity.type !== 'enigme') {
-        return null;
-    }
-
-    const defaultTheme: ThemeName = activity.data?.defaultTheme || CUSTOM_THEME_VALUE;
-    const useCustomTheme = defaultTheme === CUSTOM_THEME_VALUE;
-    const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity.data?.defaultTheme);
+    const defaultTheme: ThemeName = activity?.data?.defaultTheme || CUSTOM_THEME_VALUE;
+    const activities = allActivities.filter((a) => a.type === 'enigme' && a.data?.defaultTheme === activity?.data?.defaultTheme);
     const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.tname, value: theme.name }));
     const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
 
-    const customTheme = activity.data?.customTheme;
-    const step1Theme = customTheme
-        ? DEFAULT_SUBTHEMES[defaultTheme]?.find((subtheme) => subtheme.name === customTheme)?.tname || customTheme
-        : DEFAULT_THEMES.find((theme) => theme.name === defaultTheme)?.tname;
+    const customTheme = activity?.data?.customTheme;
+    const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
+
+    if (!activity || activity.type !== 'enigme') {
+        return null;
+    }
 
     return (
         <PageContainer>
             <BackButton href="/creer-une-enigme" label="Retour" />
             <Steps
                 steps={[
-                    { label: step1Theme || 'Énigme', href: '/creer-une-enigme/1' },
+                    { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1' },
                     { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
                     { label: 'Réponse', href: '/creer-une-enigme/3' },
                     { label: 'Pré-visualiser', href: '/creer-une-enigme/4' },
@@ -98,7 +96,7 @@ export default function CreerUneEnigmeStep1() {
                     }
                 }}
             />
-            {useCustomTheme ? (
+            {defaultTheme === CUSTOM_THEME_VALUE ? (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
                         {"Présenter un autre type d'énigme :"}
@@ -113,11 +111,14 @@ export default function CreerUneEnigmeStep1() {
                             setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
                         }}
                     />
+                    <div style={{ textAlign: 'right' }}>
+                        <Button as="a" href="/creer-une-enigme/2" color="secondary" label="Continuez" rightIcon={<ChevronRightIcon />}></Button>
+                    </div>
                 </>
             ) : (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
-                        Veuillez préciser le thème <strong>{step1Theme}</strong>.
+                        Veuillez préciser le thème <strong>{stepTheme}</strong>.
                     </Title>
                     {subthemes.length > 0 &&
                         subthemes.map((subtheme: SubThemeItem, index: number) => (
@@ -156,7 +157,7 @@ export default function CreerUneEnigmeStep1() {
                                 },
                                 content: (
                                     <>
-                                        <p>Autre type dans le thème : {step1Theme}</p>
+                                        <p>Autre type dans le thème : {stepTheme}</p>
                                         <Input
                                             placeholder=""
                                             isFullWidth
@@ -210,7 +211,7 @@ export default function CreerUneEnigmeStep1() {
                     >
                         <PelicoSearch style={{ width: '100px', height: 'auto' }} />
                         <p>
-                            Aucune énigme trouvée pour le thème <strong>{step1Theme}</strong>.
+                            Aucune énigme trouvée pour le thème <strong>{stepTheme}</strong>.
                         </p>
                     </div>
                 )}
