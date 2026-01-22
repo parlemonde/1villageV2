@@ -6,8 +6,8 @@ export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: A
     if (activity.type !== 'indice') {
         return null;
     }
-    const firstImageUrl = (activity.data?.content || []).find((content) => content.type === 'image')?.imageUrl;
-    const firstHtmlText = (activity.data?.content || []).find((content) => content.type === 'html')?.html;
+    const firstImageUrl = (activity.data?.content || []).find((content: { type: string }) => content.type === 'image')?.imageUrl;
+    const firstHtmlText = (activity.data?.content || []).find((content: { type: string }) => content.type === 'html')?.html;
     const hint = activity.data?.defaultHint || activity.data?.customHint;
 
     return (

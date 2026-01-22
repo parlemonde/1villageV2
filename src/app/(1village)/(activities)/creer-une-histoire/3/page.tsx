@@ -1,3 +1,5 @@
+import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import type { ActivityData } from '@server/database/schemas/activity-types';
@@ -61,6 +63,13 @@ const StoryStep3 = () => {
         router.push('/creer-une-histoire/4');
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleDelete = () => {
+        deleteStoryImage(data.odd.imageId, data, 2);
+        setImage('');
+    };
+
     if (data === null || activity === null || !(activity.type === 'histoire')) {
         return <div></div>;
     }
@@ -119,15 +128,19 @@ const StoryStep3 = () => {
                                 </ButtonBase>
                                 {data.place?.imageUrl && (
                                     <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                        <DeleteButton
-                                            onDelete={() => {
-                                                deleteStoryImage(data.place.imageId, data, 2);
-                                                setImage('');
+                                        <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
+                                        <Modal
+                                            isOpen={isModalOpen}
+                                            title={"Êtes-vous sur de vouloir supprimer l'image ?"}
+                                            confirmLabel="Supprimer l'image"
+                                            onClose={() => {
+                                                setIsModalOpen(false);
                                             }}
-                                            confirmLabel="Êtes-vous sur de vouloir supprimer l'image ?"
-                                            confirmTitle="Supprimer l'image"
-                                            style={{ backgroundColor: 'var(--background-color)' }}
-                                        />
+                                            onConfirm={() => {
+                                                handleDelete();
+                                                setIsModalOpen(false);
+                                            }}
+                                        ></Modal>
                                     </div>
                                 )}
                                 <ImageModal
