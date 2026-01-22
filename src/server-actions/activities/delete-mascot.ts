@@ -28,11 +28,7 @@ export const deleteMascot = async (activityId: number, classroomId: number): Pro
     await db
         .update(classrooms)
         .set({ mascotteId: null, avatarUrl: null })
-        .where(and(
-            eq(classrooms.id, classroomId),
-            eq(classrooms.teacherId, user.id)
-        )
-    );
+        .where(and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, user.id)));
 
     revalidatePath('/my-activities'); // refresh the my-activities page
 };

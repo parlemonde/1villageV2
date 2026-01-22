@@ -1,8 +1,8 @@
 import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
-import Image from 'next/image';
 import isoLanguages from '@server-actions/languages/iso-639-languages.json';
+import Image from 'next/image';
 import { useExtracted } from 'next-intl';
 
 export const MascotView = ({ activity }: ActivityContentViewProps) => {

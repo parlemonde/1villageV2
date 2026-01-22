@@ -62,7 +62,7 @@
         border-bottom: 1px solid var(--grey-100);
         white-space: normal;
     }
-    
+
     .imageUploadForm {
         flex-direction: column;
     }
