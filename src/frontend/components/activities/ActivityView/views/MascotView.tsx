@@ -1,8 +1,8 @@
 import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
-import { LANGUAGES } from '@lib/iso-639-languages-french';
 import Image from 'next/image';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useExtracted } from 'next-intl';
 
 export const MascotView = ({ activity }: ActivityContentViewProps) => {
@@ -103,17 +103,17 @@ export const MascotView = ({ activity }: ActivityContentViewProps) => {
             </div>
             <p>
                 {t('Tous les enfants de notre classe parlent')} :{' '}
-                {activity?.data?.languages?.spokenByAll?.map((language) => LANGUAGES[language]).join(', ')}.{' '}
+                {activity?.data?.languages?.spokenByAll?.map((language) => isoLanguages.find((l) => l.code === language)?.name).join(', ')}.{' '}
             </p>
             <p>
                 {t('Au moins un enfant de notre classe parle')} :{' '}
-                {activity?.data?.languages?.spokenBySome?.map((language) => LANGUAGES[language])?.join(', ')}
+                {activity?.data?.languages?.spokenBySome?.map((language) => isoLanguages.find((l) => l.code === language)?.name)?.join(', ')}
             </p>
             <p>
                 {t('{mascotName}, comme tous les enfants de notre classe, apprend', {
                     mascotName: activity?.data?.mascot?.name || '',
                 })}{' '}
-                : {activity?.data?.languages?.taught?.map((language) => LANGUAGES[language]).join(', ')}
+                : {activity?.data?.languages?.taught?.map((language) => isoLanguages.find((l) => l.code === language)?.name).join(', ')}
             </p>
             <p>
                 {t('Nous utilisons comme monnaie')} : {activity?.data?.languages?.currencies?.map((currency) => CURRENCIES[currency]).join(', ')}
