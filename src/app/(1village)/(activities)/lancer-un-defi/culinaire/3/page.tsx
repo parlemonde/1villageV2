@@ -9,7 +9,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -114,6 +114,13 @@ export default function LancerUnDefiCulinaireStep3() {
                                                 }
                                             />
                                         }
+                                    />
+                                    <Button
+                                        disabled={!activity.data.challengeKind}
+                                        onClick={() => router.push('/lancer-un-defi/culinaire/4')}
+                                        color="primary"
+                                        label={tCommon('Étape suivante')}
+                                        rightIcon={<ChevronRightIcon />}
                                     />
                                 </div>
                             )

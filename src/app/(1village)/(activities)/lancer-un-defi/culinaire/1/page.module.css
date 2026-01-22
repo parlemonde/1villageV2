@@ -5,6 +5,10 @@
     width: 100%;
     padding: 32px;
     gap: 32px;
+
+    @media (max-width: 850px) {
+        flex-direction: column;
+    }
 }
 
 .imagePreview {
