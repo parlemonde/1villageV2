@@ -9,10 +9,9 @@ import {
     type ThemeName,
     type SubThemeItem,
 } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
-import { Accordion } from '@frontend/components/ui/Accordion';
 import { Button } from '@frontend/components/ui/Button';
-import buttonStyles from '@frontend/components/ui/Button/button.module.css';
 import { Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -20,7 +19,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import classNames from 'clsx';
+// import classNames from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -108,64 +107,45 @@ export default function CreerUneEnigmeStep1() {
                     </Title>
                     {subthemes.length > 0 &&
                         subthemes.map((subtheme: SubThemeItem, index: number) => (
-                            <Button
+                            <ThemeSelectorButton
                                 key={`subtheme-button-${index}`}
-                                isFullWidth
-                                color="primary"
-                                variant="outlined"
-                                marginBottom="sm"
-                                label={subtheme.tname}
-                                value={subtheme.name}
-                                onClick={(e) => {
+                                title={subtheme.tname}
+                                onClick={() => {
                                     setActivity({
                                         type: 'enigme',
                                         ...activity,
-                                        data: { ...activity.data, customTheme: e.currentTarget.value }, // use customTheme to store subtheme
+                                        data: { ...activity.data, customTheme: subtheme.name }, // use customTheme to store subtheme
                                     });
                                     router.push('/creer-une-enigme/2');
                                 }}
                             />
                         ))}
-                    <Accordion
-                        items={[
-                            {
-                                title: {
-                                    text: `Autre...`,
-                                    className: classNames(
-                                        buttonStyles['button'],
-                                        buttonStyles['isFullWidth'],
-                                        buttonStyles['isUpperCase'],
-                                        buttonStyles['color-primary'],
-                                        buttonStyles['variant-outlined'],
-                                        buttonStyles['size-md'],
-                                    ),
-                                    style: { display: 'flex', justifyContent: 'center' },
-                                },
-                                content: (
-                                    <>
-                                        <p>Autre type dans le thème : {stepTheme}</p>
-                                        <Input
-                                            placeholder=""
-                                            isFullWidth
-                                            marginY="md"
-                                            value={activity.data?.customTheme || ''}
-                                            onChange={(e) => {
-                                                setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
-                                            }}
-                                        />
-                                        <div style={{ textAlign: 'right' }}>
-                                            <Button
-                                                as="a"
-                                                href="/creer-une-enigme/2"
-                                                color="secondary"
-                                                label="Continuez"
-                                                rightIcon={<ChevronRightIcon />}
-                                            ></Button>
-                                        </div>
-                                    </>
-                                ),
-                            },
-                        ]}
+                    <ThemeSelectorButton
+                        title={tCommon('Autre...')}
+                        onClick={() => {}}
+                        dropdownContent={
+                            <>
+                                <p>Autre type dans le thème : {stepTheme}</p>
+                                <Input
+                                    placeholder=""
+                                    isFullWidth
+                                    marginY="md"
+                                    value={activity.data?.customTheme || ''}
+                                    onChange={(e) => {
+                                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
+                                    }}
+                                />
+                                <div style={{ textAlign: 'right' }}>
+                                    <Button
+                                        as="a"
+                                        href="/creer-une-enigme/2"
+                                        color="secondary"
+                                        label="Continuez"
+                                        rightIcon={<ChevronRightIcon />}
+                                    ></Button>
+                                </div>
+                            </>
+                        }
                     />
                 </>
             )}
