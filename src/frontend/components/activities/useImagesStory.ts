@@ -4,6 +4,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
+import type { ActivityData } from '@server/database/schemas/activity-types';
 import React, { useCallback, useContext } from 'react';
 
 export const useImageStories = () => {
