@@ -19,7 +19,6 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-// import classNames from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -29,18 +28,18 @@ export default function CreerUneEnigmeStep1() {
     const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
-
-    const defaultTheme: ThemeName = activity?.data?.defaultTheme || CUSTOM_THEME_VALUE;
-    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.tname, value: theme.name }));
-    const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
-
-    const customTheme = activity?.data?.customTheme;
-    const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
     const tCommon = useExtracted('common');
+
+    const defaultTheme: ThemeName = (activity?.type === 'enigme' ? activity.data?.defaultTheme : undefined) || CUSTOM_THEME_VALUE;
+    const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
+    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
+    const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
 
     if (!activity || activity.type !== 'enigme') {
         return null;
     }
+
+    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.tname, value: theme.name }));
 
     return (
         <PageContainer>
@@ -64,14 +63,15 @@ export default function CreerUneEnigmeStep1() {
                 value={activity.data?.defaultTheme || CUSTOM_THEME_VALUE}
                 onChange={(newValue) => {
                     // changing theme resets customTheme
-                    if (newValue === CUSTOM_THEME_VALUE) {
+                    const themeValue = newValue as ThemeName;
+                    if (themeValue === CUSTOM_THEME_VALUE) {
                         setActivity({
                             type: 'enigme',
                             ...activity,
                             data: { ...activity.data, defaultTheme: CUSTOM_THEME_VALUE, customTheme: undefined },
                         });
                     } else {
-                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: newValue, customTheme: undefined } });
+                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: themeValue, customTheme: undefined } });
                     }
                 }}
             />
