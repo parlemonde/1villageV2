@@ -71,10 +71,10 @@ type HintActivity = {
     } | null;
 };
 
-type QuestionActivity = {
+export type QuestionActivity = {
     type: 'question';
     data: {
-        questions: string[];
+        questions?: { id: number; text: string }[];
     };
 };
 

@@ -15,6 +15,7 @@ import { GameView } from './views/GameView';
 import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
 import { ReportView } from './views/ReportView';
+import { QuestionView } from './views/QuestionView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
@@ -24,6 +25,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     reportage: ReportView,
     mascotte: MascotView,
     defi: ChallengeView,
+    question: QuestionView,
 };
 
 interface ActivityViewProps {

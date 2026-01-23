@@ -15,6 +15,7 @@ import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
 import { ReportCard } from './cards/ReportCard';
+import { QuestionCard } from './cards/QuestionCard';
 
 const EmptyContentCard = () => {
     return null;
@@ -28,6 +29,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     reportage: ReportCard,
     mascotte: MascotCard,
     defi: ChallengeCard,
+    question: QuestionCard,
 };
 
 interface ActivityCardProps {
