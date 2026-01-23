@@ -9,11 +9,12 @@ import { useContext } from 'react';
 import type { ActivityContentViewProps } from './activity-view.types';
 import { FreeContentView } from './views/FreeContentView';
 import { HintView } from './views/HintView';
+import { PuzzleView } from './views/PuzzleView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
     jeu: () => null,
-    enigme: () => null,
+    enigme: PuzzleView,
     indice: HintView,
 };
 
