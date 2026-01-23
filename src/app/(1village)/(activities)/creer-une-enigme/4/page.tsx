@@ -19,21 +19,20 @@ export default function CreerUneEnigmeStep4() {
     const router = useRouter();
     const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
     const [isSubmiting, setIsSubmiting] = useState(false);
-
-    const defaultTheme: ThemeName = activity?.data?.defaultTheme || CUSTOM_THEME_VALUE;
-    const customTheme: string = activity?.data?.customTheme || '';
+    const defaultTheme: ThemeName = (activity?.type === 'enigme' ? activity.data?.defaultTheme : undefined) || CUSTOM_THEME_VALUE;
+    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
     const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
-
-    const isFirstStepDone = !!(activity?.data?.customTheme || activity?.data?.defaultTheme);
-    const isSecondStepDone = (activity?.data?.content || []).length > 0;
-    const isThirdStepDone = (activity?.data?.answer || []).length > 0;
-    const isValid = isFirstStepDone && isSecondStepDone && isThirdStepDone;
     const tCommon = useExtracted('common');
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
     }
+
+    const isFirstStepDone = !!(activity?.data?.customTheme || activity?.data?.defaultTheme);
+    const isSecondStepDone = (activity?.data?.content || []).length > 0;
+    const isThirdStepDone = (activity?.data?.answer || []).length > 0;
+    const isValid = isFirstStepDone && isSecondStepDone && isThirdStepDone;
 
     const onSubmit = async () => {
         setIsSubmiting(true);
