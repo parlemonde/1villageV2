@@ -25,7 +25,7 @@ type PuzzleActivity = {
         defaultTheme?: ThemeName;
         customTheme?: string;
         content?: AnyContent[];
-        answer?: string | AnyContent[];
+        answer?: AnyContent[];
     } | null;
 };
 
