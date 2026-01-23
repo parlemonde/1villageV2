@@ -11,8 +11,8 @@ import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
-import { ReportCard } from './cards/ReportCard';
 import { MascotCard } from './cards/MascotCard';
+import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
     return null;
