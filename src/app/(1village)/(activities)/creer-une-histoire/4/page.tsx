@@ -1,12 +1,12 @@
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
-import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { Button, IconButton } from '@frontend/components/ui/Button';
+import { Field, TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { Pencil1Icon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -15,12 +15,13 @@ import React, { useContext, useState } from 'react';
 
 const StoryStep4 = () => {
     const router = useRouter();
-    const { activity, onUpdateActivity, save, getOrCreateDraft } = useContext(ActivityContext);
-    const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
+    const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
+    const [isImageModalOpen] = React.useState(false);
     const data = (activity?.data as ActivityData<'histoire'>) || null;
-    const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
+    const [, setIsUploadImageModalOpen] = useState(false);
+    const [isError] = useState<boolean>(false);
 
-    const errorSteps = React.useMemo(() => {
+    /* const errorSteps = React.useMemo(() => {
         const errors = [];
         if (data !== null) {
             if (getErrorSteps(data.odd, 1).length > 0) {
@@ -35,7 +36,7 @@ const StoryStep4 = () => {
             return errors;
         }
         return [];
-    }, [data]);
+    }, [data]); */
 
     React.useEffect(() => {
         if (activity === null && !('activity-id' in router.query) && !sessionStorage.getItem('activity')) {
@@ -45,25 +46,23 @@ const StoryStep4 = () => {
         }
     }, [activity, router]);
 
-    const dataChange = (key: keyof TaleElement) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    /* const dataChange = (key: keyof TaleElement) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         const { tale } = data;
         const newData = { ...data, tale: { ...tale, [key]: value } };
-        //onUpdateActivity({ data: newData });
-        onUpdateActivity();
-    };
+        setActivity({ data: newData });
+    }; */
 
     // Update the "object step" image url, when upload an image.
     const setImage = (imageStory: string) => {
         const { tale } = data;
-        //onUpdateActivity({ data: { ...data, tale: { ...tale, imageStory } } });
-        onUpdateActivity();
+        setActivity({ data: { ...data, tale: { ...tale, imageStory } } });
     };
 
-    const onNext = () => {
+    /* const onNext = () => {
         save().catch(console.error);
         router.push('/creer-une-histoire/5');
-    };
+    }; */
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -149,7 +148,7 @@ const StoryStep4 = () => {
                             getActivityId={getOrCreateDraft}
                         />
                     </div>
-                    <TextField
+                    {/* <TextField
                         id="standard-multiline-static"
                         label="Ecrivez l’histoire de votre village-monde idéal"
                         rows={8}
@@ -158,10 +157,45 @@ const StoryStep4 = () => {
                         onChange={dataChange('tale')}
                         variant="outlined"
                         style={{ width: '100%', marginTop: '25px', color: 'primary' }}
+                    /> */}
+                    <Field
+                        name="standard-multiline-static"
+                        label="Ecrivez l’histoire de votre village-monde idéal"
+                        input={
+                            <TextArea
+                                id="title"
+                                name="title"
+                                isFullWidth
+                                placeholder="Écrivez la description de votre image !"
+                                value={data.tale?.tale || ''}
+                                onChange={(e) => setActivity({ ...activity, data: { ...activity.data, tale: e.target.value } })}
+                                style={{ width: '100%', marginTop: '25px', color: 'primary' }}
+                                //maxLength: 400,
+                            />
+                        }
+                        marginBottom="md"
                     />
                 </div>
             </div>
-            <StepsButton prev="/creer-une-histoire/3" next={onNext} />
+            {/* <StepsButton prev="/creer-une-histoire/3" next={onNext} /> */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
+                <Button
+                    as="a"
+                    href="/creer-une-histoire/3"
+                    color="primary"
+                    variant="outlined"
+                    label="Étape précédente"
+                    leftIcon={<ChevronLeftIcon />}
+                />
+                <Button
+                    as="a"
+                    href="/creer-une-histoire/5"
+                    color="primary"
+                    variant="outlined"
+                    label="Étape suivante"
+                    leftIcon={<ChevronRightIcon />}
+                />
+            </div>
         </PageContainer>
     );
 };

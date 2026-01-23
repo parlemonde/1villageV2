@@ -4,6 +4,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,7 +12,7 @@ import React, { useContext, useState } from 'react';
 
 const StoryStep5 = () => {
     const router = useRouter();
-    const { activity, save, updateActivity } = useContext(ActivityContext);
+    const { activity, onPublishActivity, setActivity } = useContext(ActivityContext);
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
     const data = (activity?.data as ActivityData<'histoire'>) || null;
@@ -51,7 +52,7 @@ const StoryStep5 = () => {
     // useEffect here to update inspiredStoryId if equal to 0
     React.useEffect(() => {
         if (data !== null && (data.odd.inspiredStoryId === 0 || data.object.inspiredStoryId === 0 || data.place.inspiredStoryId === 0)) {
-            updateActivity({
+            setActivity({
                 data: {
                     ...data,
                     odd: { ...data.odd, inspiredStoryId: activity?.id },
@@ -60,12 +61,12 @@ const StoryStep5 = () => {
                 },
             });
         }
-    }, [activity?.id, data, updateActivity]);
+    }, [activity?.id, data, setActivity]);
 
     const onPublish = async () => {
         window.sessionStorage.setItem(`story-step-1-next`, 'false');
         setIsLoading(true);
-        const success = await save(true);
+        const success = await onPublishActivity(true);
         if (success) {
             router.push('/creer-une-histoire/success');
         }
@@ -167,7 +168,17 @@ const StoryStep5 = () => {
                     error={errorSteps.includes(3)}
                     description={data.tale?.tale}
                 />
-                <StepsButton prev="/creer-une-histoire/4" />
+                {/* <StepsButton prev="/creer-une-histoire/4" /> */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
+                    <Button
+                        as="a"
+                        href="/creer-une-histoire/4"
+                        color="primary"
+                        variant="outlined"
+                        label="Étape précédente"
+                        leftIcon={<ChevronLeftIcon />}
+                    />
+                </div>
             </div>
             <Backdrop style={{ zIndex: 2000, color: 'white' }} open={isLoading}>
                 <CircularProgress color="inherit" />

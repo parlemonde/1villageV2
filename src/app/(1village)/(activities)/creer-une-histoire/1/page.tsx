@@ -1,7 +1,6 @@
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button, IconButton } from '@frontend/components/ui/Button';
-import { Field } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -10,7 +9,7 @@ import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { Pencil1Icon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -22,7 +21,6 @@ const StoryStep1 = () => {
 
     //const { selectedPhase } = useContext(VillageContext);
     const { deleteStoryImage } = useImageStoryRequests();
-    const [isError, setIsError] = useState<boolean>(false);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [oDDChoice, setODDChoice] = useState('');
     const data = (activity?.data as ActivityData<'histoire'>) || { odd: oDDChoice[0] };
@@ -32,6 +30,9 @@ const StoryStep1 = () => {
     const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const initialError = typeof window !== 'undefined' && window.sessionStorage.getItem('story-step-1-next') === 'true';
+    const [isError] = useState(initialError);
 
     const handleDelete = () => {
         deleteStoryImage(data.odd.imageId, data, 3);
@@ -52,16 +53,15 @@ const StoryStep1 = () => {
     // Update the "odd step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
         const { odd } = data;
-        //onUpdateActivity({ data: { ...data, odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 } } });
+        setActivity({ data: { ...data, odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 } } });
     };
 
     useEffect(() => {
         // if user navigated to the next step already, let's show the errors if there are any.
-        if (window.sessionStorage.getItem(`story-step-1-next`) === 'true') {
-            setIsError(true);
-            window.sessionStorage.setItem(`story-step-1-next`, 'false');
+        if (initialError) {
+            window.sessionStorage.setItem('story-step-1-next', 'false');
         }
-    }, []);
+    }, [initialError]);
 
     if (!activity || activity.type !== 'histoire') {
         return null;
@@ -168,7 +168,7 @@ const StoryStep1 = () => {
                                     onChange={(event: { target: { value: string } }) => {
                                         setODDChoice(event.target.value as string);
                                         const { odd } = data;
-                                        //onUpdateActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
+                                        setActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
                                         onUpdateActivity();
                                     }}
                                     label="Village"
