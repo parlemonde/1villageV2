@@ -11,6 +11,7 @@ import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
+import { MascotCard } from './cards/MascotCard';
 import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
@@ -23,6 +24,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     jeu: EmptyContentCard,
     enigme: EmptyContentCard,
     reportage: ReportCard,
+    mascotte: MascotCard,
 };
 
 interface ActivityCardProps {
@@ -40,7 +42,7 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shou
     const ContentCard = CONTENT_CARDS[activity.type] || EmptyContentCard;
     return (
         <div className={classNames(styles.activityCard, { [styles.isPinned]: activity.isPinned })}>
-            <ActivityHeader activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
+            <ActivityHeader showIcon activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
                     <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />

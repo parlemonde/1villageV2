@@ -11,6 +11,7 @@ export interface MenuItem {
     href?: string;
     onClick?: () => void;
     isActive?: boolean;
+    disabled?: boolean;
     hasSeparatorTop?: boolean;
     textAlign?: 'left' | 'center' | 'right';
     color?: 'primary' | 'secondary' | 'danger';
@@ -32,6 +33,7 @@ export const Menu = ({ items }: MenuProps) => {
                                         [styles[`text-${item.textAlign}`]]: item.textAlign,
                                         [styles[`color-${item.color}`]]: item.color && item.color !== 'primary',
                                         [styles.withTopSeparator]: item.hasSeparatorTop,
+                                        [styles.disabled]: item.disabled,
                                     })}
                                     onClick={item.onClick}
                                 >

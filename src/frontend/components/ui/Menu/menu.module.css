@@ -64,6 +64,15 @@
     justify-content: flex-end;
 }
 
+.disabled {
+    pointer-events: none;
+    border: none;
+    color: var(--grey-500);
+    box-shadow: none;
+    background-color: var(--grey-100);
+    border: 1px solid var(--grey-100);
+}
+
 .color-secondary {
     color: var(--secondary-500);
     border-color: var(--secondary-400);

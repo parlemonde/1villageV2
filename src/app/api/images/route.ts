@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
             }),
         ]);
 
-        return Response.json({ url: `/${fileName}` });
+        return Response.json({ url: `/${fileName}`, id: uuid });
     } catch {
         return new NextResponse('Unknown error happened', {
             status: 500,
