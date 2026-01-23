@@ -64,7 +64,16 @@ type StoryActivity = {
     } | null;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | StoryActivity;
+type ReportActivity = {
+    type: 'reportage';
+    data: {
+        defaultReport?: string;
+        customReport?: string;
+        content?: AnyContent[];
+    } | null;
+};
+
+export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | StoryActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
@@ -75,6 +84,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     jeu: true,
     enigme: true,
     indice: true,
+    reportage: true,
     histoire: true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
