@@ -80,13 +80,12 @@ const StoryStep5 = () => {
     return (
         <PageContainer>
             <Steps
-                steps={['ODD', 'Objet', 'Lieu', 'Histoire', 'Prévisualisation']}
-                urls={[
-                    '/creer-une-histoire/1?edit',
-                    '/creer-une-histoire/2',
-                    '/creer-une-histoire/3',
-                    '/creer-une-histoire/4',
-                    '/creer-une-histoire/5',
+                steps={[
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
+                    { label: 'Objet', href: '/creer-une-histoire/2' },
+                    { label: 'Lieu', href: '/creer-une-histoire/3' },
+                    { label: 'Histoire', href: '/creer-une-histoire/4' },
+                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={4}
                 errorSteps={errorSteps}

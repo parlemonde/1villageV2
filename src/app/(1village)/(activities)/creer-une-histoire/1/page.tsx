@@ -1,3 +1,5 @@
+'use client';
+
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
@@ -13,7 +15,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { AspectRatio } from 'radix-ui';
 import { useContext, useEffect, useRef, useState } from 'react';
 
