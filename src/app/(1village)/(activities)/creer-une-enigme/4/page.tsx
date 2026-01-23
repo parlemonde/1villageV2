@@ -1,6 +1,7 @@
 'use client';
 
 import { CUSTOM_THEME_VALUE, useGetStepThemeName, type ThemeName } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { sendToast } from '@frontend/components/Toasts';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
@@ -28,6 +29,7 @@ export default function CreerUneEnigmeStep4() {
     const isThirdStepDone = (activity?.data?.answer || []).length > 0;
     const isValid = isFirstStepDone && isSecondStepDone && isThirdStepDone;
     const tCommon = useExtracted('common');
+    const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
@@ -42,9 +44,11 @@ export default function CreerUneEnigmeStep4() {
                 await onPublishActivity();
             }
             router.push('/creer-une-enigme/success');
-        } catch (error) {
-            // TODO: show error toast
-            console.error(error);
+        } catch {
+            sendToast({
+                type: 'error',
+                message: t('Une erreur est survenue lors de la publication de votre énigme.'),
+            });
         } finally {
             setIsSubmiting(false);
         }
