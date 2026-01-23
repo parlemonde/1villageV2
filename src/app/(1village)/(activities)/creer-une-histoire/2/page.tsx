@@ -1,4 +1,5 @@
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';

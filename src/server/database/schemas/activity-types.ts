@@ -1,4 +1,4 @@
-import type { AnyContent } from '@frontend/components/content/content.types';
+import type { AnyContent, Content } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
 type FreeActivity = {
@@ -42,6 +42,15 @@ type TaleElement = {
     imageId: number | null;
     imageStory: string | null;
     tale: string | null;
+};
+
+type HintActivity = {
+    type: 'indice';
+    data: {
+        content: Content;
+        customHint: Content;
+        defaultHint: string;
+    } | null;
 };
 
 type StoryActivity = {
