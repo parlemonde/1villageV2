@@ -13,16 +13,16 @@ import { useContext } from 'react';
 
 export default function CreerUneEnigmeStep2() {
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
-    const defaultTheme: ThemeName = activity?.data?.defaultTheme || CUSTOM_THEME_VALUE;
-    const customTheme: string = activity?.data?.customTheme || '';
+    const defaultTheme: ThemeName = (activity?.type === 'enigme' ? activity.data?.defaultTheme : undefined) || CUSTOM_THEME_VALUE;
+    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
     const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
-
-    const isFirstStepDone = !!(activity?.data?.customTheme || activity?.data?.defaultTheme);
     const tCommon = useExtracted('common');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
     }
+
+    const isFirstStepDone = !!(activity?.data?.customTheme || activity?.data?.defaultTheme);
 
     return (
         <PageContainer>
