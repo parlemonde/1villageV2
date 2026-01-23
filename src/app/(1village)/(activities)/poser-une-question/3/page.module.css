@@ -1,0 +1,10 @@
+.buttonsContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.question {
+    margin-bottom: 16px;
+}

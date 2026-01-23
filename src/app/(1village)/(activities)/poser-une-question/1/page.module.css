@@ -1,4 +1,4 @@
-.noQuestions {
+.card {
     padding: 16px;
     background-color: var(--grey-100);
     border-radius: 8px;
@@ -7,4 +7,8 @@
 
 .buttonContainer {
     text-align: right;
+}
+
+.mainContainer {
+    margin: 32px 0;
 }
