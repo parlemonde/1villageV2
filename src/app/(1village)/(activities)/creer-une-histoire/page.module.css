@@ -3,7 +3,6 @@
     margin-bottom: 16px;
 }
 
-
 .odd-container {
     display: flex;
     flex-wrap: wrap;
@@ -33,4 +32,10 @@
     position: absolute;
     top: 0.25rem;
     right: 0.25rem;
+}
+
+.width-900 {
+    margin: 0 auto 1rem auto;
+    width: 100%;
+    max-width: 900px;
 }

@@ -91,9 +91,12 @@ const StoryStep1 = () => {
                 activeStep={0}
             />
 
-            <div className="width-900">
-                <Title variant="h1" marginBottom="md">
+            <div className={styles['width-900']}>
+                <Title variant="h2" marginBottom="md">
                     Choisissez et dessinez l&apos;objectif du développement durable à atteindre
+                </Title>
+                <Title variant="h3" marginBottom="md">
+                    Choisissez votre objectif et dessinez-le.
                 </Title>
                 <div className={styles['odd-container']}>
                     <div className={styles['odd-column']}>
@@ -194,9 +197,15 @@ const StoryStep1 = () => {
                     </div>
                 </div>
             </div>
-            <div style={{ textAlign: 'right', marginTop: '16px' }}>
-                <Button as="a" href="/creer-une-histoire/2" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
-            </div>
+            <Button
+                as="a"
+                href="/creer-une-histoire/2"
+                color="primary"
+                variant="outlined"
+                label="Étape suivante"
+                rightIcon={<ChevronRightIcon />}
+                style={{ display: 'flex', justifySelf: 'end' }}
+            />
         </PageContainer>
     );
 };

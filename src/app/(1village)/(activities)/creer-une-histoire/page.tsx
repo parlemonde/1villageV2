@@ -1,3 +1,4 @@
+import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import Link from 'next/link';
 
@@ -14,6 +15,14 @@ const Story = () => {
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Link href="/creer-une-histoire/1" type="button"></Link>
             </div>
+            <Button
+                as="a"
+                href="/creer-une-histoire/1"
+                color="primary"
+                variant="outlined"
+                label="Commencer"
+                style={{ display: 'flex', justifySelf: 'end' }}
+            />
         </PageContainer>
     );
 };
