@@ -23,7 +23,7 @@ export default function CreerUneEnigmeStep4() {
     const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
     const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
     const tCommon = useExtracted('common');
-    const t = useExtracted('app.(1village).(activities).creer-une-enigme');
+    const t = useExtracted('app.(1village).(activities).creer-une-enigme.4');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
