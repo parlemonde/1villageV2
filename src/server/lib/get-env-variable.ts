@@ -22,7 +22,7 @@ const DEFAULT_ENV_VARIABLES = {
     NODEMAILER_PASS: '',
     TRANSCODE_VIDEOS_LAMBDA_URL: 'http://localhost:9000',
     TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME: 'server-transcode-videos',
-    OPEN_WEATHER_APP_ID: '979023fcb2e0e3856a982a4e9608a3fa',
+    OPEN_WEATHER_APP_ID: '',
 };
 
 export const getEnvVariable = (variable: keyof typeof DEFAULT_ENV_VARIABLES): string => {
