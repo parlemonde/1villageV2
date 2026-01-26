@@ -2,8 +2,10 @@
 
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import { ODD_CHOICE } from '@frontend/components/activities/story.constants';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
+import { Field } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
@@ -171,28 +173,30 @@ const StoryStep1 = () => {
                                     isPelicoImage={isPelico}
                                 />
                             </div>
-                            <fieldset /*variant="outlined"*/ className="full-width" style={{ marginTop: '1rem' }}>
-                                <label id="select-ODD">ODD</label>
-                                <Select
-                                    hasError={isError && data?.odd?.description === ''}
-                                    id="select-ODD-outlined"
-                                    value={oDDChoice || data?.odd?.description || ''}
-                                    onChange={(value: string) => {
-                                        setODDChoice(value);
-                                        const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
-                                        setActivity({ data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'> });
-                                        onUpdateActivity();
-                                    }}
-                                    options={[]}
-                                >
-                                    {/*(ODD_CHOICE || []).map((v: { choice: any }, index: number) => (
-                                        <MenuItem value={v.choice} key={index + 1}>
-                                            {v.choice}
-                                        </MenuItem>
-                                    ))*/}
-                                </Select>
-                                <p>Choisissez votre ODD</p>
-                            </fieldset>
+                            <Field
+                                name="select-ODD"
+                                label="ODD"
+                                helperText="Choisissez votre ODD"
+                                helperTextStyle={{ textAlign: 'left' }}
+                                input={
+                                    <Select
+                                        hasError={isError && data?.odd?.description === ''}
+                                        id="select-ODD-outlined"
+                                        value={oDDChoice || data?.odd?.description || ''}
+                                        onChange={(value: string) => {
+                                            debugger;
+                                            setODDChoice(value);
+                                            const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
+                                            setActivity({ data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'> });
+                                            //onUpdateActivity();
+                                        }}
+                                        options={ODD_CHOICE.map((v) => ({ label: v.choice, value: v.choice }))}
+                                        placeholder="Choisissez votre ODD"
+                                        isFullWidth
+                                    />
+                                }
+                                marginTop="md"
+                            />
                         </div>
                     </div>
                 </div>
