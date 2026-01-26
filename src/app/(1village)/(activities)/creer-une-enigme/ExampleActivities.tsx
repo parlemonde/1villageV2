@@ -34,7 +34,12 @@ export default function ExampleActivities({ activityType, theme }: ExampleActivi
             keepPreviousData: true,
         },
     );
-    const activities = allActivities.filter((a) => a.type === activityType && a.data?.defaultTheme === theme);
+    const activities = allActivities.filter((a) => {
+        if (a.type === 'enigme' && 'defaultTheme' in (a.data || {})) {
+            return a.data?.defaultTheme === theme;
+        }
+        return false;
+    });
 
     return (
         <>
