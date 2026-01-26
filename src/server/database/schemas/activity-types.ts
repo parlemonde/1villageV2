@@ -48,7 +48,7 @@ type HintActivity = {
     type: 'indice';
     data: {
         content: Content;
-        customHint: Content;
+        customHint: string;
         defaultHint: string;
     } | null;
 };

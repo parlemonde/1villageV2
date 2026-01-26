@@ -86,7 +86,7 @@ export const useImageStories = () => {
                 return;
             }
             const getStoryData = async (id: number) =>
-                await jsonFetcher(`/activities/${id}`, {
+                await jsonFetcher<{ data: Activity }>(`/activities/${id}`, {
                     method: 'GET',
                 });
 
@@ -131,24 +131,24 @@ export const useImageStoryRequests = () => {
 
     const deleteStoryImage = useCallback(
         async (id: number | null, data: ActivityData<'histoire'>, step?: number) => {
-            if (!id) {
+            if (!id || !data) {
                 return;
             }
             // This will return an array of used images.
             const storiesDatas = await getAllStories(id).catch();
             if (activity && storiesDatas && storiesDatas.length >= 1) {
-                let newActivityData = {} as ActivityData<'histoire'>;
-                const imageData = {
+                const resetImageData = {
                     imageId: 0,
                     imageUrl: '',
                     inspiredStoryId: 0,
                 };
+                let newActivityData: ActivityData<'histoire'>;
                 if (step === 1) {
                     newActivityData = {
                         ...data,
                         object: {
-                            ...data?.object,
-                            ...imageData,
+                            ...data.object,
+                            ...resetImageData,
                         },
                     };
                 } else if (step === 2) {
@@ -156,21 +156,21 @@ export const useImageStoryRequests = () => {
                         ...data,
                         place: {
                             ...data.place,
-                            ...imageData,
+                            ...resetImageData,
                         },
                     };
                 } else if (step === 3) {
                     newActivityData = {
                         ...data,
                         odd: {
-                            ...data?.odd,
-                            ...imageData,
+                            ...data.odd,
+                            ...resetImageData,
                         },
                     };
+                } else {
+                    newActivityData = data;
                 }
-                onCreateActivity('histoire', {
-                    ...newActivityData,
-                });
+                onCreateActivity('histoire', false, newActivityData);
                 //We exit the function because no delete is expected
                 return;
             }

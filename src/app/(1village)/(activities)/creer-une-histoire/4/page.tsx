@@ -1,3 +1,5 @@
+'use client';
+
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
@@ -9,16 +11,16 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
 const StoryStep4 = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
-    const [isImageModalOpen] = React.useState(false);
     const data = (activity?.data as ActivityData<'histoire'>) || null;
-    const [, setIsUploadImageModalOpen] = useState(false);
+    const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
 
     /* const errorSteps = React.useMemo(() => {
@@ -39,12 +41,12 @@ const StoryStep4 = () => {
     }, [data]); */
 
     React.useEffect(() => {
-        if (activity === null && !('activity-id' in router.query) && !sessionStorage.getItem('activity')) {
+        if (activity === null && !searchParams.has('activity-id') && !sessionStorage.getItem('activity')) {
             router.push('/creer-une-histoire');
         } else if (activity && !(activity.type === 'histoire')) {
             router.push('/creer-une-histoire');
         }
-    }, [activity, router]);
+    }, [activity, router, searchParams]);
 
     /* const dataChange = (key: keyof TaleElement) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -55,8 +57,9 @@ const StoryStep4 = () => {
 
     // Update the "object step" image url, when upload an image.
     const setImage = (imageStory: string) => {
+        if (!data) return;
         const { tale } = data;
-        setActivity({ data: { ...data, tale: { ...tale, imageStory } } });
+        setActivity({ data: { ...data, tale: { ...tale, imageStory } } as ActivityData<'histoire'> });
     };
 
     /* const onNext = () => {
@@ -70,7 +73,7 @@ const StoryStep4 = () => {
         setImage('');
     };
 
-    if (data === null || activity === null || !(activity.type === 'histoire')) {
+    if (data === null || !activity || !(activity.type === 'histoire')) {
         return <div></div>;
     }
 
@@ -97,7 +100,7 @@ const StoryStep4 = () => {
                     <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
                         <Button
                             marginLeft="sm"
-                            label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                            label={data?.tale?.imageStory ? 'Changer' : 'Choisir une image'}
                             color="primary"
                             size="sm"
                             onClick={() => setIsUploadImageModalOpen(true)}
@@ -111,7 +114,7 @@ const StoryStep4 = () => {
                                         width: '100%',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        border: `1px solid 'var(--primary-color)'`,
+                                        border: `1px solid var(--primary-color)`,
                                         borderRadius: '10px',
                                         justifyContent: 'center',
                                     }}
@@ -142,10 +145,11 @@ const StoryStep4 = () => {
                             </div>
                         )}
                         <UploadImageModal
-                            isOpen={isImageModalOpen}
+                            isOpen={isUploadImageModalOpen}
                             initialImageUrl={data.tale?.imageStory || ''}
                             onClose={() => setIsUploadImageModalOpen(false)}
                             getActivityId={getOrCreateDraft}
+                            onNewImage={(imageUrl) => setImage(imageUrl)}
                         />
                     </div>
                     {/* <TextField
@@ -163,14 +167,17 @@ const StoryStep4 = () => {
                         label="Ecrivez l’histoire de votre village-monde idéal"
                         input={
                             <TextArea
-                                id="title"
-                                name="title"
+                                id="tale-story"
+                                name="tale-story"
                                 isFullWidth
-                                placeholder="Écrivez la description de votre image !"
+                                placeholder="Écrivez l'histoire de votre village-monde idéal !"
                                 value={data.tale?.tale || ''}
-                                onChange={(e) => setActivity({ ...activity, data: { ...activity.data, tale: e.target.value } })}
+                                onChange={(e) => {
+                                    if (!data) return;
+                                    const { tale } = data;
+                                    setActivity({ data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'> });
+                                }}
                                 style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                                //maxLength: 400,
                             />
                         }
                         marginBottom="md"

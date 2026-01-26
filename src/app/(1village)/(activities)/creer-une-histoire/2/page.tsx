@@ -1,3 +1,5 @@
+'use client';
+
 import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
@@ -10,12 +12,13 @@ import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
 const StoryStep2 = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
     const { deleteStoryImage } = useImageStoryRequests();
     const data = (activity?.data as ActivityData<'histoire'>) || null;
@@ -30,12 +33,12 @@ const StoryStep2 = () => {
     }, [data]); */
 
     React.useEffect(() => {
-        if (activity === null && !('activity-id' in router.query) && !sessionStorage.getItem('activity')) {
+        if (activity === null && !searchParams.has('activity-id') && !sessionStorage.getItem('activity')) {
             router.push('/creer-une-histoire');
         } else if (activity && !(activity.type === 'histoire')) {
             router.push('/creer-une-histoire');
         }
-    }, [activity, router]);
+    }, [activity, router, searchParams]);
 
     /* const dataChange = (key: keyof StoryElement) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value.slice(0, 400);
@@ -46,9 +49,10 @@ const StoryStep2 = () => {
 
     // Update the "object step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
+        if (!data) return;
         const { object } = data;
         // imageId = 0 when we are changing the image of the object step.
-        setActivity({ data: { ...data, object: { ...object, imageUrl, imageId: 0 } } });
+        setActivity({ data: { ...data, object: { ...object, imageUrl, imageId: 0 } } as ActivityData<'histoire'> });
     };
 
     /* const onNext = () => {
@@ -59,7 +63,8 @@ const StoryStep2 = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleDelete = () => {
-        deleteStoryImage(data.odd.imageId, data, 1);
+        if (!data) return;
+        deleteStoryImage(data.object.imageId, data, 1);
         setImage('');
     };
 
@@ -90,7 +95,7 @@ const StoryStep2 = () => {
                         <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
                             <Button
                                 marginLeft="sm"
-                                label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                                label={data?.object?.imageUrl ? 'Changer' : 'Choisir une image'}
                                 color="primary"
                                 size="sm"
                                 onClick={() => setIsUploadImageModalOpen(true)}
@@ -104,7 +109,7 @@ const StoryStep2 = () => {
                                             width: '100%',
                                             display: 'flex',
                                             alignItems: 'center',
-                                            border: `1px solid 'var(--primary-color)'`,
+                                            border: `1px solid var(--primary-color)`,
                                             borderRadius: '10px',
                                             justifyContent: 'center',
                                         }}
@@ -142,6 +147,7 @@ const StoryStep2 = () => {
                             initialImageUrl={data?.object?.imageUrl || ''}
                             onClose={() => setIsUploadImageModalOpen(false)}
                             getActivityId={getOrCreateDraft}
+                            onNewImage={(imageUrl) => setImage(imageUrl)}
                         />
                     </div>
                     {/* <TextField
@@ -163,14 +169,20 @@ const StoryStep2 = () => {
                         label="Décrivez l’objet magique"
                         input={
                             <TextArea
-                                id="title"
-                                name="title"
+                                id="object-description"
+                                name="object-description"
                                 isFullWidth
                                 placeholder="Écrivez la description de votre image !"
                                 value={data?.object?.description || ''}
-                                onChange={(e) => setActivity({ ...activity, data: { ...activity.data, title: e.target.value } })}
+                                onChange={(e) => {
+                                    if (!data) return;
+                                    const { object } = data;
+                                    setActivity({
+                                        data: { ...data, object: { ...object, description: e.target.value } } as ActivityData<'histoire'>,
+                                    });
+                                }}
                                 style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                                //maxLength: 400,
+                                maxLength={400}
                             />
                         }
                         marginBottom="md"

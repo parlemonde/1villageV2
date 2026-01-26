@@ -15,7 +15,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { AspectRatio } from 'radix-ui';
 import { useContext, useEffect, useRef, useState } from 'react';
 
@@ -26,11 +26,11 @@ const StoryStep1 = () => {
     const { deleteStoryImage } = useImageStoryRequests();
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [oDDChoice, setODDChoice] = useState('');
-    const data = (activity?.data as ActivityData<'histoire'>) || { odd: oDDChoice[0] };
+    const data = (activity?.data as ActivityData<'histoire'>) || null;
     //const isEdit = activity !== null && activity?.status !== ActivityStatus.DRAFT;
     const { user } = useContext(UserContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
-    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,7 +38,9 @@ const StoryStep1 = () => {
     const [isError] = useState(initialError);
 
     const handleDelete = () => {
-        deleteStoryImage(data.odd.imageId, data, 3);
+        if (data?.odd?.imageId) {
+            deleteStoryImage(data.odd.imageId, data, 3);
+        }
         setImage('');
     };
 
@@ -46,17 +48,22 @@ const StoryStep1 = () => {
     const created = useRef(false);
     useEffect(() => {
         if (!created.current) {
-            if (!('edit' in router.query) || (activity && !(activity.type === 'histoire'))) {
+            if (!searchParams.has('edit') || (activity && !(activity.type === 'histoire'))) {
                 created.current = true;
                 onCreateActivity('histoire', isPelico);
             }
         }
-    }, [activity, isPelico, onCreateActivity, router.query]);
+    }, [activity, isPelico, onCreateActivity, searchParams]);
 
     // Update the "odd step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
-        const { odd } = data;
-        setActivity({ data: { ...data, odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 } } });
+        const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
+        setActivity({
+            data: {
+                ...data,
+                odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 },
+            } as ActivityData<'histoire'>,
+        });
     };
 
     useEffect(() => {
@@ -94,7 +101,7 @@ const StoryStep1 = () => {
                             <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
                                 <Button
                                     marginLeft="sm"
-                                    label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                                    label={activity.data?.odd.imageUrl ? 'Changer' : 'Choisir une image'}
                                     color="primary"
                                     size="sm"
                                     onClick={() => setIsUploadImageModalOpen(true)}
@@ -113,7 +120,7 @@ const StoryStep1 = () => {
                                                 justifyContent: 'center',
                                             }}
                                         >
-                                            {data.odd?.imageUrl ? (
+                                            {data?.odd?.imageUrl ? (
                                                 <Image
                                                     layout="fill"
                                                     objectFit="cover"
@@ -128,11 +135,11 @@ const StoryStep1 = () => {
                                     </AspectRatio.Root>
                                 </div>
 
-                                {data.odd?.imageUrl && (
+                                {data?.odd?.imageUrl && (
                                     <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
                                         <Button
                                             marginLeft="sm"
-                                            label={activity.data?.text ? 'Changer' : 'Choisir une image'}
+                                            label={activity.data?.odd.imageUrl ? 'Changer' : 'Choisir une image'}
                                             color="primary"
                                             size="sm"
                                             onClick={() => setIsUploadImageModalOpen(true)}
@@ -156,25 +163,24 @@ const StoryStep1 = () => {
                                     getActivityId={getOrCreateDraft}
                                     isOpen={isUploadImageModalOpen}
                                     onClose={() => setIsUploadImageModalOpen(false)}
-                                    initialImageUrl={activity.data?.cardImageUrl}
-                                    onNewImage={(imageUrl) => setActivity({ ...activity, data: { ...activity.data, cardImageUrl: imageUrl } })}
+                                    initialImageUrl={data?.odd?.imageUrl || ''}
+                                    onNewImage={(imageUrl) => setImage(imageUrl)}
                                     isPelicoImage={isPelico}
                                 />
                             </div>
                             <fieldset /*variant="outlined"*/ className="full-width" style={{ marginTop: '1rem' }}>
                                 <label id="select-ODD">ODD</label>
                                 <Select
-                                    error={isError && data?.odd?.description === ''}
-                                    labelId="select-ODD"
+                                    hasError={isError && data?.odd?.description === ''}
                                     id="select-ODD-outlined"
-                                    value={oDDChoice || data.odd?.description}
-                                    onChange={(event: { target: { value: string } }) => {
-                                        setODDChoice(event.target.value as string);
-                                        const { odd } = data;
-                                        setActivity({ data: { ...data, odd: { ...odd, description: event.target.value } } });
+                                    value={oDDChoice || data?.odd?.description || ''}
+                                    onChange={(value: string) => {
+                                        setODDChoice(value);
+                                        const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
+                                        setActivity({ data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'> });
                                         onUpdateActivity();
                                     }}
-                                    label="Village"
+                                    options={[]}
                                 >
                                     {/*(ODD_CHOICE || []).map((v: { choice: any }, index: number) => (
                                         <MenuItem value={v.choice} key={index + 1}>
