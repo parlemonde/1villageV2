@@ -33,7 +33,7 @@ export default function LancerUnDefiLinguistiqueStep5() {
         return null;
     }
 
-    const language = isoLanguages.find((l) => l.code === activity.data.language)?.name ?? '';
+    const language = isoLanguages.find((l) => l.code === activity.data.language)?.name;
 
     const onSubmit = () => {
         setIsSubmitting(true);
@@ -59,7 +59,7 @@ export default function LancerUnDefiLinguistiqueStep5() {
             <Steps
                 steps={[
                     {
-                        label: t('Langue'),
+                        label: language ?? t('Langue'),
                         href: '/lancer-un-defi/linguistique/1',
                         status: LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },

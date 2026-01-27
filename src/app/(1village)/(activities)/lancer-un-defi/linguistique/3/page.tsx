@@ -9,6 +9,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -47,7 +48,7 @@ export default function LancerUnDefiLinguistiqueStep3() {
             <Steps
                 steps={[
                     {
-                        label: t('Langue'),
+                        label: isoLanguages.find((l) => l.code === activity.data?.language)?.name ?? t('Langue'),
                         href: '/lancer-un-defi/linguistique/1',
                         status: LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },

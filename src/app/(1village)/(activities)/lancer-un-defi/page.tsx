@@ -18,8 +18,8 @@ export const useChallengeThemes = () => {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi');
 
     const CHALLENGE_THEMES: { label: string; icon?: ReactNode; href: string; name: ChallengeType }[] = [
-        { label: t('Défi culinaire'), icon: <CulinaryIcon />, href: '/lancer-un-defi/culinaire/1', name: 'culinaire' },
         { label: t('Défi linguistique'), icon: <LinguisticIcon />, href: '/lancer-un-defi/linguistique/1', name: 'linguistique' },
+        { label: t('Défi culinaire'), icon: <CulinaryIcon />, href: '/lancer-un-defi/culinaire/1', name: 'culinaire' },
         { label: t('Défi écologique'), icon: <EcologicalIcon />, href: '/lancer-un-defi/ecologique/1', name: 'ecologique' },
         { label: t('Lancer un défi sur un thème libre'), href: '/lancer-un-defi/1', name: 'libre' },
     ];
