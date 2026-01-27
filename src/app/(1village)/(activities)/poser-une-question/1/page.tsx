@@ -31,11 +31,10 @@ export default function PoserUneQuestionStep1() {
 
     const isPelico = user.role === 'admin' || user.role === 'mediator';
 
-    const { data: allQuestionActivities = [] } = useSWR<Activity[]>(
+    const { data: allQuestionActivities = [], mutate } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
                   villageId: village.id,
-                  isPelico: isPelico,
                   type: ['question'],
               })}`
             : null,
@@ -79,7 +78,7 @@ export default function PoserUneQuestionStep1() {
             ) : (
                 <div className={styles.mainContainer}>
                     {questionActivities.map((activity, index) => (
-                        <ActivityCard key={index} activity={activity} user={usersMap[activity.userId]} shouldDisableButtons={true} />
+                        <ActivityCard key={index} activity={activity} user={usersMap[activity.userId]} onEdit={mutate} shouldDisableButtons={true} />
                     ))}
                 </div>
             )}

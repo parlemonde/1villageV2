@@ -38,6 +38,7 @@ export type QuestionActivity = {
     type: 'question';
     data: {
         questions?: { id: number; text: string }[];
+        isAskingSameQuestion?: number[];
     };
 };
 

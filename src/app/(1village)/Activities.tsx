@@ -20,7 +20,7 @@ export const Activities = () => {
         search: '',
     });
 
-    const { data: activities } = useSWR<Activity[]>(
+    const { data: activities, mutate } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
                   phase,
@@ -46,6 +46,7 @@ export const Activities = () => {
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
+                        onEdit={activity.type === 'question' ? () => mutate() : undefined}
                         classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
                     />
                 ))}
