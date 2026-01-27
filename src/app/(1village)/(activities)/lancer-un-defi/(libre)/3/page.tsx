@@ -66,7 +66,11 @@ export default function LancerUnDefiStep3() {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: t('Thème'), href: '/lancer-un-defi/1', status: activity.data.themeName ? 'success' : 'warning' },
+                    {
+                        label: activity.data?.themeName ?? t('Thème'),
+                        href: '/lancer-un-defi/1',
+                        status: activity.data.themeName ? 'success' : 'warning',
+                    },
                     {
                         label: t('Action'),
                         href: '/lancer-un-defi/2',

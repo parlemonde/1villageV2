@@ -75,7 +75,7 @@ export default function LancerUnDefiLinguistiqueStep2() {
             <Steps
                 steps={[
                     {
-                        label: t('Langue'),
+                        label: isoLanguages.find((l) => l.code === activity.data?.language)?.name ?? t('Langue'),
                         href: '/lancer-un-defi/linguistique/1',
                         status: LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },

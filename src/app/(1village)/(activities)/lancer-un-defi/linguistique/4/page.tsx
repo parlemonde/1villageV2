@@ -11,7 +11,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
-import isoLanguage from '@server-actions/languages/iso-639-languages.json';
+import isoLanguages from '@server-actions/languages/iso-639-languages.json';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -26,7 +26,7 @@ const useChallengeKinds = ({ languageParam, textKind }: { languageParam?: string
         labels[textKind.value] = textKind.title.toLowerCase();
     });
 
-    const language = isoLanguage.find((l) => l.code === languageParam)?.name ?? t("(langue non choisie à l'étape 1)");
+    const language = isoLanguages.find((l) => l.code === languageParam)?.name ?? t("(langue non choisie à l'étape 1)");
 
     const CHALLENGE_KINDS = [
         {
@@ -81,7 +81,7 @@ export default function LancerUnDefiLinguistiqueStep4() {
             <Steps
                 steps={[
                     {
-                        label: t('Langue'),
+                        label: isoLanguages.find((l) => l.code === activity.data?.language)?.name ?? t('Langue'),
                         href: '/lancer-un-defi/linguistique/1',
                         status: LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },

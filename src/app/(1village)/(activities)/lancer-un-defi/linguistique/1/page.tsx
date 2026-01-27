@@ -51,12 +51,14 @@ export default function LancerUnDefiLinguistiqueStep1() {
         return null;
     }
 
+    const language = isoLanguages.find((l) => l.code === activity.data.language)?.name;
+
     return (
         <PageContainer>
             <BackButton href="/lancer-un-defi" />
             <Steps
                 steps={[
-                    { label: t('Langue'), href: '/lancer-un-defi/linguistique/1' },
+                    { label: language ?? t('Langue'), href: '/lancer-un-defi/linguistique/1' },
                     { label: t('Thème'), href: '/lancer-un-defi/linguistique/2' },
                     { label: t('Présentation'), href: '/lancer-un-defi/linguistique/3' },
                     { label: t('Le défi'), href: '/lancer-un-defi/linguistique/4' },
@@ -88,7 +90,7 @@ export default function LancerUnDefiLinguistiqueStep1() {
                 <div className={styles.radioContainer}>
                     <p>
                         {t('Dans votre classe, {language} est une langue :', {
-                            language: isoLanguages.find((language) => language.code === activity?.data?.language)?.name || '',
+                            language: language || '',
                         })}
                     </p>
                     <RadioGroup
