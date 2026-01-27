@@ -61,6 +61,8 @@ const StoryStep1 = () => {
     const setImage = (imageUrl: string) => {
         const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
         setActivity({
+            ...activity,
+            type: 'histoire',
             data: {
                 ...data,
                 odd: { ...odd, inspiredStoryId: activity?.id, imageUrl, imageId: 0 },
@@ -106,7 +108,7 @@ const StoryStep1 = () => {
                             <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
                                 <Button
                                     marginLeft="sm"
-                                    label={activity.data?.odd.imageUrl ? 'Changer' : 'Choisir une image'}
+                                    label={activity.data?.odd?.imageUrl ? 'Changer' : 'Choisir une image'}
                                     color="primary"
                                     size="sm"
                                     onClick={() => setIsUploadImageModalOpen(true)}
@@ -144,7 +146,7 @@ const StoryStep1 = () => {
                                     <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
                                         <Button
                                             marginLeft="sm"
-                                            label={activity.data?.odd.imageUrl ? 'Changer' : 'Choisir une image'}
+                                            label={activity.data?.odd?.imageUrl ? 'Changer' : 'Choisir une image'}
                                             color="primary"
                                             size="sm"
                                             onClick={() => setIsUploadImageModalOpen(true)}
@@ -184,11 +186,13 @@ const StoryStep1 = () => {
                                         id="select-ODD-outlined"
                                         value={oDDChoice || data?.odd?.description || ''}
                                         onChange={(value: string) => {
-                                            debugger;
                                             setODDChoice(value);
                                             const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
-                                            setActivity({ data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'> });
-                                            //onUpdateActivity();
+                                            setActivity({
+                                                ...activity,
+                                                type: 'histoire',
+                                                data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'>,
+                                            });
                                         }}
                                         options={ODD_CHOICE.map((v) => ({ label: v.choice, value: v.choice }))}
                                         placeholder="Choisissez votre ODD"
