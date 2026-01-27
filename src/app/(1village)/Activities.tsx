@@ -21,7 +21,7 @@ export const Activities = () => {
         search: '',
     });
 
-    const { data: activities } = useSWR<Activity[]>(
+    const { data: activities, mutate } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
                   phase,
