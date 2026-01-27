@@ -14,7 +14,7 @@ import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -106,16 +106,8 @@ const StoryStep1 = () => {
                     <div className={styles['odd-column']}>
                         <div className={styles['odd-image-wrapper']}>
                             <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <Button
-                                    marginLeft="sm"
-                                    label={activity.data?.odd?.imageUrl ? 'Changer' : 'Choisir une image'}
-                                    color="primary"
-                                    size="sm"
-                                    onClick={() => setIsUploadImageModalOpen(true)}
-                                    style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
-                                />
-                                <div style={{ width: '100%' }}>
-                                    <AspectRatio.Root ratio={2 / 3}>
+                                <div style={{ width: '100%', position: 'relative' }}>
+                                    <AspectRatio.Root ratio={3 / 2}>
                                         <div
                                             style={{
                                                 height: '100%',
@@ -125,7 +117,10 @@ const StoryStep1 = () => {
                                                 border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
                                                 borderRadius: '10px',
                                                 justifyContent: 'center',
+                                                overflow: 'hidden',
+                                                cursor: 'pointer',
                                             }}
+                                            onClick={() => setIsUploadImageModalOpen(true)}
                                         >
                                             {data?.odd?.imageUrl ? (
                                                 <Image
@@ -136,36 +131,36 @@ const StoryStep1 = () => {
                                                     unoptimized
                                                 />
                                             ) : (
-                                                <IconButton as="a" href="" variant="borderless" color="primary" icon={Pencil1Icon} />
+                                                <IconButton variant="borderless" color="primary" icon={Pencil1Icon} />
                                             )}
                                         </div>
                                     </AspectRatio.Root>
+                                    {data?.odd?.imageUrl && (
+                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                            <IconButton
+                                                icon={TrashIcon}
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setIsModalOpen(true);
+                                                }}
+                                                style={{ backgroundColor: 'white' }}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
-                                {data?.odd?.imageUrl && (
-                                    <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                        <Button
-                                            marginLeft="sm"
-                                            label={activity.data?.odd?.imageUrl ? 'Changer' : 'Choisir une image'}
-                                            color="primary"
-                                            size="sm"
-                                            onClick={() => setIsUploadImageModalOpen(true)}
-                                            style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
-                                        />
-                                        <Modal
-                                            isOpen={isModalOpen}
-                                            title={"Êtes-vous sur de vouloir supprimer l'image ?"}
-                                            confirmLabel="Supprimer l'image"
-                                            onClose={() => {
-                                                setIsModalOpen(false);
-                                            }}
-                                            onConfirm={() => {
-                                                handleDelete();
-                                                setIsModalOpen(false);
-                                            }}
-                                        ></Modal>
-                                    </div>
-                                )}
+                                <Modal
+                                    isOpen={isModalOpen}
+                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                    confirmLabel="Supprimer l'image"
+                                    onClose={() => setIsModalOpen(false)}
+                                    onConfirm={() => {
+                                        handleDelete();
+                                        setIsModalOpen(false);
+                                    }}
+                                />
                                 <UploadImageModal
                                     getActivityId={getOrCreateDraft}
                                     isOpen={isUploadImageModalOpen}
