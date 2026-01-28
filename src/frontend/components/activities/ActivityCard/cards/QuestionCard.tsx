@@ -48,10 +48,12 @@ export const QuestionCard = ({ activity, onEdit, onDelete, shouldDisableButtons 
 
     return (
         <>
-            {activity.data?.questions?.map((question) => (
-                <p key={question.id}>{question.text}</p>
-            ))}
-            {(onEdit && !showAskSameButton) || onDelete ? (
+            <div style={{ marginBottom: '8px' }}>
+                {activity.data?.questions?.map((question) => (
+                    <p key={question.id}>{question.text}</p>
+                ))}
+            </div>
+            {onEdit && onDelete ? (
                 <div style={{ textAlign: 'right' }}>
                     {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}
                     {onDelete && <Button marginLeft="sm" label="Supprimer" variant="contained" color="error" onClick={onDelete} />}
@@ -60,8 +62,8 @@ export const QuestionCard = ({ activity, onEdit, onDelete, shouldDisableButtons 
                 <div
                     style={{
                         display: 'flex',
-                        flexDirection: showAskSameButton ? 'row' : 'row-reverse',
-                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        justifyContent: showAskSameButton ? 'space-between' : 'flex-end',
                     }}
                 >
                     {showAskSameButton && (
