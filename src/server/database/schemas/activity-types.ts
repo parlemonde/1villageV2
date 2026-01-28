@@ -11,11 +11,34 @@ type FreeActivity = {
     } | null;
 };
 
-type GameActivity = {
+type IdiomGame = {
+    theme: 'expression';
+    language?: string;
+    languageKnowledge?: string;
+    idioms?: {
+        imageUrl?: string;
+        value?: string;
+        meaning?: string;
+        falseMeanings?: string[];
+    }[];
+};
+
+type CurrencyGame = {
+    theme: 'monnaie';
+    currency?: string;
+};
+
+type GestureGame = {
+    theme: 'mimique';
+    gesture?: string;
+};
+
+type Game = IdiomGame | CurrencyGame | GestureGame;
+export type GameType = Game['theme'];
+
+type GameActivity<T = Game> = {
     type: 'jeu';
-    data: {
-        gameId: string;
-    } | null;
+    data: T;
 };
 
 type PuzzleActivity = {
