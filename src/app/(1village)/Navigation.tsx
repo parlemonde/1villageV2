@@ -3,6 +3,7 @@
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
@@ -10,7 +11,6 @@ import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
-import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
@@ -42,7 +42,7 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
     },
 ];
 
-const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: () => void): MenuItem | null => {
+const getActivityMenuItem = (type: ActivityType, firstPath: string, isActivityTypeInPhase: Boolean, hasVillageReachedPhase: Boolean, onClick?: () => void): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
     const label = ACTIVITY_LABELS[type] || type;
     const href = ACTIVITY_URLS[type];
@@ -56,7 +56,8 @@ const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: ()
         label,
         href,
         isActive: firstPath === href.split('/')[1],
-        onClick,
+        isDisabled: !isActivityTypeInPhase || !hasVillageReachedPhase,
+        onClick: firstPath === href.split('/')[1] ? () => { alert('Lien inactif'); } : onClick,
     };
 };
 
@@ -82,7 +83,11 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath)).filter((item) => item !== null);
+    const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
+        const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
+        const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+        return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase)
+    }).filter((item) => item !== null);
 
     return (
         <div className={styles.navigationWrapper}>
