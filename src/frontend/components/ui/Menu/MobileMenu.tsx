@@ -23,6 +23,7 @@ export const MobileMenu = ({ items }: MobileMenuProps) => {
                                         [styles[`text-${item.textAlign}`]]: item.textAlign,
                                         [styles[`color-${item.color}`]]: item.color && item.color !== 'primary',
                                         [styles.withTopSeparator]: item.hasSeparatorTop,
+                                        [styles.disabled]: item.isDisabled,
                                     })}
                                     onClick={item.onClick}
                                 >

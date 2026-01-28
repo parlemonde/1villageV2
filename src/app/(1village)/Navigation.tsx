@@ -139,13 +139,14 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
         keepPreviousData: true,
     });
 
-    const activityMenuItems = activityTypes
-        .map((type) =>
-            getActivityMenuItem(type, firstPath, () => {
-                onClose();
-            }),
-        )
+    const activityMenuItems = ACTIVITY_TYPES_ENUM
+        .map((type) =>{
+            const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
+            const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+            return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose)
+        })
         .filter((item) => item !== null);
+
     if (activityMenuItems.length > 0) {
         activityMenuItems[0].hasSeparatorTop = true;
     }

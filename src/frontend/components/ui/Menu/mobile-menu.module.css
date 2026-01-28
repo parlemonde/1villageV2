@@ -38,6 +38,12 @@
     background-color: var(--primary-color);
     color: white;
 }
+.mobileMenuItem.disabled {
+    pointer-events: none;
+    border-color: var(--grey-300);
+    background-color: var(--grey-200);
+    color: var(--grey-400);
+}
 .mobileMenuItemIcon {
     display: flex;
 }
