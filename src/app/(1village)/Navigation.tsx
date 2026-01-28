@@ -10,12 +10,12 @@ import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
-import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
@@ -40,20 +40,15 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
         isActive: firstPath === 'my-activities',
         onClick,
     },
-    ...(isPelico
-        ? [
-              {
-                  icon: <FreeContentIcon />,
-                  label: 'Publier un contenu libre',
-                  href: '/contenu-libre',
-                  isActive: firstPath === 'contenu-libre',
-                  onClick,
-              },
-          ]
-        : []),
 ];
 
-const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: () => void): MenuItem | null => {
+const getActivityMenuItem = (
+    type: ActivityType,
+    firstPath: string,
+    isActivityTypeInPhase: boolean,
+    hasVillageReachedPhase: boolean,
+    onClick?: () => void,
+): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
     const label = ACTIVITY_LABELS[type] || type;
     const href = ACTIVITY_URLS[type];
@@ -67,7 +62,13 @@ const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: ()
         label,
         href,
         isActive: firstPath === href.split('/')[1],
-        onClick,
+        isDisabled: !isActivityTypeInPhase || !hasVillageReachedPhase,
+        onClick:
+            firstPath === href.split('/')[1]
+                ? () => {
+                      alert('Lien inactif');
+                  }
+                : onClick,
     };
 };
 
@@ -82,13 +83,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
-    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
-
-    if (isPelico) {
-        activityTypes = activityTypes.filter((type) => type !== 'libre');
-    }
 
     // Do not display navigation on activity page
     if (pathname.startsWith('/activities/')) {
@@ -97,7 +94,11 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath)).filter((item) => item !== null);
+    const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
+        const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
+        const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+        return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase);
+    }).filter((item) => item !== null);
 
     return (
         <div className={styles.navigationWrapper}>
@@ -145,21 +146,16 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
 
-    if (isPelico) {
-        activityTypes = activityTypes.filter((type) => type !== 'libre');
-    }
+    const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
+        const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
+        const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
+        return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose);
+    }).filter((item) => item !== null);
 
-    const activityMenuItems = activityTypes
-        .map((type) =>
-            getActivityMenuItem(type, firstPath, () => {
-                onClose();
-            }),
-        )
-        .filter((item) => item !== null);
     if (activityMenuItems.length > 0) {
         activityMenuItems[0].hasSeparatorTop = true;
     }
