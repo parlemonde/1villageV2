@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
@@ -9,7 +9,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -52,7 +52,11 @@ const StoryStep2 = () => {
         if (!data) return;
         const { object } = data;
         // imageId = 0 when we are changing the image of the object step.
-        setActivity({ data: { ...data, object: { ...object, imageUrl, imageId: 0 } } as ActivityData<'histoire'> });
+        setActivity({
+            ...activity,
+            type: 'histoire',
+            data: { ...data, object: { ...object, imageUrl, imageId: 0 } } as ActivityData<'histoire'>,
+        });
     };
 
     /* const onNext = () => {
@@ -84,118 +88,112 @@ const StoryStep2 = () => {
                 activeStep={1}
                 /*errorSteps={errorSteps}*/
             />
-            <div className="width-900">
+            <div className={styles['width-900']}>
                 <h1>Imaginez et dessinez votre objet magique</h1>
                 <p className="text">
-                    Grâce à ses pouvoirs, votre objet magique doit permettre d’atteindre l’objectif du développement durable que vous avez choisi à
-                    l’étape précédente.
+                    Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
+                    choisi à l&apos;étape précédente.
                 </p>
-                <div className="grid-container">
-                    <div style={{ marginTop: '1.5rem' }}>
-                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                            <Button
-                                marginLeft="sm"
-                                label={data?.object?.imageUrl ? 'Changer' : 'Choisir une image'}
-                                color="primary"
-                                size="sm"
-                                onClick={() => setIsUploadImageModalOpen(true)}
-                                style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
-                            />
-                            <div style={{ width: '100%' }}>
-                                <AspectRatio.Root ratio={2 / 3}>
-                                    <div
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            border: `1px solid var(--primary-color)`,
-                                            borderRadius: '10px',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        {data?.object?.imageUrl ? (
-                                            <Image layout="fill" objectFit="cover" alt="image de l'objet" src={data?.object?.imageUrl} unoptimized />
-                                        ) : (
-                                            <>
-                                                <IconButton as="a" href="" variant="borderless" color="primary" icon={Pencil1Icon} />
-                                            </>
-                                        )}
-                                    </div>
-                                </AspectRatio.Root>
-                            </div>
-                        </div>
-                        {data?.object?.imageUrl && (
-                            <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
+                <div className={styles['odd-container']}>
+                    <div className={styles['odd-column']}>
+                        <div className={styles['odd-image-wrapper']}>
+                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                                <div style={{ width: '100%', position: 'relative' }}>
+                                    <AspectRatio.Root ratio={3 / 2}>
+                                        <div
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                                borderRadius: '10px',
+                                                justifyContent: 'center',
+                                                overflow: 'hidden',
+                                                cursor: 'pointer',
+                                            }}
+                                            onClick={() => setIsUploadImageModalOpen(true)}
+                                        >
+                                            {data?.object?.imageUrl ? (
+                                                <Image
+                                                    layout="fill"
+                                                    objectFit="cover"
+                                                    alt="image de l'objet"
+                                                    src={data?.object?.imageUrl}
+                                                    unoptimized
+                                                />
+                                            ) : (
+                                                <IconButton variant="borderless" color="primary" icon={PlusIcon} />
+                                            )}
+                                        </div>
+                                    </AspectRatio.Root>
+                                    {data?.object?.imageUrl && (
+                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                            <IconButton
+                                                icon={TrashIcon}
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setIsModalOpen(true);
+                                                }}
+                                                style={{ backgroundColor: 'white' }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
                                 <Modal
                                     isOpen={isModalOpen}
-                                    title={"Êtes-vous sur de vouloir supprimer l'image ?"}
+                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
                                     confirmLabel="Supprimer l'image"
-                                    onClose={() => {
-                                        setIsModalOpen(false);
-                                    }}
+                                    onClose={() => setIsModalOpen(false)}
                                     onConfirm={() => {
                                         handleDelete();
                                         setIsModalOpen(false);
                                     }}
-                                ></Modal>
+                                />
+                                <UploadImageModal
+                                    isOpen={isUploadImageModalOpen}
+                                    initialImageUrl={data?.object?.imageUrl || ''}
+                                    onClose={() => setIsUploadImageModalOpen(false)}
+                                    getActivityId={getOrCreateDraft}
+                                    onNewImage={(imageUrl) => setImage(imageUrl)}
+                                />
                             </div>
-                        )}
-                        <UploadImageModal
-                            isOpen={isUploadImageModalOpen}
-                            initialImageUrl={data?.object?.imageUrl || ''}
-                            onClose={() => setIsUploadImageModalOpen(false)}
-                            getActivityId={getOrCreateDraft}
-                            onNewImage={(imageUrl) => setImage(imageUrl)}
+                        </div>
+
+                        {/* Description section - sous l'image */}
+                        <Field
+                            helperText={'Écrivez la description de votre image !'}
+                            name="standard-multiline-static"
+                            label="Décrivez l'objet magique"
+                            input={
+                                <TextArea
+                                    id="object-description"
+                                    name="object-description"
+                                    isFullWidth
+                                    placeholder="Écrivez la description de votre image !"
+                                    value={data?.object?.description || ''}
+                                    onChange={(e) => {
+                                        if (!data) return;
+                                        const { object } = data;
+                                        setActivity({
+                                            ...activity,
+                                            type: 'histoire',
+                                            data: { ...data, object: { ...object, description: e.target.value } } as ActivityData<'histoire'>,
+                                        });
+                                    }}
+                                    style={{ width: '100%' }}
+                                    maxLength={400}
+                                />
+                            }
+                            marginTop="md"
                         />
+                        <div style={{ width: '100%', textAlign: 'right' }}>
+                            <span className="text text--small">{data?.object?.description?.length || 0}/400</span>
+                        </div>
                     </div>
-                    {/* <TextField
-                        helperText={'Écrivez la description de votre image !'}
-                        id="standard-multiline-static"
-                        label="Décrivez l’objet magique"
-                        value={data?.object?.description || ''}
-                        onChange={dataChange('description')}
-                        variant="outlined"
-                        multiline
-                        maxRows={4}
-                        style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                        inputProps={{
-                            maxLength: 400,
-                        }} /> */}
-                    <Field
-                        helperText={'Écrivez la description de votre image !'}
-                        name="standard-multiline-static"
-                        label="Décrivez l’objet magique"
-                        input={
-                            <TextArea
-                                id="object-description"
-                                name="object-description"
-                                isFullWidth
-                                placeholder="Écrivez la description de votre image !"
-                                value={data?.object?.description || ''}
-                                onChange={(e) => {
-                                    if (!data) return;
-                                    const { object } = data;
-                                    setActivity({
-                                        data: { ...data, object: { ...object, description: e.target.value } } as ActivityData<'histoire'>,
-                                    });
-                                }}
-                                style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                                maxLength={400}
-                            />
-                        }
-                        marginBottom="md"
-                    />
-                    {data?.object?.description ? (
-                        <div style={{ width: '100%', textAlign: 'right' }}>
-                            <span className="text text--small">{data.object.description.length}/400</span>
-                        </div>
-                    ) : (
-                        <div style={{ width: '100%', textAlign: 'right' }}>
-                            <span className="text text--small">0/400</span>
-                        </div>
-                    )}
                 </div>
             </div>
             {/* <StepsButton prev={`/creer-une-histoire/1?edit=${activity.id}`} next={onNext} /> */}

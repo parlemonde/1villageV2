@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteButton } from '@frontend/components/activities/DeleteButton/DeleteButton';
+import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
@@ -9,7 +9,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
-import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -25,20 +25,6 @@ const StoryStep3 = () => {
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
 
-    /* const errorSteps = React.useMemo(() => {
-        const errors = [];
-        if (data !== null) {
-            if (getErrorSteps(data.odd, 1).length > 0) {
-                errors.push(0);
-            }
-            if (getErrorSteps(data.object, 2).length > 0) {
-                errors.push(1);
-            }
-            return errors;
-        }
-        return [];
-    }, [data]); */
-
     React.useEffect(() => {
         if (activity === null && !searchParams.has('activity-id') && !sessionStorage.getItem('activity')) {
             router.push('/creer-une-histoire');
@@ -47,19 +33,14 @@ const StoryStep3 = () => {
         }
     }, [activity, router, searchParams]);
 
-    /* const dataChange = (key: keyof StoryElement) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.slice(0, 400);
-        const { place } = data;
-        const newData = { ...data, place: { ...place, [key]: value } };
-        setActivity({ data: newData });
-    }; */
-
     // Update the "place step" image url, when upload an image.
     const setImage = (imageUrl: string) => {
         if (!data || !activity) return;
         const { object, place } = data;
         // imageId = 0 when we are changing the image of the object step.
         setActivity({
+            ...activity,
+            type: 'histoire',
             data: {
                 ...data,
                 object: { ...object, inspiredStoryId: activity.id },
@@ -68,11 +49,6 @@ const StoryStep3 = () => {
             } as ActivityData<'histoire'>,
         });
     };
-
-    /* const onNext = () => {
-        save().catch(console.error);
-        router.push('/creer-une-histoire/4');
-    }; */
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -97,117 +73,109 @@ const StoryStep3 = () => {
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={2}
-                /*errorSteps={errorSteps}*/
             />
-            <div className="width-900">
+            <div className={styles['width-900']}>
                 <h1>Imaginez et dessinez votre lieu extraordinaire</h1>
                 <p className="text">
-                    Tout comme l’objet magique, ce lieu extraordinaire doit permettre d’atteindre l’objectif du développement durable que vous avez
-                    choisi à l’étape précédente.
+                    Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable
+                    que vous avez choisi à l&apos;étape précédente.
                 </p>
-                <div className="grid-container">
-                    <div style={{ marginTop: '1.5rem' }}>
-                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                            <Button
-                                marginLeft="sm"
-                                label={data?.place?.imageUrl ? 'Changer' : 'Choisir une image'}
-                                color="primary"
-                                size="sm"
-                                onClick={() => setIsUploadImageModalOpen(true)}
-                                style={{ width: '100%', color: isError ? 'var(--error-color)' : 'var(--primary-color)' }}
-                            />
-                            <div style={{ width: '100%' }}>
-                                <AspectRatio.Root ratio={2 / 3}>
-                                    <div
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            border: `1px solid var(--primary-color)`,
-                                            borderRadius: '10px',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        {data.place?.imageUrl ? (
-                                            <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
-                                        ) : (
-                                            <IconButton as="a" href="" variant="borderless" color="primary" icon={Pencil1Icon} />
-                                        )}
-                                    </div>
-                                </AspectRatio.Root>
-                            </div>
-                            {data.place?.imageUrl && (
-                                <div style={{ position: 'absolute', top: '0.25rem', right: '0.25rem' }}>
-                                    <DeleteButton onClick={() => setIsModalOpen(true)} style={{ backgroundColor: 'var(--background-color)' }} />
-                                    <Modal
-                                        isOpen={isModalOpen}
-                                        title={"Êtes-vous sur de vouloir supprimer l'image ?"}
-                                        confirmLabel="Supprimer l'image"
-                                        onClose={() => {
-                                            setIsModalOpen(false);
-                                        }}
-                                        onConfirm={() => {
-                                            handleDelete();
-                                            setIsModalOpen(false);
-                                        }}
-                                    ></Modal>
+                <div className={styles['odd-container']}>
+                    <div className={styles['odd-column']}>
+                        <div className={styles['odd-image-wrapper']}>
+                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                                <div style={{ width: '100%', position: 'relative' }}>
+                                    <AspectRatio.Root ratio={3 / 2}>
+                                        <div
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                                borderRadius: '10px',
+                                                justifyContent: 'center',
+                                                overflow: 'hidden',
+                                                cursor: 'pointer',
+                                            }}
+                                            onClick={() => setIsUploadImageModalOpen(true)}
+                                        >
+                                            {data?.place?.imageUrl ? (
+                                                <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
+                                            ) : (
+                                                <IconButton variant="borderless" color="primary" icon={PlusIcon} />
+                                            )}
+                                        </div>
+                                    </AspectRatio.Root>
+                                    {data?.place?.imageUrl && (
+                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                            <IconButton
+                                                icon={TrashIcon}
+                                                variant="outlined"
+                                                color="error"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setIsModalOpen(true);
+                                                }}
+                                                style={{ backgroundColor: 'white' }}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                            <UploadImageModal
-                                isOpen={isUploadImageModalOpen}
-                                initialImageUrl={data.place?.imageUrl || ''}
-                                onClose={() => setIsUploadImageModalOpen(false)}
-                                getActivityId={getOrCreateDraft}
-                                onNewImage={(imageUrl) => setImage(imageUrl)}
-                            />
+
+                                <Modal
+                                    isOpen={isModalOpen}
+                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                    confirmLabel="Supprimer l'image"
+                                    onClose={() => setIsModalOpen(false)}
+                                    onConfirm={() => {
+                                        handleDelete();
+                                        setIsModalOpen(false);
+                                    }}
+                                />
+                                <UploadImageModal
+                                    isOpen={isUploadImageModalOpen}
+                                    initialImageUrl={data?.place?.imageUrl || ''}
+                                    onClose={() => setIsUploadImageModalOpen(false)}
+                                    getActivityId={getOrCreateDraft}
+                                    onNewImage={(imageUrl) => setImage(imageUrl)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Description section - sous l'image */}
+                        <Field
+                            helperText={'Écrivez la description de votre image !'}
+                            name="standard-multiline-static"
+                            label="Décrivez le lieu extraordinaire"
+                            input={
+                                <TextArea
+                                    id="place-description"
+                                    name="place-description"
+                                    isFullWidth
+                                    placeholder="Écrivez la description de votre image !"
+                                    value={data?.place?.description || ''}
+                                    onChange={(e) => {
+                                        if (!data) return;
+                                        const { place } = data;
+                                        setActivity({
+                                            ...activity,
+                                            type: 'histoire',
+                                            data: { ...data, place: { ...place, description: e.target.value } } as ActivityData<'histoire'>,
+                                        });
+                                    }}
+                                    style={{ width: '100%' }}
+                                    maxLength={400}
+                                />
+                            }
+                            marginTop="md"
+                        />
+                        <div style={{ width: '100%', textAlign: 'right' }}>
+                            <span className="text text--small">{data?.place?.description?.length || 0}/400</span>
                         </div>
                     </div>
-                    {/* <TextField
-                        id="standard-multiline-static"
-                        label="Décrivez le lieu extraordinaire"
-                        value={data.place?.description || ''}
-                        onChange={dataChange('description')}
-                        variant="outlined"
-                        multiline
-                        maxRows={4}
-                        style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                        inputProps={{
-                            maxLength: 400,
-                        }} /> */}
-                    <Field
-                        name="standard-multiline-static"
-                        label="Décrivez le lieu extraordinaire"
-                        input={
-                            <TextArea
-                                id="place-description"
-                                name="place-description"
-                                isFullWidth
-                                placeholder="Écrivez la description de votre image !"
-                                value={data?.place?.description || ''}
-                                onChange={(e) => {
-                                    if (!data) return;
-                                    const { place } = data;
-                                    setActivity({ data: { ...data, place: { ...place, description: e.target.value } } as ActivityData<'histoire'> });
-                                }}
-                                style={{ width: '100%', marginTop: '25px', color: 'primary' }}
-                                maxLength={400}
-                            />
-                        }
-                        marginBottom="md"
-                    />
-                    {data.place?.description ? (
-                        <div style={{ width: '100%', textAlign: 'right' }}>
-                            <span className="text text--small">{data.place.description.length}/400</span>
-                        </div>
-                    ) : (
-                        <div style={{ width: '100%', textAlign: 'right' }}>
-                            <span className="text text--small">0/400</span>
-                        </div>
-                    )}
                 </div>
             </div>
-            {/* <StepsButton prev={`/creer-une-histoire/2`} next={onNext} /> */}
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
                 <Button
                     as="a"

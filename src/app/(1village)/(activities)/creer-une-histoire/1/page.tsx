@@ -10,11 +10,10 @@ import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
-import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { ChevronRightIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -22,7 +21,7 @@ import { AspectRatio } from 'radix-ui';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 const StoryStep1 = () => {
-    const { activity, onCreateActivity, setActivity, onUpdateActivity, getOrCreateDraft } = useContext(ActivityContext);
+    const { activity, onCreateActivity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
 
     //const { selectedPhase } = useContext(VillageContext);
     const { deleteStoryImage } = useImageStoryRequests();
@@ -96,12 +95,8 @@ const StoryStep1 = () => {
             />
 
             <div className={styles['width-900']}>
-                <Title variant="h2" marginBottom="md">
-                    Choisissez et dessinez l&apos;objectif du développement durable à atteindre
-                </Title>
-                <Title variant="h3" marginBottom="md">
-                    Choisissez votre objectif et dessinez-le.
-                </Title>
+                <h1>Choisissez et dessinez l&apos;objectif du développement durable à atteindre</h1>
+                <p className="text">Choisissez votre objectif et dessinez-le.</p>
                 <div className={styles['odd-container']}>
                     <div className={styles['odd-column']}>
                         <div className={styles['odd-image-wrapper']}>
@@ -131,7 +126,7 @@ const StoryStep1 = () => {
                                                     unoptimized
                                                 />
                                             ) : (
-                                                <IconButton variant="borderless" color="primary" icon={Pencil1Icon} />
+                                                <IconButton variant="borderless" color="primary" icon={PlusIcon} />
                                             )}
                                         </div>
                                     </AspectRatio.Root>

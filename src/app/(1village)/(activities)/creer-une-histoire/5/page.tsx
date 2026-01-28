@@ -1,5 +1,6 @@
 'use client';
 
+import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { BackDrop } from '@frontend/components/ui/BackDrop';
 import { Button } from '@frontend/components/ui/Button';
@@ -9,7 +10,7 @@ import { Steps } from '@frontend/components/ui/Steps';
 import { Tooltip } from '@frontend/components/ui/Tooltip';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import { ChevronLeftIcon, Pencil1Icon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,16 +32,15 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
         <div
             style={{
                 display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
                 gap: '1rem',
                 padding: '1rem',
-                marginBottom: '1rem',
-                border: `2px solid ${error ? 'var(--warning-color)' : 'var(--border-color)'}`,
-                borderRadius: '10px',
-                backgroundColor: error ? 'var(--warning-background)' : 'transparent',
+                position: 'relative',
             }}
         >
             <div style={{ width: '150px', flexShrink: 0 }}>
-                <AspectRatio.Root ratio={2 / 3}>
+                <AspectRatio.Root ratio={3 / 2}>
                     <div
                         style={{
                             height: '100%',
@@ -48,7 +48,7 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            border: '1px solid var(--border-color)',
+                            border: `1px solid ${error ? 'var(--warning-color)' : 'var(--border-color)'}`,
                             borderRadius: '8px',
                             overflow: 'hidden',
                         }}
@@ -61,12 +61,37 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
                     </div>
                 </AspectRatio.Root>
             </div>
-            <div style={{ flex: 1 }}>
-                <p style={{ margin: '0 0 0.5rem 0' }}>{description || <em>Aucune description</em>}</p>
-                <Link href={urlStep} passHref>
-                    <Button as="a" href={urlStep} variant="borderless" color="primary" label="Modifier" size="sm" />
-                </Link>
+            <div
+                style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: `1px dashed ${error ? 'var(--warning-color)' : '#4CAF50'}`,
+                    borderRadius: '8px',
+                    padding: '1rem',
+                    minHeight: '80px',
+                }}
+            >
+                <p style={{ margin: 0 }}>{description || <em>Aucune description</em>}</p>
             </div>
+            <Link
+                href={urlStep}
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: '#E8F5E9',
+                    border: '1px solid #4CAF50',
+                    color: '#4CAF50',
+                    textDecoration: 'none',
+                    flexShrink: 0,
+                }}
+            >
+                <Pencil1Icon width={18} height={18} />
+            </Link>
         </div>
     );
 };
@@ -152,7 +177,7 @@ const StoryStep5 = () => {
                 activeStep={4}
             />
 
-            <div className="width-900">
+            <div className={styles['width-900']}>
                 <h1>Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}</h1>
                 <p className="text" style={{ fontSize: '1.1rem' }}>
                     Relisez votre publication une dernière fois avant de la publier !
@@ -193,40 +218,57 @@ const StoryStep5 = () => {
                 )}
 
                 {/* ODD */}
-                <ImageStepContainer
-                    urlStep={`/creer-une-histoire/1?edit=${activity.id}`}
-                    imageUrl={data.odd?.imageUrl}
-                    isValid={isValid}
-                    error={errorSteps.includes(0)}
-                    description={data.odd?.description}
-                />
+                <div
+                    className={`${styles['preview-block']} ${errorSteps.includes(0) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
+                >
+                    <ImageStepContainer
+                        urlStep={`/creer-une-histoire/1?edit=${activity.id}`}
+                        imageUrl={data.odd?.imageUrl}
+                        isValid={isValid}
+                        error={errorSteps.includes(0)}
+                        description={data.odd?.description}
+                    />
+                </div>
+
                 {/* Object */}
-                <ImageStepContainer
-                    urlStep={`/creer-une-histoire/2`}
-                    imageUrl={data.object?.imageUrl}
-                    isValid={isValid}
-                    error={errorSteps.includes(1)}
-                    description={data.object?.description}
-                />
+                <div
+                    className={`${styles['preview-block']} ${errorSteps.includes(1) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
+                >
+                    <ImageStepContainer
+                        urlStep={`/creer-une-histoire/2`}
+                        imageUrl={data.object?.imageUrl}
+                        isValid={isValid}
+                        error={errorSteps.includes(1)}
+                        description={data.object?.description}
+                    />
+                </div>
 
                 {/* Place */}
-                <ImageStepContainer
-                    urlStep={`/creer-une-histoire/3`}
-                    imageUrl={data.place?.imageUrl}
-                    isValid={isValid}
-                    error={errorSteps.includes(2)}
-                    description={data.place?.description}
-                />
+                <div
+                    className={`${styles['preview-block']} ${errorSteps.includes(2) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
+                >
+                    <ImageStepContainer
+                        urlStep={`/creer-une-histoire/3`}
+                        imageUrl={data.place?.imageUrl}
+                        isValid={isValid}
+                        error={errorSteps.includes(2)}
+                        description={data.place?.description}
+                    />
+                </div>
 
                 {/* Tale */}
-                <ImageStepContainer
-                    urlStep={`/creer-une-histoire/4`}
-                    imageUrl={data.tale?.imageStory}
-                    isValid={isValid}
-                    error={errorSteps.includes(3)}
-                    description={data.tale?.tale}
-                />
-                {/* <StepsButton prev="/creer-une-histoire/4" /> */}
+                <div
+                    className={`${styles['preview-block']} ${errorSteps.includes(3) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
+                >
+                    <ImageStepContainer
+                        urlStep={`/creer-une-histoire/4`}
+                        imageUrl={data.tale?.imageStory}
+                        isValid={isValid}
+                        error={errorSteps.includes(3)}
+                        description={data.tale?.tale}
+                    />
+                </div>
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
                     <Button
                         as="a"
@@ -237,12 +279,12 @@ const StoryStep5 = () => {
                         leftIcon={<ChevronLeftIcon />}
                     />
                 </div>
+                {isLoading && (
+                    <BackDrop style={{ zIndex: 2000, color: 'white' }}>
+                        <CircularProgress color="inherit" />
+                    </BackDrop>
+                )}
             </div>
-            {isLoading && (
-                <BackDrop style={{ zIndex: 2000, color: 'white' }}>
-                    <CircularProgress color="inherit" />
-                </BackDrop>
-            )}
         </PageContainer>
     );
 };

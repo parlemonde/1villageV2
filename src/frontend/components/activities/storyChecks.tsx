@@ -6,7 +6,8 @@ type TaleElement = {
     tale: string | null;
 };
 
-export const stepValid = (data: Record<string, unknown>): boolean => {
+export const stepValid = (data: Record<string, unknown> | null | undefined): boolean => {
+    if (!data) return false;
     //verifier si data.imageUrl === '' et data.description === ''
     //verifier si data.imageStory === '' et data.tale === ''
     if (data.imageUrl === '') return false;
