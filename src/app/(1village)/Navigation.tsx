@@ -142,7 +142,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const activityMenuItems = ACTIVITY_TYPES_ENUM
         .map((type) =>{
             const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
-            const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+            const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
             return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose)
         })
         .filter((item) => item !== null);
