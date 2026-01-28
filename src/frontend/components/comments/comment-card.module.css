@@ -1,0 +1,49 @@
+.card {
+    padding: 16px;
+    box-shadow:
+        rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    width: 100%;
+    position: relative;
+}
+
+.buttons {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+
+    & > button {
+        margin-top: 4px;
+        margin-right: 4px;
+    }
+}
+
+.editButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.commentHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.commentHeaderText {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.commentHeaderInfo {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    line-height: 16px;
+    align-items: center;
+}
