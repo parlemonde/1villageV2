@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { sendToast } from '@frontend/components/Toasts';
@@ -28,15 +30,21 @@ interface CommentDisplayProps {
 
 const CommentDisplayName = ({ user, classroom, isPelico }: CommentDisplayProps) => {
     const { classroom: currentClassroom } = useContext(UserContext);
+    const t = useExtracted('CommentCard');
+
+    const alias = t('Les {classLevel} de {className}', {
+        classLevel: classroom?.level ?? '',
+        className: classroom?.name ?? '',
+    });
 
     if (isPelico) {
         return 'Pélico';
     } else if (classroom && classroom.id === currentClassroom?.id) {
-        return 'Votre classe';
+        return t('Votre classe');
     } else if (classroom) {
-        return classroom.alias || (classroom.level ? `Les ${classroom.level} de ${classroom.name}` : classroom.name);
+        return classroom.alias || (classroom.level ? alias : classroom.name);
     }
-    return user?.name || 'Un pélicopain';
+    return user?.name || t('Un pélicopain');
 };
 
 interface CommentCardProps {

@@ -21,7 +21,7 @@ interface CommentsProps {
 }
 
 export const Comments = ({ activityId }: CommentsProps) => {
-    const t = useExtracted('CommentEditor');
+    const t = useExtracted('Comments');
     const tCommon = useExtracted('common');
 
     const [content, setContent] = useState<unknown>('');
