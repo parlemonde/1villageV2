@@ -103,7 +103,7 @@ const StoryStep3 = () => {
                                             {data?.place?.imageUrl ? (
                                                 <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
                                             ) : (
-                                                <IconButton variant="borderless" color="primary" icon={PlusIcon} />
+                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
                                             )}
                                         </div>
                                     </AspectRatio.Root>

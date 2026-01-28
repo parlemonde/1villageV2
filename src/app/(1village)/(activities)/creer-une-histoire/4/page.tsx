@@ -99,7 +99,7 @@ const StoryStep4 = () => {
                                                     unoptimized
                                                 />
                                             ) : (
-                                                <IconButton variant="borderless" color="primary" icon={PlusIcon} />
+                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
                                             )}
                                         </div>
                                     </AspectRatio.Root>
