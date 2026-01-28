@@ -43,6 +43,12 @@
     color: white;
     width: calc(100% + 16px);
 }
+.menuItem.disabled {
+    pointer-events: none;
+    border-color: var(--grey-300);
+    background-color: var(--grey-200);
+    color: var(--grey-400);
+}
 .menuItemIcon {
     display: flex;
 }
