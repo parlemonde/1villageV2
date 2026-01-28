@@ -1,0 +1,111 @@
+'use client';
+
+import type { UserComment } from '@app/api/comments/route';
+import { sendToast } from '@frontend/components/Toasts';
+import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
+import { Button } from '@frontend/components/ui/Button';
+import { Modal } from '@frontend/components/ui/Modal';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import { deleteComment } from '@server-actions/comments/delete-comment';
+import { postComment } from '@server-actions/comments/post-comment';
+import { useExtracted } from 'next-intl';
+import { useState } from 'react';
+import useSWR from 'swr';
+
+import { CommentCard } from './CommentCard';
+import styles from './comments.module.css';
+
+interface CommentsProps {
+    activityId: number;
+}
+
+export const Comments = ({ activityId }: CommentsProps) => {
+    const t = useExtracted('CommentEditor');
+    const tCommon = useExtracted('common');
+
+    const [content, setContent] = useState<unknown>('');
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [commentIdToDelete, setCommentIdToDelete] = useState<number | undefined>();
+
+    const { data: comments, mutate } = useSWR<UserComment[]>(`/api/comments${serializeToQueryUrl({ activityId: activityId })}`, jsonFetcher);
+
+    const post = async () => {
+        const { error } = await postComment({
+            activityId,
+            content,
+        });
+        if (!error) {
+            mutate();
+        } else {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+        }
+    };
+
+    const onDeleteComment = async () => {
+        if (!commentIdToDelete) {
+            return;
+        }
+
+        const { error } = await deleteComment(commentIdToDelete);
+        if (!error) {
+            mutate();
+        } else {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+        }
+
+        setIsDeleteModalOpen(false);
+    };
+
+    return (
+        <>
+            <div className={styles.separator}>
+                <strong>{t('Réaction des pélicopains')}</strong>
+            </div>
+            <div className={styles.commentsFeed}>
+                {comments && comments.length > 0 ? (
+                    comments?.map((c) => (
+                        <CommentCard
+                            key={c.comment.id}
+                            user={c.user}
+                            classroom={c.classroom}
+                            comment={c.comment}
+                            onDelete={() => {
+                                setIsDeleteModalOpen(true);
+                                setCommentIdToDelete(c.comment.id);
+                            }}
+                        />
+                    ))
+                ) : (
+                    <p>{t("Aucune réaction n'a été publiée pour le moment")}</p>
+                )}
+            </div>
+            <div className={styles.editorContainer}>
+                <div className={styles.editor}>
+                    <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
+                    <HtmlEditor content={content} onChange={setContent} />
+                    <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+                </div>
+            </div>
+
+            <Modal
+                isOpen={isDeleteModalOpen}
+                confirmLabel={tCommon('Supprimer')}
+                confirmLevel="error"
+                onConfirm={onDeleteComment}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title={t('Confirmer la suppression')}
+                hasCancelButton
+                hasCloseButton
+            >
+                {t('Voulez-vous vraiment supprimer ce commentaire ?')}
+            </Modal>
+        </>
+    );
+};
