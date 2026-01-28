@@ -1,6 +1,7 @@
 'use client';
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
+import { Comments } from '@frontend/components/comments/Comments';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
@@ -33,6 +34,7 @@ export const ActivityView = ({ activity }: ActivityViewProps) => {
                 classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
             />
             {ContentView && <ContentView activity={activity} />}
+            <Comments activityId={activity.id} />
         </div>
     );
 };

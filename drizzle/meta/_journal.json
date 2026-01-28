@@ -50,6 +50,13 @@
       "when": 1768145721631,
       "tag": "0006_striped_ego",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1769503800616,
+      "tag": "0007_exotic_chat",
+      "breakpoints": true
     }
   ]
 }
