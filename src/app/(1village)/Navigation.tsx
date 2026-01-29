@@ -2,7 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_ICONS, ACTIVITY_URLS, useActivityName } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
@@ -44,13 +44,13 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
 
 const getActivityMenuItem = (
     type: ActivityType,
+    activityLabel: string,
     firstPath: string,
     isActivityTypeInPhase: boolean,
     hasVillageReachedPhase: boolean,
     onClick?: () => void,
 ): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
-    const label = ACTIVITY_LABELS[type] || type;
     const href = ACTIVITY_URLS[type];
 
     if (!href) {
@@ -59,7 +59,7 @@ const getActivityMenuItem = (
 
     return {
         icon: Icon !== null ? <Icon /> : undefined,
-        label,
+        label: activityLabel,
         href,
         isActive: firstPath === href.split('/')[1],
         isDisabled: !isActivityTypeInPhase || !hasVillageReachedPhase,
@@ -80,6 +80,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const { user, classroom } = useContext(UserContext);
     const [phase] = usePhase();
     const pathname = usePathname();
+    const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
@@ -97,7 +98,8 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
         const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
         const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
-        return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase);
+        const activityLabel = getActivityLabel(type as ActivityType);
+        return getActivityMenuItem(type, activityLabel, firstPath, isActivityTypeInPhase, hasVillageReachedPhase);
     }).filter((item) => item !== null);
 
     return (
@@ -141,6 +143,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const classroomCountryCode = classroom?.countryCode;
     const { village } = useContext(VillageContext);
     const pathname = usePathname();
+    const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
@@ -153,7 +156,8 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
         const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
         const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
-        return getActivityMenuItem(type, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose);
+        const activityLabel = getActivityLabel(type as ActivityType);
+        return getActivityMenuItem(type, activityLabel, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose);
     }).filter((item) => item !== null);
 
     if (activityMenuItems.length > 0) {
