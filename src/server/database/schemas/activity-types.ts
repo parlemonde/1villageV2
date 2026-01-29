@@ -12,6 +12,15 @@ export type FreeActivity = {
     } | null;
 };
 
+type PelicoPresentation = {
+    type: 'presentation-pelico';
+    data: {
+        title?: string;
+        text?: string;
+        content?: AnyContent[];
+    } | null;
+};
+
 export type IdiomGame = {
     theme: 'expression';
     language?: string;
@@ -216,7 +225,10 @@ export type Activities =
     | StoryActivity
     | MascotActivity
     | ChallengeActivity
-    | QuestionActivity;
+    | QuestionActivity
+    | PelicoPresentation
+    | MascotActivity
+    | ChallengeActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
@@ -224,7 +236,6 @@ export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T
 // Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     libre: true,
-    defi: true,
     jeu: true,
     enigme: true,
     indice: true,
@@ -232,6 +243,8 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     histoire: true,
     mascotte: true,
     question: true,
+    defi: true,
+    'presentation-pelico': true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 
