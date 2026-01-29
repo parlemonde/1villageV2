@@ -2,6 +2,7 @@
 
 import { getMarginAndPaddingProps, getMarginAndPaddingStyle, type MarginProps, type PaddingProps } from '@frontend/components/ui/css-styles';
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import classNames from 'clsx';
 import { useRef, useState } from 'react';
 
 import styles from './theme-selector-button.module.css';
@@ -9,14 +10,15 @@ import styles from './theme-selector-button.module.css';
 interface ThemeSelectorButtonProps extends MarginProps, PaddingProps {
     title: string;
     description?: string;
+    isActive?: boolean;
     onClick: () => void;
     dropdownContent?: React.ReactNode;
 }
 
-export const ThemeSelectorButton = ({ title, description, onClick, dropdownContent, ...otherProps }: ThemeSelectorButtonProps) => {
+export const ThemeSelectorButton = ({ title, description, isActive = false, onClick, dropdownContent, ...otherProps }: ThemeSelectorButtonProps) => {
     const { marginAndPaddingProps } = getMarginAndPaddingProps(otherProps);
-    const [isOpen, setIsOpen] = useState(false);
-    const [height, setHeight] = useState(0);
+    const [isOpen, setIsOpen] = useState(dropdownContent && isActive);
+    const [height, setHeight] = useState(dropdownContent && isActive ? 'auto' : 0);
     const ref = useRef<HTMLDivElement>(null);
 
     const handleClick = () => {
@@ -29,7 +31,7 @@ export const ThemeSelectorButton = ({ title, description, onClick, dropdownConte
     };
 
     return (
-        <div className={styles.button} style={getMarginAndPaddingStyle(marginAndPaddingProps)}>
+        <div className={classNames(styles.button, { [styles.active]: isActive })} style={getMarginAndPaddingStyle(marginAndPaddingProps)}>
             <div className={styles.buttonContent} role="button" onClick={handleClick}>
                 <div className={styles.left}>
                     <p className={styles.title}>{title}</p>

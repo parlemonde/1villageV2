@@ -107,6 +107,7 @@ export default function CreerUneEnigmeStep1() {
                             <ThemeSelectorButton
                                 key={`subtheme-button-${index}`}
                                 title={subtheme.tname}
+                                isActive={activity.data?.customTheme === subtheme.name}
                                 marginBottom="lg"
                                 paddingX="md"
                                 paddingY="sm"
@@ -122,6 +123,7 @@ export default function CreerUneEnigmeStep1() {
                         ))}
                     <ThemeSelectorButton
                         title={tCommon('Autre...')}
+                        isActive={(activity.data?.customTheme && subthemes.findIndex((st) => st.name === activity.data?.customTheme) === -1) || false}
                         onClick={() => {}}
                         paddingX="md"
                         paddingY="sm"
