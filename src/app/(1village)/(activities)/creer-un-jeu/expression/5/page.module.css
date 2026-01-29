@@ -1,0 +1,11 @@
+.buttonsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+}
+
+.gamePreview {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
