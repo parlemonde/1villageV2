@@ -52,14 +52,6 @@ export const ActivityName = ({ type }: { type: ActivityType }): React.ReactNode 
     return getActivityName(type);
 };
 
-export const ACTIVITY_LABELS: Record<ActivityType, string> = {
-    libre: 'Publier un contenu libre',
-    jeu: 'Créer un jeu',
-    enigme: 'Créer une énigme',
-    indice: 'Créer un indice',
-    reportage: 'Créer un reportage',
-};
-
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     libre: 'envoyé un message à ses Pélicopains',
     jeu: 'lancé un jeu',
