@@ -10,7 +10,7 @@ export default function AdminManagePhasesPage() {
     return (
         <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Phases' }]} />
-            <Title marginY="md">Paraméter les phases</Title>
+            <Title marginY="md">Paramétrer les phases</Title>
             <PhasesTable />
             <Button
                 as="a"

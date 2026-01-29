@@ -14,7 +14,7 @@ export default async function AdminManageActivitiesPage() {
     return (
         <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Gérer', href: '/admin/manage' }, { label: 'Activités' }]} />
-            <Title marginY="md">Paraméter les activités</Title>
+            <Title marginY="md">Paramétrer les activités</Title>
             <ActivityPhasesTable phases={phases} />
             <Button
                 as="a"

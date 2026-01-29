@@ -11,6 +11,15 @@ export type FreeActivity = {
     } | null;
 };
 
+type PelicoPresentation = {
+    type: 'presentation-pelico';
+    data: {
+        title?: string;
+        text?: string;
+        content?: AnyContent[];
+    } | null;
+};
+
 export type IdiomGame = {
     theme: 'expression';
     language?: string;
@@ -165,18 +174,27 @@ export type ChallengeActivity<T = Challenge> = {
 };
 export type ChallengeType = Challenge['theme'];
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity;
+export type Activities =
+    | FreeActivity
+    | GameActivity
+    | PuzzleActivity
+    | HintActivity
+    | ReportActivity
+    | PelicoPresentation
+    | MascotActivity
+    | ChallengeActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     libre: true,
-    defi: true,
     jeu: true,
     enigme: true,
     indice: true,
     reportage: true,
     mascotte: true,
+    defi: true,
+    'presentation-pelico': true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 
