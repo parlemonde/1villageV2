@@ -1,6 +1,7 @@
 'use client';
 
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
+import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
@@ -25,12 +26,12 @@ const StoryStep2 = () => {
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
 
-    /* const errorSteps = React.useMemo(() => {
+    const errorSteps = React.useMemo(() => {
         if (data !== null) {
             return getErrorSteps(data.odd, 1);
         }
         return [];
-    }, [data]); */
+    }, [data]);
 
     React.useEffect(() => {
         if (activity === null && !searchParams.has('activity-id') && !sessionStorage.getItem('activity')) {
@@ -79,14 +80,13 @@ const StoryStep2 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
                     { label: 'Objet', href: '/creer-une-histoire/2' },
                     { label: 'Lieu', href: '/creer-une-histoire/3' },
                     { label: 'Histoire', href: '/creer-une-histoire/4' },
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={1}
-                /*errorSteps={errorSteps}*/
             />
             <div className={styles['width-900']}>
                 <h1>Imaginez et dessinez votre objet magique</h1>

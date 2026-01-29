@@ -3,7 +3,6 @@ import type { MarginProps } from '@frontend/components/ui/css-styles';
 import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import { CheckIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
-import React from 'react';
 
 import styles from './steps.module.css';
 

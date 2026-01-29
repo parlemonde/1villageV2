@@ -1,6 +1,7 @@
 'use client';
 
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
+import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { useImageStoryRequests } from '@frontend/components/activities/useImagesStory';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Field, TextArea } from '@frontend/components/ui/Form';
@@ -24,6 +25,20 @@ const StoryStep3 = () => {
     const data = (activity?.data as ActivityData<'histoire'>) || null;
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
+
+    const errorSteps = React.useMemo(() => {
+        const errors = [];
+        if (data !== null) {
+            if (getErrorSteps(data.odd, 1).length > 0) {
+                errors.push(0);
+            }
+            if (getErrorSteps(data.object, 2).length > 0) {
+                errors.push(1);
+            }
+            return errors;
+        }
+        return [];
+    }, [data]);
 
     React.useEffect(() => {
         if (activity === null && !searchParams.has('activity-id') && !sessionStorage.getItem('activity')) {
@@ -66,8 +81,8 @@ const StoryStep3 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
-                    { label: 'Objet', href: '/creer-une-histoire/2' },
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
                     { label: 'Lieu', href: '/creer-une-histoire/3' },
                     { label: 'Histoire', href: '/creer-une-histoire/4' },
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
