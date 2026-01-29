@@ -50,3 +50,7 @@
     padding-left: 15px;
     cursor: pointer;
 }
+
+.readonly {
+    pointer-events: none;
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { getMarginAndPaddingStyle, type MarginProps } from '@frontend/components/ui/css-styles';
+import classNames from 'clsx';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import * as React from 'react';
 
@@ -9,14 +10,15 @@ import styles from './radio-group.module.css';
 interface RadioGroupProps extends MarginProps {
     options: { label: React.ReactNode; value: string }[];
     value?: string;
-    setValue: (value: string) => void;
+    setValue?: (value: string) => void;
+    readonly?: boolean;
 }
 
-export const RadioGroup = ({ options, value, setValue, ...marginProps }: RadioGroupProps) => {
+export const RadioGroup = ({ options, value, setValue, readonly, ...marginProps }: RadioGroupProps) => {
     return (
         <RadixRadioGroup.Root
-            onValueChange={(checkedValue) => setValue(checkedValue)}
-            className={styles.root}
+            onValueChange={(checkedValue) => setValue?.(checkedValue)}
+            className={classNames(styles.root, { [styles.readonly]: readonly })}
             value={value}
             style={getMarginAndPaddingStyle(marginProps)}
         >
