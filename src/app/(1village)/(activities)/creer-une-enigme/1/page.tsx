@@ -55,9 +55,6 @@ export default function CreerUneEnigmeStep1() {
                 marginTop="xl"
                 marginBottom="md"
             />
-            <Title variant="h2" marginBottom="md">
-                Énigme choisie :{' '}
-            </Title>
             <Select
                 options={selectOptions}
                 value={activity.data?.defaultTheme || CUSTOM_THEME_VALUE}
@@ -130,7 +127,9 @@ export default function CreerUneEnigmeStep1() {
                         paddingY="sm"
                         dropdownContent={
                             <>
-                                <p>Autre type dans le thème : {defaultTheme}</p>
+                                <p>
+                                    Catégorie de votre <strong>{defaultTheme}</strong>
+                                </p>
                                 <Input
                                     placeholder=""
                                     isFullWidth
