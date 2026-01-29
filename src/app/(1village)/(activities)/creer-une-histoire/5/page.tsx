@@ -140,7 +140,13 @@ const StoryStep5 = () => {
 
     // useEffect here to update inspiredStoryId if equal to 0
     React.useEffect(() => {
-        if (data !== null && data.odd && data.object && data.place && (data.odd.inspiredStoryId === 0 || data.object.inspiredStoryId === 0 || data.place.inspiredStoryId === 0)) {
+        if (
+            data !== null &&
+            data.odd &&
+            data.object &&
+            data.place &&
+            (data.odd.inspiredStoryId === 0 || data.object.inspiredStoryId === 0 || data.place.inspiredStoryId === 0)
+        ) {
             setActivity({
                 data: {
                     ...data,
