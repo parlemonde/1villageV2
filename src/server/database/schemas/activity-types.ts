@@ -222,6 +222,7 @@ export type Activities =
     | PuzzleActivity
     | HintActivity
     | ReportActivity
+    | PelicoPresentation
     | StoryActivity
     | MascotActivity
     | ChallengeActivity
