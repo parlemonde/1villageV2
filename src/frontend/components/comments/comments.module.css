@@ -1,0 +1,28 @@
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 18px;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.separator:not(:empty)::before {
+    margin-right: 0.5em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: 0.5em;
+}
+
+.commentsFeed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px 0;
+}
