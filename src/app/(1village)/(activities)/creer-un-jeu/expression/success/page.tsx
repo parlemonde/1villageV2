@@ -4,7 +4,6 @@ import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
-import Link from 'next/link';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
@@ -34,10 +33,7 @@ export default function CreerUnJeuExpressionSuccess() {
                 <Title variant="h3">{message}</Title>
                 <PelicoSouriant style={{ width: '160px', height: 'auto' }} />
             </div>
-            <Button as="a" href="/" color="primary" label={tCommon("Retour à l'accueil")} marginBottom="lg" />
-            <Link href="/creer-un-jeu/expression/explorer" color="primary">
-                {tCommon('Ou découvrez les jeux des autres pélicopains !')}
-            </Link>
+            <Button as="a" href="/" color="primary" label={tCommon("Retour à l'accueil")} />
         </div>
     );
 }

@@ -10,6 +10,7 @@ import classNames from 'clsx';
 import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
 import { FreeContentCard } from './cards/FreeContentCard';
+import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
 import { ReportCard } from './cards/ReportCard';
 
@@ -20,7 +21,7 @@ const EmptyContentCard = () => {
 const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = {
     libre: FreeContentCard,
     indice: HintCard,
-    jeu: EmptyContentCard,
+    jeu: GameCard,
     enigme: EmptyContentCard,
     reportage: ReportCard,
 };

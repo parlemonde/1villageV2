@@ -1,7 +1,7 @@
 'use client';
 
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
-import { ACTIVITY_LAST_PAGE_URLS } from '@frontend/components/activities/activities-constants';
+import { getActivityLastPageUrl } from '@frontend/components/activities/activities-constants';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Title } from '@frontend/components/ui/Title';
 import { setToLocalStorage } from '@frontend/hooks/useLocalStorage/local-storage';
@@ -61,7 +61,9 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         classroom={classroom}
                         onEdit={() => {
                             setToLocalStorage('activity', activity);
-                            router.push(ACTIVITY_LAST_PAGE_URLS[activity.type]);
+                            const theme = activity.type === 'jeu' ? activity.data?.theme : undefined;
+                            const route = getActivityLastPageUrl(activity.type, theme);
+                            router.push(route);
                         }}
                         onDelete={() => {
                             setActivityIdToDelete(activity.id);
