@@ -18,6 +18,11 @@ function shuffle(array: { label: React.ReactNode; value: string }[]) {
     }
 }
 
+export interface RadioOption {
+    label: React.ReactNode;
+    value: string;
+}
+
 interface RadioGroupProps extends MarginProps {
     options: { label: React.ReactNode; value: string }[];
     value?: string;
