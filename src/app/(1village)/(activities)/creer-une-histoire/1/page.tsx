@@ -51,7 +51,26 @@ const StoryStep1 = () => {
         if (!created.current) {
             if (!searchParams.has('edit') || (activity && !(activity.type === 'histoire'))) {
                 created.current = true;
-                onCreateActivity('histoire', isPelico);
+                // Initialize with empty story data structure
+                const createEmptyItem = () => ({
+                    imageId: null,
+                    imageUrl: null,
+                    description: null,
+                    inspiredStoryId: null,
+                });
+
+                const initialStoryData: ActivityData<'histoire'> = {
+                    odd: createEmptyItem(),
+                    object: createEmptyItem(),
+                    place: createEmptyItem(),
+                    tale: {
+                        imageStory: null,
+                        tale: null,
+                        imageId: null,
+                    },
+                    isOriginal: true,
+                };
+                onCreateActivity('histoire', isPelico, initialStoryData);
             }
         }
     }, [activity, isPelico, onCreateActivity, searchParams]);

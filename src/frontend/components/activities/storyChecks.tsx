@@ -1,20 +1,33 @@
 import type { StoryElement } from '@server/database/schemas/activity-types';
 
+import { isEmpty } from '../../../utils/helper';
+
 type TaleElement = {
     imageId: number | null;
     imageStory: string | null;
     tale: string | null;
 };
 
-export const stepValid = (data: Record<string, unknown> | null | undefined): boolean => {
+const isStoryElement = (data: StoryElement | TaleElement): data is StoryElement => {
+    return 'imageUrl' in data && 'description' in data;
+};
+
+const isTaleElement = (data: StoryElement | TaleElement): data is TaleElement => {
+    return 'imageStory' in data && 'tale' in data;
+};
+
+export const stepValid = (data: StoryElement | TaleElement): boolean => {
     if (!data) return false;
-    //verifier si data.imageUrl === '' et data.description === ''
-    //verifier si data.imageStory === '' et data.tale === ''
-    if (data.imageUrl === '') return false;
-    if (data.description === '') return false;
-    if (data.imageStory === '') return false;
-    if (data.tale === '') return false;
-    return true;
+
+    if (isStoryElement(data)) {
+        return !isEmpty(data.imageUrl) && !isEmpty(data.description);
+    }
+
+    if (isTaleElement(data)) {
+        return !isEmpty(data.imageStory) && !isEmpty(data.tale);
+    }
+
+    return false;
 };
 
 export const getErrorSteps = (data: StoryElement | TaleElement, step: number) => {

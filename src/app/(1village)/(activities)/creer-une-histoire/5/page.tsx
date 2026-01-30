@@ -174,10 +174,10 @@ const StoryStep5 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : undefined },
-                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : undefined },
-                    { label: 'Lieu', href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : undefined },
-                    { label: 'Histoire', href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : undefined },
+                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: 'Lieu', href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
+                    { label: 'Histoire', href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={4}
