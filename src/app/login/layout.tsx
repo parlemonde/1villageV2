@@ -1,3 +1,4 @@
+import { Link } from '@frontend/components/ui/Link';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { redirect } from 'next/navigation';
@@ -18,10 +19,10 @@ export default async function RootLayout({
         <main className={styles.loginLayout}>
             <div className={styles.loginContainer}>
                 <div className={styles.loginHeader}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Link href="/" className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
-                    </div>
+                    </Link>
                     <BackButton />
                 </div>
                 <div className={styles.loginContent}>{children}</div>
