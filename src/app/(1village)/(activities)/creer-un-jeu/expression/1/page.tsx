@@ -94,7 +94,7 @@ export default function CreerUnJeuExpressionStep1() {
                         marginTop="lg"
                         options={languageKnowledge.map((l) => ({ label: l.label, value: l.label }))}
                         value={activity?.data?.languageKnowledge}
-                        setValue={(languageKnowledge) => setActivity({ ...activity, data: { ...activity.data, languageKnowledge } })}
+                        onChange={(languageKnowledge) => setActivity({ ...activity, data: { ...activity.data, languageKnowledge } })}
                     />
                     <div className={styles.buttonContainer}>
                         <Button

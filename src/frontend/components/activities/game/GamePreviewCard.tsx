@@ -28,7 +28,7 @@ export const GamePreviewCard = ({ label, imageUrl, options, href }: GamePreviewC
                 )}
                 <p>{label}</p>
             </div>
-            <RadioGroup readonly options={options} value={options[0].value} />
+            <RadioGroup readonly options={options} value={'true'} />
             <IconButton as="a" href={href} icon={Pencil1Icon} variant="outlined" color="primary" />
         </div>
     );

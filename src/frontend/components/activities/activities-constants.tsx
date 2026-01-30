@@ -9,6 +9,7 @@ import MascotIcon from '@frontend/svg/activities/mascot.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { UserRole } from '@server/database/schemas/users';
+import type { ActivityType, GameType } from '@server/database/schemas/activity-types';
 import { useExtracted } from 'next-intl';
 import React from 'react';
 
@@ -82,9 +83,19 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     defi: '/lancer-un-defi',
 };
 
-export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
+type ActivityRoute = string | ((theme: GameType) => string);
+export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     libre: '/contenu-libre/3',
-    jeu: '/creer-un-jeu/3',
+    jeu: (theme: GameType) => {
+        switch (theme) {
+            case 'expression':
+                return '/creer-un-jeu/expression/5';
+            case 'mimique':
+                return '/creer-un-jeu/mimique/5';
+            case 'monnaie':
+                return '/creer-un-jeu/monnaie/5';
+        }
+    },
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
     mascotte: '/creer-sa-mascotte/5',
@@ -101,4 +112,18 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     reportage: null,
     mascotte: ['teacher'],
     defi: null,
+};
+
+export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {
+    const route = ACTIVITY_LAST_PAGE_URLS[type];
+
+    if (typeof route === 'string') {
+        return route;
+    }
+
+    if (theme) {
+        return route(theme);
+    }
+
+    return '/';
 };

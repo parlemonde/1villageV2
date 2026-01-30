@@ -57,7 +57,7 @@ export default function CreerUnJeuExpressionStep5() {
         return activity.data?.idioms?.map((idiom, index) => {
             const options = [{ label: idiom.meaning ?? '', value: 'true' }];
             idiom.falseMeanings?.forEach((falseMeaning, index) => {
-                options.push({ label: falseMeaning, value: index.toString() }); // value serves as unique identifier
+                options.push({ label: falseMeaning, value: index.toString() }); // value must be unique
             });
             return (
                 <GamePreviewCard
