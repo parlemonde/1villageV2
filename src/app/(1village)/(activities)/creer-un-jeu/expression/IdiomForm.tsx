@@ -22,7 +22,7 @@ interface IdiomFormProps {
 }
 
 export const IdiomForm = ({ activity, setActivity, getOrCreateDraft, number, stepId }: IdiomFormProps) => {
-    const t = useExtracted('IdiomForm');
+    const t = useExtracted('app.(1village).(activities).creer-un-jeu.expression');
 
     const index = number - 1;
 
