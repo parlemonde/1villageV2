@@ -2,10 +2,10 @@ import type { ActivityContentCardProps } from '@frontend/components/activities/A
 import { Button } from '@frontend/components/ui/Button';
 import type { ChallengeType } from '@server/database/schemas/activity-types';
 
-import { CulinaryChallengeCard } from './ChallengeCards/CulinaryChallengeCard';
-import { EcologicalChallengeCard } from './ChallengeCards/EcologicalChallengeCard';
-import { FreeThemeChallengeCard } from './ChallengeCards/FreeThemeChallengeCard';
-import { LinguisticChallengeCard } from './ChallengeCards/LinguisticChallengeCard';
+import { CulinaryChallengeCard } from './challenge/CulinaryChallengeCard';
+import { EcologicalChallengeCard } from './challenge/EcologicalChallengeCard';
+import { FreeThemeChallengeCard } from './challenge/FreeThemeChallengeCard';
+import { LinguisticChallengeCard } from './challenge/LinguisticChallengeCard';
 
 export const ChallengeCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     if (activity.type !== 'defi') {
