@@ -29,6 +29,7 @@ export default function CreerUneEnigmeStep1() {
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
     const tCommon = useExtracted('common');
+    const t = useExtracted('app.(1village).(activities).creer-une-enigme.1');
 
     const defaultTheme: ThemeName = (activity?.type === 'enigme' ? activity.data?.defaultTheme : undefined) || CUSTOM_THEME_VALUE;
     const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
@@ -131,6 +132,20 @@ export default function CreerUneEnigmeStep1() {
                             <>
                                 <p>
                                     Catégorie de votre <strong>{defaultTheme}</strong>
+                                </p>
+                                <p
+                                    style={{
+                                        display: 'inline-block',
+                                        padding: '4px',
+                                        marginTop: '12px',
+                                        border: '1px dashed',
+                                        borderRadius: '4px',
+                                        fontSize: '12px',
+                                    }}
+                                >
+                                    {t(
+                                        "Ne donnez pas le nom de votre catégorie. La catégorie de l'énigme est un indice supplémentaire pour les autres classes.",
+                                    )}
                                 </p>
                                 <Input
                                     placeholder=""
