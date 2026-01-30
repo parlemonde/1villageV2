@@ -5,12 +5,13 @@ import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
+import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { deleteComment } from '@server-actions/comments/delete-comment';
 import { postComment } from '@server-actions/comments/post-comment';
 import { useExtracted } from 'next-intl';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 import { CommentCard } from './CommentCard';
@@ -24,6 +25,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
     const t = useExtracted('Comments');
     const tCommon = useExtracted('common');
 
+    const { user, classroom } = useContext(UserContext);
+
     const [content, setContent] = useState<unknown>('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [commentIdToDelete, setCommentIdToDelete] = useState<number | undefined>();
@@ -31,18 +34,46 @@ export const Comments = ({ activityId }: CommentsProps) => {
     const { data: comments, mutate } = useSWR<UserComment[]>(`/api/comments${serializeToQueryUrl({ activityId: activityId })}`, jsonFetcher);
 
     const post = async () => {
-        const { error } = await postComment({
-            activityId,
-            content,
-        });
-        if (!error) {
-            mutate();
-        } else {
-            sendToast({
-                type: 'error',
-                message: error.message,
-            });
-        }
+        const tempId = -1;
+        const optimisticComment: UserComment = {
+            comment: {
+                id: tempId,
+                content: content,
+                activityId: activityId,
+                userId: user.id,
+                createDate: new Date().toISOString(),
+                updateDate: new Date().toISOString(),
+            },
+            classroom: classroom,
+            user: user,
+        };
+
+        await mutate(
+            async (current = []) => {
+                const { error, data } = await postComment({
+                    activityId,
+                    content,
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                const newComment: UserComment = {
+                    comment: data!,
+                    classroom: classroom,
+                    user: user,
+                };
+
+                return [newComment, ...current.filter((c) => c.comment.id !== tempId)];
+            },
+            {
+                optimisticData: (current = []) => [optimisticComment, ...current],
+                rollbackOnError: true,
+                revalidate: false,
+                populateCache: true,
+            },
+        );
     };
 
     const onDeleteComment = async () => {
