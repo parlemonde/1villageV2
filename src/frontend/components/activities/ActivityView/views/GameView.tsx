@@ -2,12 +2,13 @@ import type { ActivityContentViewProps } from '@frontend/components/activities/A
 import type { GameType } from '@server/database/schemas/activity-types';
 import type React from 'react';
 
+import { CurrencyGameView } from './game/CurrencyGameView';
 import { IdiomGameView } from './game/IdiomGameView';
 
 const GAME_VIEWS: Record<GameType, React.FC<ActivityContentViewProps>> = {
     expression: IdiomGameView,
     mimique: () => null,
-    monnaie: () => null,
+    monnaie: CurrencyGameView,
 };
 
 export const GameView = ({ activity }: ActivityContentViewProps) => {

@@ -8,14 +8,12 @@ import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 export default function CreerUnJeuExpressionSuccess() {
-    const t = useExtracted('app.(1village).(activities).creer-un-jeu.expression.success');
+    const t = useExtracted('app.(1village).(activities).creer-un-jeu.success');
     const tCommon = useExtracted('common');
 
     const { activity } = useContext(ActivityContext);
 
-    const message = activity?.publishDate
-        ? t('Votre jeu des expressions a été modifié avec succès !')
-        : t('Votre jeu des expressions a été publié avec succès !');
+    const message = activity?.publishDate ? t('Votre jeu a été modifié avec succès !') : t('Votre jeu a été publié avec succès !');
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '48px', gap: '48px' }}>
