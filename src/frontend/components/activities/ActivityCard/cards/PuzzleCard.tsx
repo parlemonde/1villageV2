@@ -1,14 +1,18 @@
+import { useGetStepThemeName, CUSTOM_THEME_VALUE } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
 
 export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+    const defaultTheme = activity?.type === 'enigme' ? (activity.data?.defaultTheme ?? CUSTOM_THEME_VALUE) : CUSTOM_THEME_VALUE;
+    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
+    const themeLabel = useGetStepThemeName(defaultTheme, customTheme);
+
     if (activity.type !== 'enigme') {
         return null;
     }
     const firstImageUrl = (activity.data?.content || []).find((content) => content.type === 'image')?.imageUrl;
     const firstHtmlText = (activity.data?.content || []).find((content) => content.type === 'html')?.html;
-    const puzzle = activity.data?.defaultTheme || activity.data?.customTheme;
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'stretch' }}>
@@ -42,7 +46,7 @@ export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
             )}
             <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingRight: 4 }}>
-                    <span style={{ fontWeight: 500 }}>{puzzle}</span>
+                    <span style={{ fontWeight: 500 }}>{themeLabel}</span>
                     <p
                         style={{
                             fontSize: '15px',
