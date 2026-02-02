@@ -27,6 +27,13 @@ export type IdiomGame = {
 export type CurrencyGame = {
     theme: 'monnaie';
     currency?: string;
+    objects?: {
+        stepId: number;
+        imageUrl?: string;
+        name?: string;
+        price?: string;
+        falsePrices?: string[];
+    }[];
 };
 
 export type GestureGame = {

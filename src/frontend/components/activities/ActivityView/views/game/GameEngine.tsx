@@ -10,17 +10,19 @@ import { useExtracted } from 'next-intl';
 import { useState } from 'react';
 
 export interface Round {
-    question: string;
+    title: string;
     imageUrl: string;
     options: RadioOption[];
 }
 
 interface GameEngineProps {
     rounds: Round[];
+    question: string;
+    successMessage: string;
+    errorMessage: string;
 }
 
-export const GameEngine = ({ rounds }: GameEngineProps) => {
-    const t = useExtracted('GameEngine');
+export const GameEngine = ({ rounds, question, successMessage, errorMessage }: GameEngineProps) => {
     const tCommon = useExtracted('common');
 
     const [index, setIndex] = useState(0);
@@ -56,14 +58,14 @@ export const GameEngine = ({ rounds }: GameEngineProps) => {
             >
                 <div style={{ margin: 'auto', textAlign: 'center' }}>
                     <Title variant="h2" marginBottom="sm">
-                        {rounds[index].question}
+                        {rounds[index].title}
                     </Title>
                     {rounds?.[index]?.imageUrl && (
-                        <Image src={rounds[index].imageUrl} alt={rounds[index].question} width={500} height={300} style={{ objectFit: 'cover' }} />
+                        <Image src={rounds[index].imageUrl} alt={rounds[index].title} width={500} height={300} style={{ objectFit: 'cover' }} />
                     )}
                 </div>
                 <Title variant="h3" color="inherit" marginTop="md">
-                    {t('Que signifie cette expression ?')}
+                    {question}
                 </Title>
                 <div style={{ display: 'flex', flexDirection: 'row', margin: '32px 0' }}>
                     <RadioGroup
@@ -82,8 +84,8 @@ export const GameEngine = ({ rounds }: GameEngineProps) => {
                         visibility: showAnswers || showError ? 'visible' : 'hidden',
                     }}
                 >
-                    {showAnswers && t("C'est exact ! Vous avez trouvé la signification de cette expression.")}
-                    {showError && t("Dommage ! Ce n'est pas la bonne réponse. Essayez encore !")}
+                    {showAnswers && successMessage}
+                    {showError && errorMessage}
                 </p>
             </div>
             <div style={{ marginTop: '32px', textAlign: 'right' }}>
