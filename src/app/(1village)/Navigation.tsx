@@ -15,7 +15,6 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
-import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
@@ -46,7 +45,6 @@ const getActivityMenuItem = (
     type: ActivityType,
     activityLabel: string,
     firstPath: string,
-    isActivityTypeInPhase: boolean,
     hasVillageReachedPhase: boolean,
     onClick?: () => void,
 ): MenuItem | null => {
@@ -62,7 +60,7 @@ const getActivityMenuItem = (
         label: activityLabel,
         href,
         isActive: firstPath === href.split('/')[1],
-        isDisabled: !isActivityTypeInPhase || !hasVillageReachedPhase,
+        isDisabled: !hasVillageReachedPhase,
         onClick:
             firstPath === href.split('/')[1]
                 ? () => {
@@ -95,12 +93,13 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
-        const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
-        const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
-        const activityLabel = getActivityLabel(type as ActivityType);
-        return getActivityMenuItem(type, activityLabel, firstPath, isActivityTypeInPhase, hasVillageReachedPhase);
-    }).filter((item) => item !== null);
+    const activityMenuItems = activityTypes
+        .map((type) => {
+            const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+            const activityLabel = getActivityLabel(type as ActivityType);
+            return getActivityMenuItem(type, activityLabel, firstPath, hasVillageReachedPhase);
+        })
+        .filter((item) => item !== null);
 
     return (
         <div className={styles.navigationWrapper}>
@@ -153,12 +152,13 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
         keepPreviousData: true,
     });
 
-    const activityMenuItems = ACTIVITY_TYPES_ENUM.map((type) => {
-        const isActivityTypeInPhase = activityTypes.includes(type as ActivityType);
-        const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
-        const activityLabel = getActivityLabel(type as ActivityType);
-        return getActivityMenuItem(type, activityLabel, firstPath, isActivityTypeInPhase, hasVillageReachedPhase, onClose);
-    }).filter((item) => item !== null);
+    const activityMenuItems = activityTypes
+        .map((type) => {
+            const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
+            const activityLabel = getActivityLabel(type as ActivityType);
+            return getActivityMenuItem(type, activityLabel, firstPath, hasVillageReachedPhase, onClose);
+        })
+        .filter((item) => item !== null);
 
     if (activityMenuItems.length > 0) {
         activityMenuItems[0].hasSeparatorTop = true;
