@@ -99,7 +99,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                 </div>
             </div>
             {activity.type === 'enigme' && <ActivityTimer publishDate={activity.publishDate ?? undefined} />}
-            {Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
+            {Icon && <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
         </div>
     );
 };
