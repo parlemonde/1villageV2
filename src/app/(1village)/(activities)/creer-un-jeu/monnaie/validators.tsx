@@ -17,6 +17,10 @@ export const CURRENCY_GAME_STEPS_VALIDATORS = {
         return this.isObjectStepValid(activity, 3);
     },
 
+    areAllStepsValid(activity: Partial<GameActivity<CurrencyGame>>) {
+        return this.isStep1Valid(activity) && this.isStep2Valid(activity) && this.isStep3Valid(activity) && this.isStep4Valid(activity);
+    },
+
     isObjectStepValid(activity: Partial<GameActivity<CurrencyGame>>, number: number) {
         const index = number - 1;
         return (
