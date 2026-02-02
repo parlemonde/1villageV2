@@ -89,7 +89,7 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                 input={
                     <Input
                         isFullWidth
-                        placeholder={`${t('Prix inventé')} 1`}
+                        placeholder={t('Prix inventé 1')}
                         type="number"
                         min="0"
                         name="falsePrice1"
@@ -106,7 +106,7 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                 marginBottom="md"
                 input={
                     <Input
-                        placeholder={`${t('Prix inventé')} 2`}
+                        placeholder={t('Prix inventé 2')}
                         isFullWidth
                         type="number"
                         min="0"

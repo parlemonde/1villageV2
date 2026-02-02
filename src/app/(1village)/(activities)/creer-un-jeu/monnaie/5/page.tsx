@@ -74,22 +74,22 @@ export default function CreerUnJeuMonnaieStep5() {
             <Steps
                 steps={[
                     {
-                        label: activity.data?.currency ? CURRENCIES[activity.data.currency] : t('Langue'),
+                        label: activity.data?.currency ? CURRENCIES[activity.data.currency] : t('Monnaie'),
                         href: '/creer-un-jeu/monnaie/1',
                         status: CURRENCY_GAME_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: t('1ère expression'),
+                        label: t('Objet 1'),
                         href: '/creer-un-jeu/monnaie/2',
                         status: CURRENCY_GAME_STEPS_VALIDATORS.isStep2Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: t('2ème expression'),
+                        label: t('Objet 2'),
                         href: '/creer-un-jeu/monnaie/3',
                         status: CURRENCY_GAME_STEPS_VALIDATORS.isStep3Valid(activity) ? 'success' : 'warning',
                     },
                     {
-                        label: t('3ème expression'),
+                        label: t('Objet 3'),
                         href: '/creer-un-jeu/monnaie/4',
                         status: CURRENCY_GAME_STEPS_VALIDATORS.isStep4Valid(activity) ? 'success' : 'warning',
                     },
@@ -106,7 +106,13 @@ export default function CreerUnJeuMonnaieStep5() {
             <div className={styles.gamePreview}>{renderGameCards()}</div>
             <div className={styles.buttonsContainer}>
                 <Button as="a" href="/creer-un-jeu/monnaie/4" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
-                <Button onClick={onSubmit} color="primary" label={tCommon('Publier')} variant="contained" />
+                <Button
+                    disabled={!CURRENCY_GAME_STEPS_VALIDATORS.areAllStepsValid(activity)}
+                    onClick={onSubmit}
+                    color="primary"
+                    label={tCommon('Publier')}
+                    variant="contained"
+                />
             </div>
             <Loader isLoading={isSubmitting} />
         </PageContainer>
