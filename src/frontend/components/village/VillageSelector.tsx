@@ -13,6 +13,8 @@ import { setVillage } from '@server-actions/villages/set-village';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
+import styles from './VillageSelector.module.css';
+
 export const VillageSelector = () => {
     const { village } = useContext(VillageContext);
     const [isModalOpen, setIsModalOpen] = useState(village === undefined);
@@ -22,7 +24,25 @@ export const VillageSelector = () => {
 
     return (
         <>
-            <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
+            <div
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: '1px solid var(--secondary-color)',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                }}
+            >
+                <span className={styles.villageName}>{village?.name ?? 'Aucun village'}</span>
+                <Button
+                    size="sm"
+                    isUpperCase={false}
+                    color="secondary"
+                    onClick={() => setIsModalOpen(true)}
+                    label="Changer de village"
+                    className={styles.changeButton}
+                />
+            </div>
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => {

@@ -1,0 +1,9 @@
+.villageName {
+    padding: 4px 12px;
+    font-size: 14px;
+}
+
+.changeButton {
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+}
