@@ -57,9 +57,9 @@ export default function CreerUneEnigmeStep4() {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
-                    { label: "Créer l'énigme", href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
-                    { label: 'Réponse', href: '/creer-une-enigme/3', status: isThirdStepDone ? 'success' : 'warning' },
+                    { label: stepTheme || tCommon('Énigme'), href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
+                    { label: tCommon("Créer l'énigme"), href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
+                    { label: tCommon('Réponse'), href: '/creer-une-enigme/3', status: isThirdStepDone ? 'success' : 'warning' },
                     { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={4}
@@ -67,9 +67,9 @@ export default function CreerUneEnigmeStep4() {
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Pré-visualisez votre énigme et publiez-la
+                {t('Pré-visualisez votre énigme et publiez-la')}
             </Title>
-            <p>Relisez votre publication une dernière fois avant de la publier !</p>
+            <p>{t('Relisez votre publication une dernière fois avant de la publier !')}</p>
             <ActivityStepPreview
                 stepName="Énigme"
                 href="/creer-une-enigme/1"

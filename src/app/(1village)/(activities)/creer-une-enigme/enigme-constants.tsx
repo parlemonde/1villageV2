@@ -3,7 +3,7 @@ import LocalisationIcon from '@frontend/svg/enigmes/localisation-mystere.svg';
 import ObjetIcon from '@frontend/svg/enigmes/objet-mystere.svg';
 import PersonaliteIcon from '@frontend/svg/enigmes/personalite-mystere.svg';
 import { useExtracted } from 'next-intl';
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 
 export const CUSTOM_THEME_VALUE = 'Autre thème';
 
@@ -11,28 +11,32 @@ export type ThemeName = 'Objet mystère' | 'Évènement mystère' | 'Personnalit
 
 export type ThemeItem = {
     name: ThemeName;
-    tname: string;
+    label: string;
     icon: React.ReactNode;
 };
 
 export type SubThemeItem = {
     name: string;
-    tname: string;
+    label: string;
 };
 
-export const useEnigmeThemes = (): ThemeItem[] => {
+export const useEnigmeThemes = () => {
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
-    return useMemo(
+    const DEFAULT_THEMES: ThemeItem[] = useMemo(
         () => [
-            { name: 'Objet mystère', tname: t('Objet mystère'), icon: <ObjetIcon /> },
-            { name: 'Évènement mystère', tname: t('Évènement mystère'), icon: <EvenementIcon /> },
-            { name: 'Personnalité mystère', tname: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
-            { name: 'Lieu mystère', tname: t('Lieu mystère'), icon: <LocalisationIcon /> },
-            { name: 'Autre thème', tname: t('Autre thème'), icon: <></> },
+            { name: 'Objet mystère', label: t('Objet mystère'), icon: <ObjetIcon /> },
+            { name: 'Évènement mystère', label: t('Évènement mystère'), icon: <EvenementIcon /> },
+            { name: 'Personnalité mystère', label: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
+            { name: 'Lieu mystère', label: t('Lieu mystère'), icon: <LocalisationIcon /> },
+            { name: 'Autre thème', label: t('Autre thème'), icon: <></> },
         ],
         [t],
     );
+
+    const getThemeLabel = useCallback((name: ThemeName) => DEFAULT_THEMES.find((theme) => theme.name === name)?.label || name, [DEFAULT_THEMES]);
+
+    return { DEFAULT_THEMES, getThemeLabel };
 };
 
 export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
@@ -41,28 +45,28 @@ export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
     return useMemo(
         () => ({
             'Objet mystère': [
-                { name: 'Un jouet', tname: t('Un jouet') },
-                { name: 'Un ustensile', tname: t('Un ustensile') },
-                { name: 'Un objet de culte', tname: t('Un objet de culte') },
-                { name: 'Un instrument de musique', tname: t('Un instrument de musique') },
-                { name: 'Un costume', tname: t('Un costume') },
+                { name: 'Un jouet', label: t('Un jouet') },
+                { name: 'Un ustensile', label: t('Un ustensile') },
+                { name: 'Un objet de culte', label: t('Un objet de culte') },
+                { name: 'Un instrument de musique', label: t('Un instrument de musique') },
+                { name: 'Un costume', label: t('Un costume') },
             ],
             'Évènement mystère': [
-                { name: 'Une fête de l’école', tname: t('Une fête de l’école') },
-                { name: 'Un festival', tname: t('Un festival') },
-                { name: 'Un fait historique', tname: t('Un fait historique') },
-                { name: 'Une fête nationale', tname: t('Une fête nationale') },
+                { name: 'Une fête de l’école', label: t('Une fête de l’école') },
+                { name: 'Un festival', label: t('Un festival') },
+                { name: 'Un fait historique', label: t('Un fait historique') },
+                { name: 'Une fête nationale', label: t('Une fête nationale') },
             ],
             'Personnalité mystère': [
-                { name: 'Un personnage historique', tname: t('Un personnage historique') },
-                { name: 'Un personnage de fiction', tname: t('Un personnage de fiction') },
-                { name: 'Un personnage contemporain', tname: t('Un personnage contemporain') },
+                { name: 'Un personnage historique', label: t('Un personnage historique') },
+                { name: 'Un personnage de fiction', label: t('Un personnage de fiction') },
+                { name: 'Un personnage contemporain', label: t('Un personnage contemporain') },
             ],
             'Lieu mystère': [
-                { name: 'Un monument commémoratif', tname: t('Un monument commémoratif') },
-                { name: ' Un édifice remarquable', tname: t(' Un édifice remarquable') },
-                { name: ' Une salle de spectacle', tname: t(' Une salle de spectacle') },
-                { name: " Un ouvrage d'art", tname: t(" Un ouvrage d'art") },
+                { name: 'Un monument commémoratif', label: t('Un monument commémoratif') },
+                { name: ' Un édifice remarquable', label: t(' Un édifice remarquable') },
+                { name: ' Une salle de spectacle', label: t(' Une salle de spectacle') },
+                { name: " Un ouvrage d'art", label: t(" Un ouvrage d'art") },
             ],
             'Autre thème': [],
         }),
@@ -71,11 +75,11 @@ export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
 };
 
 export const useGetStepThemeName = function (defaultTheme: ThemeName, customTheme?: string): string {
-    const DEFAULT_THEMES = useEnigmeThemes();
+    const { DEFAULT_THEMES } = useEnigmeThemes();
     const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
     return useMemo(() => {
         return customTheme
-            ? DEFAULT_SUBTHEMES[defaultTheme]?.find((subtheme) => subtheme.name === customTheme)?.tname || customTheme
-            : DEFAULT_THEMES.find((theme) => theme.name === defaultTheme)?.tname || defaultTheme;
+            ? DEFAULT_SUBTHEMES[defaultTheme]?.find((subtheme) => subtheme.name === customTheme)?.label || customTheme
+            : DEFAULT_THEMES.find((theme) => theme.name === defaultTheme)?.label || defaultTheme;
     }, [defaultTheme, customTheme, DEFAULT_THEMES, DEFAULT_SUBTHEMES]);
 };

@@ -17,6 +17,7 @@ export default function CreerUneEnigmeStep3() {
     const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
     const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
     const tCommon = useExtracted('common');
+    const t = useExtracted('app.(1village).(activities).creer-une-enigme.3');
 
     if (!activity || activity.type !== 'enigme') {
         return null;
@@ -29,9 +30,9 @@ export default function CreerUneEnigmeStep3() {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
-                    { label: "Créer l'énigme", href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
-                    { label: 'Réponse', href: '/creer-une-enigme/3' },
+                    { label: stepTheme || tCommon('Énigme'), href: '/creer-une-enigme/1', status: isFirstStepDone ? 'success' : 'warning' },
+                    { label: tCommon("Créer l'énigme"), href: '/creer-une-enigme/2', status: isSecondStepDone ? 'success' : 'warning' },
+                    { label: tCommon('Réponse'), href: '/creer-une-enigme/3' },
                     { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={3}
@@ -39,7 +40,7 @@ export default function CreerUneEnigmeStep3() {
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Entrez la réponse de votre énigme :
+                {t('Entrez la réponse de votre énigme :')}
             </Title>
             <div style={{ marginTop: '16px' }}>
                 <ContentEditor

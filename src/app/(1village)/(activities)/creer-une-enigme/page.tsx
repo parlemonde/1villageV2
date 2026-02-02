@@ -14,7 +14,7 @@ export default function CreerUneEnigmePage() {
     const { user } = React.useContext(UserContext);
     const { onCreateActivity } = React.useContext(ActivityContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
-    const DEFAULT_THEMES = useEnigmeThemes();
+    const { DEFAULT_THEMES } = useEnigmeThemes();
 
     return (
         <PageContainer title="Sur quelle thématique sera votre énigme ?">
@@ -31,7 +31,7 @@ export default function CreerUneEnigmePage() {
                         }}
                     >
                         {theme.icon}
-                        {theme.tname}
+                        {theme.label}
                     </button>
                 ))}
             </div>
