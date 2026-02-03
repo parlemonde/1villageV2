@@ -4,6 +4,7 @@ import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Modal } from '@frontend/components/ui/Modal';
 import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
 import { debounce } from '@frontend/lib/debounce';
+import { getGameFormRoutes } from '@lib/get-game-form-routes';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
