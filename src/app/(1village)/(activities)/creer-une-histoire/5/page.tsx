@@ -105,7 +105,8 @@ const StoryStep5 = () => {
     const [isLoading, setIsLoading] = useState(false);
     const data = (activity?.data as ActivityData<'histoire'>) || null;
     // Check if this is an edit (activity has been published before)
-    const isEdit = activity !== null && activity?.publishDate !== null;
+    const isEdit = activity !== null && activity?.publishDate !== null && activity?.publishDate !== undefined;
+
     // Check if user is an observer (parent role has limited permissions)
     const isObservator = user?.role === 'parent';
 
