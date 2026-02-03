@@ -71,7 +71,7 @@ export default function LancerUnDefiLinguistiqueStep1() {
             <Title variant="h2" marginBottom="md">
                 {t('Choisissez dans quelle langue vous souhaitez lancer le défi')}
             </Title>
-            <p>Vous pourrez ensuite choisir le thème de votre défi.</p>
+            <p>{t('Vous pourrez ensuite choisir le thème de votre défi.')}</p>
             <Field
                 label={t('Langue')}
                 marginTop="xl"
@@ -81,7 +81,7 @@ export default function LancerUnDefiLinguistiqueStep1() {
                         placeholder={t('Choisir une langue')}
                         isFullWidth
                         options={languagesOptions}
-                        value={activity?.data?.language}
+                        value={activity?.data?.language ?? ''}
                         onChange={(language) => setActivity({ ...activity, data: { ...activity.data, language } })}
                     />
                 }
