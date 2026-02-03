@@ -16,6 +16,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
+import { getClassroomFromMap } from '@server/helpers/get-classroom';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
 
@@ -104,7 +105,7 @@ export default function CreerUnIndiceStep1() {
                             key={activity.id}
                             activity={activity}
                             user={usersMap[activity.userId]}
-                            classroom={activity.classroomId ? classroomsMap[activity.classroomId] : undefined}
+                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
                         />
                     ))}
                     {activities.length === 0 && (

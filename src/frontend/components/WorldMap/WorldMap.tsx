@@ -1,7 +1,10 @@
 'use client';
 
 import { VillageContext } from '@frontend/contexts/villageContext';
-import type { Map } from 'maplibre-gl';
+import type { Activity } from '@server/database/schemas/activities';
+import type { Classroom } from '@server/database/schemas/classrooms';
+import { getClassroomFromProp } from '@server/helpers/get-classroom';
+import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { getClassroomMarker } from './classroom-marker';
@@ -9,9 +12,24 @@ import { useFullScreen } from './use-full-screen';
 import { initWorldMap } from './world';
 import styles from './world-map.module.css';
 
-const WorldMap = () => {
+interface WorldMapProps {
+    activity?: Activity | null;
+}
+
+function fitToBounds(map: maplibregl.Map, activity: Activity | null, bounds: maplibregl.LngLatBounds) {
+    // Auto zoom & pan to fit all markers
+    if (activity !== null && !bounds.isEmpty()) {
+        // Zoom at city level, not street
+        map.setMaxZoom(10);
+        map.fitBounds(bounds, { padding: 60, duration: 1000 });
+    }
+}
+
+const WorldMap = ({ activity = null }: WorldMapProps) => {
+    //A ref to store the MapLibre instance (persists across renders)
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
+
     const { containerRef, fullScreenButton } = useFullScreen(() => {
         map?.stop();
     });
@@ -22,8 +40,10 @@ const WorldMap = () => {
         if (!canvas) {
             return () => {};
         }
+
         const { map, dispose } = initWorldMap(canvas);
         setMap(map);
+
         let animationFrame: number | null = null;
         const render = () => {
             let newLng = map.getCenter().lng - 90;
@@ -47,6 +67,8 @@ const WorldMap = () => {
             if (animationFrame !== null) {
                 cancelAnimationFrame(animationFrame);
             }
+            //Cleanup
+            setMap(null);
         };
     }, []);
 
@@ -55,10 +77,21 @@ const WorldMap = () => {
         if (!map || !canvas) {
             return () => {};
         }
+
+        const bounds = new LngLatBounds();
+
         const markers = Object.values(classroomsMap)
-            .filter((classroom) => classroom !== undefined)
-            .map((classroom) => getClassroomMarker({ classroom, canvas }));
-        markers.forEach((marker) => marker.marker.addTo(map));
+            .filter((classroom) => {
+                if (classroom === undefined) return false;
+
+                const cls: Classroom | undefined = getClassroomFromProp(classroom);
+                return activity === null || cls?.teacherId === activity.userId;
+            })
+            .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
+        markers.forEach((marker) => {
+            marker.marker.addTo(map);
+            bounds.extend(marker.marker.getLngLat());
+        });
         markers.forEach((marker) =>
             marker.setClickHandler(() => {
                 map.flyTo({
@@ -67,11 +100,23 @@ const WorldMap = () => {
                 });
             }),
         );
+
+        map.once('load', () => {
+            fitToBounds(map, activity, bounds);
+        });
+
+        fitToBounds(map, activity, bounds);
+
+        map.once('idle', () => {
+            //Restore max zoom after fitBounds
+            map.setMaxZoom(18);
+        });
+
         return () => {
             markers.forEach((marker) => marker.dispose());
             markers.forEach((marker) => marker.marker.remove());
         };
-    }, [map, classroomsMap]);
+    }, [classroomsMap, activity, map]);
 
     return (
         <div ref={containerRef} style={{ position: 'relative', height: '100%', width: '100%' }}>
@@ -82,8 +127,8 @@ const WorldMap = () => {
                         <button
                             className={styles.button}
                             onClick={() => {
-                                map.stop();
-                                map.zoomIn();
+                                map?.stop();
+                                map?.zoomIn();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -94,8 +139,8 @@ const WorldMap = () => {
                         <button
                             className={`${styles.button} ${styles.bottom}`}
                             onClick={() => {
-                                map.stop();
-                                map.zoomOut();
+                                map?.stop();
+                                map?.zoomOut();
                             }}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
