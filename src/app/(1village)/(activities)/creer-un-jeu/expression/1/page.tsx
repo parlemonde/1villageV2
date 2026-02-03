@@ -78,7 +78,7 @@ export default function CreerUnJeuExpressionStep1() {
                         placeholder={t('Choisir une langue')}
                         isFullWidth
                         options={languagesOptions}
-                        value={activity?.data?.language}
+                        value={activity?.data?.language ?? ''}
                         onChange={(language) => setActivity({ ...activity, data: { ...activity.data, language } })}
                     />
                 }
