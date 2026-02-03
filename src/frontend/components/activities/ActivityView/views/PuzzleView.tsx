@@ -3,6 +3,7 @@ import type { ActivityContentViewProps } from '@frontend/components/activities/A
 import { CUSTOM_THEME_VALUE } from '@frontend/components/activities/enigme-constants';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button/Button';
+import ArrowDownIcon from '@frontend/svg/arrowDown.svg';
 import classNames from 'clsx';
 import { useExtracted } from 'next-intl';
 import { useState } from 'react';
@@ -28,8 +29,11 @@ export const PuzzleView = ({ activity }: ActivityContentViewProps) => {
                 {hasHintValue && (
                     <Button
                         color="primary"
-                        variant="outlined"
+                        variant="borderless"
                         label={tCommon('Obtenir un autre indice')}
+                        isUpperCase={false}
+                        className={classNames(styles.hintButton, { [styles.hintOpen]: hintVisible })}
+                        rightIcon={<ArrowDownIcon className={styles.icon} style={{ width: '20px', fill: 'var(--primary-color)' }} />}
                         onClick={() => setHintVisible(!hintVisible)}
                     />
                 )}

@@ -25,3 +25,13 @@
     font-weight: 600;
     margin-bottom: 6px;
 }
+
+.hintButton {
+    text-decoration: underline;
+}
+
+.hintOpen {
+    .icon {
+        transform: rotate(180deg);
+    }
+}
