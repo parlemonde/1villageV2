@@ -8,6 +8,7 @@ import { Field, TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
@@ -90,7 +91,9 @@ const StoryStep3 = () => {
                 activeStep={2}
             />
             <div className={styles['width-story']}>
-                <h1>Imaginez et dessinez votre lieu extraordinaire</h1>
+                <Title variant="h2" marginBottom="md">
+                    Imaginez et dessinez votre lieu extraordinaire
+                </Title>
                 <p className="text">
                     Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable
                     que vous avez choisi à l&apos;étape précédente.

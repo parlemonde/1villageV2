@@ -7,6 +7,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { Tooltip } from '@frontend/components/ui/Tooltip';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -184,7 +185,9 @@ const StoryStep5 = () => {
             />
 
             <div className={styles['width-story']}>
-                <h1>Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}</h1>
+                <Title variant="h2" marginBottom="md">
+                    Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}
+                </Title>
                 <p className="text" style={{ fontSize: '1.1rem' }}>
                     Relisez votre publication une dernière fois avant de la publier !
                 </p>

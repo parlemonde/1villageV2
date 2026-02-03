@@ -10,6 +10,7 @@ import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -116,7 +117,9 @@ const StoryStep1 = () => {
             />
 
             <div className={styles['width-story']}>
-                <h1>Choisissez et dessinez l&apos;objectif du développement durable à atteindre</h1>
+                <Title variant="h2" marginBottom="md">
+                    Choisissez et dessinez l&apos;objectif du développement durable à atteindre
+                </Title>
                 <p className="text">Choisissez votre objectif et dessinez-le.</p>
                 <div className={styles['odd-container']}>
                     <div className={styles['odd-column']}>

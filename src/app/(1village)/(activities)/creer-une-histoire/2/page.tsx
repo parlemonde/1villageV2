@@ -8,6 +8,7 @@ import { Field, TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
@@ -89,7 +90,9 @@ const StoryStep2 = () => {
                 activeStep={1}
             />
             <div className={styles['width-story']}>
-                <h1>Imaginez et dessinez votre objet magique</h1>
+                <Title variant="h2" marginBottom="md">
+                    Imaginez et dessinez votre objet magique
+                </Title>
                 <p className="text">
                     Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
                     choisi à l&apos;étape précédente.

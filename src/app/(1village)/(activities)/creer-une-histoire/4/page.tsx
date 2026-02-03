@@ -7,6 +7,7 @@ import { Field, TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
@@ -84,7 +85,9 @@ const StoryStep4 = () => {
                 activeStep={3}
             />
             <div className={styles['width-story']}>
-                <h1>Décrivez et dessinez votre village-monde idéal</h1>
+                <Title variant="h2" marginBottom="md">
+                    Décrivez et dessinez votre village-monde idéal
+                </Title>
                 <p className="text">
                     Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l&apos;objectif
                     du développement durable que vous avez choisi.
