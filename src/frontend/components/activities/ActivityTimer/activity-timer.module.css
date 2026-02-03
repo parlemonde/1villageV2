@@ -8,3 +8,16 @@
 .activityTimer.unavailable {
     color: var(--error-color);
 }
+
+.activityResponseButtonTimer {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: var(--error-color);
+    opacity: 0.6;
+
+    svg {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}

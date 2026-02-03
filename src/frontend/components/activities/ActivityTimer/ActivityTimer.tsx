@@ -56,11 +56,12 @@ export const ActivityResponseButton = ({ activity }: ActivityTimerProps) => {
             href={isDisabled ? undefined : `/activities/${activity.id}?response=true`}
             color="primary"
             variant="outlined"
+            isUpperCase={false}
             label={
                 isDisabled ? (
                     <>
-                        {tCommon("Voir la réponse à l'énigme {rest} jours", { rest: diffInDays.toString() })}
-                        <span style={{ color: 'var(--error-color)' }}>
+                        {tCommon("Voir la réponse à l'énigme")}
+                        <span className={classNames(styles.activityResponseButtonTimer)}>
                             <TimerIcon style={{ width: '20px', height: 'auto', marginX: 4 }} />
                             {tCommon('{rest} jours', { rest: diffInDays.toString() })}
                         </span>
