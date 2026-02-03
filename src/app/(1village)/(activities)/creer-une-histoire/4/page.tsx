@@ -82,7 +82,7 @@ const StoryStep4 = () => {
                 ]}
                 activeStep={3}
             />
-            <div className={styles['width-900']}>
+            <div className={styles['width-story']}>
                 <h1>Décrivez et dessinez votre village-monde idéal</h1>
                 <p className="text">
                     Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l&apos;objectif

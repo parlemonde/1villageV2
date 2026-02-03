@@ -88,7 +88,7 @@ const StoryStep2 = () => {
                 ]}
                 activeStep={1}
             />
-            <div className={styles['width-900']}>
+            <div className={styles['width-story']}>
                 <h1>Imaginez et dessinez votre objet magique</h1>
                 <p className="text">
                     Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
@@ -190,7 +190,7 @@ const StoryStep2 = () => {
                             }
                             marginTop="md"
                         />
-                        <div style={{ width: '100%', textAlign: 'right' }}>
+                        <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
                             <span className="text text--small">{data?.object?.description?.length || 0}/400</span>
                         </div>
                     </div>

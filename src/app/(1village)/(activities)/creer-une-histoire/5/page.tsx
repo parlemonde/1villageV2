@@ -183,7 +183,7 @@ const StoryStep5 = () => {
                 activeStep={4}
             />
 
-            <div className={styles['width-900']}>
+            <div className={styles['width-story']}>
                 <h1>Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}</h1>
                 <p className="text" style={{ fontSize: '1.1rem' }}>
                     Relisez votre publication une dernière fois avant de la publier !

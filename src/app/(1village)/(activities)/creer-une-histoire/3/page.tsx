@@ -89,7 +89,7 @@ const StoryStep3 = () => {
                 ]}
                 activeStep={2}
             />
-            <div className={styles['width-900']}>
+            <div className={styles['width-story']}>
                 <h1>Imaginez et dessinez votre lieu extraordinaire</h1>
                 <p className="text">
                     Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable
@@ -185,7 +185,7 @@ const StoryStep3 = () => {
                             }
                             marginTop="md"
                         />
-                        <div style={{ width: '100%', textAlign: 'right' }}>
+                        <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
                             <span className="text text--small">{data?.place?.description?.length || 0}/400</span>
                         </div>
                     </div>

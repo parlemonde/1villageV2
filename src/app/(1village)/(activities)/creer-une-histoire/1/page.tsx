@@ -111,9 +111,11 @@ const StoryStep1 = () => {
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={0}
+                marginTop="xl"
+                marginBottom="md"
             />
 
-            <div className={styles['width-900']}>
+            <div className={styles['width-story']}>
                 <h1>Choisissez et dessinez l&apos;objectif du développement durable à atteindre</h1>
                 <p className="text">Choisissez votre objectif et dessinez-le.</p>
                 <div className={styles['odd-container']}>

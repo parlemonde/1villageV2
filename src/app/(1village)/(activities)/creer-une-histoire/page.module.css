@@ -17,7 +17,7 @@
 /* Equivalent to md={6} → 50% width on medium screens */
 @media (min-width: 960px) {
     .odd-column {
-        width: 50%;
+        width: 80%;
     }
 }
 
@@ -34,10 +34,10 @@
     right: 0.25rem;
 }
 
-.width-900 {
+.width-story {
     margin: 0 auto 1rem auto;
     width: 100%;
-    max-width: 900px;
+    max-width: 65rem;
 }
 
 .preview-block {
