@@ -13,6 +13,8 @@ interface ActivityTimerProps {
     onClick?: () => void;
 }
 
+const DAYS_TO_WAIT_FOR_ANSWER = 7;
+
 export const ActivityTimer = ({ activity }: ActivityTimerProps) => {
     const tCommon = useExtracted('common');
 
@@ -26,11 +28,16 @@ export const ActivityTimer = ({ activity }: ActivityTimerProps) => {
     const now = new Date();
     const diffInMs = now.getTime() - published.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    const isUnavailable = diffInDays < DAYS_TO_WAIT_FOR_ANSWER;
 
     return (
-        <span className={classNames(styles.activityTimer, { [styles.unavailable]: diffInDays > 0 })}>
+        <span className={classNames(styles.activityTimer, { [styles.unavailable]: isUnavailable })}>
             <TimerIcon style={{ width: '20px', height: 'auto', marginRight: 4 }} />
-            {diffInDays > 0 ? <>{tCommon('Temps restant: {rest} jours', { rest: diffInDays.toString() })}</> : <>{tCommon('Réponse disponible')}</>}
+            {isUnavailable ? (
+                <>{tCommon('Temps restant: {rest} jours', { rest: (DAYS_TO_WAIT_FOR_ANSWER - diffInDays).toString() })}</>
+            ) : (
+                <>{tCommon('Réponse disponible')}</>
+            )}
         </span>
     );
 };
@@ -48,7 +55,7 @@ export const ActivityResponseButton = ({ activity, onClick }: ActivityTimerProps
     const now = new Date();
     const diffInMs = now.getTime() - published.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    const isDisabled = diffInDays > 0;
+    const isDisabled = diffInDays < DAYS_TO_WAIT_FOR_ANSWER;
 
     return (
         <Button
@@ -65,7 +72,7 @@ export const ActivityResponseButton = ({ activity, onClick }: ActivityTimerProps
                         {tCommon("Voir la réponse à l'énigme")}
                         <span className={classNames(styles.activityResponseButtonTimer)}>
                             <TimerIcon style={{ width: '20px', height: 'auto', marginX: 4 }} />
-                            {tCommon('{rest} jours', { rest: diffInDays.toString() })}
+                            {tCommon('{rest} jours', { rest: (DAYS_TO_WAIT_FOR_ANSWER - diffInDays).toString() })}
                         </span>
                     </>
                 ) : (
