@@ -28,7 +28,10 @@ export const PuzzleView = ({ activity }: ActivityContentViewProps) => {
             <ContentViewer content={activity.data?.content} activityId={activity.id} marginTop={20} marginBottom={50} />
 
             {answerVisible ? (
-                <ContentViewer content={activity.data?.answer} activityId={activity.id} marginTop={20} marginBottom={50} />
+                <div className={styles.answerSection}>
+                    {tCommon("Réponse à l'énigme")}
+                    <ContentViewer content={activity.data?.answer} activityId={activity.id} marginTop={10} />
+                </div>
             ) : (
                 <>
                     <div className={classNames(styles.puzzleViewFooter)}>
