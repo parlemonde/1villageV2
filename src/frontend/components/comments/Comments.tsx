@@ -3,6 +3,7 @@
 import type { UserComment } from '@app/api/comments/route';
 import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
+import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -38,14 +39,14 @@ export const Comments = ({ activityId }: CommentsProps) => {
         const optimisticComment: UserComment = {
             comment: {
                 id: tempId,
-                content: content,
-                activityId: activityId,
+                content,
+                activityId,
                 userId: user.id,
                 createDate: new Date().toISOString(),
                 updateDate: new Date().toISOString(),
             },
-            classroom: classroom,
-            user: user,
+            classroom,
+            user,
         };
 
         await mutate(
@@ -56,7 +57,12 @@ export const Comments = ({ activityId }: CommentsProps) => {
                 });
 
                 if (error) {
-                    throw error;
+                    sendToast({
+                        type: 'error',
+                        message: error.message,
+                    });
+                } else {
+                    setContent(defaultContent);
                 }
 
                 const newComment: UserComment = {
