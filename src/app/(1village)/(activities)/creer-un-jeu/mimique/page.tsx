@@ -9,7 +9,7 @@ import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 export default function CreerUnJeuMimiquePage() {
-    const t = useExtracted('app.activities.creer-un-jeu.mimique');
+    const t = useExtracted('app.(1village).(activities).creer-un-jeu.mimique');
 
     const router = useRouter();
 
