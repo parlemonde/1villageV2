@@ -61,7 +61,6 @@ export const ActivityResponseButton = ({ activity, onClick }: ActivityTimerProps
         <Button
             as={isDisabled ? 'button' : 'a'}
             disabled={isDisabled}
-            href={isDisabled ? undefined : `/activities/${activity.id}?response=true`}
             color="primary"
             variant="outlined"
             isUpperCase={false}
