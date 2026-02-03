@@ -1,6 +1,6 @@
 'use client';
 
-import { useEnigmeThemes } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { useEnigmeThemes } from '@frontend/components/activities/enigme-constants';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';

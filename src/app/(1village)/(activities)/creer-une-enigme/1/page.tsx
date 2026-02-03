@@ -1,6 +1,8 @@
 'use client';
 
-import ExampleActivities from '@app/(1village)/(activities)/creer-une-enigme/ExampleActivities';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import ExampleActivities from '@frontend/components/activities/ExampleActivities';
 import {
     useEnigmeThemes,
     useEnigmeSubthemes,
@@ -8,9 +10,7 @@ import {
     CUSTOM_THEME_VALUE,
     type ThemeName,
     type SubThemeItem,
-} from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
-import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
-import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+} from '@frontend/components/activities/enigme-constants';
 import { Button } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';

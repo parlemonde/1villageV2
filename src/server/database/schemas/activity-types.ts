@@ -1,4 +1,4 @@
-import type { ThemeName } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import type { ThemeName } from '@frontend/components/activities/enigme-constants';
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 

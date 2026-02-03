@@ -1,6 +1,6 @@
 'use client';
 
-import { CUSTOM_THEME_VALUE, useGetStepThemeName, type ThemeName } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
+import { CUSTOM_THEME_VALUE, useGetStepThemeName, type ThemeName } from '@frontend/components/activities/enigme-constants';
 import { sendToast } from '@frontend/components/Toasts';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
