@@ -10,6 +10,7 @@ import styles from './activity-timer.module.css';
 
 interface ActivityTimerProps {
     activity: Partial<Activity>;
+    onClick?: () => void;
 }
 
 export const ActivityTimer = ({ activity }: ActivityTimerProps) => {
@@ -34,7 +35,7 @@ export const ActivityTimer = ({ activity }: ActivityTimerProps) => {
     );
 };
 
-export const ActivityResponseButton = ({ activity }: ActivityTimerProps) => {
+export const ActivityResponseButton = ({ activity, onClick }: ActivityTimerProps) => {
     const tCommon = useExtracted('common');
 
     const publishDate = activity.publishDate;
@@ -57,6 +58,7 @@ export const ActivityResponseButton = ({ activity }: ActivityTimerProps) => {
             color="primary"
             variant="outlined"
             isUpperCase={false}
+            onClick={isDisabled ? undefined : onClick}
             label={
                 isDisabled ? (
                     <>
