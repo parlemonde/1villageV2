@@ -3,11 +3,12 @@ import type { GameType } from '@server/database/schemas/activity-types';
 import type React from 'react';
 
 import { CurrencyGameView } from './game/CurrencyGameView';
+import { GestureGameView } from './game/GestureGameView';
 import { IdiomGameView } from './game/IdiomGameView';
 
 const GAME_VIEWS: Record<GameType, React.FC<ActivityContentViewProps>> = {
     expression: IdiomGameView,
-    mimique: () => null,
+    mimique: GestureGameView,
     monnaie: CurrencyGameView,
 };
 

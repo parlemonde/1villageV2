@@ -4,6 +4,7 @@ import { Button } from '@frontend/components/ui/Button';
 import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { Title } from '@frontend/components/ui/Title';
+import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import { useExtracted } from 'next-intl';
@@ -11,7 +12,8 @@ import { useState } from 'react';
 
 export interface Round {
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
+    videoUrl?: string;
     options: RadioOption[];
 }
 
@@ -56,12 +58,17 @@ export const GameEngine = ({ rounds, question, successMessage, errorMessage }: G
                     borderRadius: '10px',
                 }}
             >
-                <div style={{ margin: 'auto', textAlign: 'center' }}>
+                <div style={{ margin: 'auto', textAlign: 'center', width: '100%' }}>
                     <Title variant="h2" marginBottom="sm">
                         {rounds[index].title}
                     </Title>
                     {rounds?.[index]?.imageUrl && (
                         <Image src={rounds[index].imageUrl} alt={rounds[index].title} width={500} height={300} style={{ objectFit: 'cover' }} />
+                    )}
+                    {rounds?.[index]?.videoUrl && (
+                        <div style={{ width: '80%', margin: 'auto' }}>
+                            <VideoPlayer src={rounds[index].videoUrl} />
+                        </div>
                     )}
                 </div>
                 <Title variant="h3" color="inherit" marginTop="md">

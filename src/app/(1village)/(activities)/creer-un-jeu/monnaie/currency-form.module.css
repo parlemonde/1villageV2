@@ -3,12 +3,17 @@
     border-radius: 10px;
     object-fit: cover;
     margin-bottom: 16px;
+
+    &:hover {
+        filter: brightness(0.8);
+        transition: filter 0.2s ease-in-out;
+    }
 }
 
 .svg {
     width: 400px;
     height: 400px;
     background: var(--grey-100);
-    padding: 48px;
+    padding: 150px;
     color: var(--primary-color);
 }

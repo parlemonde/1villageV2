@@ -5,6 +5,7 @@ import { CURRENCY_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/cre
 import { sendToast } from '@frontend/components/Toasts';
 import { GamePreviewCard } from '@frontend/components/activities/game/GamePreviewCard';
 import { Button } from '@frontend/components/ui/Button';
+import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
 import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -52,21 +53,27 @@ export default function CreerUnJeuMonnaieStep5() {
     };
 
     const renderGameCards = () => {
-        return activity.data?.objects?.map((obj, index) => {
-            const options = [{ label: `${obj.price} ${CURRENCIES[activity.data.currency ?? '']}`, value: 'true' }];
-            obj.falsePrices?.forEach((falsePrice, index) => {
-                options.push({ label: `${falsePrice} ${CURRENCIES[activity.data.currency ?? '']}`, value: index.toString() }); // value must be unique
+        return activity.data?.objects
+            ?.filter((obj) => obj !== null)
+            ?.map((obj, index) => {
+                const options: RadioOption[] = [];
+                if (activity.data.currency) {
+                    options.push({ label: `${obj.price} ${CURRENCIES[activity.data.currency]}`, value: 'true' });
+                }
+                obj.falsePrices?.forEach((falsePrice, index) => {
+                    options.push({ label: `${falsePrice} ${CURRENCIES[activity.data.currency ?? '']}`, value: index.toString() }); // value must be unique
+                });
+
+                return (
+                    <GamePreviewCard
+                        key={index}
+                        label={obj.name}
+                        imageUrl={obj.imageUrl}
+                        options={options}
+                        href={`/creer-un-jeu/monnaie/${obj.stepId}`}
+                    />
+                );
             });
-            return (
-                <GamePreviewCard
-                    key={index}
-                    label={obj.name}
-                    imageUrl={obj.imageUrl}
-                    options={options}
-                    href={`/creer-un-jeu/monnaie/${obj.stepId}`}
-                />
-            );
-        });
     };
 
     return (
