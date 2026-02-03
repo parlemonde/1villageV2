@@ -23,6 +23,7 @@ const StoryStep4 = () => {
     const data = (activity?.data as ActivityData<'histoire'>) || null;
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
+    const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
 
     const errorSteps = React.useMemo(() => {
         const errors = [];
@@ -158,17 +159,37 @@ const StoryStep4 = () => {
                         </div>
 
                         {/* Description section - sous l'image */}
-                        <Field
-                            helperText={"Écrivez l'histoire de votre village-monde idéal !"}
-                            name="standard-multiline-static"
-                            label="Écrivez l'histoire de votre village-monde idéal"
-                            input={
+                        <div style={{ position: 'relative', marginTop: '1.5rem', width: '100%' }}>
+                            <label
+                                htmlFor="tale-story"
+                                style={{
+                                    position: 'absolute',
+                                    top: '-0.6rem',
+                                    left: '0.75rem',
+                                    backgroundColor: 'white',
+                                    padding: '0 0.25rem',
+                                    fontSize: '0.75rem',
+                                    color: isTextAreaFocused ? 'var(--primary-color)' : 'var(--grey-600)',
+                                }}
+                            >
+                                Écrivez l&apos;histoire de votre village-monde idéal
+                            </label>
+                            <div
+                                style={{
+                                    maxHeight: '200px',
+                                    overflowY: 'auto',
+                                    width: '100%',
+                                    border: `2px solid ${isTextAreaFocused ? 'var(--primary-color)' : 'var(--grey-300)'}`,
+                                    borderRadius: '4px',
+                                }}
+                            >
                                 <TextArea
                                     id="tale-story"
                                     name="tale-story"
                                     isFullWidth
-                                    placeholder="Écrivez l'histoire de votre village-monde idéal !"
                                     value={data?.tale?.tale || ''}
+                                    onFocus={() => setIsTextAreaFocused(true)}
+                                    onBlur={() => setIsTextAreaFocused(false)}
                                     onChange={(e) => {
                                         if (!data) return;
                                         const { tale } = data;
@@ -178,11 +199,10 @@ const StoryStep4 = () => {
                                             data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
                                         });
                                     }}
-                                    style={{ width: '100%' }}
+                                    style={{ width: '100%', border: 'none', outline: 'none', boxShadow: 'none' }}
                                 />
-                            }
-                            marginTop="md"
-                        />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
