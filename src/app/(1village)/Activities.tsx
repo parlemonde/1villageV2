@@ -4,10 +4,10 @@ import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { ActivityFilters, type ActivityFiltersState } from '@frontend/components/activities/ActivityFilters/ActivityFilters';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
+import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
-import { getClassroomFromMap } from '@server/helpers/get-classroom';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 

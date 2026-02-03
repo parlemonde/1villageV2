@@ -12,11 +12,11 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
+import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
-import { getClassroomFromMap } from '@server/helpers/get-classroom';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
 

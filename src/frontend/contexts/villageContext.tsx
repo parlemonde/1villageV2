@@ -1,12 +1,12 @@
 'use client';
 
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
+import { getClassroomFromProp } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
-import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import React, { createContext, useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 

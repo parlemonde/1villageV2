@@ -1,9 +1,9 @@
 'use client';
 
 import { VillageContext } from '@frontend/contexts/villageContext';
+import { getClassroomFromProp } from '@lib/get-classroom';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 

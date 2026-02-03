@@ -1,7 +1,7 @@
 import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { getGravatarUrl } from '@frontend/components/Avatar/Avatar';
+import { getClassroomFromProp } from '@lib/get-classroom';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import { getClassroomFromProp } from '@server/helpers/get-classroom';
 import { Marker } from 'maplibre-gl';
 import { v4 } from 'uuid';
 
