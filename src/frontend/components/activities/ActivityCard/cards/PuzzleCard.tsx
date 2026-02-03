@@ -1,12 +1,11 @@
-import { useGetStepThemeName, CUSTOM_THEME_VALUE } from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
 import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
+import { useExtracted } from 'next-intl';
 
 export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
-    const defaultTheme = activity?.type === 'enigme' ? (activity.data?.defaultTheme ?? CUSTOM_THEME_VALUE) : CUSTOM_THEME_VALUE;
-    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
-    const themeLabel = useGetStepThemeName(defaultTheme, customTheme);
+    const tCommon = useExtracted('common');
+    const themeLabel = activity?.type === 'enigme' ? activity.data?.customTheme || activity.data?.defaultTheme : tCommon('Autre thème');
 
     if (activity.type !== 'enigme') {
         return null;

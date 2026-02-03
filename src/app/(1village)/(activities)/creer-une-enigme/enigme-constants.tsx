@@ -21,6 +21,7 @@ export type SubThemeItem = {
 };
 
 export const useEnigmeThemes = () => {
+    const tCommon = useExtracted('common');
     const t = useExtracted('app.(1village).(activities).creer-une-enigme');
 
     const DEFAULT_THEMES: ThemeItem[] = useMemo(
@@ -29,9 +30,9 @@ export const useEnigmeThemes = () => {
             { name: 'Évènement mystère', label: t('Évènement mystère'), icon: <EvenementIcon /> },
             { name: 'Personnalité mystère', label: t('Personnalité mystère'), icon: <PersonaliteIcon /> },
             { name: 'Lieu mystère', label: t('Lieu mystère'), icon: <LocalisationIcon /> },
-            { name: 'Autre thème', label: t('Autre thème'), icon: <></> },
+            { name: 'Autre thème', label: tCommon('Autre thème'), icon: <></> },
         ],
-        [t],
+        [tCommon, t],
     );
 
     const getThemeLabel = useCallback((name: ThemeName) => DEFAULT_THEMES.find((theme) => theme.name === name)?.label || name, [DEFAULT_THEMES]);
