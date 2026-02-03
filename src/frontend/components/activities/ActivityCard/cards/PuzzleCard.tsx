@@ -5,7 +5,7 @@ import { useExtracted } from 'next-intl';
 
 export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     const tCommon = useExtracted('common');
-    const themeLabel = activity?.type === 'enigme' ? activity.data?.customTheme || activity.data?.defaultTheme : tCommon('Autre thème');
+    const themeLabel = activity?.type === 'enigme' ? activity.data?.defaultTheme : tCommon('Autre thème');
 
     if (activity.type !== 'enigme') {
         return null;
@@ -70,8 +70,8 @@ export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
                 <div style={{ textAlign: 'right' }}>
                     {onEdit || onDelete ? (
                         <>
-                            {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}
-                            {onDelete && <Button marginLeft="sm" label="Supprimer" variant="contained" color="error" onClick={onDelete} />}
+                            {onEdit && <Button label={tCommon('Modifier')} variant="contained" color="secondary" onClick={onEdit} />}
+                            {onDelete && <Button marginLeft="sm" label={tCommon('Supprimer')} variant="contained" color="error" onClick={onDelete} />}
                         </>
                     ) : (
                         <Button
@@ -80,7 +80,7 @@ export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
                             href={shouldDisableButtons ? undefined : `/activities/${activity.id}`}
                             color="primary"
                             variant="outlined"
-                            label="Voir l'énigme"
+                            label={tCommon("Résoudre l'énigme")}
                         />
                     )}
                 </div>
