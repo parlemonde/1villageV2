@@ -2,16 +2,15 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ActivityTimer } from '@frontend/components/activities/ActivityTimer/ActivityTimer';
 import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
-import TimerIcon from '@frontend/svg/enigmes/timer.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';
-import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import styles from './activity-header.module.css';
@@ -36,30 +35,6 @@ const ActivityDisplayName = ({ user, classroom, isPelico }: ActivityDisplayNameP
         return classroom.alias || (classroom.level ? `Les ${classroom.level} de ${classroom.name}` : classroom.name);
     }
     return user?.name || 'Un pélicopain';
-};
-
-interface ActivityTimerProps {
-    publishDate?: string;
-}
-
-const ActivityTimer = ({ publishDate }: ActivityTimerProps) => {
-    const tCommon = useExtracted('common');
-
-    if (!publishDate) {
-        return null;
-    }
-
-    const published = new Date(publishDate ?? '');
-    const now = new Date();
-    const diffInMs = now.getTime() - published.getTime();
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-    return (
-        <span className={classNames(styles.activityTimer, { [styles.unavailable]: diffInDays > 0 })}>
-            <TimerIcon style={{ width: '20px', height: 'auto', marginRight: 4 }} />
-            {diffInDays > 0 ? <>{tCommon('Temps restant: {rest} jours', { rest: diffInDays.toString() })}</> : <>{tCommon('Réponse disponible')}</>}
-        </span>
-    );
 };
 
 interface ActivityHeaderProps {
@@ -98,7 +73,7 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     )}
                 </div>
             </div>
-            {activity.type === 'enigme' && <ActivityTimer publishDate={activity.publishDate ?? undefined} />}
+            {activity.type === 'enigme' && <ActivityTimer activity={activity} />}
             {Icon && <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
         </div>
     );

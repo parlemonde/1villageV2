@@ -1,0 +1,10 @@
+.activityTimer {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--success-color);
+}
+
+.activityTimer.unavailable {
+    color: var(--error-color);
+}
