@@ -38,7 +38,13 @@ export type CurrencyGame = {
 
 export type GestureGame = {
     theme: 'mimique';
-    gesture?: string;
+    gestures?: {
+        stepId: number;
+        videoUrl?: string;
+        meaning?: string;
+        origin?: string;
+        falseMeanings?: string[];
+    }[];
 };
 
 type Game = IdiomGame | CurrencyGame | GestureGame;

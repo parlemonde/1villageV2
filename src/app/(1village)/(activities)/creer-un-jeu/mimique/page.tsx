@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
-export default function CreerUnJeuExpressionPage() {
-    const t = useExtracted('app.(1village).(activities).creer-un-jeu.expression');
+export default function CreerUnJeuMimiquePage() {
+    const t = useExtracted('app.activities.creer-un-jeu.mimique');
 
     const router = useRouter();
 
@@ -20,20 +20,21 @@ export default function CreerUnJeuExpressionPage() {
 
     const goToNextStep = () => {
         onCreateActivity('jeu', isPelico, {
-            theme: 'expression',
+            theme: 'mimique',
         });
-        router.push('/creer-un-jeu/expression/1');
+
+        router.push('/creer-un-jeu/mimique/1');
     };
 
     return (
-        <PageContainer title={t("Qu'est-ce qu'une expression ?")}>
+        <PageContainer title={t("Qu'est-ce qu'une mimique ?")}>
             <p>
                 {t(
-                    "Une expression est une formule toute faite qu'on utilise le plus souvent à l'oral pour commenter une situation ou exprimer un jugement. Par exemple, pour dire qu'il pleut beaucoup, on peut dire en français \"il pleut comme une vache qui pisse\" alors qu'en anglais on dit \"it's raining cats and dogs\" (il pleut des chats et des chiens).",
+                    "Une mimique est un geste du corps qui exprime une émotion, une pensée et que l'on fait dans certaines situations. Par exemple, un signe des mains pour dire bonjour ! Ou bien, un mouvement du visage pour exprimer la colère.",
                 )}
             </p>
             <div style={{ textAlign: 'right', marginTop: '32px' }}>
-                <Button color="primary" label={t('Créer 3 expressions')} onClick={goToNextStep} />
+                <Button onClick={goToNextStep} color="primary" label={t('Faire découvrir 3 mimiques')} />
             </div>
         </PageContainer>
     );

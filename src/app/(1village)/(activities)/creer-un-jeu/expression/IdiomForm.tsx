@@ -87,7 +87,7 @@ export const IdiomForm = ({ activity, setActivity, getOrCreateDraft, number, ste
                         name="falseMeaning1"
                         value={activity?.data?.idioms?.[index]?.falseMeanings?.[0] ?? ''}
                         onChange={(e) => {
-                            const prev = activity?.data?.idioms?.[index].falseMeanings || [];
+                            const prev = activity?.data?.idioms?.[index]?.falseMeanings || [];
                             setIdiom('falseMeanings', [e.target.value, ...prev.slice(1)]);
                         }}
                     />
@@ -103,8 +103,9 @@ export const IdiomForm = ({ activity, setActivity, getOrCreateDraft, number, ste
                         name="falseMeaning2"
                         value={activity?.data?.idioms?.[index]?.falseMeanings?.[1] ?? ''}
                         onChange={(e) => {
-                            const prev = activity?.data?.idioms?.[index].falseMeanings || [];
-                            setIdiom('falseMeanings', [...prev.slice(0, 1), e.target.value]);
+                            const prev = activity?.data?.idioms?.[index]?.falseMeanings;
+                            const newValue = prev ? [...prev.slice(0, 1), e.target.value] : ['', e.target.value];
+                            setIdiom('falseMeanings', newValue);
                         }}
                     />
                 }

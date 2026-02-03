@@ -41,6 +41,7 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                     alt={activity?.data?.objects?.[index].name ?? ''}
                     width={400}
                     height={400}
+                    onClick={() => setIsOpen(true)}
                 />
             ) : (
                 <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
@@ -95,7 +96,7 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                         name="falsePrice1"
                         value={activity?.data?.objects?.[index]?.falsePrices?.[0] ?? ''}
                         onChange={(e) => {
-                            const prev = activity?.data?.objects?.[index].falsePrices || [];
+                            const prev = activity?.data?.objects?.[index]?.falsePrices || [];
                             setObject('falsePrices', [e.target.value, ...prev.slice(1)]);
                         }}
                     />
@@ -113,8 +114,9 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                         name="falsePrice2"
                         value={activity?.data?.objects?.[index]?.falsePrices?.[1] ?? ''}
                         onChange={(e) => {
-                            const prev = activity?.data?.objects?.[index].falsePrices || [];
-                            setObject('falsePrices', [...prev.slice(0, 1), e.target.value]);
+                            const prev = activity?.data?.objects?.[index]?.falsePrices;
+                            const newValue = prev ? [...prev.slice(0, 1), e.target.value] : ['', e.target.value];
+                            setObject('falsePrices', newValue);
                         }}
                     />
                 }
