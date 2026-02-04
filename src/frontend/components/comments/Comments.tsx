@@ -110,6 +110,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     comments?.map((c) => (
                         <CommentCard
                             key={c.comment.id}
+                            showButtons={user.id === c.user.id}
                             user={c.user}
                             classroom={c.classroom}
                             comment={c.comment}
