@@ -11,8 +11,10 @@ interface ContentViewerProps extends MarginProps, PaddingProps {
 
 export const ContentViewer = ({ content = [], activityId, ...otherProps }: ContentViewerProps) => {
     const { marginAndPaddingProps } = getMarginAndPaddingProps(otherProps);
+    const marginAndPaddingStyle = { ...{ marginTop: '32px', marginBottom: '32px' }, ...getMarginAndPaddingStyle(marginAndPaddingProps) };
+
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', margin: '32px 0', ...getMarginAndPaddingStyle(marginAndPaddingProps) }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', ...marginAndPaddingStyle }}>
             {content.map((content, index) => (
                 <AnyContentViewer key={index} content={content} activityId={activityId} />
             ))}
