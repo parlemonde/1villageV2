@@ -2,6 +2,7 @@
 
 import { isCurrencyGame } from '@app/(1village)/(activities)/creer-un-jeu/monnaie/helpers';
 import { CURRENCY_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/monnaie/validators';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
@@ -32,6 +33,7 @@ export default function CreerUnJeuMonnaieStep1() {
 
     return (
         <PageContainer>
+            <BackButton href="/creer-un-jeu" />
             <Steps
                 steps={[
                     { label: activity.data?.currency ? CURRENCIES[activity.data.currency] : t('Monnaie'), href: '/creer-un-jeu/monnaie/1' },
