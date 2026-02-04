@@ -3,7 +3,7 @@
 import styles from '@app/(1village)/(activities)/creer-une-histoire/page.module.css';
 import { getErrorSteps } from '@frontend/components/activities/storyChecks';
 import { Button, IconButton } from '@frontend/components/ui/Button';
-import { Field, TextArea } from '@frontend/components/ui/Form';
+import { TextArea } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
