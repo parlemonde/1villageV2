@@ -33,6 +33,18 @@
     border-radius: 10px;
 }
 
+.logoContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-start;
+    text-decoration: none;
+}
+
+.logoContainer:hover {
+    opacity: 0.8;
+}
+
 .logo {
     width: 40px;
     height: 40px;
