@@ -39,14 +39,17 @@ export const Toolbar = ({ state, viewRef, isVisible }: ToolbarProps) => {
     const nodes: Node[] = [];
     const cursorMarks = isTextSelection(state.selection) ? state.selection.$cursor?.marks() || null : null;
     const marks = state.storedMarks || cursorMarks || [];
-    for (let i = 0; i < state.selection.ranges.length; i++) {
-        const {
-            $from: { pos: from },
-            $to: { pos: to },
-        } = state.selection.ranges[i];
-        state.doc.nodesBetween(from, to, (node) => {
-            nodes.push(node);
-        });
+
+    if (state.doc?.content?.size) {
+        for (let i = 0; i < state.selection.ranges.length; i++) {
+            const {
+                $from: { pos: from },
+                $to: { pos: to },
+            } = state.selection.ranges[i];
+            state.doc.nodesBetween(from, to, (node) => {
+                nodes.push(node);
+            });
+        }
     }
 
     const formatValue = getFormat(state, marks);

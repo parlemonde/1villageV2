@@ -1,6 +1,7 @@
 'use client';
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
+import { Comments } from '@frontend/components/comments/Comments';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { getClassroomFromMap } from '@lib/get-classroom';
 import type { Activity } from '@server/database/schemas/activities';
@@ -39,6 +40,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}
+            {showDetails && <Comments activityId={activity.id} />}
         </>
     );
 };
