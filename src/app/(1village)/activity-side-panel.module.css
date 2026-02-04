@@ -7,3 +7,46 @@
         display: none;
     }
 }
+
+.WorldMapContainer {
+    width: 100%;
+    height: 280px;
+    max-height: 50vh;
+    background-color: black;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--primary-300);
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    background-color: var(--primary-300);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.ficheProf {
+    background-color: transparent;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.weather {
+    background-color: var(--primary-300);
+    font-weight: bold;
+    font-size: 1.25rem;
+    padding: 1rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.countryContainer {
+    display: flex;
+    gap: 10px;
+}
