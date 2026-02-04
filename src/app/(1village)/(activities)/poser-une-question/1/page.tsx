@@ -78,7 +78,7 @@ export default function PoserUneQuestionStep1() {
             ) : (
                 <div className={styles.mainContainer}>
                     {questionActivities.map((activity, index) => (
-                        <ActivityCard key={index} activity={activity} user={usersMap[activity.userId]} onEdit={mutate} shouldDisableButtons={true} />
+                        <ActivityCard key={index} activity={activity} user={usersMap[activity.userId]} action={mutate} shouldDisableButtons={true} />
                     ))}
                 </div>
             )}

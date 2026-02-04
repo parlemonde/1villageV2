@@ -46,7 +46,7 @@ export const Activities = () => {
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
-                        onEdit={activity.type === 'question' ? () => mutate() : undefined}
+                        action={activity.type === 'question' ? mutate : undefined}
                         classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
                     />
                 ))}
