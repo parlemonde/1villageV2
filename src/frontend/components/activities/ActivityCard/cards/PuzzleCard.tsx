@@ -1,17 +1,18 @@
 import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
-import { CUSTOM_THEME_VALUE } from '@frontend/components/activities/enigme-constants';
+import { CUSTOM_THEME_VALUE, useEnigmeThemes } from '@frontend/components/activities/enigme-constants';
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
 import { useExtracted } from 'next-intl';
 
 export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
     const tCommon = useExtracted('common');
+    const { getThemeLabel } = useEnigmeThemes();
+    const themeLabel = getThemeLabel((activity.type === 'enigme' && activity.data?.defaultTheme) || CUSTOM_THEME_VALUE);
 
     if (activity.type !== 'enigme') {
         return null;
     }
 
-    const themeLabel = activity.data?.defaultTheme || tCommon.rich('{text}', { text: CUSTOM_THEME_VALUE });
     const firstImageUrl = (activity.data?.content || []).find((content) => content.type === 'image')?.imageUrl;
     const firstHtmlText = (activity.data?.content || []).find((content) => content.type === 'html')?.html;
 
