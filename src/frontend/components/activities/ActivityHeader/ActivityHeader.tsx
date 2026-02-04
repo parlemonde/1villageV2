@@ -2,6 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ActivityTimer } from '@frontend/components/activities/ActivityTimer/ActivityTimer';
 import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
@@ -72,7 +73,8 @@ export const ActivityHeader = ({ user, classroom, activity, className }: Activit
                     )}
                 </div>
             </div>
-            {Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
+            {activity.type === 'enigme' && <ActivityTimer activity={activity} />}
+            {Icon && <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
         </div>
     );
 };
