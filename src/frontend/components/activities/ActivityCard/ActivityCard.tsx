@@ -38,9 +38,10 @@ interface ActivityCardProps {
     classroom?: Classroom;
     onEdit?: () => void;
     onDelete?: () => void;
+    action?: () => void;
     shouldDisableButtons?: boolean;
 }
-export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shouldDisableButtons = false }: ActivityCardProps) => {
+export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, action, shouldDisableButtons = false }: ActivityCardProps) => {
     if (!user || !activity.type) {
         return null;
     }
@@ -50,7 +51,13 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shou
             <ActivityHeader showIcon activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
-                    <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />
+                    <ContentCard
+                        activity={activity}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        action={action}
+                        shouldDisableButtons={shouldDisableButtons}
+                    />
                 </div>
             )}
         </div>

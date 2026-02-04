@@ -7,7 +7,7 @@ import { askSameQuestion } from '@server-actions/activities/ask-same-question';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
-export const QuestionCard = ({ activity, onEdit, onDelete, shouldDisableButtons }: ActivityContentCardProps) => {
+export const QuestionCard = ({ activity, onEdit, onDelete, action, shouldDisableButtons }: ActivityContentCardProps) => {
     const t = useExtracted('QuestionCard');
     const { user, classroom } = useContext(UserContext);
 
@@ -16,7 +16,7 @@ export const QuestionCard = ({ activity, onEdit, onDelete, shouldDisableButtons 
     }
 
     const isPelico = user.role === 'admin' || user.role === 'mediator';
-    const showAskSameButton = activity.userId !== user.id && !isPelico;
+    const showAskSameButton = action && activity.userId !== user.id && !isPelico;
 
     const onClick = async () => {
         if (!classroom?.id) {
@@ -53,7 +53,7 @@ export const QuestionCard = ({ activity, onEdit, onDelete, shouldDisableButtons 
                     <p key={question.id}>{question.text}</p>
                 ))}
             </div>
-            {onEdit && onDelete ? (
+            {onEdit || onDelete ? (
                 <div style={{ textAlign: 'right' }}>
                     {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}
                     {onDelete && <Button marginLeft="sm" label="Supprimer" variant="contained" color="error" onClick={onDelete} />}
