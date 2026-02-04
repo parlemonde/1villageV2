@@ -11,7 +11,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
 import { updateActivity } from '@server-actions/activities/update-activity';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserContext } from './userContext';
@@ -78,6 +78,7 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const [draftActivity, setDraftActivity] = useState<Activity | undefined>(undefined);
     const [draftStep, setDraftStep] = useState<number>(0); // 0 -> idle, 1 -> saving draft, 2 -> draft saved.
     const pathname = usePathname();
+    const router = useRouter();
 
     const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
 
@@ -209,6 +210,7 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                     }
                     setLocalActivity(draftActivity);
                     setDraftActivity(undefined);
+                    draftActivity.draftUrl && router.push(draftActivity.draftUrl);
                 }}
                 cancelLabel="Créer une nouvelle activité"
                 confirmLabel="Reprendre le brouillon"
