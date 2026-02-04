@@ -40,7 +40,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}
-            <Comments activityId={activity.id} />
+            {showDetails && <Comments activityId={activity.id} />}
         </>
     );
 };

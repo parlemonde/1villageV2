@@ -118,7 +118,19 @@ export const CommentCard = ({ user, classroom, comment, onDelete }: CommentCardP
                         <HtmlEditor content={content} onChange={setContent} />
                         <div className={styles.editButtons}>
                             <Button label={tCommon('Annuler')} color="primary" onClick={cancelEdition} />
-                            <Button label={tCommon('Modifier')} color="primary" variant="contained" onClick={editComment} />
+                            <Button
+                                disabled={
+                                    typeof content === 'object' &&
+                                    content !== null &&
+                                    'content' in content &&
+                                    Array.isArray(content.content) &&
+                                    content?.content?.every((c) => !c.content)
+                                }
+                                label={tCommon('Modifier')}
+                                color="primary"
+                                variant="contained"
+                                onClick={editComment}
+                            />
                         </div>
                     </>
                 ) : (
