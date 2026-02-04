@@ -22,7 +22,7 @@ export type SubThemeItem = {
 
 export const useEnigmeThemes = () => {
     const tCommon = useExtracted('common');
-    const t = useExtracted('app.(1village).(activities).creer-une-enigme');
+    const t = useExtracted('enigme-constants');
 
     const DEFAULT_THEMES: ThemeItem[] = useMemo(
         () => [
@@ -41,7 +41,7 @@ export const useEnigmeThemes = () => {
 };
 
 export const useEnigmeSubthemes = (): Record<ThemeName, SubThemeItem[]> => {
-    const t = useExtracted('app.(1village).(activities).creer-une-enigme');
+    const t = useExtracted('enigme-constants');
 
     return useMemo(
         () => ({
