@@ -2,6 +2,7 @@
 
 import { isIdiomGame } from '@app/(1village)/(activities)/creer-un-jeu/expression/helpers';
 import { IDIOM_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/expression/validators';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field } from '@frontend/components/ui/Form';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
@@ -54,6 +55,7 @@ export default function CreerUnJeuExpressionStep1() {
 
     return (
         <PageContainer>
+            <BackButton href="/creer-un-jeu" />
             <Steps
                 steps={[
                     { label: language ?? t('Langue'), href: '/creer-un-jeu/expression/1' },

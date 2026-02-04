@@ -27,7 +27,7 @@ export default function CreerUnJeuMonnaiePage() {
     };
 
     return (
-        <PageContainer>
+        <PageContainer title={t('Jeu de la monnaie')}>
             <p style={{ marginTop: '16px' }}>
                 {t(
                     "Savez-vous qu'il existe beaucoup de monnaies différentes à travers le monde ? Selon le pays, les billets et les pièces n'ont pas les mêmes dessins, couleurs et ne représentent pas la même somme d'argent !",

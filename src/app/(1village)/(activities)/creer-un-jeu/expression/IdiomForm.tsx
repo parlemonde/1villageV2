@@ -1,9 +1,10 @@
 'use client';
 
+import { IconButton } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
-import { PlusIcon } from '@radix-ui/react-icons';
+import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import type { GameActivity, IdiomGame } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
@@ -36,7 +37,10 @@ export const IdiomForm = ({ activity, setActivity, getOrCreateDraft, number, ste
                 {t('Dessinez votre expression')}
             </Title>
             {activity?.data?.idioms?.[index]?.imageUrl ? (
-                <Image className={styles.image} src={activity?.data?.idioms?.[index].imageUrl} alt="" width={400} height={400} />
+                <div className={styles.imageContainer}>
+                    <Image className={styles.image} src={activity.data.idioms[index].imageUrl} alt="" width={400} height={400} />
+                    <IconButton className={styles.editIcon} icon={Pencil1Icon} color="primary" variant="contained" onClick={() => setIsOpen(true)} />
+                </div>
             ) : (
                 <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
             )}

@@ -1,9 +1,10 @@
 'use client';
 
+import { IconButton } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Title } from '@frontend/components/ui/Title';
 import { UploadImageModal } from '@frontend/components/upload/UploadImageModal';
-import { PlusIcon } from '@radix-ui/react-icons';
+import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import type { CurrencyGame, GameActivity } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
@@ -35,14 +36,16 @@ export const CurrencyForm = ({ activity, setActivity, getOrCreateDraft, number, 
                 {title}
             </Title>
             {activity?.data?.objects?.[index]?.imageUrl ? (
-                <Image
-                    className={styles.image}
-                    src={activity?.data?.objects?.[index].imageUrl}
-                    alt={activity?.data?.objects?.[index].name ?? ''}
-                    width={400}
-                    height={400}
-                    onClick={() => setIsOpen(true)}
-                />
+                <div className={styles.imageContainer}>
+                    <Image
+                        className={styles.image}
+                        src={activity?.data?.objects?.[index].imageUrl}
+                        alt={activity?.data?.objects?.[index].name ?? ''}
+                        width={400}
+                        height={400}
+                    />
+                    <IconButton className={styles.editIcon} icon={Pencil1Icon} variant="contained" color="primary" onClick={() => setIsOpen(true)} />
+                </div>
             ) : (
                 <PlusIcon className={styles.image + ' ' + styles.svg} onClick={() => setIsOpen(true)} />
             )}

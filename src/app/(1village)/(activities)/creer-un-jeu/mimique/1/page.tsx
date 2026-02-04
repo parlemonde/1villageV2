@@ -3,6 +3,7 @@
 import { GestureForm } from '@app/(1village)/(activities)/creer-un-jeu/mimique/GestureForm';
 import { isGestureGame } from '@app/(1village)/(activities)/creer-un-jeu/mimique/helpers';
 import { GESTURE_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/mimique/validators';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -28,6 +29,7 @@ export default function CreerUnJeuMimiqueStep1() {
 
     return (
         <PageContainer>
+            <BackButton href="/creer-un-jeu" />
             <Steps
                 steps={[
                     { label: t('1ère mimique'), href: '/creer-un-jeu/mimique/1' },
