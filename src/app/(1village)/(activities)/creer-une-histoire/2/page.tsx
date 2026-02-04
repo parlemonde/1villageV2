@@ -88,6 +88,8 @@ const StoryStep2 = () => {
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={1}
+                marginTop="xl"
+                marginBottom="md"
             />
             <div className={styles['width-story']}>
                 <Title variant="h2" marginBottom="md">

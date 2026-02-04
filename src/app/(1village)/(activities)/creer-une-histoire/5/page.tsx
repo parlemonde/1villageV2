@@ -183,13 +183,15 @@ const StoryStep5 = () => {
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={4}
+                marginTop="xl"
+                marginBottom="md"
             />
 
             <div className={styles['width-story']}>
                 <Title variant="h2" marginBottom="md">
                     Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}
                 </Title>
-                <p className="text" style={{ fontSize: '1.1rem' }}>
+                <p className="text" style={{ fontSize: '1.1rem', margin: '1rem 0' }}>
                     Relisez votre publication une dernière fois avant de la publier !
                 </p>
 
