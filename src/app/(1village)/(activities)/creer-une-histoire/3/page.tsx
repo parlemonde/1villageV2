@@ -165,15 +165,13 @@ const StoryStep3 = () => {
 
                         {/* Description section - sous l'image */}
                         <Field
-                            helperText={'Écrivez la description de votre image !'}
                             name="standard-multiline-static"
-                            label="Décrivez le lieu extraordinaire"
                             input={
                                 <TextArea
                                     id="place-description"
                                     name="place-description"
                                     isFullWidth
-                                    placeholder="Écrivez la description de votre image !"
+                                    placeholder="Décrivez le lieu extraordinaire"
                                     value={data?.place?.description || ''}
                                     onChange={(e) => {
                                         if (!data) return;

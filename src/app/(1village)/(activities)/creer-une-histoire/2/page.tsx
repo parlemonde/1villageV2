@@ -172,13 +172,12 @@ const StoryStep2 = () => {
                         <Field
                             helperText={'Écrivez la description de votre image !'}
                             name="standard-multiline-static"
-                            label="Décrivez l'objet magique"
                             input={
                                 <TextArea
                                     id="object-description"
                                     name="object-description"
                                     isFullWidth
-                                    placeholder="Écrivez la description de votre image !"
+                                    placeholder="Décrivez l'objet magique"
                                     value={data?.object?.description || ''}
                                     onChange={(e) => {
                                         if (!data) return;
