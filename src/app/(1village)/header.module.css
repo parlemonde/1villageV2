@@ -56,6 +56,18 @@
     opacity: 0.8;
 }
 
+.villageNameContainer {
+    display: inline-block;
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+}
+
+.villageNameLabel {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 4px 8px;
+}
+
 @media (max-width: 850px) {
     .headerContainer {
         height: 60px;
