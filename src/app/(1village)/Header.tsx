@@ -20,6 +20,7 @@ import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon,
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
@@ -29,6 +30,8 @@ import styles from './header.module.css';
 export const Header = () => {
     const { user } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
+    const tCommon = useExtracted('common');
+
     return (
         <div className={styles.headerContainer}>
             <header className={styles.header}>
@@ -55,7 +58,7 @@ export const Header = () => {
                                 color="primary"
                                 size="md"
                                 isUpperCase={false}
-                                label="Mes ressources"
+                                label={tCommon('Mes ressources')}
                                 hideLabelOnMobile
                                 as="a"
                                 href="https://prof.parlemonde.org/les-ressources/"
@@ -66,7 +69,7 @@ export const Header = () => {
                                 color="primary"
                                 size="md"
                                 isUpperCase={false}
-                                label="Ma messagerie"
+                                label={tCommon('Ma messagerie')}
                                 hideLabelOnMobile
                                 as="a"
                                 href="https://prof.parlemonde.org/la-salle/"
@@ -76,10 +79,10 @@ export const Header = () => {
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
-                    {user?.role === 'admin' && <DropdownMenuItem label="Portail admin" href="/admin" icon={GearIcon} />}
-                    <DropdownMenuItem label="Mon compte" href="/mon-compte" icon={AvatarIcon} />
-                    {user?.role === 'admin' && <DropdownMenuItem label="Paramètres" href="/parametres" icon={MixerHorizontalIcon} />}
-                    <DropdownMenuItem label="Se déconnecter" onClick={() => logout()} color="danger" icon={ExitIcon} />
+                    {user?.role === 'admin' && <DropdownMenuItem label={tCommon('Portail admin')} href="/admin" icon={GearIcon} />}
+                    <DropdownMenuItem label={tCommon('Mon compte')} href="/mon-compte" icon={AvatarIcon} />
+                    {user?.role === 'admin' && <DropdownMenuItem label={tCommon('Paramètres')} href="/parametres" icon={MixerHorizontalIcon} />}
+                    <DropdownMenuItem label={tCommon('Se déconnecter')} onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
             </header>
             {isOpen && (
@@ -95,12 +98,13 @@ const VillageSelector = () => {
     const { village } = useContext(VillageContext);
     const [isModalOpen, setIsModalOpen] = useState(village === undefined);
     const [villageId, setVillageId] = useState(village?.id);
+    const tCommon = useExtracted('common');
 
     const { data, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
 
     return (
         <>
-            <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label="Changer de village" />
+            <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label={tCommon('Changer de village')} />
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => {
@@ -108,7 +112,7 @@ const VillageSelector = () => {
                         setIsModalOpen(false);
                     }
                 }}
-                title="Sélectionner un village"
+                title={tCommon('Sélectionner un village')}
                 hasCloseButton={village !== undefined}
                 hasFooter={false}
                 isConfirmDisabled={!villageId || isLoading}
@@ -128,7 +132,7 @@ const VillageSelector = () => {
                                     color="secondary"
                                     value={villageId ? `${villageId}` : undefined}
                                     onChange={(value) => setVillageId(Number(value))}
-                                    placeholder="Sélectionner un village"
+                                    placeholder={tCommon('Sélectionner un village')}
                                     options={(data || []).map((village) => ({
                                         label: village.name,
                                         value: `${village.id}`,
@@ -140,7 +144,7 @@ const VillageSelector = () => {
                             <Button
                                 color="secondary"
                                 variant={village === undefined ? 'outlined' : 'contained'}
-                                label="Choisir"
+                                label={tCommon('Choisir')}
                                 onClick={async () => {
                                     if (!villageId) {
                                         return;
@@ -164,11 +168,11 @@ const VillageSelector = () => {
                                         paddingX="md"
                                         style={{ display: 'inline', position: 'relative', top: '-15px', backgroundColor: 'white' }}
                                     >
-                                        OU
+                                        {tCommon('OU')}
                                     </Title>
                                 </div>
                                 <div style={{ width: '100%', textAlign: 'center' }}>
-                                    <Button as="a" href="/admin" color="secondary" variant="contained" label="Aller à l'interface Admin" />
+                                    <Button as="a" href="/admin" color="secondary" variant="contained" label={tCommon("Aller à l'interface Admin")} />
                                 </div>
                             </>
                         )}
