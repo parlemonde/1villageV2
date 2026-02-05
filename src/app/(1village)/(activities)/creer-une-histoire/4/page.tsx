@@ -24,7 +24,6 @@ const StoryStep4 = () => {
     const data = (activity?.data as ActivityData<'histoire'>) || null;
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
     const [isError] = useState<boolean>(false);
-    const [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
 
     const errorSteps = React.useMemo(() => {
         const errors = [];
@@ -164,49 +163,24 @@ const StoryStep4 = () => {
                         </div>
 
                         {/* Description section - sous l'image */}
-                        <div style={{ position: 'relative', marginTop: '1.5rem', width: '100%' }}>
-                            <label
-                                htmlFor="tale-story"
-                                style={{
-                                    position: 'absolute',
-                                    top: '-0.6rem',
-                                    left: '0.75rem',
-                                    backgroundColor: 'white',
-                                    padding: '0 0.25rem',
-                                    fontSize: '0.75rem',
-                                    color: isTextAreaFocused ? 'var(--primary-color)' : 'var(--grey-600)',
+                        <div style={{ marginTop: '1.5rem', width: '100%' }}>
+                            <TextArea
+                                id="tale-story"
+                                name="tale-story"
+                                isFullWidth
+                                placeholder="Écrivez l'histoire de votre village-monde idéal"
+                                value={data?.tale?.tale || ''}
+                                onChange={(e) => {
+                                    if (!data) return;
+                                    const { tale } = data;
+                                    setActivity({
+                                        ...activity,
+                                        type: 'histoire',
+                                        data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
+                                    });
                                 }}
-                            >
-                                Écrivez l&apos;histoire de votre village-monde idéal
-                            </label>
-                            <div
-                                style={{
-                                    maxHeight: '200px',
-                                    overflowY: 'auto',
-                                    width: '100%',
-                                    border: `2px solid ${isTextAreaFocused ? 'var(--primary-color)' : 'var(--grey-300)'}`,
-                                    borderRadius: '4px',
-                                }}
-                            >
-                                <TextArea
-                                    id="tale-story"
-                                    name="tale-story"
-                                    isFullWidth
-                                    value={data?.tale?.tale || ''}
-                                    onFocus={() => setIsTextAreaFocused(true)}
-                                    onBlur={() => setIsTextAreaFocused(false)}
-                                    onChange={(e) => {
-                                        if (!data) return;
-                                        const { tale } = data;
-                                        setActivity({
-                                            ...activity,
-                                            type: 'histoire',
-                                            data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
-                                        });
-                                    }}
-                                    style={{ width: '100%', border: 'none', outline: 'none', boxShadow: 'none' }}
-                                />
-                            </div>
+                                style={{ width: '100%' }}
+                            />
                         </div>
                     </div>
                 </div>
