@@ -9,8 +9,19 @@ type TextAreaProps = {
     isFullWidth?: boolean;
     size?: 'sm' | 'md' | 'lg';
     hasError?: boolean;
+    enableScroll?: boolean;
 } & Omit<JSX.IntrinsicElements['textarea'], 'ref' | 'size'>;
-export const TextArea = ({ color = 'primary', isFullWidth, size = 'md', hasError, onChange, className, style = {}, ...props }: TextAreaProps) => {
+export const TextArea = ({
+    color = 'primary',
+    isFullWidth,
+    size = 'md',
+    hasError,
+    enableScroll = false,
+    onChange,
+    className,
+    style = {},
+    ...props
+}: TextAreaProps) => {
     const [isInvalid, setIsInvalid] = React.useState(false);
     const [isFocused, setIsFocused] = React.useState(false);
 
@@ -19,13 +30,14 @@ export const TextArea = ({ color = 'primary', isFullWidth, size = 'md', hasError
             {props.placeholder && isFocused && (
                 <label className={classNames(styles.floatingLabel, styles[`floatingLabel-${color}`])}>{props.placeholder}</label>
             )}
-            <div className={classNames(styles.growWrap, styles[`growWrap-size-${size}`])} data-replicated-value={props.value}>
+            <div className={classNames(styles.growWrap, styles[`growWrap-size-${size}`])} data-replicated-value={enableScroll ? '' : props.value}>
                 <textarea
                     {...props}
                     className={classNames(styles.input, styles.textareaInput, styles[`color-${color}`], styles[`size-${size}`], className, {
                         [styles[`isFullWidth`]]: isFullWidth,
                         [styles[`hasError`]]: hasError || isInvalid,
                         [styles.textareaFocused]: isFocused,
+                        [styles.textareaScrollable]: enableScroll,
                     })}
                     style={style}
                     onFocus={(e) => {

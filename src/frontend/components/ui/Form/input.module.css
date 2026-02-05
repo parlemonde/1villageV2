@@ -141,6 +141,10 @@
     grid-area: 1/1/2/2;
 }
 
+.textareaInput.textareaScrollable {
+    overflow-y: auto;
+}
+
 .growWrap {
     display: grid;
     width: 100%;

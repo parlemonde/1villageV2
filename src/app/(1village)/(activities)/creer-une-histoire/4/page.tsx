@@ -168,6 +168,7 @@ const StoryStep4 = () => {
                                 id="tale-story"
                                 name="tale-story"
                                 isFullWidth
+                                enableScroll
                                 placeholder="Écrivez l'histoire de votre village-monde idéal"
                                 value={data?.tale?.tale || ''}
                                 onChange={(e) => {
@@ -179,7 +180,7 @@ const StoryStep4 = () => {
                                         data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
                                     });
                                 }}
-                                style={{ width: '100%' }}
+                                style={{ width: '100%', height: '240px' }}
                             />
                         </div>
                     </div>
