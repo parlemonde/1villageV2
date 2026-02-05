@@ -5,10 +5,11 @@ import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { eq } from 'drizzle-orm';
 
-export const deleteClassroom = async (classroomId: number): Promise<void> => {
+export const deleteClassroom = async (classroomId: number | undefined): Promise<void> => {
     const currentUser = await getCurrentUser();
     if (currentUser?.role !== 'admin') {
         throw new Error('Not authorized');
     }
-    await db.delete(classrooms).where(eq(classrooms.id, classroomId));
+
+    if (classroomId) await db.delete(classrooms).where(eq(classrooms.id, classroomId));
 };

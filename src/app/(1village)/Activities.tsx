@@ -4,6 +4,7 @@ import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { ActivityFilters, type ActivityFiltersState } from '@frontend/components/activities/ActivityFilters/ActivityFilters';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
+import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -46,7 +47,7 @@ export const Activities = () => {
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
-                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                        classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
                     />
                 ))}
             </div>

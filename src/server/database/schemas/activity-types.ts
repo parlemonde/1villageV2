@@ -1,7 +1,7 @@
 import type { AnyContent, Content } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
-type FreeActivity = {
+export type FreeActivity = {
     type: 'libre';
     data: {
         title?: string;
@@ -11,14 +11,14 @@ type FreeActivity = {
     } | null;
 };
 
-type GameActivity = {
+export type GameActivity = {
     type: 'jeu';
     data: {
         gameId: string;
     } | null;
 };
 
-type PuzzleActivity = {
+export type PuzzleActivity = {
     type: 'enigme';
     data: {
         text: string;

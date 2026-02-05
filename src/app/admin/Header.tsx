@@ -4,11 +4,12 @@ import { BackDrop } from '@frontend/components/ui/BackDrop';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Dropdown } from '@frontend/components/ui/Dropdown';
 import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuItem';
+import { Link } from '@frontend/components/ui/Link';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import { ExitIcon, HamburgerMenuIcon, HomeIcon } from '@radix-ui/react-icons';
 import { logout } from '@server-actions/authentication/logout';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { AdminMobileNavigation } from './Navigation';
 import styles from './header.module.css';
@@ -29,10 +30,10 @@ export const Header = () => {
                     />
                 </div>
                 <div style={{ flex: '1 1 0' }}>
-                    <div className={styles.logoContainer}>
+                    <Link href="/" className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
-                    </div>
+                    </Link>
                 </div>
 
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
