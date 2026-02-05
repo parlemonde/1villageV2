@@ -98,7 +98,7 @@
 }
 .variant-outlined.color-secondary {
     border: 1px solid var(--secondary-color);
-    color: var(--secondary-500);
+    color: var(--secondary-700);
 }
 .variant-outlined.color-secondary:hover,
 .variant-outlined.color-secondary:focus-visible {
