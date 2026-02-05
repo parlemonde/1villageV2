@@ -106,7 +106,14 @@ const VillageSelector = () => {
         <>
             <div className={styles.villageNameContainer}>
                 {village && <span className={styles.villageNameLabel}>{village?.name}</span>}
-                <Button size="sm" isUpperCase={false} color="secondary" onClick={() => setIsModalOpen(true)} label={tCommon('Changer de village')} />
+                <Button
+                    size="sm"
+                    isUpperCase={false}
+                    color="secondary"
+                    className={styles.villageNameButton}
+                    onClick={() => setIsModalOpen(true)}
+                    label={tCommon('Changer de village')}
+                />
             </div>
             <Modal
                 isOpen={isModalOpen}

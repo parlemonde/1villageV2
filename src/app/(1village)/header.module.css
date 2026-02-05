@@ -58,14 +58,21 @@
 
 .villageNameContainer {
     display: inline-block;
-    border: 1px solid var(--secondary-color);
+}
+
+.villageNameContainer:has(.villageNameLabel) {
     border-radius: 10px;
+    border: 1px solid var(--secondary-color);
 }
 
 .villageNameLabel {
     font-size: 13px;
     line-height: 20px;
     padding: 4px 8px;
+}
+
+.villageNameLabel + .villageNameButton {
+    border-width: 0 0 0 1px;
 }
 
 @media (max-width: 850px) {
