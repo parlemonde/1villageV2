@@ -91,112 +91,104 @@ const StoryStep2 = () => {
                 marginTop="xl"
                 marginBottom="md"
             />
-            <div className={styles['width-story']}>
-                <Title variant="h2" marginBottom="md">
-                    Imaginez et dessinez votre objet magique
-                </Title>
-                <p className="text">
-                    Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
-                    choisi à l&apos;étape précédente.
-                </p>
-                <div className={styles['odd-container']}>
-                    <div className={styles['odd-column']}>
-                        <div className={styles['odd-image-wrapper']}>
-                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <div style={{ width: '100%', position: 'relative' }}>
-                                    <AspectRatio.Root ratio={3 / 2}>
-                                        <div
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
-                                                borderRadius: '10px',
-                                                justifyContent: 'center',
-                                                overflow: 'hidden',
-                                                cursor: 'pointer',
+            <Title variant="h2" marginBottom="md">
+                Imaginez et dessinez votre objet magique
+            </Title>
+            <p className="text">
+                Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
+                choisi à l&apos;étape précédente.
+            </p>
+            <div className={styles['odd-container']}>
+                <div className={styles['odd-column']}>
+                    <div className={styles['odd-image-wrapper']}>
+                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                            <div style={{ width: '100%', position: 'relative' }}>
+                                <AspectRatio.Root ratio={3 / 2}>
+                                    <div
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                            borderRadius: '10px',
+                                            justifyContent: 'center',
+                                            overflow: 'hidden',
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => setIsUploadImageModalOpen(true)}
+                                    >
+                                        {data?.object?.imageUrl ? (
+                                            <Image layout="fill" objectFit="cover" alt="image de l'objet" src={data?.object?.imageUrl} unoptimized />
+                                        ) : (
+                                            <PlusIcon width={80} height={80} color="var(--primary-color)" />
+                                        )}
+                                    </div>
+                                </AspectRatio.Root>
+                                {data?.object?.imageUrl && (
+                                    <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                        <IconButton
+                                            icon={TrashIcon}
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsModalOpen(true);
                                             }}
-                                            onClick={() => setIsUploadImageModalOpen(true)}
-                                        >
-                                            {data?.object?.imageUrl ? (
-                                                <Image
-                                                    layout="fill"
-                                                    objectFit="cover"
-                                                    alt="image de l'objet"
-                                                    src={data?.object?.imageUrl}
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
-                                            )}
-                                        </div>
-                                    </AspectRatio.Root>
-                                    {data?.object?.imageUrl && (
-                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
-                                            <IconButton
-                                                icon={TrashIcon}
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setIsModalOpen(true);
-                                                }}
-                                                style={{ backgroundColor: 'white' }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <Modal
-                                    isOpen={isModalOpen}
-                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                    confirmLabel="Supprimer l'image"
-                                    onClose={() => setIsModalOpen(false)}
-                                    onConfirm={() => {
-                                        handleDelete();
-                                        setIsModalOpen(false);
-                                    }}
-                                />
-                                <UploadImageModal
-                                    isOpen={isUploadImageModalOpen}
-                                    initialImageUrl={data?.object?.imageUrl || ''}
-                                    onClose={() => setIsUploadImageModalOpen(false)}
-                                    getActivityId={getOrCreateDraft}
-                                    onNewImage={(imageUrl) => setImage(imageUrl)}
-                                />
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        </div>
 
-                        {/* Description section - sous l'image */}
-                        <Field
-                            helperText={'Écrivez la description de votre image !'}
-                            name="standard-multiline-static"
-                            input={
-                                <TextArea
-                                    id="object-description"
-                                    name="object-description"
-                                    isFullWidth
-                                    placeholder="Décrivez l'objet magique"
-                                    value={data?.object?.description || ''}
-                                    onChange={(e) => {
-                                        if (!data) return;
-                                        const { object } = data;
-                                        setActivity({
-                                            ...activity,
-                                            type: 'histoire',
-                                            data: { ...data, object: { ...object, description: e.target.value } } as ActivityData<'histoire'>,
-                                        });
-                                    }}
-                                    style={{ width: '100%' }}
-                                    maxLength={400}
-                                />
-                            }
-                            marginTop="md"
-                        />
-                        <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
-                            <span className="text text--small">{data?.object?.description?.length || 0}/400</span>
+                            <Modal
+                                isOpen={isModalOpen}
+                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                confirmLabel="Supprimer l'image"
+                                onClose={() => setIsModalOpen(false)}
+                                onConfirm={() => {
+                                    handleDelete();
+                                    setIsModalOpen(false);
+                                }}
+                            />
+                            <UploadImageModal
+                                isOpen={isUploadImageModalOpen}
+                                initialImageUrl={data?.object?.imageUrl || ''}
+                                onClose={() => setIsUploadImageModalOpen(false)}
+                                getActivityId={getOrCreateDraft}
+                                onNewImage={(imageUrl) => setImage(imageUrl)}
+                            />
                         </div>
+                    </div>
+
+                    {/* Description section - sous l'image */}
+                    <Field
+                        helperText={'Écrivez la description de votre image !'}
+                        name="standard-multiline-static"
+                        input={
+                            <TextArea
+                                id="object-description"
+                                name="object-description"
+                                isFullWidth
+                                placeholder="Décrivez l'objet magique"
+                                value={data?.object?.description || ''}
+                                onChange={(e) => {
+                                    if (!data) return;
+                                    const { object } = data;
+                                    setActivity({
+                                        ...activity,
+                                        type: 'histoire',
+                                        data: { ...data, object: { ...object, description: e.target.value } } as ActivityData<'histoire'>,
+                                    });
+                                }}
+                                style={{ width: '100%' }}
+                                maxLength={400}
+                            />
+                        }
+                        marginTop="md"
+                    />
+                    <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
+                        <span className="text text--small">{data?.object?.description?.length || 0}/400</span>
                     </div>
                 </div>
             </div>

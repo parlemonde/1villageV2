@@ -92,105 +92,103 @@ const StoryStep3 = () => {
                 marginTop="xl"
                 marginBottom="md"
             />
-            <div className={styles['width-story']}>
-                <Title variant="h2" marginBottom="md">
-                    Imaginez et dessinez votre lieu extraordinaire
-                </Title>
-                <p className="text">
-                    Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable
-                    que vous avez choisi à l&apos;étape précédente.
-                </p>
-                <div className={styles['odd-container']}>
-                    <div className={styles['odd-column']}>
-                        <div className={styles['odd-image-wrapper']}>
-                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <div style={{ width: '100%', position: 'relative' }}>
-                                    <AspectRatio.Root ratio={3 / 2}>
-                                        <div
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
-                                                borderRadius: '10px',
-                                                justifyContent: 'center',
-                                                overflow: 'hidden',
-                                                cursor: 'pointer',
+            <Title variant="h2" marginBottom="md">
+                Imaginez et dessinez votre lieu extraordinaire
+            </Title>
+            <p className="text">
+                Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable que
+                vous avez choisi à l&apos;étape précédente.
+            </p>
+            <div className={styles['odd-container']}>
+                <div className={styles['odd-column']}>
+                    <div className={styles['odd-image-wrapper']}>
+                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                            <div style={{ width: '100%', position: 'relative' }}>
+                                <AspectRatio.Root ratio={3 / 2}>
+                                    <div
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                            borderRadius: '10px',
+                                            justifyContent: 'center',
+                                            overflow: 'hidden',
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => setIsUploadImageModalOpen(true)}
+                                    >
+                                        {data?.place?.imageUrl ? (
+                                            <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
+                                        ) : (
+                                            <PlusIcon width={80} height={80} color="var(--primary-color)" />
+                                        )}
+                                    </div>
+                                </AspectRatio.Root>
+                                {data?.place?.imageUrl && (
+                                    <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                        <IconButton
+                                            icon={TrashIcon}
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsModalOpen(true);
                                             }}
-                                            onClick={() => setIsUploadImageModalOpen(true)}
-                                        >
-                                            {data?.place?.imageUrl ? (
-                                                <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
-                                            ) : (
-                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
-                                            )}
-                                        </div>
-                                    </AspectRatio.Root>
-                                    {data?.place?.imageUrl && (
-                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
-                                            <IconButton
-                                                icon={TrashIcon}
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setIsModalOpen(true);
-                                                }}
-                                                style={{ backgroundColor: 'white' }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <Modal
-                                    isOpen={isModalOpen}
-                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                    confirmLabel="Supprimer l'image"
-                                    onClose={() => setIsModalOpen(false)}
-                                    onConfirm={() => {
-                                        handleDelete();
-                                        setIsModalOpen(false);
-                                    }}
-                                />
-                                <UploadImageModal
-                                    isOpen={isUploadImageModalOpen}
-                                    initialImageUrl={data?.place?.imageUrl || ''}
-                                    onClose={() => setIsUploadImageModalOpen(false)}
-                                    getActivityId={getOrCreateDraft}
-                                    onNewImage={(imageUrl) => setImage(imageUrl)}
-                                />
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        </div>
 
-                        {/* Description section - sous l'image */}
-                        <Field
-                            name="standard-multiline-static"
-                            input={
-                                <TextArea
-                                    id="place-description"
-                                    name="place-description"
-                                    isFullWidth
-                                    placeholder="Décrivez le lieu extraordinaire"
-                                    value={data?.place?.description || ''}
-                                    onChange={(e) => {
-                                        if (!data) return;
-                                        const { place } = data;
-                                        setActivity({
-                                            ...activity,
-                                            type: 'histoire',
-                                            data: { ...data, place: { ...place, description: e.target.value } } as ActivityData<'histoire'>,
-                                        });
-                                    }}
-                                    style={{ width: '100%' }}
-                                    maxLength={400}
-                                />
-                            }
-                            marginTop="md"
-                        />
-                        <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
-                            <span className="text text--small">{data?.place?.description?.length || 0}/400</span>
+                            <Modal
+                                isOpen={isModalOpen}
+                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                confirmLabel="Supprimer l'image"
+                                onClose={() => setIsModalOpen(false)}
+                                onConfirm={() => {
+                                    handleDelete();
+                                    setIsModalOpen(false);
+                                }}
+                            />
+                            <UploadImageModal
+                                isOpen={isUploadImageModalOpen}
+                                initialImageUrl={data?.place?.imageUrl || ''}
+                                onClose={() => setIsUploadImageModalOpen(false)}
+                                getActivityId={getOrCreateDraft}
+                                onNewImage={(imageUrl) => setImage(imageUrl)}
+                            />
                         </div>
+                    </div>
+
+                    {/* Description section - sous l'image */}
+                    <Field
+                        name="standard-multiline-static"
+                        input={
+                            <TextArea
+                                id="place-description"
+                                name="place-description"
+                                isFullWidth
+                                placeholder="Décrivez le lieu extraordinaire"
+                                value={data?.place?.description || ''}
+                                onChange={(e) => {
+                                    if (!data) return;
+                                    const { place } = data;
+                                    setActivity({
+                                        ...activity,
+                                        type: 'histoire',
+                                        data: { ...data, place: { ...place, description: e.target.value } } as ActivityData<'histoire'>,
+                                    });
+                                }}
+                                style={{ width: '100%' }}
+                                maxLength={400}
+                            />
+                        }
+                        marginTop="md"
+                    />
+                    <div style={{ width: '100%', textAlign: 'right', color: 'var(--grey-400)', paddingRight: '8px' }}>
+                        <span className="text text--small">{data?.place?.description?.length || 0}/400</span>
                     </div>
                 </div>
             </div>

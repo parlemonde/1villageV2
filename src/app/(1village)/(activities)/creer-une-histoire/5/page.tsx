@@ -187,114 +187,104 @@ const StoryStep5 = () => {
                 marginBottom="md"
             />
 
-            <div className={styles['width-story']}>
-                <Title variant="h2" marginBottom="md">
-                    Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}
-                </Title>
-                <p className="text" style={{ fontSize: '1.1rem', margin: '1rem 0' }}>
-                    Relisez votre publication une dernière fois avant de la publier !
-                </p>
+            <Title variant="h2" marginBottom="md">
+                Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}
+            </Title>
+            <p className="text" style={{ fontSize: '1.1rem', margin: '1rem 0' }}>
+                Relisez votre publication une dernière fois avant de la publier !
+            </p>
 
-                {isEdit ? (
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
-                        <Button as="a" color="secondary" variant="contained" href="/creer-une-histoire/2" label="Modifier à l'étape précédente" />
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={onPublish}
-                            disabled={isObservator || !isValid}
-                            label="Enregistrer les changements"
-                        />
-                    </div>
-                ) : (
-                    <>
-                        {!isValid && (
-                            <p>
-                                <b>Avant de publier votre histoire, il faut corriger les étapes incomplètes, marquées en orange.</b>
-                            </p>
-                        )}
-                        <div style={{ width: '100%', textAlign: 'right', margin: '1rem 0' }}>
-                            {isObservator ? (
-                                <Tooltip content="Action non autorisée" hasArrow>
-                                    <span>
-                                        <Button variant="outlined" color="primary" disabled label="Publier" />
-                                    </span>
-                                </Tooltip>
-                            ) : (
-                                <Button variant="outlined" color="primary" onClick={onPublish} disabled={!isValid} label="Publier" />
-                            )}
-                        </div>
-                    </>
-                )}
-
-                {/* ODD */}
-                <div
-                    className={`${styles['preview-block']} ${errorSteps.includes(0) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
-                >
-                    <ImageStepContainer
-                        urlStep={`/creer-une-histoire/1?edit=${activity.id}`}
-                        imageUrl={data.odd?.imageUrl}
-                        isValid={isValid}
-                        error={errorSteps.includes(0)}
-                        description={data.odd?.description}
-                    />
-                </div>
-
-                {/* Object */}
-                <div
-                    className={`${styles['preview-block']} ${errorSteps.includes(1) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
-                >
-                    <ImageStepContainer
-                        urlStep={`/creer-une-histoire/2`}
-                        imageUrl={data.object?.imageUrl}
-                        isValid={isValid}
-                        error={errorSteps.includes(1)}
-                        description={data.object?.description}
-                    />
-                </div>
-
-                {/* Place */}
-                <div
-                    className={`${styles['preview-block']} ${errorSteps.includes(2) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
-                >
-                    <ImageStepContainer
-                        urlStep={`/creer-une-histoire/3`}
-                        imageUrl={data.place?.imageUrl}
-                        isValid={isValid}
-                        error={errorSteps.includes(2)}
-                        description={data.place?.description}
-                    />
-                </div>
-
-                {/* Tale */}
-                <div
-                    className={`${styles['preview-block']} ${errorSteps.includes(3) ? styles['preview-block-error'] : styles['preview-block-valid']}`}
-                >
-                    <ImageStepContainer
-                        urlStep={`/creer-une-histoire/4`}
-                        imageUrl={data.tale?.imageStory}
-                        isValid={isValid}
-                        error={errorSteps.includes(3)}
-                        description={data.tale?.tale}
-                    />
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
+            {isEdit ? (
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
+                    <Button as="a" color="secondary" variant="contained" href="/creer-une-histoire/2" label="Modifier à l'étape précédente" />
                     <Button
-                        as="a"
-                        href="/creer-une-histoire/4"
-                        color="primary"
                         variant="outlined"
-                        label="Étape précédente"
-                        leftIcon={<ChevronLeftIcon />}
+                        color="primary"
+                        onClick={onPublish}
+                        disabled={isObservator || !isValid}
+                        label="Enregistrer les changements"
                     />
                 </div>
-                {isLoading && (
-                    <BackDrop style={{ zIndex: 2000, color: 'white' }}>
-                        <CircularProgress color="inherit" />
-                    </BackDrop>
-                )}
+            ) : (
+                <>
+                    {!isValid && (
+                        <p>
+                            <b>Avant de publier votre histoire, il faut corriger les étapes incomplètes, marquées en orange.</b>
+                        </p>
+                    )}
+                    <div style={{ width: '100%', textAlign: 'right', margin: '1rem 0' }}>
+                        {isObservator ? (
+                            <Tooltip content="Action non autorisée" hasArrow>
+                                <span>
+                                    <Button variant="outlined" color="primary" disabled label="Publier" />
+                                </span>
+                            </Tooltip>
+                        ) : (
+                            <Button variant="outlined" color="primary" onClick={onPublish} disabled={!isValid} label="Publier" />
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* ODD */}
+            <div className={`${styles['preview-block']} ${errorSteps.includes(0) ? styles['preview-block-error'] : styles['preview-block-valid']}`}>
+                <ImageStepContainer
+                    urlStep={`/creer-une-histoire/1?edit=${activity.id}`}
+                    imageUrl={data.odd?.imageUrl}
+                    isValid={isValid}
+                    error={errorSteps.includes(0)}
+                    description={data.odd?.description}
+                />
             </div>
+
+            {/* Object */}
+            <div className={`${styles['preview-block']} ${errorSteps.includes(1) ? styles['preview-block-error'] : styles['preview-block-valid']}`}>
+                <ImageStepContainer
+                    urlStep={`/creer-une-histoire/2`}
+                    imageUrl={data.object?.imageUrl}
+                    isValid={isValid}
+                    error={errorSteps.includes(1)}
+                    description={data.object?.description}
+                />
+            </div>
+
+            {/* Place */}
+            <div className={`${styles['preview-block']} ${errorSteps.includes(2) ? styles['preview-block-error'] : styles['preview-block-valid']}`}>
+                <ImageStepContainer
+                    urlStep={`/creer-une-histoire/3`}
+                    imageUrl={data.place?.imageUrl}
+                    isValid={isValid}
+                    error={errorSteps.includes(2)}
+                    description={data.place?.description}
+                />
+            </div>
+
+            {/* Tale */}
+            <div className={`${styles['preview-block']} ${errorSteps.includes(3) ? styles['preview-block-error'] : styles['preview-block-valid']}`}>
+                <ImageStepContainer
+                    urlStep={`/creer-une-histoire/4`}
+                    imageUrl={data.tale?.imageStory}
+                    isValid={isValid}
+                    error={errorSteps.includes(3)}
+                    description={data.tale?.tale}
+                />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
+                <Button
+                    as="a"
+                    href="/creer-une-histoire/4"
+                    color="primary"
+                    variant="outlined"
+                    label="Étape précédente"
+                    leftIcon={<ChevronLeftIcon />}
+                />
+            </div>
+            {isLoading && (
+                <BackDrop style={{ zIndex: 2000, color: 'white' }}>
+                    <CircularProgress color="inherit" />
+                </BackDrop>
+            )}
         </PageContainer>
     );
 };

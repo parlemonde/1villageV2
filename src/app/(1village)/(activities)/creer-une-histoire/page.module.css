@@ -14,13 +14,6 @@
     margin-top: 1.5rem;
 }
 
-/* Equivalent to md={6} → 50% width on medium screens */
-@media (min-width: 960px) {
-    .odd-column {
-        width: 80%;
-    }
-}
-
 .odd-image-wrapper {
     width: 100%;
     max-width: 320px;
@@ -32,12 +25,6 @@
     position: absolute;
     top: 0.25rem;
     right: 0.25rem;
-}
-
-.width-story {
-    margin: 0 auto 1rem auto;
-    width: 100%;
-    max-width: 65rem;
 }
 
 .preview-block {

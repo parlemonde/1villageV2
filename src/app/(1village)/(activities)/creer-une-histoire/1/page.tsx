@@ -116,106 +116,104 @@ const StoryStep1 = () => {
                 marginBottom="md"
             />
 
-            <div className={styles['width-story']}>
-                <Title variant="h2" marginBottom="md">
-                    Choisissez et dessinez l&apos;objectif du développement durable à atteindre
-                </Title>
-                <p className="text">Choisissez votre objectif et dessinez-le.</p>
-                <div className={styles['odd-container']}>
-                    <div className={styles['odd-column']}>
-                        <div className={styles['odd-image-wrapper']}>
-                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <div style={{ width: '100%', position: 'relative' }}>
-                                    <AspectRatio.Root ratio={3 / 2}>
-                                        <div
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
-                                                borderRadius: '10px',
-                                                justifyContent: 'center',
-                                                overflow: 'hidden',
-                                                cursor: 'pointer',
-                                            }}
-                                            onClick={() => setIsUploadImageModalOpen(true)}
-                                        >
-                                            {data?.odd?.imageUrl ? (
-                                                <Image
-                                                    layout="fill"
-                                                    objectFit="cover"
-                                                    alt="image de l'objectif de développement durable"
-                                                    src={data.odd?.imageUrl}
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
-                                            )}
-                                        </div>
-                                    </AspectRatio.Root>
-                                    {data?.odd?.imageUrl && (
-                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
-                                            <IconButton
-                                                icon={TrashIcon}
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setIsModalOpen(true);
-                                                }}
-                                                style={{ backgroundColor: 'white' }}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <Modal
-                                    isOpen={isModalOpen}
-                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                    confirmLabel="Supprimer l'image"
-                                    onClose={() => setIsModalOpen(false)}
-                                    onConfirm={() => {
-                                        handleDelete();
-                                        setIsModalOpen(false);
-                                    }}
-                                />
-                                <UploadImageModal
-                                    getActivityId={getOrCreateDraft}
-                                    isOpen={isUploadImageModalOpen}
-                                    onClose={() => setIsUploadImageModalOpen(false)}
-                                    initialImageUrl={data?.odd?.imageUrl || ''}
-                                    onNewImage={(imageUrl) => setImage(imageUrl)}
-                                    isPelicoImage={isPelico}
-                                />
-                            </div>
-                            <Field
-                                name="select-ODD"
-                                label="ODD"
-                                helperText="Choisissez votre ODD"
-                                helperTextStyle={{ textAlign: 'left' }}
-                                input={
-                                    <Select
-                                        hasError={isError && data?.odd?.description === ''}
-                                        id="select-ODD-outlined"
-                                        value={oDDChoice || data?.odd?.description || ''}
-                                        onChange={(value: string) => {
-                                            setODDChoice(value);
-                                            const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
-                                            setActivity({
-                                                ...activity,
-                                                type: 'histoire',
-                                                data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'>,
-                                            });
+            <Title variant="h2" marginBottom="md">
+                Choisissez et dessinez l&apos;objectif du développement durable à atteindre
+            </Title>
+            <p className="text">Choisissez votre objectif et dessinez-le.</p>
+            <div className={styles['odd-container']}>
+                <div className={styles['odd-column']}>
+                    <div className={styles['odd-image-wrapper']}>
+                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                            <div style={{ width: '100%', position: 'relative' }}>
+                                <AspectRatio.Root ratio={3 / 2}>
+                                    <div
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                            borderRadius: '10px',
+                                            justifyContent: 'center',
+                                            overflow: 'hidden',
+                                            cursor: 'pointer',
                                         }}
-                                        options={ODD_CHOICE.map((v) => ({ label: v.choice, value: v.choice }))}
-                                        placeholder="Choisissez votre ODD"
-                                        isFullWidth
-                                    />
-                                }
-                                marginTop="md"
+                                        onClick={() => setIsUploadImageModalOpen(true)}
+                                    >
+                                        {data?.odd?.imageUrl ? (
+                                            <Image
+                                                layout="fill"
+                                                objectFit="cover"
+                                                alt="image de l'objectif de développement durable"
+                                                src={data.odd?.imageUrl}
+                                                unoptimized
+                                            />
+                                        ) : (
+                                            <PlusIcon width={80} height={80} color="var(--primary-color)" />
+                                        )}
+                                    </div>
+                                </AspectRatio.Root>
+                                {data?.odd?.imageUrl && (
+                                    <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                        <IconButton
+                                            icon={TrashIcon}
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsModalOpen(true);
+                                            }}
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            <Modal
+                                isOpen={isModalOpen}
+                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                confirmLabel="Supprimer l'image"
+                                onClose={() => setIsModalOpen(false)}
+                                onConfirm={() => {
+                                    handleDelete();
+                                    setIsModalOpen(false);
+                                }}
+                            />
+                            <UploadImageModal
+                                getActivityId={getOrCreateDraft}
+                                isOpen={isUploadImageModalOpen}
+                                onClose={() => setIsUploadImageModalOpen(false)}
+                                initialImageUrl={data?.odd?.imageUrl || ''}
+                                onNewImage={(imageUrl) => setImage(imageUrl)}
+                                isPelicoImage={isPelico}
                             />
                         </div>
+                        <Field
+                            name="select-ODD"
+                            label="ODD"
+                            helperText="Choisissez votre ODD"
+                            helperTextStyle={{ textAlign: 'left' }}
+                            input={
+                                <Select
+                                    hasError={isError && data?.odd?.description === ''}
+                                    id="select-ODD-outlined"
+                                    value={oDDChoice || data?.odd?.description || ''}
+                                    onChange={(value: string) => {
+                                        setODDChoice(value);
+                                        const odd = data?.odd ?? { imageId: null, imageUrl: null, description: null };
+                                        setActivity({
+                                            ...activity,
+                                            type: 'histoire',
+                                            data: { ...data, odd: { ...odd, description: value } } as ActivityData<'histoire'>,
+                                        });
+                                    }}
+                                    options={ODD_CHOICE.map((v) => ({ label: v.choice, value: v.choice }))}
+                                    placeholder="Choisissez votre ODD"
+                                    isFullWidth
+                                />
+                            }
+                            marginTop="md"
+                        />
                     </div>
                 </div>
             </div>

@@ -85,104 +85,102 @@ const StoryStep4 = () => {
                 marginTop="xl"
                 marginBottom="md"
             />
-            <div className={styles['width-story']}>
-                <Title variant="h2" marginBottom="md">
-                    Décrivez et dessinez votre village-monde idéal
-                </Title>
-                <p className="text">
-                    Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l&apos;objectif
-                    du développement durable que vous avez choisi.
-                </p>
-                <div className={styles['odd-container']}>
-                    <div className={styles['odd-column']}>
-                        <div className={styles['odd-image-wrapper']}>
-                            <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
-                                <div style={{ width: '100%', position: 'relative' }}>
-                                    <AspectRatio.Root ratio={3 / 2}>
-                                        <div
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
-                                                borderRadius: '10px',
-                                                justifyContent: 'center',
-                                                overflow: 'hidden',
-                                                cursor: 'pointer',
-                                            }}
-                                            onClick={() => setIsUploadImageModalOpen(true)}
-                                        >
-                                            {data?.tale?.imageStory ? (
-                                                <Image
-                                                    layout="fill"
-                                                    objectFit="cover"
-                                                    alt="image de l'histoire"
-                                                    src={data.tale?.imageStory}
-                                                    unoptimized
-                                                />
-                                            ) : (
-                                                <PlusIcon width={80} height={80} color="var(--primary-color)" />
-                                            )}
-                                        </div>
-                                    </AspectRatio.Root>
-                                    {data?.tale?.imageStory && (
-                                        <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
-                                            <IconButton
-                                                icon={TrashIcon}
-                                                variant="outlined"
-                                                color="error"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setIsModalOpen(true);
-                                                }}
-                                                style={{ backgroundColor: 'white' }}
+            <Title variant="h2" marginBottom="md">
+                Décrivez et dessinez votre village-monde idéal
+            </Title>
+            <p className="text">
+                Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l&apos;objectif du
+                développement durable que vous avez choisi.
+            </p>
+            <div className={styles['odd-container']}>
+                <div className={styles['odd-column']}>
+                    <div className={styles['odd-image-wrapper']}>
+                        <div style={{ width: '100%', maxWidth: '320px', marginTop: '1rem', position: 'relative' }}>
+                            <div style={{ width: '100%', position: 'relative' }}>
+                                <AspectRatio.Root ratio={3 / 2}>
+                                    <div
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            border: `1px solid ${isError ? 'var(--error-color)' : 'var(--primary-color)'}`,
+                                            borderRadius: '10px',
+                                            justifyContent: 'center',
+                                            overflow: 'hidden',
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => setIsUploadImageModalOpen(true)}
+                                    >
+                                        {data?.tale?.imageStory ? (
+                                            <Image
+                                                layout="fill"
+                                                objectFit="cover"
+                                                alt="image de l'histoire"
+                                                src={data.tale?.imageStory}
+                                                unoptimized
                                             />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <Modal
-                                    isOpen={isModalOpen}
-                                    title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                    confirmLabel="Supprimer l'image"
-                                    onClose={() => setIsModalOpen(false)}
-                                    onConfirm={() => {
-                                        handleDelete();
-                                        setIsModalOpen(false);
-                                    }}
-                                />
-                                <UploadImageModal
-                                    isOpen={isUploadImageModalOpen}
-                                    initialImageUrl={data?.tale?.imageStory || ''}
-                                    onClose={() => setIsUploadImageModalOpen(false)}
-                                    getActivityId={getOrCreateDraft}
-                                    onNewImage={(imageUrl) => setImage(imageUrl)}
-                                />
+                                        ) : (
+                                            <PlusIcon width={80} height={80} color="var(--primary-color)" />
+                                        )}
+                                    </div>
+                                </AspectRatio.Root>
+                                {data?.tale?.imageStory && (
+                                    <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}>
+                                        <IconButton
+                                            icon={TrashIcon}
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsModalOpen(true);
+                                            }}
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        </div>
 
-                        {/* Description section - sous l'image */}
-                        <div style={{ marginTop: '1.5rem', width: '100%' }}>
-                            <TextArea
-                                id="tale-story"
-                                name="tale-story"
-                                isFullWidth
-                                enableScroll
-                                placeholder="Écrivez l'histoire de votre village-monde idéal"
-                                value={data?.tale?.tale || ''}
-                                onChange={(e) => {
-                                    if (!data) return;
-                                    const { tale } = data;
-                                    setActivity({
-                                        ...activity,
-                                        type: 'histoire',
-                                        data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
-                                    });
+                            <Modal
+                                isOpen={isModalOpen}
+                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
+                                confirmLabel="Supprimer l'image"
+                                onClose={() => setIsModalOpen(false)}
+                                onConfirm={() => {
+                                    handleDelete();
+                                    setIsModalOpen(false);
                                 }}
-                                style={{ width: '100%', height: '240px' }}
+                            />
+                            <UploadImageModal
+                                isOpen={isUploadImageModalOpen}
+                                initialImageUrl={data?.tale?.imageStory || ''}
+                                onClose={() => setIsUploadImageModalOpen(false)}
+                                getActivityId={getOrCreateDraft}
+                                onNewImage={(imageUrl) => setImage(imageUrl)}
                             />
                         </div>
+                    </div>
+
+                    {/* Description section - sous l'image */}
+                    <div style={{ marginTop: '1.5rem', width: '100%' }}>
+                        <TextArea
+                            id="tale-story"
+                            name="tale-story"
+                            isFullWidth
+                            enableScroll
+                            placeholder="Écrivez l'histoire de votre village-monde idéal"
+                            value={data?.tale?.tale || ''}
+                            onChange={(e) => {
+                                if (!data) return;
+                                const { tale } = data;
+                                setActivity({
+                                    ...activity,
+                                    type: 'histoire',
+                                    data: { ...data, tale: { ...tale, tale: e.target.value } } as ActivityData<'histoire'>,
+                                });
+                            }}
+                            style={{ width: '100%', height: '240px' }}
+                        />
                     </div>
                 </div>
             </div>
