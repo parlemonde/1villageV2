@@ -3,7 +3,6 @@
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
-import { getChallengeFormRoute } from '@frontend/lib/get-challenge-form-route';
 import CulinaryIcon from '@frontend/svg/defi/culinaire.svg';
 import EcologicalIcon from '@frontend/svg/defi/ecologique.svg';
 import LinguisticIcon from '@frontend/svg/defi/linguistique.svg';
@@ -18,11 +17,11 @@ import styles from './page.module.css';
 export const useChallengeThemes = () => {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi');
 
-    const CHALLENGE_THEMES: { label: string; icon?: ReactNode; name: ChallengeType }[] = [
-        { label: t('Défi linguistique'), icon: <LinguisticIcon />, name: 'linguistique' },
-        { label: t('Défi culinaire'), icon: <CulinaryIcon />, name: 'culinaire' },
-        { label: t('Défi écologique'), icon: <EcologicalIcon />, name: 'ecologique' },
-        { label: t('Lancer un défi sur un thème libre'), name: 'libre' },
+    const CHALLENGE_THEMES: { label: string; icon?: ReactNode; name: ChallengeType; href: string }[] = [
+        { label: t('Défi linguistique'), icon: <LinguisticIcon />, name: 'linguistique', href: '/lancer-un-defi/linguistique/1' },
+        { label: t('Défi culinaire'), icon: <CulinaryIcon />, name: 'culinaire', href: '/lancer-un-defi/culinaire/1' },
+        { label: t('Défi écologique'), icon: <EcologicalIcon />, name: 'ecologique', href: '/lancer-un-defi/ecologique/1' },
+        { label: t('Lancer un défi sur un thème libre'), name: 'libre', href: '/lancer-un-defi/1' },
     ];
 
     return CHALLENGE_THEMES;
@@ -49,7 +48,7 @@ export default function LancerUnDefiPage() {
                             onCreateActivity('defi', isPelico, {
                                 theme: theme.name,
                             });
-                            router.push(getChallengeFormRoute(theme.name));
+                            router.push(theme.href);
                         }}
                     >
                         {theme.icon}
