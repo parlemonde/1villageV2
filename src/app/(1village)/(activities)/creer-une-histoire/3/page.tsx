@@ -86,11 +86,11 @@ const StoryStep3 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: t('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
-                    { label: t('Lieu'), href: '/creer-une-histoire/3' },
-                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
-                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
+                    { label: tCommon('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: tCommon('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: tCommon('Lieu'), href: '/creer-une-histoire/3' },
+                    { label: tCommon('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: tCommon('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={2}
                 marginTop="xl"
@@ -149,8 +149,8 @@ const StoryStep3 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
-                                confirmLabel={t("Supprimer l'image")}
+                                title={tCommon("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={tCommon("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();

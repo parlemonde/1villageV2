@@ -109,11 +109,11 @@ const StoryStep1 = () => {
             <BackButton href="/creer-une-histoire" label={t('Retour')} />
             <Steps
                 steps={[
-                    { label: t('ODD'), href: '/creer-une-histoire/1?edit' },
-                    { label: t('Objet'), href: '/creer-une-histoire/2' },
-                    { label: t('Lieu'), href: '/creer-une-histoire/3' },
-                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
-                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
+                    { label: tCommon('ODD'), href: '/creer-une-histoire/1?edit' },
+                    { label: tCommon('Objet'), href: '/creer-une-histoire/2' },
+                    { label: tCommon('Lieu'), href: '/creer-une-histoire/3' },
+                    { label: tCommon('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: tCommon('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={0}
                 marginTop="xl"
@@ -175,8 +175,8 @@ const StoryStep1 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
-                                confirmLabel={t("Supprimer l'image")}
+                                title={tCommon("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={tCommon("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();

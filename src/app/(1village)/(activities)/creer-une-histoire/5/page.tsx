@@ -27,10 +27,11 @@ type ImageStepContainerProps = {
     isValid: boolean;
     error: boolean;
     description: string | null | undefined;
-    t: ReturnType<typeof useExtracted>;
 };
 
-const ImageStepContainer = ({ urlStep, imageUrl, error, description, t }: ImageStepContainerProps) => {
+const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStepContainerProps) => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.5');
+
     return (
         <div
             style={{
@@ -181,11 +182,11 @@ const StoryStep5 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: t('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
-                    { label: t('Lieu'), href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
-                    { label: t('Histoire'), href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
-                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
+                    { label: tCommon('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: tCommon('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: tCommon('Lieu'), href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
+                    { label: tCommon('Histoire'), href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
+                    { label: tCommon('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={4}
                 marginTop="xl"
@@ -240,7 +241,6 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(0)}
                     description={data.odd?.description}
-                    t={t}
                 />
             </div>
 
@@ -252,7 +252,6 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(1)}
                     description={data.object?.description}
-                    t={t}
                 />
             </div>
 
@@ -264,7 +263,6 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(2)}
                     description={data.place?.description}
-                    t={t}
                 />
             </div>
 
@@ -276,7 +274,6 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(3)}
                     description={data.tale?.tale}
-                    t={t}
                 />
             </div>
 
