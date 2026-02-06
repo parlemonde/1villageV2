@@ -1,9 +1,10 @@
 import type { NominatimPlace } from '@app/api/geo/route';
-import { Map } from '@frontend/components/Map';
-import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Modal } from '@frontend/components/ui/Modal';
+import { WorldMap2D } from '@frontend/components/worldMaps/WorldMap2D';
+import { DEFAULT_COORDINATES } from '@frontend/components/worldMaps/WorldMap2D/WorldMap2D';
+import type { Coordinates } from '@frontend/components/worldMaps/world-map.types';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
@@ -28,7 +29,7 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
-    const [useFallback, setUseFallback] = useState(false);
+    const [useFallback, setUseFallback] = useState(true);
     const [hasAddressChanged, setHasAddressChanged] = useState(false);
 
     const hasValidationErrors = !currentSchoolName || !currentAddress;
@@ -229,13 +230,14 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                     />
                 }
             />
-            {useFallback && <Map marginBottom="md" marginX="auto" coordinates={currentCoordinates} zoom={5} setCoordinates={setCurrentCoordinates} />}
+            {useFallback && <WorldMap2D coordinates={currentCoordinates} setCoordinates={setCurrentCoordinates} />}
             <Field
                 style={{ pointerEvents: 'none' }}
                 isRequired={useFallback}
                 name="country"
                 label="Pays"
                 marginBottom="md"
+                marginTop="md"
                 input={<CountrySelect value={currentCountry} onChange={setCurrentCountry} isFullWidth disabled />}
             />
         </Modal>

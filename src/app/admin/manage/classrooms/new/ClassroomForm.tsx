@@ -2,12 +2,13 @@
 
 import styles from '@app/admin/manage/manage.module.css';
 import type { NominatimPlace } from '@app/api/geo/route';
-import { Map } from '@frontend/components/Map';
-import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
 import { Button } from '@frontend/components/ui/Button';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
+import { WorldMap2D } from '@frontend/components/worldMaps/WorldMap2D';
+import { DEFAULT_COORDINATES } from '@frontend/components/worldMaps/WorldMap2D/WorldMap2D';
+import type { Coordinates } from '@frontend/components/worldMaps/world-map.types';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
@@ -281,7 +282,7 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
                     />
                 }
             />
-            {useFallback && <Map marginBottom="md" marginX="auto" coordinates={coordinates} setCoordinates={setCoordinates} />}
+            {useFallback && <WorldMap2D coordinates={coordinates} setCoordinates={setCoordinates} />}
             <Field
                 label="Village-monde"
                 name="village"

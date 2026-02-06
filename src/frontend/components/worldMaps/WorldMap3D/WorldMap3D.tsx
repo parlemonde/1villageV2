@@ -1,5 +1,8 @@
 'use client';
 
+import { getClassroomMarker } from '@frontend/components/worldMaps/classroom-marker';
+import { useFullScreen } from '@frontend/components/worldMaps/use-full-screen';
+import styles from '@frontend/components/worldMaps/world-map.module.css';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { getClassroomFromProp } from '@lib/get-classroom';
 import type { Activity } from '@server/database/schemas/activities';
@@ -7,10 +10,7 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
-import { getClassroomMarker } from './classroom-marker';
-import { useFullScreen } from './use-full-screen';
 import { initWorldMap } from './world';
-import styles from './world-map.module.css';
 
 interface WorldMapProps {
     activity?: Activity | null;
@@ -25,7 +25,7 @@ function fitToBounds(map: maplibregl.Map, activity: Activity | null, bounds: map
     }
 }
 
-const WorldMap = ({ activity = null }: WorldMapProps) => {
+const WorldMap3D = ({ activity = null }: WorldMapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
@@ -155,4 +155,4 @@ const WorldMap = ({ activity = null }: WorldMapProps) => {
     );
 };
 
-export default WorldMap;
+export default WorldMap3D;
