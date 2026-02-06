@@ -15,7 +15,10 @@ export const deleteComment = async (commentId: number): Promise<ServerActionResp
             throw new Error('Unauthorized');
         }
 
-        await db.delete(comments).where(and(eq(comments.id, commentId), eq(comments.userId, user.id)));
+        const isPelico = user.role === 'admin' || user.role === 'mediator';
+        const filters = isPelico ? eq(comments.id, commentId) : and((eq(comments.id, commentId), eq(comments.userId, user.id)));
+
+        await db.delete(comments).where(filters);
         return {};
     } catch (e) {
         console.error(e);

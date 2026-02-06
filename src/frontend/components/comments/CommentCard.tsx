@@ -52,10 +52,11 @@ interface CommentCardProps {
     classroom?: Classroom;
     comment: Comment;
     onDelete: () => void;
-    showButtons: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
 }
 
-export const CommentCard = ({ user, classroom, comment, onDelete, showButtons }: CommentCardProps) => {
+export const CommentCard = ({ user, classroom, comment, onDelete, canEdit, canDelete }: CommentCardProps) => {
     const tCommon = useExtracted('common');
     const isPelico = user.role === 'admin' || user.role === 'mediator';
 
@@ -86,10 +87,10 @@ export const CommentCard = ({ user, classroom, comment, onDelete, showButtons }:
 
     return (
         <div className={styles.card}>
-            {showButtons && (
+            {(canEdit || canDelete) && (
                 <div className={styles.buttons}>
-                    <IconButton icon={Pencil1Icon} color="primary" onClick={openEditor} />
-                    <IconButton icon={TrashIcon} color="error" variant="contained" onClick={onDelete} />
+                    {canEdit && <IconButton icon={Pencil1Icon} color="primary" onClick={openEditor} />}
+                    {canDelete && <IconButton icon={TrashIcon} color="error" variant="contained" onClick={onDelete} />}
                 </div>
             )}
             <div className={styles.commentHeader}>

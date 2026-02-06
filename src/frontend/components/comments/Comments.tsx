@@ -27,6 +27,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
     const tCommon = useExtracted('common');
 
     const { user, classroom } = useContext(UserContext);
+    const isPelico = user.role === 'admin' || user.role === 'mediator';
 
     const [content, setContent] = useState<unknown>('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -110,7 +111,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     comments?.map((c) => (
                         <CommentCard
                             key={c.comment.id}
-                            showButtons={user.id === c.user.id}
+                            canEdit={user.id === c.user.id}
+                            canDelete={user.id === c.user.id || isPelico}
                             user={c.user}
                             classroom={c.classroom}
                             comment={c.comment}
