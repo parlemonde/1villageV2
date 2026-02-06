@@ -15,10 +15,14 @@ import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-u
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
 const StoryStep3 = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.3');
+    const tCommon = useExtracted('common');
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
@@ -82,22 +86,23 @@ const StoryStep3 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
-                    { label: 'Lieu', href: '/creer-une-histoire/3' },
-                    { label: 'Histoire', href: '/creer-une-histoire/4' },
-                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: t('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: t('Lieu'), href: '/creer-une-histoire/3' },
+                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={2}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Imaginez et dessinez votre lieu extraordinaire
+                {t('Imaginez et dessinez votre lieu extraordinaire')}
             </Title>
             <p className="text">
-                Tout comme l&apos;objet magique, ce lieu extraordinaire doit permettre d&apos;atteindre l&apos;objectif du développement durable que
-                vous avez choisi à l&apos;étape précédente.
+                {t(
+                    "Tout comme l'objet magique, ce lieu extraordinaire doit permettre d'atteindre l'objectif du développement durable que vous avez choisi à l'étape précédente.",
+                )}
             </p>
             <div className={styles['odd-container']}>
                 <div className={styles['odd-column']}>
@@ -120,7 +125,7 @@ const StoryStep3 = () => {
                                         onClick={() => setIsUploadImageModalOpen(true)}
                                     >
                                         {data?.place?.imageUrl ? (
-                                            <Image layout="fill" objectFit="cover" alt="image du lieu" src={data.place?.imageUrl} unoptimized />
+                                            <Image layout="fill" objectFit="cover" alt={t('image du lieu')} src={data.place?.imageUrl} unoptimized />
                                         ) : (
                                             <PlusIcon width={80} height={80} color="var(--primary-color)" />
                                         )}
@@ -144,8 +149,8 @@ const StoryStep3 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                confirmLabel="Supprimer l'image"
+                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={t("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();
@@ -170,7 +175,7 @@ const StoryStep3 = () => {
                                 id="place-description"
                                 name="place-description"
                                 isFullWidth
-                                placeholder="Décrivez le lieu extraordinaire"
+                                placeholder={t('Décrivez le lieu extraordinaire')}
                                 value={data?.place?.description || ''}
                                 onChange={(e) => {
                                     if (!data) return;
@@ -198,7 +203,7 @@ const StoryStep3 = () => {
                     href="/creer-une-histoire/2"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
@@ -206,7 +211,7 @@ const StoryStep3 = () => {
                     href="/creer-une-histoire/4"
                     color="primary"
                     variant="outlined"
-                    label="Étape suivante"
+                    label={tCommon('Étape suivante')}
                     leftIcon={<ChevronRightIcon />}
                 />
             </div>

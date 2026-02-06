@@ -15,10 +15,14 @@ import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-u
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
 const StoryStep2 = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.2');
+    const tCommon = useExtracted('common');
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
@@ -81,22 +85,23 @@ const StoryStep2 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: 'Objet', href: '/creer-une-histoire/2' },
-                    { label: 'Lieu', href: '/creer-une-histoire/3' },
-                    { label: 'Histoire', href: '/creer-une-histoire/4' },
-                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: t('Objet'), href: '/creer-une-histoire/2' },
+                    { label: t('Lieu'), href: '/creer-une-histoire/3' },
+                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={1}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Imaginez et dessinez votre objet magique
+                {t('Imaginez et dessinez votre objet magique')}
             </Title>
             <p className="text">
-                Grâce à ses pouvoirs, votre objet magique doit permettre d&apos;atteindre l&apos;objectif du développement durable que vous avez
-                choisi à l&apos;étape précédente.
+                {t(
+                    "Grâce à ses pouvoirs, votre objet magique doit permettre d'atteindre l'objectif du développement durable que vous avez choisi à l'étape précédente.",
+                )}
             </p>
             <div className={styles['odd-container']}>
                 <div className={styles['odd-column']}>
@@ -119,7 +124,13 @@ const StoryStep2 = () => {
                                         onClick={() => setIsUploadImageModalOpen(true)}
                                     >
                                         {data?.object?.imageUrl ? (
-                                            <Image layout="fill" objectFit="cover" alt="image de l'objet" src={data?.object?.imageUrl} unoptimized />
+                                            <Image
+                                                layout="fill"
+                                                objectFit="cover"
+                                                alt={t("image de l'objet")}
+                                                src={data?.object?.imageUrl}
+                                                unoptimized
+                                            />
                                         ) : (
                                             <PlusIcon width={80} height={80} color="var(--primary-color)" />
                                         )}
@@ -143,8 +154,8 @@ const StoryStep2 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                confirmLabel="Supprimer l'image"
+                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={t("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();
@@ -163,14 +174,14 @@ const StoryStep2 = () => {
 
                     {/* Description section - sous l'image */}
                     <Field
-                        helperText={'Écrivez la description de votre image !'}
+                        helperText={t('Écrivez la description de votre image !')}
                         name="standard-multiline-static"
                         input={
                             <TextArea
                                 id="object-description"
                                 name="object-description"
                                 isFullWidth
-                                placeholder="Décrivez l'objet magique"
+                                placeholder={t("Décrivez l'objet magique")}
                                 value={data?.object?.description || ''}
                                 onChange={(e) => {
                                     if (!data) return;
@@ -199,7 +210,7 @@ const StoryStep2 = () => {
                     href="/creer-une-histoire/1"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
@@ -207,7 +218,7 @@ const StoryStep2 = () => {
                     href="/creer-une-histoire/3"
                     color="primary"
                     variant="outlined"
-                    label="Étape suivante"
+                    label={tCommon('Étape suivante')}
                     leftIcon={<ChevronRightIcon />}
                 />
             </div>

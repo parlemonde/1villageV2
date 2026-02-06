@@ -16,6 +16,7 @@ import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
@@ -26,9 +27,10 @@ type ImageStepContainerProps = {
     isValid: boolean;
     error: boolean;
     description: string | null | undefined;
+    t: ReturnType<typeof useExtracted>;
 };
 
-const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStepContainerProps) => {
+const ImageStepContainer = ({ urlStep, imageUrl, error, description, t }: ImageStepContainerProps) => {
     return (
         <div
             style={{
@@ -55,9 +57,9 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
                         }}
                     >
                         {imageUrl ? (
-                            <Image layout="fill" objectFit="cover" alt="Image de l'étape" src={imageUrl} unoptimized />
+                            <Image layout="fill" objectFit="cover" alt={t("Image de l'étape")} src={imageUrl} unoptimized />
                         ) : (
-                            <span style={{ color: 'var(--text-secondary)' }}>Aucune image</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>{t('Aucune image')}</span>
                         )}
                     </div>
                 </AspectRatio.Root>
@@ -73,7 +75,7 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
                     minHeight: '80px',
                 }}
             >
-                <p style={{ margin: 0 }}>{description || <em>Aucune description</em>}</p>
+                <p style={{ margin: 0 }}>{description || <em>{t('Aucune description')}</em>}</p>
             </div>
             <Link
                 href={urlStep}
@@ -98,6 +100,9 @@ const ImageStepContainer = ({ urlStep, imageUrl, error, description }: ImageStep
 };
 
 const StoryStep5 = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.5');
+    const tCommon = useExtracted('common');
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { activity, onPublishActivity, setActivity } = useContext(ActivityContext);
@@ -176,11 +181,11 @@ const StoryStep5 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
-                    { label: 'Lieu', href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
-                    { label: 'Histoire', href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
-                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: t('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: t('Lieu'), href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
+                    { label: t('Histoire'), href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
+                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={4}
                 marginTop="xl"
@@ -188,39 +193,40 @@ const StoryStep5 = () => {
             />
 
             <Title variant="h2" marginBottom="md">
-                Pré-visualisez votre histoire{!isEdit && ' et publiez-la'}
+                {t('Pré-visualisez votre histoire')}
+                {!isEdit && t(' et publiez-la')}
             </Title>
             <p className="text" style={{ fontSize: '1.1rem', margin: '1rem 0' }}>
-                Relisez votre publication une dernière fois avant de la publier !
+                {t('Relisez votre publication une dernière fois avant de la publier !')}
             </p>
 
             {isEdit ? (
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', margin: '1rem 0' }}>
-                    <Button as="a" color="secondary" variant="contained" href="/creer-une-histoire/2" label="Modifier à l'étape précédente" />
+                    <Button as="a" color="secondary" variant="contained" href="/creer-une-histoire/2" label={t("Modifier à l'étape précédente")} />
                     <Button
                         variant="outlined"
                         color="primary"
                         onClick={onPublish}
                         disabled={isObservator || !isValid}
-                        label="Enregistrer les changements"
+                        label={t('Enregistrer les changements')}
                     />
                 </div>
             ) : (
                 <>
                     {!isValid && (
                         <p>
-                            <b>Avant de publier votre histoire, il faut corriger les étapes incomplètes, marquées en orange.</b>
+                            <b>{t('Avant de publier votre histoire, il faut corriger les étapes incomplètes, marquées en orange.')}</b>
                         </p>
                     )}
                     <div style={{ width: '100%', textAlign: 'right', margin: '1rem 0' }}>
                         {isObservator ? (
-                            <Tooltip content="Action non autorisée" hasArrow>
+                            <Tooltip content={t('Action non autorisée')} hasArrow>
                                 <span>
-                                    <Button variant="outlined" color="primary" disabled label="Publier" />
+                                    <Button variant="outlined" color="primary" disabled label={tCommon('Publier')} />
                                 </span>
                             </Tooltip>
                         ) : (
-                            <Button variant="outlined" color="primary" onClick={onPublish} disabled={!isValid} label="Publier" />
+                            <Button variant="outlined" color="primary" onClick={onPublish} disabled={!isValid} label={tCommon('Publier')} />
                         )}
                     </div>
                 </>
@@ -234,6 +240,7 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(0)}
                     description={data.odd?.description}
+                    t={t}
                 />
             </div>
 
@@ -245,6 +252,7 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(1)}
                     description={data.object?.description}
+                    t={t}
                 />
             </div>
 
@@ -256,6 +264,7 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(2)}
                     description={data.place?.description}
+                    t={t}
                 />
             </div>
 
@@ -267,6 +276,7 @@ const StoryStep5 = () => {
                     isValid={isValid}
                     error={errorSteps.includes(3)}
                     description={data.tale?.tale}
+                    t={t}
                 />
             </div>
 
@@ -276,7 +286,7 @@ const StoryStep5 = () => {
                     href="/creer-une-histoire/4"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
             </div>

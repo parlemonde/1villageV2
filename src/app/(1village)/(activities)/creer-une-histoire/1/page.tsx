@@ -18,10 +18,14 @@ import { ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { AspectRatio } from 'radix-ui';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 const StoryStep1 = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.1');
+    const tCommon = useExtracted('common');
+
     const { activity, onCreateActivity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
 
     //const { selectedPhase } = useContext(VillageContext);
@@ -102,14 +106,14 @@ const StoryStep1 = () => {
 
     return (
         <PageContainer>
-            <BackButton href="/creer-une-histoire" label="Retour" />
+            <BackButton href="/creer-une-histoire" label={t('Retour')} />
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit' },
-                    { label: 'Objet', href: '/creer-une-histoire/2' },
-                    { label: 'Lieu', href: '/creer-une-histoire/3' },
-                    { label: 'Histoire', href: '/creer-une-histoire/4' },
-                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                    { label: t('ODD'), href: '/creer-une-histoire/1?edit' },
+                    { label: t('Objet'), href: '/creer-une-histoire/2' },
+                    { label: t('Lieu'), href: '/creer-une-histoire/3' },
+                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={0}
                 marginTop="xl"
@@ -117,9 +121,9 @@ const StoryStep1 = () => {
             />
 
             <Title variant="h2" marginBottom="md">
-                Choisissez et dessinez l&apos;objectif du développement durable à atteindre
+                {t("Choisissez et dessinez l'objectif du développement durable à atteindre")}
             </Title>
-            <p className="text">Choisissez votre objectif et dessinez-le.</p>
+            <p className="text">{t('Choisissez votre objectif et dessinez-le.')}</p>
             <div className={styles['odd-container']}>
                 <div className={styles['odd-column']}>
                     <div className={styles['odd-image-wrapper']}>
@@ -144,7 +148,7 @@ const StoryStep1 = () => {
                                             <Image
                                                 layout="fill"
                                                 objectFit="cover"
-                                                alt="image de l'objectif de développement durable"
+                                                alt={t("image de l'objectif de développement durable")}
                                                 src={data.odd?.imageUrl}
                                                 unoptimized
                                             />
@@ -171,8 +175,8 @@ const StoryStep1 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                confirmLabel="Supprimer l'image"
+                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={t("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();
@@ -190,8 +194,8 @@ const StoryStep1 = () => {
                         </div>
                         <Field
                             name="select-ODD"
-                            label="ODD"
-                            helperText="Choisissez votre ODD"
+                            label={t('ODD')}
+                            helperText={t('Choisissez votre ODD')}
                             helperTextStyle={{ textAlign: 'left' }}
                             input={
                                 <Select
@@ -208,7 +212,7 @@ const StoryStep1 = () => {
                                         });
                                     }}
                                     options={ODD_CHOICE.map((v) => ({ label: v.choice, value: v.choice }))}
-                                    placeholder="Choisissez votre ODD"
+                                    placeholder={t('Choisissez votre ODD')}
                                     isFullWidth
                                 />
                             }
@@ -222,7 +226,7 @@ const StoryStep1 = () => {
                 href="/creer-une-histoire/2"
                 color="primary"
                 variant="outlined"
-                label="Étape suivante"
+                label={tCommon('Étape suivante')}
                 rightIcon={<ChevronRightIcon />}
                 style={{ display: 'flex', justifySelf: 'end' }}
             />

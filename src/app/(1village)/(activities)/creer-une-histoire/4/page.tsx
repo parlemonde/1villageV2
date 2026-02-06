@@ -14,10 +14,14 @@ import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrashIcon } from '@radix-u
 import type { ActivityData } from '@server/database/schemas/activity-types';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { AspectRatio } from 'radix-ui';
 import React, { useContext, useState } from 'react';
 
 const StoryStep4 = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.4');
+    const tCommon = useExtracted('common');
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
@@ -75,22 +79,23 @@ const StoryStep4 = () => {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: 'ODD', href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
-                    { label: 'Objet', href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
-                    { label: 'Lieu', href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
-                    { label: 'Histoire', href: '/creer-une-histoire/4' },
-                    { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
+                    { label: t('ODD'), href: '/creer-une-histoire/1?edit', status: errorSteps.includes(0) ? 'warning' : 'success' },
+                    { label: t('Objet'), href: '/creer-une-histoire/2', status: errorSteps.includes(1) ? 'warning' : 'success' },
+                    { label: t('Lieu'), href: '/creer-une-histoire/3', status: errorSteps.includes(2) ? 'warning' : 'success' },
+                    { label: t('Histoire'), href: '/creer-une-histoire/4' },
+                    { label: t('Prévisualisation'), href: '/creer-une-histoire/5' },
                 ]}
                 activeStep={3}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                Décrivez et dessinez votre village-monde idéal
+                {t('Décrivez et dessinez votre village-monde idéal')}
             </Title>
             <p className="text">
-                Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l&apos;objectif du
-                développement durable que vous avez choisi.
+                {t(
+                    "Racontez aux pélicopains à quoi ressemble votre village-monde idéal, comment il fonctionne et comment il atteint l'objectif du développement durable que vous avez choisi.",
+                )}
             </p>
             <div className={styles['odd-container']}>
                 <div className={styles['odd-column']}>
@@ -116,7 +121,7 @@ const StoryStep4 = () => {
                                             <Image
                                                 layout="fill"
                                                 objectFit="cover"
-                                                alt="image de l'histoire"
+                                                alt={t("image de l'histoire")}
                                                 src={data.tale?.imageStory}
                                                 unoptimized
                                             />
@@ -143,8 +148,8 @@ const StoryStep4 = () => {
 
                             <Modal
                                 isOpen={isModalOpen}
-                                title={"Êtes-vous sûr de vouloir supprimer l'image ?"}
-                                confirmLabel="Supprimer l'image"
+                                title={t("Êtes-vous sûr de vouloir supprimer l'image ?")}
+                                confirmLabel={t("Supprimer l'image")}
                                 onClose={() => setIsModalOpen(false)}
                                 onConfirm={() => {
                                     handleDelete();
@@ -168,7 +173,7 @@ const StoryStep4 = () => {
                             name="tale-story"
                             isFullWidth
                             enableScroll
-                            placeholder="Écrivez l'histoire de votre village-monde idéal"
+                            placeholder={t("Écrivez l'histoire de votre village-monde idéal")}
                             value={data?.tale?.tale || ''}
                             onChange={(e) => {
                                 if (!data) return;
@@ -190,7 +195,7 @@ const StoryStep4 = () => {
                     href="/creer-une-histoire/3"
                     color="primary"
                     variant="outlined"
-                    label="Étape précédente"
+                    label={tCommon('Étape précédente')}
                     leftIcon={<ChevronLeftIcon />}
                 />
                 <Button
@@ -198,7 +203,7 @@ const StoryStep4 = () => {
                     href="/creer-une-histoire/5"
                     color="primary"
                     variant="outlined"
-                    label="Étape suivante"
+                    label={tCommon('Étape suivante')}
                     leftIcon={<ChevronRightIcon />}
                 />
             </div>
