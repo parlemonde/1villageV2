@@ -1,9 +1,14 @@
+'use client';
+
 import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
 import Link from 'next/link';
+import { useExtracted } from 'next-intl';
 
 const StorySuccess = () => {
+    const t = useExtracted('app.(1village).(activities).creer-une-histoire.succes');
+
     return (
         <PageContainer>
             <div
@@ -17,13 +22,13 @@ const StorySuccess = () => {
                 }}
             >
                 <p className="text" style={{ margin: '1rem 1.5rem' }}>
-                    Votre histoire a bien été publiée !
+                    {t('Votre histoire a bien été publiée !')}
                 </p>
                 <PelicoSouriant style={{ width: '60%', height: 'auto', margin: '0 20%' }} />
             </div>
             <div className="text-center">
                 <Link href="/" passHref>
-                    <Button as="a" href="/" variant="outlined" color="primary" label="Retour à l'accueil" />
+                    <Button as="a" href="/" variant="outlined" color="primary" label={t("Retour à l'accueil")} />
                 </Link>
             </div>
         </PageContainer>
