@@ -4,7 +4,6 @@ import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Modal } from '@frontend/components/ui/Modal';
 import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
 import { debounce } from '@frontend/lib/debounce';
-import { getGameFormRoutes } from '@lib/get-game-form-routes';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -210,12 +209,9 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                     if (!draftActivity) {
                         return;
                     }
-                    if (draftActivity.type === 'jeu') {
-                        const route = `${getGameFormRoutes(draftActivity.data.theme)}/1`;
-                        router.push(route);
-                    }
                     setLocalActivity(draftActivity);
                     setDraftActivity(undefined);
+                    draftActivity.draftUrl && router.push(draftActivity.draftUrl);
                 }}
                 cancelLabel="Créer une nouvelle activité"
                 confirmLabel="Reprendre le brouillon"
