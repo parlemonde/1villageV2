@@ -47,7 +47,7 @@
 .variant-contained.color-secondary {
     background-color: var(--secondary-color);
     border: 1px solid var(--secondary-color);
-    color: var(--font-color);
+    color: var(--secondary-700);
 }
 .variant-contained.color-secondary:hover,
 .variant-contained.color-secondary:focus-visible {
