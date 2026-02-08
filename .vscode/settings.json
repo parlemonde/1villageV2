@@ -15,7 +15,7 @@
   "files.exclude": {
     "**/.postgres-data": true,
     "**/.dynamodb": true,
-    "**/tmp": false,
+    "**/tmp": true,
     "**/.open-next": true,
     "**/.next": true,
     "**/.zed": true,
