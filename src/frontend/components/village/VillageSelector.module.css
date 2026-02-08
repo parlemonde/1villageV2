@@ -1,0 +1,15 @@
+.villageNameContainer {
+    display: inline-block;
+    border-radius: 10px;
+    border: 1px solid var(--secondary-color);
+}
+
+.villageNameLabel {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 4px 8px;
+}
+
+.villageNameLabel + .villageNameButton {
+    border-width: 0;
+}
