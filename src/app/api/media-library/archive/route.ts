@@ -76,17 +76,26 @@ export const GET = async (request: NextRequest) => {
     }
 
     const zip = new JSZip();
-    for (const media of mediasList) {
+
+    const filePromises = mediasList.map(async (media) => {
         const url = media.metadata && 'originalFilePath' in media.metadata ? media.metadata.originalFilePath : media.url;
         const file = USE_S3 ? await getS3File(url) : await getLocalFile(url);
         if (!file) {
             console.error(`File not found: ${url}`);
-            continue;
+            return null;
         }
 
         const fileExtension = url.split('.').pop();
         const fileName = `${media.activityType}_${media.villageName.replace(/ /g, '_')}_${media.activityId}.${fileExtension}`;
-        zip.file(fileName, file);
+        return { fileName, file };
+    });
+
+    const files = await Promise.all(filePromises);
+
+    for (const fileData of files) {
+        if (fileData) {
+            zip.file(fileData.fileName, fileData.file);
+        }
     }
 
     const zipBuffer = await zip.generateAsync({ type: 'uint8array' });

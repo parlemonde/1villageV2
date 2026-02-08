@@ -9,8 +9,8 @@ import { v4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
     try {
-        const currentUser = await getCurrentUser();
-        const formData = await request.formData();
+        const [currentUser, formData] = await Promise.all([getCurrentUser(), request.formData()]);
+
         const file: FormDataEntryValue | null = formData.get('image');
         const isPelicoImage = formData.get('isPelicoImage') === 'true';
         const activityId = formData.get('activityId');
@@ -51,27 +51,28 @@ export async function POST(request: NextRequest) {
                 withoutEnlargement: true,
             })
             .toFormat('webp');
-        const imageBuffer = await sharpPipeline.toBuffer();
-        const imageSize = await sharpPipeline.metadata();
+
+        const [imageBuffer, imageSize] = await Promise.all([sharpPipeline.toBuffer(), sharpPipeline.metadata()]);
 
         // Upload image to storage
         const userImageId = isPelicoImage ? 'pelico' : currentUser.id;
         const fileName = `media/images/users/${userImageId}/${uuid}.webp`;
-        await uploadFile(fileName, imageBuffer, 'image/webp');
 
-        // Insert media into database
-        await db.insert(medias).values({
-            id: uuid,
-            userId: currentUser.id,
-            type: 'image',
-            url: fileName,
-            isPelico: isPelicoImage,
-            metadata: {
-                width: imageSize.width,
-                height: imageSize.height,
-            },
-            activityId: activityId ? Number(activityId) : null,
-        });
+        await Promise.all([
+            uploadFile(fileName, imageBuffer, 'image/webp'),
+            db.insert(medias).values({
+                id: uuid,
+                userId: currentUser.id,
+                type: 'image',
+                url: fileName,
+                isPelico: isPelicoImage,
+                metadata: {
+                    width: imageSize.width,
+                    height: imageSize.height,
+                },
+                activityId: activityId ? Number(activityId) : null,
+            }),
+        ]);
 
         return Response.json({ url: `/${fileName}` });
     } catch {

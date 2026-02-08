@@ -1,0 +1,146 @@
+'use client';
+
+import { Avatar } from '@frontend/components/Avatar';
+import { CountryFlag } from '@frontend/components/CountryFlag';
+import { sendToast } from '@frontend/components/Toasts';
+import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
+import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
+import { Button, IconButton } from '@frontend/components/ui/Button';
+import { UserContext } from '@frontend/contexts/userContext';
+import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
+import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import type { Classroom } from '@server/database/schemas/classrooms';
+import type { Comment } from '@server/database/schemas/comments';
+import type { User } from '@server/database/schemas/users';
+import { updateComment } from '@server-actions/comments/update-comment';
+import { useExtracted } from 'next-intl';
+import { useContext, useState } from 'react';
+
+import styles from './comment-card.module.css';
+
+const toFormattedDate = (date: string | null): string => {
+    return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';
+};
+
+interface CommentDisplayProps {
+    user: User;
+    classroom?: Classroom;
+    isPelico: boolean;
+}
+
+const CommentDisplayName = ({ user, classroom, isPelico }: CommentDisplayProps) => {
+    const { classroom: currentClassroom } = useContext(UserContext);
+    const t = useExtracted('CommentCard');
+
+    const alias = t('Les {classLevel} de {className}', {
+        classLevel: classroom?.level ?? '',
+        className: classroom?.name ?? '',
+    });
+
+    if (isPelico) {
+        return 'Pélico';
+    } else if (classroom && classroom.id === currentClassroom?.id) {
+        return t('Votre classe');
+    } else if (classroom) {
+        return classroom.alias || (classroom.level ? alias : classroom.name);
+    }
+    return user?.name || t('Un pélicopain');
+};
+
+interface CommentCardProps {
+    user: User;
+    classroom?: Classroom;
+    comment: Comment;
+    onDelete: () => void;
+    canEdit: boolean;
+    canDelete: boolean;
+}
+
+export const CommentCard = ({ user, classroom, comment, onDelete, canEdit, canDelete }: CommentCardProps) => {
+    const tCommon = useExtracted('common');
+    const isPelico = user.role === 'admin' || user.role === 'mediator';
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [content, setContent] = useState(comment.content);
+    const [beforeEdit, setBeforeEdit] = useState(comment.content);
+
+    const editComment = async () => {
+        const { error } = await updateComment({ id: comment.id, content });
+        if (error) {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+        }
+        setIsEditing(false);
+    };
+
+    const cancelEdition = () => {
+        setIsEditing(false);
+        setContent(beforeEdit);
+    };
+
+    const openEditor = () => {
+        setIsEditing(true);
+        setBeforeEdit(content);
+    };
+
+    return (
+        <div className={styles.card}>
+            {(canEdit || canDelete) && (
+                <div className={styles.buttons}>
+                    {canEdit && <IconButton icon={Pencil1Icon} color="primary" onClick={openEditor} />}
+                    {canDelete && <IconButton icon={TrashIcon} color="error" variant="contained" onClick={onDelete} />}
+                </div>
+            )}
+            <div className={styles.commentHeader}>
+                <Avatar user={user} classroom={classroom} isPelico={isPelico} />
+                <div className={styles.commentHeaderText}>
+                    <span>
+                        <CommentDisplayName user={user} classroom={classroom} isPelico={isPelico} />
+                    </span>
+                    <div className={styles.commentHeaderInfo}>
+                        <span>Publié le {toFormattedDate(comment.createDate ?? null)}</span>
+                        {isPelico && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
+                            </>
+                        )}
+                        {classroom && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <CountryFlag size="small" country={classroom?.countryCode} />
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div className={styles.body}>
+                {isEditing ? (
+                    <>
+                        <HtmlEditor content={content} onChange={setContent} />
+                        <div className={styles.editButtons}>
+                            <Button label={tCommon('Annuler')} color="primary" onClick={cancelEdition} />
+                            <Button
+                                disabled={
+                                    typeof content === 'object' &&
+                                    content !== null &&
+                                    'content' in content &&
+                                    Array.isArray(content.content) &&
+                                    content?.content?.every((c) => !c.content)
+                                }
+                                label={tCommon('Modifier')}
+                                color="primary"
+                                variant="contained"
+                                onClick={editComment}
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <HtmlViewer content={content} />
+                )}
+            </div>
+        </div>
+    );
+};

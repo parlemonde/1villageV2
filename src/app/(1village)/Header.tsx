@@ -8,6 +8,7 @@ import { Dropdown } from '@frontend/components/ui/Dropdown';
 import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuItem';
 import { Field } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
+import { Link } from '@frontend/components/ui/Link/Link';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -19,7 +20,7 @@ import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon,
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import { setVillage } from '@server-actions/villages/set-village';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 import { NavigationMobileMenu } from './Navigation';
@@ -42,10 +43,10 @@ export const Header = () => {
                     />
                 </div>
                 <div className={styles.navContainer}>
-                    <div className={styles.logoContainer}>
+                    <Link href="/" className={styles.logoContainer}>
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
-                    </div>
+                    </Link>
                     {user?.role === 'teacher' && (
                         <div className={styles.teacherButtonContainer}>
                             <Button

@@ -1,4 +1,6 @@
+import eslintCSS from '@eslint/css';
 import eslintJS from '@eslint/js';
+import eslintJson from '@eslint/json';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintNextVitals from 'eslint-config-next/core-web-vitals';
 import eslintPrettier from 'eslint-plugin-prettier/recommended';
@@ -8,11 +10,54 @@ import i18nNamespacePlugin from './eslint-plugins/i18n-namespace.mjs';
 import importBoundariesPlugin from './eslint-plugins/import-boundaries.mjs';
 
 const eslintConfig = defineConfig([
-    ...eslintNextVitals,
-    eslintJS.configs.recommended,
-    eslintTS.configs.recommended,
-    eslintPrettier,
+    eslintNextVitals.map((c) => ({
+        files: ['**/*.{js,jsx,mjs,ts,tsx,mts,cts}'],
+        ...c,
+    })),
     {
+        files: ['**/*.{js,jsx,mjs}'],
+        ...eslintJS.configs.recommended,
+    },
+    eslintTS.configs.recommended.map((c) => ({
+        files: ['**/*.{ts,tsx,mts,cts}'],
+        ...c,
+    })),
+    {
+        name: 'css',
+        files: ['**/*.css'],
+        language: 'css/css',
+        plugins: {
+            css: eslintCSS,
+        },
+    },
+    {
+        files: ['**/*.json'],
+        language: 'json/json',
+        plugins: {
+            json: eslintJson,
+        },
+        rules: {
+            'json/no-duplicate-keys': 'error',
+        },
+    },
+    {
+        files: ['**/*.{json,css,js,jsx,mjs,ts,tsx,mts,cts}'],
+        ...eslintPrettier,
+    },
+    {
+        files: ['**/*.{json,css,js,jsx,mjs,ts,tsx,mts,cts}'],
+        rules: {
+            // Windows eol
+            'prettier/prettier': [
+                'error',
+                {
+                    endOfLine: 'auto',
+                },
+            ],
+        },
+    },
+    {
+        files: ['**/*.{js,jsx,mjs,ts,tsx,mts,cts}'],
         plugins: {
             'i18n-namespace': i18nNamespacePlugin,
             'import-boundaries': importBoundariesPlugin,
@@ -44,13 +89,6 @@ const eslintConfig = defineConfig([
                     ],
                 },
             ],
-            // Windows eol
-            'prettier/prettier': [
-                'error',
-                {
-                    endOfLine: 'auto',
-                },
-            ],
             'no-console': [
                 'error',
                 {
@@ -63,6 +101,33 @@ const eslintConfig = defineConfig([
                     properties: 'always',
                 },
             ],
+            'import/newline-after-import': [
+                'error',
+                {
+                    count: 1,
+                },
+            ],
+            'import/order': [
+                'error',
+                {
+                    groups: [
+                        ['builtin', 'external', 'internal'],
+                        ['parent', 'sibling', 'index'],
+                    ],
+                    'newlines-between': 'always',
+                    alphabetize: {
+                        order: 'asc',
+                        caseInsensitive: false,
+                    },
+                },
+            ],
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
+        },
+    },
+    {
+        files: ['**/*.{ts,tsx,mts,cts}'],
+        rules: {
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 {
@@ -97,32 +162,26 @@ const eslintConfig = defineConfig([
                     ignoreRestSiblings: true,
                 },
             ],
-            'import/newline-after-import': [
-                'error',
-                {
-                    count: 1,
-                },
-            ],
-            'import/order': [
-                'error',
-                {
-                    groups: [
-                        ['builtin', 'external', 'internal'],
-                        ['parent', 'sibling', 'index'],
-                    ],
-                    'newlines-between': 'always',
-                    alphabetize: {
-                        order: 'asc',
-                        caseInsensitive: false,
-                    },
-                },
-            ],
-            'react-hooks/rules-of-hooks': 'error',
-            'react-hooks/exhaustive-deps': 'warn',
             '@typescript-eslint/triple-slash-reference': 'off',
         },
     },
-    globalIgnores(['public', '.postgres-data/', '.next/', '.open-next/', 'drizzle/', 'node_modules/', 'tmp/', 'server-transcode-videos/']),
+    globalIgnores([
+        '.claude/*',
+        '.cursor/*',
+        '.github/*',
+        '.vscode/*',
+        '.zed/*',
+        'drizzle/*',
+        'node_modules/*',
+        'public/*',
+        'server-transcode-videos/*',
+        '.postgres-data/*',
+        '.next/*',
+        '.open-next/*',
+        'tmp/*',
+        'next-env.d.ts',
+        'src/server/i18n/messages/*',
+    ]),
 ]);
 
 export default eslintConfig;

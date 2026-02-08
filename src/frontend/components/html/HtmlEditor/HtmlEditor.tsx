@@ -13,7 +13,7 @@ import { Toolbar } from './Toolbar';
 import styles from './html-editor.module.css';
 import { schema } from './schema';
 
-const defaultContent = {
+export const defaultContent = {
     type: 'doc',
     content: [],
 };

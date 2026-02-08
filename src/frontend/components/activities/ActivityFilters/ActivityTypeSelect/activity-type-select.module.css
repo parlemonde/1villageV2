@@ -12,14 +12,14 @@
     min-width: 160px;
     color: var(--font-color);
 }
-.trigger:hover, 
+.trigger:hover,
 .trigger:focus {
     border-color: var(--grey-500);
 }
 .trigger:focus {
     outline: none;
 }
-.trigger[data-state="open"] {
+.trigger[data-state='open'] {
     border-color: var(--primary-color);
     /* box-shadow: inset 0px 0px 0px 1px var(--primary-color); */
 }
@@ -48,7 +48,7 @@
 .trigger:focus .icon {
     fill: var(--grey-600);
 }
-.trigger[data-state="open"] .icon {
+.trigger[data-state='open'] .icon {
     fill: var(--primary-color);
 }
 
