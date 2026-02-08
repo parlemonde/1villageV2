@@ -2,8 +2,8 @@
 import { auth } from '@server/lib/auth';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { eq } from 'drizzle-orm';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import postgres from 'postgres';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { Client } from 'pg';
 
 import { db } from './database';
 import { auth_sessions } from './schemas/auth-schemas';
@@ -18,10 +18,11 @@ async function createDatabase(): Promise<void> {
         return;
     }
     try {
-        const client = postgres(DATABASE_URL.replace(/\/[^/]*$/, ''), { debug: true });
-        const res = await client`SELECT datname FROM pg_catalog.pg_database WHERE datname = 'un_village'`;
-        if (res.length === 0) {
-            await client`CREATE DATABASE un_village`;
+        const client = new Client({ connectionString: DATABASE_URL.replace(/\/[^/]*$/, ''), ssl: false });
+        await client.connect();
+        const res = await client.query('SELECT datname FROM pg_catalog.pg_database WHERE datname = $1', ['un_village']);
+        if (res.rows.length === 0) {
+            await client.query('CREATE DATABASE un_village');
         }
         await client.end();
     } catch (e) {
