@@ -1,0 +1,22 @@
+.deleteButton {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #d11a2a;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 8px;
+}
+
+.deleteButton:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 850px) {
+    .deleteButton {
+        top: 8px;
+        left: 16px;
+    }
+}

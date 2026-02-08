@@ -5,6 +5,7 @@ import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
+import StoryIcon from '@frontend/svg/activities/story.svg';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useExtracted } from 'next-intl';
 import React from 'react';
@@ -24,6 +25,8 @@ export const useActivityName = () => {
                     return t('Indice');
                 case 'reportage':
                     return t('Reportage');
+                case 'histoire':
+                    return t('Histoire');
             }
         },
         [t],
@@ -41,6 +44,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     enigme: 'Créer une énigme',
     indice: 'Créer un indice',
     reportage: 'Créer un reportage',
+    histoire: 'Inventer une histoire',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -49,6 +53,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     enigme: 'créé une énigme',
     indice: 'créé un indice',
     reportage: 'créé un reportage',
+    histoire: 'inventé une histoire',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -57,6 +62,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     enigme: EnigmeIcon,
     indice: HintIcon,
     reportage: ReportageIcon,
+    histoire: StoryIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -65,6 +71,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     enigme: '/creer-une-enigme',
     indice: '/creer-un-indice',
     reportage: '/creer-un-reportage',
+    histoire: '/creer-une-histoire',
 };
 
 export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
@@ -73,4 +80,5 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
     reportage: '/creer-un-reportage/3',
+    histoire: '/creer-une-histoire/3',
 };
