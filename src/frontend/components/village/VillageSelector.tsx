@@ -63,7 +63,7 @@ export const VillageSelector = () => {
                 isConfirmDisabled={!villageId || isLoading}
             >
                 {isLoading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', padding: '16px' }}>
+                    <div className={styles.progressContainer}>
                         <CircularProgress />
                     </div>
                 ) : (
@@ -85,7 +85,7 @@ export const VillageSelector = () => {
                                 />
                             }
                         />
-                        <div style={{ width: '100%', textAlign: 'right', marginTop: '16px' }}>
+                        <div className={styles.chooseButtonContainer}>
                             <Button
                                 color="secondary"
                                 variant={village === undefined ? 'outlined' : 'contained'}
@@ -98,17 +98,12 @@ export const VillageSelector = () => {
                         </div>
                         {village === undefined && (
                             <>
-                                <div style={{ width: '100%', borderTop: '1px solid #e0e0e0', margin: '32px 0 10px 0', textAlign: 'center' }}>
-                                    <Title
-                                        variant="h3"
-                                        color="inherit"
-                                        paddingX="md"
-                                        style={{ display: 'inline', position: 'relative', top: '-15px', backgroundColor: 'white' }}
-                                    >
+                                <div className={styles.titleContainer}>
+                                    <Title variant="h3" color="inherit" paddingX="md" className={styles.separator}>
                                         {tCommon('OU')}
                                     </Title>
                                 </div>
-                                <div style={{ width: '100%', textAlign: 'center' }}>
+                                <div className={styles.adminButtonContainer}>
                                     <Button as="a" href="/admin" color="secondary" variant="contained" label={tCommon("Aller à l'interface Admin")} />
                                 </div>
                             </>

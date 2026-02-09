@@ -13,3 +13,36 @@
 .villageNameLabel + .villageNameButton {
     border-width: 0;
 }
+
+.progressContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+}
+
+.chooseButtonContainer {
+    width: 100%;
+    text-align: right;
+    margin-top: 16px;
+}
+
+.titleContainer {
+    width: 100%;
+    border-top: 1px solid #e0e0e0;
+    margin: 32px 0 10px 0;
+    text-align: center;
+
+    .separator {
+        display: inline;
+        position: relative;
+        top: -15px;
+        background-color: white;
+    }
+}
+
+.adminButtonContainer {
+    width: 100%;
+    text-align: center;
+}
