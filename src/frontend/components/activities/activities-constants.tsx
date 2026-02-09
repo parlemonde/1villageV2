@@ -7,9 +7,8 @@ import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
 import MascotIcon from '@frontend/svg/activities/mascot.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
-import type { ActivityType } from '@server/database/schemas/activity-types';
-import type { UserRole } from '@server/database/schemas/users';
 import type { ActivityType, GameType } from '@server/database/schemas/activity-types';
+import type { UserRole } from '@server/database/schemas/users';
 import { useExtracted } from 'next-intl';
 import React from 'react';
 
