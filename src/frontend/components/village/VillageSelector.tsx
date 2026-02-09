@@ -24,6 +24,18 @@ export const VillageSelector = () => {
 
     const { data, isLoading } = useSWR<Village[], Error>('/api/villages', jsonFetcher);
 
+    const setCookieVillageId = async (villageId: number | undefined) => {
+        if (!villageId) {
+            return;
+        }
+        try {
+            await setVillage(villageId);
+        } catch (err) {
+            console.error(err);
+        }
+        setIsModalOpen(false);
+    };
+
     return (
         <>
             <div className={styles.villageNameContainer}>
@@ -79,15 +91,7 @@ export const VillageSelector = () => {
                                 variant={village === undefined ? 'outlined' : 'contained'}
                                 label={tCommon('Choisir')}
                                 onClick={async () => {
-                                    if (!villageId) {
-                                        return;
-                                    }
-                                    try {
-                                        await setVillage(villageId);
-                                    } catch {
-                                        // TODO: handle error
-                                    }
-                                    setIsModalOpen(false);
+                                    await setCookieVillageId(villageId);
                                 }}
                                 disabled={!villageId || isLoading}
                             />
