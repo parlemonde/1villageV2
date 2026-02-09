@@ -1,7 +1,7 @@
 'use client';
 
-import { isLinguisticActivity } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/helpers';
-import { LINGUISTIC_CHALLENGE_VALIDATORS } from '@app/(1village)/(activities)/lancer-un-defi/linguistique/validators';
+import { isIdiomGame } from '@app/(1village)/(activities)/creer-un-jeu/expression/helpers';
+import { IDIOM_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/expression/validators';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { Field } from '@frontend/components/ui/Form';
@@ -20,7 +20,7 @@ import { useContext } from 'react';
 import styles from './page.module.css';
 
 export const useLanguageKnowledge = () => {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.linguistique.1');
+    const t = useExtracted('app.(1village).(activities).creer-un-jeu.expression.1');
 
     const LANGUAGE_KNOWLEDGE = [
         { label: t('maternelle chez tous les enfants') },
@@ -32,8 +32,8 @@ export const useLanguageKnowledge = () => {
     return LANGUAGE_KNOWLEDGE;
 };
 
-export default function LancerUnDefiLinguistiqueStep1() {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.linguistique.1');
+export default function CreerUnJeuExpressionStep1() {
+    const t = useExtracted('app.(1village).(activities).creer-un-jeu.expression.1');
     const tCommon = useExtracted('common');
 
     const router = useRouter();
@@ -42,36 +42,35 @@ export default function LancerUnDefiLinguistiqueStep1() {
 
     const languageKnowledge = useLanguageKnowledge();
 
+    if (!activity || !isIdiomGame(activity)) {
+        return null;
+    }
+
     const languagesOptions = isoLanguages.map((language) => ({
         label: language.name,
         value: language.code,
     }));
 
-    if (!activity || !isLinguisticActivity(activity)) {
-        return null;
-    }
-
-    const language = isoLanguages.find((l) => l.code === activity.data.language)?.name;
+    const language = isoLanguages.find((l) => l.code === activity.data?.language)?.name;
 
     return (
         <PageContainer>
-            <BackButton href="/lancer-un-defi" />
+            <BackButton href="/creer-un-jeu" />
             <Steps
                 steps={[
-                    { label: language ?? t('Langue'), href: '/lancer-un-defi/linguistique/1' },
-                    { label: t('Thème'), href: '/lancer-un-defi/linguistique/2' },
-                    { label: t('Présentation'), href: '/lancer-un-defi/linguistique/3' },
-                    { label: t('Le défi'), href: '/lancer-un-defi/linguistique/4' },
-                    { label: tCommon('Pré-visualiser'), href: '/lancer-un-defi/linguistique/5' },
+                    { label: language ?? t('Langue'), href: '/creer-un-jeu/expression/1' },
+                    { label: t('1ère expression'), href: '/creer-un-jeu/expression/2' },
+                    { label: t('2ème expression'), href: '/creer-un-jeu/expression/3' },
+                    { label: t('3ème expression'), href: '/creer-un-jeu/expression/4' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-un-jeu/expression/5' },
                 ]}
                 activeStep={1}
                 marginTop="xl"
                 marginBottom="md"
             />
             <Title variant="h2" marginBottom="md">
-                {t('Choisissez dans quelle langue vous souhaitez lancer le défi')}
+                {t('Choisissez la langue de vos expressions')}
             </Title>
-            <p>{t('Vous pourrez ensuite choisir le thème de votre défi.')}</p>
             <Field
                 label={t('Langue')}
                 marginTop="xl"
@@ -101,9 +100,9 @@ export default function LancerUnDefiLinguistiqueStep1() {
                     />
                     <div className={styles.buttonContainer}>
                         <Button
-                            disabled={!LINGUISTIC_CHALLENGE_VALIDATORS.isStep1Valid(activity)}
+                            disabled={!IDIOM_GAME_STEPS_VALIDATORS.isStep1Valid(activity)}
                             color="primary"
-                            onClick={() => router.push('/lancer-un-defi/linguistique/2')}
+                            onClick={() => router.push('/creer-un-jeu/expression/2')}
                             label={tCommon('Étape suivante')}
                             rightIcon={<ChevronRightIcon />}
                             marginTop="md"
