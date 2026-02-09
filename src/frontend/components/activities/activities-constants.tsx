@@ -86,7 +86,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     mascotte: '/creer-sa-mascotte',
     reportage: '/creer-un-reportage',
     defi: '/lancer-un-defi',
-    question: '/poser-une-question/1',
+    question: '/poser-une-question',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);

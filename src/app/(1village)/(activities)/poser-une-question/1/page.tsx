@@ -5,14 +5,12 @@ import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
-import { ActivityContext } from '@frontend/contexts/activityContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
-import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 import useSWR from 'swr';
@@ -23,13 +21,8 @@ export default function PoserUneQuestionStep1() {
     const t = useExtracted('app.(1village).(activities).poser-une-question.1');
     const tCommon = useExtracted('common');
 
-    const router = useRouter();
-
     const { village, usersMap } = useContext(VillageContext);
-    const { onCreateActivity } = useContext(ActivityContext);
     const { user } = useContext(UserContext);
-
-    const isPelico = user.role === 'admin' || user.role === 'mediator';
 
     const { data: allQuestionActivities = [] } = useSWR<Activity[]>(
         village
@@ -45,11 +38,6 @@ export default function PoserUneQuestionStep1() {
     );
 
     const questionActivities = allQuestionActivities.filter((a) => a.userId !== user.id);
-
-    const goToNextStep = () => {
-        onCreateActivity('question', isPelico, { questions: [{ id: 1, text: '' }] });
-        router.push('/poser-une-question/2');
-    };
 
     return (
         <PageContainer>
@@ -83,7 +71,7 @@ export default function PoserUneQuestionStep1() {
                 </div>
             )}
             <div className={styles.buttonContainer}>
-                <Button onClick={goToNextStep} color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
+                <Button as="a" href="/poser-une-question/2" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
             </div>
         </PageContainer>
     );
