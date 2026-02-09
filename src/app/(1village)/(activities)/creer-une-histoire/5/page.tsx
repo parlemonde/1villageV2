@@ -182,7 +182,7 @@ const StoryStep5 = () => {
                     { label: 'Histoire', href: '/creer-une-histoire/4', status: errorSteps.includes(3) ? 'warning' : 'success' },
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
-                activeStep={4}
+                activeStep={5}
                 marginTop="xl"
                 marginBottom="md"
             />

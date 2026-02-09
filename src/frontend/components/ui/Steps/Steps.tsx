@@ -34,12 +34,12 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                         <div
                             className={classNames(styles.stepNumberLine, {
                                 [styles.stepNumberLineHidden]: index === 0,
-                                [styles.stepNumberLineActive]: index < activeStep,
+                                [styles.stepNumberLineActive]: index < activeStep - 1,
                             })}
                         ></div>
                         <div
                             className={classNames(styles.stepNumber, {
-                                [styles.stepNumberActive]: index === activeStep,
+                                [styles.stepNumberActive]: index === activeStep - 1,
                             })}
                         >
                             {step.status === 'success' ? <CheckIcon width={26} height={26} /> : index + 1}
@@ -47,7 +47,7 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                         <div
                             className={classNames(styles.stepNumberLine, {
                                 [styles.stepNumberLineHidden]: index === steps.length - 1,
-                                [styles.stepNumberLineActive]: index < activeStep,
+                                [styles.stepNumberLineActive]: index < activeStep - 1,
                             })}
                         ></div>
                     </div>

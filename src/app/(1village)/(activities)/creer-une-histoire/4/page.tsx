@@ -81,7 +81,7 @@ const StoryStep4 = () => {
                     { label: 'Histoire', href: '/creer-une-histoire/4' },
                     { label: 'Prévisualisation', href: '/creer-une-histoire/5' },
                 ]}
-                activeStep={3}
+                activeStep={4}
                 marginTop="xl"
                 marginBottom="md"
             />
