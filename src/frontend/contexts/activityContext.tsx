@@ -2,7 +2,7 @@
 
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Modal } from '@frontend/components/ui/Modal';
-import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
+import { useSessionStorage } from '@frontend/hooks/useSessionStorage';
 import { debounce } from '@frontend/lib/debounce';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
@@ -79,7 +79,7 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const [draftStep, setDraftStep] = useState<number>(0); // 0 -> idle, 1 -> saving draft, 2 -> draft saved.
     const pathname = usePathname();
 
-    const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
+    const [localActivity, setLocalActivity] = useSessionStorage<Partial<Activity> | undefined>('activity', undefined);
 
     // Use a following ref for the activity to use in callbacks and effects without causing re-renders
     const localActivityRef = useRef<Partial<Activity> | undefined>(undefined);
