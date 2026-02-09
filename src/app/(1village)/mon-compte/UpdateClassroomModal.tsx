@@ -10,7 +10,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 interface UpdateClassroomModalProps {
     isOpen: boolean;
@@ -21,28 +21,21 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const { user, classroom, setClassroom } = useContext(UserContext);
     const { invalidateClassrooms } = useContext(VillageContext);
 
-    const [currentLevel, setCurrentLevel] = useState('');
-    const [currentSchoolName, setCurrentSchoolName] = useState('');
-    const [currentAddress, setCurrentAddress] = useState('');
-    const [currentCountry, setCurrentCountry] = useState('');
-    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates>(DEFAULT_COORDINATES);
+    const [currentLevel, setCurrentLevel] = useState(classroom?.level || '');
+    const [currentSchoolName, setCurrentSchoolName] = useState(classroom?.name || '');
+    const [currentAddress, setCurrentAddress] = useState(classroom?.address || '');
+    const [currentCountry, setCurrentCountry] = useState(classroom?.countryCode || '');
+    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates>(
+        classroom?.coordinates ? { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude } : DEFAULT_COORDINATES,
+    );
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
-    const [useFallback, setUseFallback] = useState(true);
+    const [useFallback, setUseFallback] = useState(false);
     const [hasAddressChanged, setHasAddressChanged] = useState(false);
 
     const hasValidationErrors = !currentSchoolName || !currentAddress;
     const isConfirmDisabled = isUpdating || hasValidationErrors;
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCurrentLevel(classroom?.level || '');
-        setCurrentSchoolName(classroom?.name || '');
-        setCurrentAddress(classroom?.address || '');
-        setCurrentCountry(classroom?.countryCode || '');
-        setCurrentCoordinates({ lat: classroom?.coordinates?.latitude ?? 0, lng: classroom?.coordinates?.longitude ?? 0 });
-    }, [classroom, isOpen]);
 
     const updateClassroomAndInvalidateContext = (classroom: Classroom) => {
         setClassroom(classroom);
@@ -135,12 +128,12 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         }
 
         setUpdateErrorMessage('');
-        setIsUpdating(true);
         const classroomData = await prepareClassroomData();
         if (!classroomData || !classroom) {
             return;
         }
 
+        setIsUpdating(true);
         const { data, error } = await updateClassroom({
             teacherId: user.id,
             id: classroom.id,
@@ -153,9 +146,11 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 longitude: classroomData.currentCoordinates.longitude,
             },
         });
+
+        setIsUpdating(false);
+
         if (error) {
             setUpdateErrorMessage(error.message);
-            setIsUpdating(false);
             return;
         }
 
