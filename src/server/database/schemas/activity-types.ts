@@ -85,12 +85,56 @@ export type MascotActivity = {
     };
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity;
+export type CulinaryChallenge = {
+    theme: 'culinaire';
+    dish?: {
+        imageUrl?: string;
+        name?: string;
+        history?: string;
+        description?: string;
+    };
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type LinguisticChallenge = {
+    theme: 'linguistique';
+    language?: string;
+    languageKnowledge?: string;
+    textKind?: 'word' | 'idiom' | 'poem' | 'song' | string;
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type EcologicalChallenge = {
+    theme: 'ecologique';
+    action?: string;
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+export type FreeThemeChallenge = {
+    theme: 'libre';
+    themeName?: string;
+    action?: string;
+    content?: AnyContent[];
+    challengeKind?: string;
+};
+
+type Challenge = CulinaryChallenge | LinguisticChallenge | EcologicalChallenge | FreeThemeChallenge;
+export type ChallengeActivity<T = Challenge> = {
+    type: 'defi';
+    data: T;
+};
+export type ChallengeType = Challenge['theme'];
+
+export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     libre: true,
+    defi: true,
     jeu: true,
     enigme: true,
     indice: true,

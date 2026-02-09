@@ -9,6 +9,7 @@ import classNames from 'clsx';
 
 import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
+import { ChallengeCard } from './cards/ChallengeCard';
 import { FreeContentCard } from './cards/FreeContentCard';
 import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
@@ -25,6 +26,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     enigme: EmptyContentCard,
     reportage: ReportCard,
     mascotte: MascotCard,
+    defi: ChallengeCard,
 };
 
 interface ActivityCardProps {
