@@ -6,11 +6,12 @@ import path from 'path';
  *       src/frontend/components/path/to/MyComponent.tsx -> MyComponent
  */
 function filePathToNamespace(filePath) {
-    const srcIndex = filePath.indexOf('src/');
+    const normalizedPath = filePath.replace(/\\/g, '/');
+    const srcIndex = normalizedPath.indexOf('src/');
     if (srcIndex === -1) {
         return null;
     }
-    const relativePath = filePath.slice(srcIndex + 4); // Remove 'src/'
+    const relativePath = normalizedPath.slice(srcIndex + 4); // Remove 'src/'
 
     if (relativePath.startsWith('app')) {
         return path.parse(relativePath).dir.replace(/\//g, '.');
