@@ -9,6 +9,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
 
 import type { ActivityContentViewProps } from './activity-view.types';
+import { ChallengeView } from './views/ChallengeView';
 import { FreeContentView } from './views/FreeContentView';
 import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
@@ -22,6 +23,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     reportage: ReportView,
     histoire: () => null,
     mascotte: MascotView,
+    defi: ChallengeView,
 };
 
 interface ActivityViewProps {
