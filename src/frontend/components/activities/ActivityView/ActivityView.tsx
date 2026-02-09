@@ -11,6 +11,7 @@ import { useContext } from 'react';
 import type { ActivityContentViewProps } from './activity-view.types';
 import { FreeContentView } from './views/FreeContentView';
 import { HintView } from './views/HintView';
+import { MascotView } from './views/MascotView';
 import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
@@ -19,6 +20,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     enigme: () => null,
     indice: HintView,
     reportage: ReportView,
+    mascotte: MascotView,
 };
 
 interface ActivityViewProps {
