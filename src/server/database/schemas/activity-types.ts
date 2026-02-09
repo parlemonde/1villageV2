@@ -85,29 +85,6 @@ export type MascotActivity = {
     };
 };
 
-type ChallengeActivity = {
-    type: 'defi';
-    data:
-        | {
-              theme: 'culinaire';
-              dish?: {
-                  imageUrl?: string;
-                  name?: string;
-                  history?: string;
-                  description?: string;
-                  content?: AnyContent[];
-                  defi?: string;
-              };
-          }
-        | {
-              theme: 'linguistique';
-          }
-        | {
-              theme: 'ecologique';
-          }
-        | null;
-};
-
 export type CulinaryChallenge = {
     theme: 'culinaire';
     dish?: {
@@ -151,17 +128,7 @@ export type ChallengeActivity<T = Challenge> = {
 };
 export type ChallengeType = Challenge['theme'];
 
-export type Activities =
-    | FreeActivity
-    | GameActivity
-    | PuzzleActivity
-    | HintActivity
-    | ReportActivity
-    | MascotActivity
-    | ChallengeActivity<CulinaryChallenge>
-    | ChallengeActivity<LinguisticChallenge>
-    | ChallengeActivity<EcologicalChallenge>
-    | ChallengeActivity<FreeThemeChallenge>;
+export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI

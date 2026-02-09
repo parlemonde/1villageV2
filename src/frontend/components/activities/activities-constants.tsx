@@ -100,4 +100,5 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     indice: null,
     reportage: null,
     mascotte: ['teacher'],
+    defi: null,
 };
