@@ -11,11 +11,48 @@ export type FreeActivity = {
     } | null;
 };
 
-export type GameActivity = {
+export type IdiomGame = {
+    theme: 'expression';
+    language?: string;
+    languageKnowledge?: string;
+    idioms?: {
+        stepId?: number;
+        imageUrl?: string;
+        value?: string;
+        meaning?: string;
+        falseMeanings?: string[];
+    }[];
+};
+
+export type CurrencyGame = {
+    theme: 'monnaie';
+    currency?: string;
+    objects?: {
+        stepId: number;
+        imageUrl?: string;
+        name?: string;
+        price?: string;
+        falsePrices?: string[];
+    }[];
+};
+
+export type GestureGame = {
+    theme: 'mimique';
+    gestures?: {
+        stepId: number;
+        videoUrl?: string;
+        meaning?: string;
+        origin?: string;
+        falseMeanings?: string[];
+    }[];
+};
+
+type Game = IdiomGame | CurrencyGame | GestureGame;
+export type GameType = Game['theme'];
+
+export type GameActivity<T = Game> = {
     type: 'jeu';
-    data: {
-        gameId: string;
-    } | null;
+    data: T;
 };
 
 export type PuzzleActivity = {
