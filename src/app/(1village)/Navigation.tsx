@@ -10,6 +10,7 @@ import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
+import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
@@ -93,7 +94,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
-    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
 
@@ -163,7 +164,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
+    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
 
