@@ -5,14 +5,14 @@ import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
 
 export const updateComment = async (comment: Partial<Comment>): Promise<ServerActionResponse> => {
     const t = await getExtracted('common');
     try {
-        const currentUser = await getCurrentUser();
-        if (!currentUser) {
+        const user = await getCurrentUser();
+        if (!user) {
             throw new Error('Unauthorized');
         }
 
@@ -24,7 +24,7 @@ export const updateComment = async (comment: Partial<Comment>): Promise<ServerAc
         await db
             .update(comments)
             .set({ content, updateDate: sql`now()` })
-            .where(eq(comments.id, id));
+            .where(and(eq(comments.id, id), eq(comments.userId, user.id)));
         return {};
     } catch (e) {
         console.error(e);

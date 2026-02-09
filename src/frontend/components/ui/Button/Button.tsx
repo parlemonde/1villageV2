@@ -60,6 +60,7 @@ const ButtonWithRef = (
             [styles[`isVisuallyHidden`]]: isVisuallyHidden,
             [styles[`isMobileOnly`]]: isMobileOnly,
             [styles[`isTabletUpOnly`]]: isTabletUpOnly,
+            [styles[`disabled`]]: otherProps.disabled,
         }),
         style: {
             ...getMarginAndPaddingStyle(marginAndPaddingProps),
