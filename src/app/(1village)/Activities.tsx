@@ -21,7 +21,7 @@ export const Activities = () => {
         search: '',
     });
 
-    const { data: activities, mutate } = useSWR<Activity[]>(
+    const { data: activities } = useSWR<Activity[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
                   phase,
@@ -48,6 +48,7 @@ export const Activities = () => {
                         activity={activity}
                         user={usersMap[activity.userId]}
                         classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                        hasActions={activity.type === 'question'}
                     />
                 ))}
             </div>

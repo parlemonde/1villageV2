@@ -6,8 +6,9 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { askSameQuestion } from '@server-actions/activities/ask-same-question';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
+import { mutate } from 'swr';
 
-export const QuestionCard = ({ activity, onEdit, onDelete, action, shouldDisableButtons }: ActivityContentCardProps) => {
+export const QuestionCard = ({ activity, onEdit, onDelete, hasActions, shouldDisableButtons }: ActivityContentCardProps) => {
     const t = useExtracted('QuestionCard');
     const { user, classroom } = useContext(UserContext);
 
@@ -16,34 +17,15 @@ export const QuestionCard = ({ activity, onEdit, onDelete, action, shouldDisable
     }
 
     const isPelico = user.role === 'admin' || user.role === 'mediator';
-    const showAskSameButton = action && activity.userId !== user.id && !isPelico;
+    const showAskSameButton = hasActions && activity.userId !== user.id && !isPelico;
 
     const onClick = async () => {
         if (!classroom?.id) {
             return;
         }
 
-        if (activity.data?.isAskingSameQuestion?.includes(classroom.id)) {
-            const newArray = activity.data?.isAskingSameQuestion?.filter((classroomId) => classroomId != classroom?.id);
-            const newValue = newArray.length === 0 ? undefined : newArray;
-            await askSameQuestion({
-                id: activity.id,
-                data: {
-                    ...activity.data,
-                    isAskingSameQuestion: newValue,
-                },
-            });
-            onEdit?.();
-        } else {
-            await askSameQuestion({
-                id: activity.id,
-                data: {
-                    ...activity.data,
-                    isAskingSameQuestion: [...(activity.data?.isAskingSameQuestion || []), classroom.id],
-                },
-            });
-            onEdit?.();
-        }
+        await askSameQuestion({ ...activity, classroomId: classroom.id });
+        mutate((key) => typeof key === 'string' && key.startsWith('/api/activities'), undefined, { revalidate: true });
     };
 
     return (

@@ -5,5 +5,5 @@ export type ActivityContentCardProps = {
     shouldDisableButtons: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
-    action?: () => void;
+    hasActions?: boolean;
 };
