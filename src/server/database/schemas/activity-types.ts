@@ -73,7 +73,6 @@ type ReportActivity = {
     } | null;
 };
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | StoryActivity | MascotActivity;
 export type MascotActivity = {
     type: 'mascotte';
     data: {
@@ -159,7 +158,15 @@ export type ChallengeActivity<T = Challenge> = {
 };
 export type ChallengeType = Challenge['theme'];
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity;
+export type Activities =
+    | FreeActivity
+    | GameActivity
+    | PuzzleActivity
+    | HintActivity
+    | ReportActivity
+    | StoryActivity
+    | MascotActivity
+    | ChallengeActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
