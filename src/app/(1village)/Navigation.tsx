@@ -39,6 +39,17 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
         isActive: firstPath === 'my-activities',
         onClick,
     },
+    ...(isPelico
+        ? [
+              {
+                  icon: <FreeContentIcon />,
+                  label: 'Publier un contenu libre',
+                  href: '/contenu-libre',
+                  isActive: firstPath === 'contenu-libre',
+                  onClick,
+              },
+          ]
+        : []),
 ];
 
 const getActivityMenuItem = (
@@ -85,6 +96,10 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
+
+    if (isPelico) {
+        activityTypes = activityTypes.filter((type) => type !== 'libre');
+    }
 
     // Do not display navigation on activity page
     if (pathname.startsWith('/activities/')) {
@@ -151,6 +166,10 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
     });
+
+    if (isPelico) {
+        activityTypes = activityTypes.filter((type) => type !== 'libre');
+    }
 
     const activityMenuItems = activityTypes
         .map((type) => {
