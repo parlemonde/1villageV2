@@ -3,15 +3,14 @@
     background-color: white;
     border: 1px solid var(--grey-300);
     border-radius: 4px;
-    margin-bottom: 20px;
 }
 .isPinned {
     border: 2px solid var(--primary-color);
 }
 .activityCardHeader {
-    padding: 10px;
+    padding: 4px;
 }
 
 .activityCardBody {
-    padding: 0 10px 10px;
+    padding: 0 4px 4px 4px;
 }
