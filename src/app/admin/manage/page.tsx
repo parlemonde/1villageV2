@@ -15,7 +15,6 @@ export default function AdminManagePage() {
             <AdminLink href="/admin/manage/activities" label="Paraméter les activités" />
             <AdminLink href="/admin/manage/translations" label="Gestion des traductions" />
             <AdminLink href="/admin/manage/pelico" label="Présentation de Pélico" />
-
         </PageContainer>
     );
 }
