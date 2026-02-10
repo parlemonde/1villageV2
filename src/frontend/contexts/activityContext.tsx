@@ -12,6 +12,7 @@ import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
 import { updateActivity } from '@server-actions/activities/update-activity';
 import { usePathname, useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserContext } from './userContext';
@@ -79,6 +80,7 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const [draftActivity, setDraftActivity] = useState<Activity | undefined>(undefined);
     const [draftStep, setDraftStep] = useState<number>(0); // 0 -> idle, 1 -> saving draft, 2 -> draft saved.
     const pathname = usePathname();
+    const tCommon = useExtracted('common');
 
     const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
 
@@ -193,13 +195,13 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                         }}
                     >
                         {draftStep === 1 && <CircularProgress color="inherit" size={18} />}
-                        {draftStep === 2 && <p className="text text--small">Brouillon enregistré</p>}
+                        {draftStep === 2 && <p className="text text--small">{tCommon('Brouillon enregistré')}</p>}
                     </div>
                 </div>
             )}
             <Modal
                 isOpen={draftActivity !== undefined}
-                title="Brouillon en cours !"
+                title={tCommon('Brouillon en cours !')}
                 hasCloseButton={false}
                 onClose={() => {
                     setDraftActivity(undefined);
@@ -216,9 +218,11 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                 cancelLabel="Créer une nouvelle activité"
                 confirmLabel="Reprendre le brouillon"
             >
-                <p>Vous avez un brouillon en cours pour cette activité, souhaitez vous le reprendre ?</p>
+                <p>{tCommon('Vous avez un brouillon en cours pour cette activité, souhaitez vous le reprendre ?')}</p>
                 <p>
-                    (Continuer sans ce brouillon en créera un nouveau qui va <strong>supprimer</strong> celui déjà existant.)
+                    {tCommon.rich('Continuer sans ce brouillon en créera un nouveau qui va <bold>supprimer</bold> celui déjà existant.', {
+                        bold: (chunks) => <strong>{chunks}</strong>,
+                    })}
                 </p>
             </Modal>
         </ActivityContext.Provider>

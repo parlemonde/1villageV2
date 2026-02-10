@@ -1,6 +1,8 @@
 'use client';
 
-import ExampleActivities from '@app/(1village)/(activities)/creer-une-enigme/ExampleActivities';
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import ExampleActivities from '@frontend/components/activities/ExampleActivities';
 import {
     useEnigmeThemes,
     useEnigmeSubthemes,
@@ -8,9 +10,7 @@ import {
     CUSTOM_THEME_VALUE,
     type ThemeName,
     type SubThemeItem,
-} from '@app/(1village)/(activities)/creer-une-enigme/enigme-constants';
-import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
-import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+} from '@frontend/components/activities/enigme-constants';
 import { Button } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
@@ -24,7 +24,7 @@ import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 export default function CreerUneEnigmeStep1() {
-    const DEFAULT_THEMES = useEnigmeThemes();
+    const { DEFAULT_THEMES, getThemeLabel } = useEnigmeThemes();
     const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
     const router = useRouter();
     const { activity, setActivity } = useContext(ActivityContext);
@@ -40,16 +40,16 @@ export default function CreerUneEnigmeStep1() {
         return null;
     }
 
-    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.tname, value: theme.name }));
+    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.label, value: theme.name }));
 
     return (
         <PageContainer>
-            <BackButton href="/creer-une-enigme" label="Retour" />
+            <BackButton href="/creer-une-enigme" label={tCommon('Retour')} />
             <Steps
                 steps={[
-                    { label: stepTheme || 'Énigme', href: '/creer-une-enigme/1' },
-                    { label: "Créer l'énigme", href: '/creer-une-enigme/2' },
-                    { label: 'Réponse', href: '/creer-une-enigme/3' },
+                    { label: stepTheme || tCommon('Énigme'), href: '/creer-une-enigme/1' },
+                    { label: tCommon("Créer l'énigme"), href: '/creer-une-enigme/2' },
+                    { label: tCommon('Réponse'), href: '/creer-une-enigme/3' },
                     { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
                 ]}
                 activeStep={1}
@@ -76,11 +76,11 @@ export default function CreerUneEnigmeStep1() {
             {defaultTheme === CUSTOM_THEME_VALUE ? (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
-                        {"Présenter un autre type d'énigme :"}
+                        {t("Présenter un autre type d'énigme :")}
                     </Title>
-                    <p>Indiquez quel autre type d&apos;énigme vous souhaitez présenter :</p>
+                    <p>{t("Indiquez quel autre type d'énigme vous souhaitez présenter :")}</p>
                     <Input
-                        placeholder="Devinez..."
+                        placeholder={t('Donnez un nom à la catégorie de votre énigme')}
                         isFullWidth
                         marginY="md"
                         value={activity.data?.customTheme || ''}
@@ -101,13 +101,13 @@ export default function CreerUneEnigmeStep1() {
             ) : (
                 <>
                     <Title variant="h2" marginTop="lg" marginBottom="md">
-                        Veuillez préciser le thème <strong>{defaultTheme}</strong>.
+                        {t('Veuillez préciser le thème')} <strong>{getThemeLabel(defaultTheme)}</strong>.
                     </Title>
                     {subthemes.length > 0 &&
                         subthemes.map((subtheme: SubThemeItem, index: number) => (
                             <ThemeSelectorButton
                                 key={`subtheme-button-${index}`}
-                                title={subtheme.tname}
+                                title={subtheme.label}
                                 isActive={activity.data?.customTheme === subtheme.name}
                                 marginBottom="lg"
                                 paddingX="md"
@@ -131,7 +131,7 @@ export default function CreerUneEnigmeStep1() {
                         dropdownContent={
                             <>
                                 <p>
-                                    Catégorie de votre <strong>{defaultTheme}</strong>
+                                    {t('Catégorie de votre ')} <strong>{getThemeLabel(defaultTheme)}</strong>
                                 </p>
                                 <p
                                     style={{
@@ -143,9 +143,10 @@ export default function CreerUneEnigmeStep1() {
                                         fontSize: '12px',
                                     }}
                                 >
-                                    {t(
-                                        "Ne donnez pas le nom de votre catégorie. La catégorie de l'énigme est un indice supplémentaire pour les autres classes.",
-                                    )}
+                                    {t('Ne donnez pas le nom de votre {cat}.', { cat: getThemeLabel(defaultTheme) })}{' '}
+                                    {t.rich("La catégorie de l'énigme est un <hint>indice supplémentaire</hint> pour les autres classes.", {
+                                        hint: (chunks) => <strong>{chunks}</strong>,
+                                    })}
                                 </p>
                                 <Input
                                     placeholder=""

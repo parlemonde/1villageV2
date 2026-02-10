@@ -92,13 +92,19 @@ export const getMarginAndPaddingProps = <T>(
     };
 };
 
-export const getMarginAndPaddingStyle = (props: MarginProps & PaddingProps): React.CSSProperties => ({
-    marginTop: getSize(props.marginTop || props.marginY || props.margin),
-    marginBottom: getSize(props.marginBottom || props.marginY || props.margin),
-    marginRight: getSize(props.marginRight || props.marginX || props.margin),
-    marginLeft: getSize(props.marginLeft || props.marginX || props.margin),
-    paddingTop: getSize(props.paddingTop || props.paddingY || props.padding),
-    paddingBottom: getSize(props.paddingBottom || props.paddingY || props.padding),
-    paddingRight: getSize(props.paddingRight || props.paddingX || props.padding),
-    paddingLeft: getSize(props.paddingLeft || props.paddingX || props.padding),
-});
+export const getMarginAndPaddingStyle = (props: MarginProps & PaddingProps): React.CSSProperties => {
+    const result = {
+        marginTop: getSize(props.marginTop || props.marginY || props.margin),
+        marginBottom: getSize(props.marginBottom || props.marginY || props.margin),
+        marginRight: getSize(props.marginRight || props.marginX || props.margin),
+        marginLeft: getSize(props.marginLeft || props.marginX || props.margin),
+        paddingTop: getSize(props.paddingTop || props.paddingY || props.padding),
+        paddingBottom: getSize(props.paddingBottom || props.paddingY || props.padding),
+        paddingRight: getSize(props.paddingRight || props.paddingX || props.padding),
+        paddingLeft: getSize(props.paddingLeft || props.paddingX || props.padding),
+    };
+    return Object.keys(result).reduce(
+        (acc, key) => (result[key as keyof typeof result] === undefined ? { ...acc } : { ...acc, [key]: result[key as keyof typeof result] }),
+        {},
+    );
+};
