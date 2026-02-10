@@ -46,7 +46,7 @@ export default function ExampleActivities({ activityType, theme }: ExampleActivi
             <Title variant="h2" marginTop={60} marginBottom="md">
                 {<span>Énigmes des pélicopains sur ce thème :</span>}
             </Title>
-            <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {activities.map((activity) => (
                     <ActivityCard
                         key={activity.id}
@@ -75,7 +75,7 @@ export default function ExampleActivities({ activityType, theme }: ExampleActivi
                         </p>
                     </div>
                 )}
-            </>
+            </div>
         </>
     );
 }
