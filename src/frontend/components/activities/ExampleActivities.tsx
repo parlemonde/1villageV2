@@ -4,6 +4,7 @@ import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import { Title } from '@frontend/components/ui/Title';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
+import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -52,7 +53,7 @@ export default function ExampleActivities({ activityType, theme }: ExampleActivi
                         key={activity.id}
                         activity={activity}
                         user={usersMap[activity.userId]}
-                        classroom={activity.classroomId ? classroomsMap[activity.classroomId] : undefined}
+                        classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
                     />
                 ))}
                 {activities.length === 0 && (
