@@ -182,7 +182,8 @@ export type Activities =
     | ReportActivity
     | PelicoPresentation
     | MascotActivity
-    | ChallengeActivity;
+    | ChallengeActivity
+    | PelicoPresentation;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
