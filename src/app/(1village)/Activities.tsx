@@ -66,8 +66,10 @@ export const Activities = () => {
                 <Field
                     className={styles.itemsPerPageLabel}
                     label={t('Activités par page')}
+                    name="nbItemsPerPage"
                     input={
                         <Select
+                            id="nbItemsPerPage"
                             options={[
                                 { label: STEP_ITEMS_PAGE * 1, value: (STEP_ITEMS_PAGE * 1).toString() },
                                 { label: STEP_ITEMS_PAGE * 2, value: (STEP_ITEMS_PAGE * 2).toString() },

@@ -4,7 +4,15 @@
     justify-content: flex-start;
     align-items: center;
     font-size: 14px;
-    color: var(--font-color);
+    color: var(--primary-color);
+}
+
+@media (max-width: 480px) {
+    /* hide label but keep it in DOM for accessibility */
+    .itemsPerPageLabel label[for='nbItemsPerPage'] {
+        position: absolute;
+        left: 100%;
+    }
 }
 
 .paginationContainer {
