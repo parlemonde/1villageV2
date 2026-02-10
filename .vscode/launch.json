@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Next.js",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev"],
       "env": {
         "NODE_OPTIONS": "--inspect"
