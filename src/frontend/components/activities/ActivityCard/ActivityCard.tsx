@@ -28,6 +28,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     reportage: ReportCard,
     mascotte: MascotCard,
     defi: ChallengeCard,
+    'presentation-pelico': EmptyContentCard,
 };
 
 interface ActivityCardProps {

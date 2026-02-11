@@ -50,7 +50,12 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
         <div className={'container'}>
             <Loader isLoading={isSaving} />
 
-            <ContentEditor content={presentationData?.content || []} setContent={handleContentChange} />
+            <ContentEditor
+                content={presentationData?.content || []}
+                setContent={handleContentChange}
+                activityId={presentation?.id}
+                getActivityId={async () => presentation?.id ?? null}
+            />
 
             <div className={'actions'}>
                 <Button label="Valider" color="primary" variant="contained" disabled={!hasChanges} onClick={onSave} />

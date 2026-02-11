@@ -24,6 +24,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     reportage: ReportView,
     mascotte: MascotView,
     defi: ChallengeView,
+    'presentation-pelico': FreeContentView,
 };
 
 interface ActivityViewProps {

@@ -31,6 +31,8 @@ export const useActivityName = () => {
                     return t('Mascotte');
                 case 'defi':
                     return t('Défi');
+                case 'presentation-pelico':
+                    return t('Présentation Pélico');
             }
         },
         [t],
@@ -50,6 +52,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     mascotte: 'Créer sa mascotte',
     reportage: 'Créer un reportage',
     defi: 'Lancer un defi',
+    'presentation-pelico': 'Présentation de Pélico',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -60,6 +63,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     mascotte: 'créé sa mascotte',
     reportage: 'créé un reportage',
     defi: 'lancé un defi',
+    'presentation-pelico': 'se présente',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -70,6 +74,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     mascotte: MascotIcon,
     reportage: ReportageIcon,
     defi: ChallengeIcon,
+    'presentation-pelico': null,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -80,6 +85,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     mascotte: '/creer-sa-mascotte',
     reportage: '/creer-un-reportage',
     defi: '/lancer-un-defi',
+    'presentation-pelico': '/pelico',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);
@@ -100,6 +106,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     mascotte: '/creer-sa-mascotte/5',
     reportage: '/creer-un-reportage/3',
     defi: '/lancer-un-defi/3',
+    'presentation-pelico': '/pelico',
 };
 
 // null means all roles
@@ -111,6 +118,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     reportage: null,
     mascotte: ['teacher'],
     defi: null,
+    'presentation-pelico': ['admin', 'mediator'],
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

@@ -11,7 +11,7 @@ import { PelicoPresentationPage } from './PelicoPresentationPage';
 
 export default async function AdminPelicoPresentation() {
     const user = await getCurrentUser();
-    const hasAccess = user !== null && (['admin', 'mediator'] as UserRole[]).includes(user.role);
+    const hasAccess = user != null && (['admin', 'mediator'] as UserRole[]).includes(user.role);
 
     if (!hasAccess) {
         return (
