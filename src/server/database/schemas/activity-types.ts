@@ -195,7 +195,15 @@ export type ChallengeActivity<T = Challenge> = {
 };
 export type ChallengeType = Challenge['theme'];
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity | StoryActivity;
+export type Activities =
+    | FreeActivity
+    | GameActivity
+    | PuzzleActivity
+    | HintActivity
+    | ReportActivity
+    | MascotActivity
+    | ChallengeActivity
+    | StoryActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
