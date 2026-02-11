@@ -19,7 +19,7 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Se
         }
 
         if (user.role === 'admin') {
-            return { data: await db.update(classrooms).set(rest).where(eq(classrooms.id, classroomId)) };
+            return { data: await db.update(classrooms).set(rest).where(eq(classrooms.id, classroomId)).returning() };
         }
 
         return {

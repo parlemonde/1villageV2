@@ -1,0 +1,31 @@
+.image {
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.svg {
+    cursor: pointer;
+    width: 400px;
+    height: 400px;
+    background: var(--grey-100);
+    padding: 150px;
+    color: var(--primary-color);
+
+    &:hover {
+        filter: brightness(0.8);
+        transition: filter 0.2s ease-in-out;
+    }
+}
+
+.imageContainer {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin-bottom: 16px;
+}
+
+.editIcon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}

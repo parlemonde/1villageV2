@@ -7,6 +7,7 @@ import type { ReadableStream } from 'node:stream/web';
 import { Readable } from 'stream';
 
 import { getAwsClient } from './aws-client';
+import { parseS3ListResponse } from './parse-s3-list-response';
 
 const S3_BASE_URL = `https://${getEnvVariable('S3_BUCKET_NAME')}.s3.${getEnvVariable('AWS_REGION')}.amazonaws.com`;
 export function getS3FileUrl(key: string): string {
@@ -98,13 +99,58 @@ export async function listS3Files(
                 method: 'GET',
             },
         );
-        const data = await response.json();
+        const xml = await response.text();
+        const data = parseS3ListResponse(xml);
         return {
-            files: data.Contents.map((c: { Key: string }) => c.Key),
-            nextContinuationToken: data.IsTruncated ? data['NextContinuationToken'] : undefined,
+            files: data.Contents?.map((c) => c.Key) || [],
+            nextContinuationToken: data.IsTruncated ? data.NextContinuationToken : undefined,
         };
     } catch (e) {
         console.error(e);
         return { files: [] };
+    }
+}
+
+export async function listS3Folders(prefix: string): Promise<string[]> {
+    try {
+        const awsClient = getAwsClient();
+        const folders = new Set<string>();
+        let continuationToken: string | undefined;
+
+        // Boucle pour gérer la pagination
+        do {
+            const response = await awsClient.fetch(
+                `${S3_BASE_URL}/${serializeToQueryUrl({
+                    'list-type': '2',
+                    prefix: prefix.endsWith('/') ? prefix : `${prefix}/`,
+                    'continuation-token': continuationToken,
+                    delimiter: '/',
+                })}`,
+                {
+                    method: 'GET',
+                },
+            );
+            const xml = await response.text();
+            const data = parseS3ListResponse(xml);
+
+            // Ajouter les prefixes communs (CommonPrefixes) qui représentent les dossiers
+            if (data.CommonPrefixes) {
+                for (const cp of data.CommonPrefixes) {
+                    const folderPath = cp.Prefix;
+                    // Extraire le nom du dossier sans le préfixe et sans le slash final
+                    const folderName = folderPath.replace(prefix.endsWith('/') ? prefix : `${prefix}/`, '').replace(/\/$/, '');
+                    if (folderName) {
+                        folders.add(folderName);
+                    }
+                }
+            }
+
+            continuationToken = data.IsTruncated ? data.NextContinuationToken : undefined;
+        } while (continuationToken);
+
+        return Array.from(folders).sort();
+    } catch (e) {
+        console.error(e);
+        return [];
     }
 }

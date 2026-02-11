@@ -11,7 +11,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { publishActivity } from '@server-actions/activities/publish-activity';
 import { saveDraft } from '@server-actions/activities/save-draft';
 import { updateActivity } from '@server-actions/activities/update-activity';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserContext } from './userContext';
@@ -73,6 +73,7 @@ const onSaveDraftDebounced = debounce((activity: Partial<Activity>, getSavedId: 
 }, 2000);
 
 export const ActivityProvider = ({ children }: { children: React.ReactNode }) => {
+    const router = useRouter();
     const { village } = useContext(VillageContext);
     const { classroom } = useContext(UserContext);
     const [draftActivity, setDraftActivity] = useState<Activity | undefined>(undefined);
@@ -214,8 +215,10 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                     if (!draftActivity) {
                         return;
                     }
+
                     setLocalActivity(draftActivity);
                     setDraftActivity(undefined);
+                    draftActivity.draftUrl && router.push(draftActivity.draftUrl);
                 }}
                 cancelLabel="Créer une nouvelle activité"
                 confirmLabel="Reprendre le brouillon"

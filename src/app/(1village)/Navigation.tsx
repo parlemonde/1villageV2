@@ -2,7 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_ROLES, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
@@ -16,6 +16,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import type { UserRole } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
@@ -53,7 +54,7 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
         : []),
 ];
 
-const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: () => void): MenuItem | null => {
+const getActivityMenuItem = (type: ActivityType, firstPath: string, role: UserRole, onClick?: () => void): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
     const label = ACTIVITY_LABELS[type] || type;
     const href = ACTIVITY_URLS[type];
@@ -67,6 +68,7 @@ const getActivityMenuItem = (type: ActivityType, firstPath: string, onClick?: ()
         label,
         href,
         isActive: firstPath === href.split('/')[1],
+        disabled: ACTIVITY_ROLES[type] !== null && !ACTIVITY_ROLES[type]?.includes(role),
         onClick,
     };
 };
@@ -96,8 +98,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     }
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
-
-    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath)).filter((item) => item !== null);
+    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath, user.role)).filter((item) => item !== null);
 
     return (
         <div className={styles.navigationWrapper}>
@@ -155,7 +156,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
 
     const activityMenuItems = activityTypes
         .map((type) =>
-            getActivityMenuItem(type, firstPath, () => {
+            getActivityMenuItem(type, firstPath, user.role, () => {
                 onClose();
             }),
         )

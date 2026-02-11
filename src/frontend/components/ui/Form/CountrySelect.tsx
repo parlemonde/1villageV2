@@ -1,9 +1,8 @@
-import { CountryFlag } from '@frontend/components/CountryFlag';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 
+import { CountryOption } from './CountryOption';
 import type { SelectProps } from './Select';
 import { Select } from './Select';
-import styles from './country-select.module.css';
 
 interface CountrySelectProps extends Omit<SelectProps, 'options'> {
     onChange: (country: string) => void;
@@ -27,14 +26,7 @@ export function CountrySelect(props: CountrySelectProps) {
     const filteredCountries = filter ? Object.entries(COUNTRIES).filter(([key, _]) => key && filter(key)) : Object.entries(COUNTRIES);
 
     const countryOptions = filteredCountries.map(([key, value]) => ({
-        label: (
-            <div className={styles.countryOptions}>
-                <span className={styles.countryFlag}>
-                    <CountryFlag size="small" country={key} />
-                </span>
-                <span>{value}</span>
-            </div>
-        ),
+        label: <CountryOption id={key} key={key} value={value} />,
         value: key,
     }));
 
