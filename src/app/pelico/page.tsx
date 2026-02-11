@@ -5,11 +5,12 @@ import { getPelicoPresentation } from '@server-actions/activities/get-pelico-pre
 
 export default async function PelicoPage() {
     const presentation = await getPelicoPresentation();
+    const presentationData = presentation?.type === 'presentation-pelico' ? presentation.data : null;
 
     return (
         <PageContainer>
             <Title marginY="md">Pélico, la mascotte d&apos;1Village, se présente</Title>
-            {presentation?.data && <ContentViewer content={presentation.data.content} activityId={presentation.id} />}
+            {presentationData?.content && <ContentViewer content={presentationData.content} activityId={presentation!.id} />}
         </PageContainer>
     );
 }
