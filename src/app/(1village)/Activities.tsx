@@ -78,7 +78,7 @@ export const Activities = () => {
                             ]}
                             size="sm"
                             value={itemsPerPage.toString()}
-                            style={{ width: '60px' }}
+                            className={styles.itemsPerPageSelect}
                             margin={'sm'}
                             onChange={(value) => {
                                 setCurrentPage(1);

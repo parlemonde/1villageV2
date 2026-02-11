@@ -7,6 +7,12 @@
     color: var(--primary-color);
 }
 
+.itemsPerPageSelect {
+    width: 60px;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 @media (max-width: 480px) {
     /* hide label but keep it in DOM for accessibility */
     .itemsPerPageLabel label[for='nbItemsPerPage'] {
