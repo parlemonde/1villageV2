@@ -9,17 +9,22 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
 
 import type { ActivityContentViewProps } from './activity-view.types';
+import { ChallengeView } from './views/ChallengeView';
 import { FreeContentView } from './views/FreeContentView';
+import { GameView } from './views/GameView';
 import { HintView } from './views/HintView';
+import { MascotView } from './views/MascotView';
 import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,
-    jeu: () => null,
+    jeu: GameView,
     enigme: () => null,
     indice: HintView,
     reportage: ReportView,
     histoire: () => null,
+    mascotte: MascotView,
+    defi: ChallengeView,
 };
 
 interface ActivityViewProps {

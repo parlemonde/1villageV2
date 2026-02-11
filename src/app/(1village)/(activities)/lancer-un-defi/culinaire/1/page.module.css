@@ -1,0 +1,43 @@
+.imageUploadForm {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: 100%;
+    padding: 32px;
+    gap: 32px;
+
+    @media (max-width: 850px) {
+        flex-direction: column;
+    }
+}
+
+.imagePreview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: fit-content;
+    text-align: center;
+}
+
+.image {
+    cursor: pointer;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.svg {
+    width: 200px;
+    height: 200px;
+    background: var(--grey-100);
+    padding: 48px;
+    color: var(--primary-color);
+}
+
+.imageDescription {
+    width: 100%;
+}
+
+.button {
+    text-align: right;
+}
