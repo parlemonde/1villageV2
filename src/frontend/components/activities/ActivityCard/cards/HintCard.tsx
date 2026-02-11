@@ -1,4 +1,5 @@
 import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
+import type { AnyContent } from '@frontend/components/content/content.types';
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
 
@@ -6,8 +7,11 @@ export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: A
     if (activity.type !== 'indice') {
         return null;
     }
-    const firstImageUrl = (activity.data?.content || []).find((content) => content.type === 'image')?.imageUrl;
-    const firstHtmlText = (activity.data?.content || []).find((content) => content.type === 'html')?.html;
+    const contents = (activity.data?.content || []) as AnyContent[];
+    const firstImageContent = contents.find((content): content is AnyContent & { type: 'image' } => content.type === 'image');
+    const firstHtmlContent = contents.find((content): content is AnyContent & { type: 'html' } => content.type === 'html');
+    const firstImageUrl = firstImageContent?.imageUrl;
+    const firstHtmlText = firstHtmlContent?.html;
     const hint = activity.data?.defaultHint || activity.data?.customHint;
 
     return (
