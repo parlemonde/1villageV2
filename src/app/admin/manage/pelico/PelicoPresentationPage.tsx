@@ -37,7 +37,7 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
         try {
             await updatePelicoPresentation(presentationData);
             setHasChanges(false);
-            router.push('/admin/newportal/manage/settings');
+            //router.push('/admin/newportal/manage/settings');
             router.refresh();
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
