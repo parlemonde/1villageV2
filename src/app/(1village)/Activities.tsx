@@ -42,14 +42,16 @@ export const Activities = () => {
         <div>
             <ActivityFilters filters={filters} setFilters={setFilters} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {activities?.map((activity) => (
-                    <ActivityCard
-                        key={activity.id}
-                        activity={activity}
-                        user={usersMap[activity.userId]}
-                        classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
-                    />
-                ))}
+                {activities
+                    ?.filter((activity) => activity.type !== 'presentation-pelico')
+                    .map((activity) => (
+                        <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            user={usersMap[activity.userId]}
+                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                        />
+                    ))}
             </div>
         </div>
     );
