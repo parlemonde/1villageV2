@@ -91,6 +91,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     if (isPelico) {
         activityTypes = activityTypes.filter((type) => type !== 'libre');
     }
+    activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
 
     // Do not display navigation on activity page
     if (pathname.startsWith('/activities/')) {
@@ -153,6 +154,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     if (isPelico) {
         activityTypes = activityTypes.filter((type) => type !== 'libre');
     }
+    activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
 
     const activityMenuItems = activityTypes
         .map((type) =>
