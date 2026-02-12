@@ -44,11 +44,14 @@ interface ActivityHeaderProps {
     showIcon?: boolean;
     showDetails?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className, showIcon, showDetails = true }: ActivityHeaderProps) => {
+export const ActivityHeader = ({ user, classroom, activity, className, showIcon = true, showDetails = true }: ActivityHeaderProps) => {
     if (!activity.type) {
         return null;
     }
     const Icon = activity.isPinned ? PinnedIcon : ACTIVITY_ICONS[activity.type];
+    if (activity.type === 'libre') {
+        showIcon = activity.isPinned || false;
+    }
     return (
         <div className={classNames(styles.activityHeader, className)}>
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
