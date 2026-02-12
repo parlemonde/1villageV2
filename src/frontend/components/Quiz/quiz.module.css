@@ -1,7 +1,6 @@
 .root {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: grid;
+    grid-template-rows: repeat(1fr, 3);
 }
 
 .item {
@@ -80,4 +79,55 @@
     color: var(--font-color);
     padding-left: 15px;
     cursor: pointer;
+}
+
+.readonly {
+    pointer-events: none;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100%);
+    grid-template-rows: 10% 1fr 1fr 1fr;
+}
+
+.flagsHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    height: 40px;
+}
+
+.flagsContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    flex: 1;
+}
+
+.flag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100px;
+}
+
+.flagDescription {
+    font-size: 12px;
+}
+
+.results {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    flex: 1;
+}
+
+.avatarList {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    justify-content: stretch;
+    width: 100px;
 }

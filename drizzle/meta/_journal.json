@@ -57,6 +57,13 @@
       "when": 1769503800616,
       "tag": "0007_exotic_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1770902811212,
+      "tag": "0008_old_bishop",
+      "breakpoints": true
     }
   ]
 }
