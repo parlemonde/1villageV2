@@ -37,7 +37,7 @@ export const ActivityTypeSelect = ({ selectedTypes, setSelectedTypes }: Activity
     // Never include "presentation-pelico" in the filter options.
     const availableTypes = React.useMemo<ActivityType[]>(
         () =>
-            (!availableTypesForPhase.includes('libre') ? ['libre', ...availableTypesForPhase] : availableTypesForPhase).filter(
+            (!availableTypesForPhase.includes('libre') ? (['libre', ...availableTypesForPhase] as ActivityType[]) : availableTypesForPhase).filter(
                 (type) => type !== 'presentation-pelico',
             ),
         [availableTypesForPhase],
