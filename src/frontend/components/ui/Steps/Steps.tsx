@@ -34,7 +34,7 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                         <div
                             className={classNames(styles.stepNumberLine, {
                                 [styles.stepNumberLineHidden]: index === 0,
-                                [styles.stepNumberLineActive]: index < activeStep - 1,
+                                [styles.stepNumberLineActive]: index <= activeStep - 1,
                             })}
                         ></div>
                         <div
@@ -47,7 +47,7 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                         <div
                             className={classNames(styles.stepNumberLine, {
                                 [styles.stepNumberLineHidden]: index === steps.length - 1,
-                                [styles.stepNumberLineActive]: index < activeStep - 1,
+                                [styles.stepNumberLineActive]: index <= activeStep - 1,
                             })}
                         ></div>
                     </div>
