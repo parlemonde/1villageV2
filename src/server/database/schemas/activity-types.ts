@@ -1,3 +1,4 @@
+import type { ThemeName } from '@frontend/components/activities/enigme-constants';
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
@@ -58,7 +59,10 @@ export type GameActivity<T = Game> = {
 export type PuzzleActivity = {
     type: 'enigme';
     data: {
-        text: string;
+        defaultTheme?: ThemeName;
+        customTheme?: string;
+        content?: AnyContent[];
+        answer?: AnyContent[];
     } | null;
 };
 

@@ -1,0 +1,182 @@
+'use client';
+
+import { ThemeSelectorButton } from '@frontend/components/ThemeSelectorButton/ThemeSelectorButton';
+import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
+import ExampleActivities from '@frontend/components/activities/ExampleActivities';
+import {
+    useEnigmeThemes,
+    useEnigmeSubthemes,
+    useGetStepThemeName,
+    CUSTOM_THEME_VALUE,
+    type ThemeName,
+    type SubThemeItem,
+} from '@frontend/components/activities/enigme-constants';
+import { Button } from '@frontend/components/ui/Button';
+import { Input } from '@frontend/components/ui/Form';
+import { Select } from '@frontend/components/ui/Form/Select';
+import { PageContainer } from '@frontend/components/ui/PageContainer';
+import { Steps } from '@frontend/components/ui/Steps';
+import { Title } from '@frontend/components/ui/Title';
+import { ActivityContext } from '@frontend/contexts/activityContext';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
+import { useContext } from 'react';
+
+export default function CreerUneEnigmeStep1() {
+    const { DEFAULT_THEMES, getThemeLabel } = useEnigmeThemes();
+    const DEFAULT_SUBTHEMES = useEnigmeSubthemes();
+    const router = useRouter();
+    const { activity, setActivity } = useContext(ActivityContext);
+    const tCommon = useExtracted('common');
+    const t = useExtracted('app.(1village).(activities).creer-une-enigme.1');
+
+    const defaultTheme: ThemeName = (activity?.type === 'enigme' ? activity.data?.defaultTheme : undefined) || CUSTOM_THEME_VALUE;
+    const subthemes: SubThemeItem[] = DEFAULT_SUBTHEMES[defaultTheme] || [];
+    const customTheme = activity?.type === 'enigme' ? activity.data?.customTheme : undefined;
+    const stepTheme = useGetStepThemeName(defaultTheme, customTheme);
+
+    if (!activity || activity.type !== 'enigme') {
+        return null;
+    }
+
+    const selectOptions = DEFAULT_THEMES.map((theme) => ({ label: theme.label, value: theme.name }));
+
+    return (
+        <PageContainer>
+            <BackButton href="/creer-une-enigme" label={tCommon('Retour')} />
+            <Steps
+                steps={[
+                    { label: stepTheme || tCommon('Énigme'), href: '/creer-une-enigme/1' },
+                    { label: tCommon("Créer l'énigme"), href: '/creer-une-enigme/2' },
+                    { label: tCommon('Réponse'), href: '/creer-une-enigme/3' },
+                    { label: tCommon('Pré-visualiser'), href: '/creer-une-enigme/4' },
+                ]}
+                activeStep={1}
+                marginTop="xl"
+                marginBottom="md"
+            />
+            <Select
+                options={selectOptions}
+                value={activity.data?.defaultTheme || CUSTOM_THEME_VALUE}
+                onChange={(newValue) => {
+                    // changing theme resets customTheme
+                    const themeValue = newValue as ThemeName;
+                    if (themeValue === CUSTOM_THEME_VALUE) {
+                        setActivity({
+                            type: 'enigme',
+                            ...activity,
+                            data: { ...activity.data, defaultTheme: CUSTOM_THEME_VALUE, customTheme: undefined },
+                        });
+                    } else {
+                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, defaultTheme: themeValue, customTheme: undefined } });
+                    }
+                }}
+            />
+            {defaultTheme === CUSTOM_THEME_VALUE ? (
+                <>
+                    <Title variant="h2" marginTop="lg" marginBottom="md">
+                        {t("Présenter un autre type d'énigme :")}
+                    </Title>
+                    <p>{t("Indiquez quel autre type d'énigme vous souhaitez présenter :")}</p>
+                    <Input
+                        placeholder={t('Donnez un nom à la catégorie de votre énigme')}
+                        isFullWidth
+                        marginY="md"
+                        value={activity.data?.customTheme || ''}
+                        onChange={(e) => {
+                            setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
+                        }}
+                    />
+                    <div style={{ textAlign: 'right' }}>
+                        <Button
+                            as="a"
+                            href="/creer-une-enigme/2"
+                            color="secondary"
+                            label={tCommon('Continuez')}
+                            rightIcon={<ChevronRightIcon />}
+                        ></Button>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <Title variant="h2" marginTop="lg" marginBottom="md">
+                        {t('Veuillez préciser le thème')} <strong>{getThemeLabel(defaultTheme)}</strong>.
+                    </Title>
+                    {subthemes.length > 0 &&
+                        subthemes.map((subtheme: SubThemeItem, index: number) => (
+                            <ThemeSelectorButton
+                                key={`subtheme-button-${index}`}
+                                title={subtheme.label}
+                                isActive={activity.data?.customTheme === subtheme.name}
+                                marginBottom="lg"
+                                paddingX="md"
+                                paddingY="sm"
+                                onClick={() => {
+                                    setActivity({
+                                        type: 'enigme',
+                                        ...activity,
+                                        data: { ...activity.data, customTheme: subtheme.name }, // use customTheme to store subtheme
+                                    });
+                                    router.push('/creer-une-enigme/2');
+                                }}
+                            />
+                        ))}
+                    <ThemeSelectorButton
+                        title={tCommon('Autre...')}
+                        isActive={(activity.data?.customTheme && subthemes.findIndex((st) => st.name === activity.data?.customTheme) === -1) || false}
+                        onClick={() => {}}
+                        paddingX="md"
+                        paddingY="sm"
+                        dropdownContent={
+                            <>
+                                <p>
+                                    {t('Catégorie de votre ')} <strong>{getThemeLabel(defaultTheme)}</strong>
+                                </p>
+                                <p
+                                    style={{
+                                        display: 'inline-block',
+                                        padding: '4px',
+                                        marginTop: '12px',
+                                        border: '1px dashed',
+                                        borderRadius: '4px',
+                                        fontSize: '12px',
+                                    }}
+                                >
+                                    {t('Ne donnez pas le nom de votre {cat}.', { cat: getThemeLabel(defaultTheme) })}{' '}
+                                    {t.rich("La catégorie de l'énigme est un <hint>indice supplémentaire</hint> pour les autres classes.", {
+                                        hint: (chunks) => <strong>{chunks}</strong>,
+                                    })}
+                                </p>
+                                <Input
+                                    placeholder=""
+                                    isFullWidth
+                                    marginY="md"
+                                    value={activity.data?.customTheme || ''}
+                                    onChange={(e) => {
+                                        setActivity({ type: 'enigme', ...activity, data: { ...activity.data, customTheme: e.target.value } });
+                                    }}
+                                />
+                                <div style={{ textAlign: 'right' }}>
+                                    <Button
+                                        as="a"
+                                        href="/creer-une-enigme/2"
+                                        color="secondary"
+                                        label="Continuez"
+                                        rightIcon={<ChevronRightIcon />}
+                                    ></Button>
+                                </div>
+                            </>
+                        }
+                    />
+                </>
+            )}
+
+            <ExampleActivities activityType="enigme" theme={activity.data?.defaultTheme} />
+
+            <div style={{ textAlign: 'right', marginTop: '16px' }}>
+                <Button as="a" href="/creer-une-enigme/2" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />}></Button>
+            </div>
+        </PageContainer>
+    );
+}

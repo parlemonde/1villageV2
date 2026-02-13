@@ -11,6 +11,7 @@
     font-weight: 500;
 }
 
+.button.active,
 .button:hover {
     background-color: var(--grey-200);
     border-color: var(--grey-300);
