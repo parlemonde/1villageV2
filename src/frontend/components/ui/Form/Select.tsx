@@ -16,6 +16,7 @@ export interface SelectProps extends MarginProps {
     options: { label: React.ReactNode; value: string }[];
     size?: 'sm' | 'md' | 'lg';
     color?: 'primary' | 'secondary';
+    className?: string; /* classes applied on <RadixSelect.Trigger> element */
     disabled?: boolean;
     isFullWidth?: boolean;
     placeholder?: string;
@@ -37,6 +38,7 @@ export const Select = (props: SelectProps) => {
         style = {},
         hasError = false,
         disabled = false,
+        className = '',
         ...marginProps
     } = props;
 
@@ -64,7 +66,7 @@ export const Select = (props: SelectProps) => {
             <RadixSelect.Trigger
                 name={name}
                 id={id}
-                className={classNames(styles.selectTrigger, styles[`size-${size}`], styles[`color-${color}`], {
+                className={classNames(styles.selectTrigger, styles[`size-${size}`], styles[`color-${color}`], className, {
                     [styles[`isFullWidth`]]: isFullWidth,
                     [styles.hasError]: hasError,
                 })}
