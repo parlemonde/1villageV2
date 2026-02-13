@@ -1,0 +1,27 @@
+.pageLayout {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.content {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.sidebar {
+    flex-shrink: 0;
+    padding: 16px 0;
+}
+
+@media (max-width: 850px) {
+    .pageLayout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 0 16px 16px 16px;
+    }
+}
