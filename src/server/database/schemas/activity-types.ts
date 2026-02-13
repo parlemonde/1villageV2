@@ -101,6 +101,14 @@ type StoryActivity = {
     } | null;
 };
 
+export type QuestionActivity = {
+    type: 'question';
+    data: {
+        questions?: { id: number; text: string }[];
+        isAskingSameQuestion?: number[];
+    };
+};
+
 type ReportActivity = {
     type: 'reportage';
     data: {
@@ -204,6 +212,9 @@ export type Activities =
     | StoryActivity
     | MascotActivity
     | ChallengeActivity;
+    | MascotActivity
+    | ChallengeActivity
+    | QuestionActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
@@ -218,6 +229,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     reportage: true,
     histoire: true,
     mascotte: true,
+    question: true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 

@@ -6,6 +6,7 @@ import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import GameIcon from '@frontend/svg/activities/game.svg';
 import HintIcon from '@frontend/svg/activities/hint.svg';
 import MascotIcon from '@frontend/svg/activities/mascot.svg';
+import QuestionIcon from '@frontend/svg/activities/question.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
 import StoryIcon from '@frontend/svg/activities/story.svg';
 import type { ActivityType, GameType } from '@server/database/schemas/activity-types';
@@ -34,6 +35,8 @@ export const useActivityName = () => {
                     return t('Mascotte');
                 case 'defi':
                     return t('Défi');
+                case 'question':
+                    return t('Question');
             }
         },
         [t],
@@ -54,6 +57,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     reportage: 'Créer un reportage',
     histoire: 'Inventer une histoire',
     defi: 'Lancer un defi',
+    question: 'Poser une question',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
@@ -65,6 +69,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     reportage: 'créé un reportage',
     histoire: 'inventé une histoire',
     defi: 'lancé un defi',
+    question: 'posé une question',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -76,6 +81,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     reportage: ReportageIcon,
     histoire: StoryIcon,
     defi: ChallengeIcon,
+    question: QuestionIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -87,6 +93,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     reportage: '/creer-un-reportage',
     histoire: '/creer-une-histoire',
     defi: '/lancer-un-defi',
+    question: '/poser-une-question',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);
@@ -108,6 +115,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     reportage: '/creer-un-reportage/3',
     histoire: '/creer-une-histoire/3',
     defi: '/lancer-un-defi/3',
+    question: '/poser-une-question/3',
 };
 
 // null means all roles
@@ -120,6 +128,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     histoire: null,
     mascotte: ['teacher'],
     defi: null,
+    question: null,
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

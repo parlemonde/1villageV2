@@ -1,10 +1,10 @@
+import type { Disposable } from '@frontend/components/worldMaps/world-map.types';
 import type { CustomLayerInterface } from 'maplibre-gl';
 import { Map } from 'maplibre-gl';
 import { PerspectiveCamera, Scene, WebGLRenderer, MathUtils } from 'three';
 
 import { disposeNode } from './stars/dispose-node';
 import { Sky } from './stars/stars';
-import type { Disposable } from './world-map.types';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 

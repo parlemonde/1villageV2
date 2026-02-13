@@ -14,6 +14,7 @@ import { FreeContentCard } from './cards/FreeContentCard';
 import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
+import { QuestionCard } from './cards/QuestionCard';
 import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
@@ -29,6 +30,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     histoire: EmptyContentCard,
     mascotte: MascotCard,
     defi: ChallengeCard,
+    question: QuestionCard,
 };
 
 interface ActivityCardProps {
@@ -38,8 +40,9 @@ interface ActivityCardProps {
     onEdit?: () => void;
     onDelete?: () => void;
     shouldDisableButtons?: boolean;
+    hasActions?: boolean;
 }
-export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shouldDisableButtons = false }: ActivityCardProps) => {
+export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, hasActions, shouldDisableButtons = false }: ActivityCardProps) => {
     if (!user || !activity.type) {
         return null;
     }
@@ -49,7 +52,13 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shou
             <ActivityHeader showIcon activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
-                    <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />
+                    <ContentCard
+                        activity={activity}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        hasActions={hasActions}
+                        shouldDisableButtons={shouldDisableButtons}
+                    />
                 </div>
             )}
         </div>
