@@ -48,6 +48,7 @@ export const Activities = () => {
                         activity={activity}
                         user={usersMap[activity.userId]}
                         classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                        hasActions={activity.type === 'question'}
                     />
                 ))}
             </div>
