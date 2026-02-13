@@ -2,9 +2,9 @@
 
 import { getWeather, OPEN_WEATHER_BASE_URL } from '@app/api/weather/weather.get';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { WorldMap } from '@frontend/components/WorldMap';
 import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
+import WorldMap3D from '@frontend/components/worldMaps/WorldMap3D/WorldMap3D';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -102,7 +102,7 @@ export const ActivitySidePanel = () => {
             </div>
 
             <div className={styles.WorldMapContainer}>
-                <WorldMap activity={activity} />
+                <WorldMap3D activity={activity} />
             </div>
 
             {weather && (

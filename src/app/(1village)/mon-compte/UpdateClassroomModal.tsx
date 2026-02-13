@@ -1,15 +1,16 @@
 import type { NominatimPlace } from '@app/api/geo/route';
-import { Map } from '@frontend/components/Map';
-import { DEFAULT_COORDINATES, type Coordinates } from '@frontend/components/Map/Map';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
 import { Modal } from '@frontend/components/ui/Modal';
+import { WorldMap2D } from '@frontend/components/worldMaps/WorldMap2D';
+import { DEFAULT_COORDINATES } from '@frontend/components/worldMaps/WorldMap2D/WorldMap2D';
+import type { Coordinates } from '@frontend/components/worldMaps/world-map.types';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 interface UpdateClassroomModalProps {
     isOpen: boolean;
@@ -20,11 +21,13 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
     const { user, classroom, setClassroom } = useContext(UserContext);
     const { invalidateClassrooms } = useContext(VillageContext);
 
-    const [currentLevel, setCurrentLevel] = useState('');
-    const [currentSchoolName, setCurrentSchoolName] = useState('');
-    const [currentAddress, setCurrentAddress] = useState('');
-    const [currentCountry, setCurrentCountry] = useState('');
-    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates>(DEFAULT_COORDINATES);
+    const [currentLevel, setCurrentLevel] = useState(classroom?.level || '');
+    const [currentSchoolName, setCurrentSchoolName] = useState(classroom?.name || '');
+    const [currentAddress, setCurrentAddress] = useState(classroom?.address || '');
+    const [currentCountry, setCurrentCountry] = useState(classroom?.countryCode || '');
+    const [currentCoordinates, setCurrentCoordinates] = useState<Coordinates>(
+        classroom?.coordinates ? { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude } : DEFAULT_COORDINATES,
+    );
 
     const [isUpdating, setIsUpdating] = useState(false);
     const [updateErrorMessage, setUpdateErrorMessage] = useState('');
@@ -33,15 +36,6 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
 
     const hasValidationErrors = !currentSchoolName || !currentAddress;
     const isConfirmDisabled = isUpdating || hasValidationErrors;
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCurrentLevel(classroom?.level || '');
-        setCurrentSchoolName(classroom?.name || '');
-        setCurrentAddress(classroom?.address || '');
-        setCurrentCountry(classroom?.countryCode || '');
-        setCurrentCoordinates({ lat: classroom?.coordinates?.latitude ?? 0, lng: classroom?.coordinates?.longitude ?? 0 });
-    }, [classroom, isOpen]);
 
     const updateClassroomAndInvalidateContext = (classroom: Classroom) => {
         setClassroom(classroom);
@@ -134,12 +128,12 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
         }
 
         setUpdateErrorMessage('');
-        setIsUpdating(true);
         const classroomData = await prepareClassroomData();
         if (!classroomData || !classroom) {
             return;
         }
 
+        setIsUpdating(true);
         const { data, error } = await updateClassroom({
             teacherId: user.id,
             id: classroom.id,
@@ -152,9 +146,11 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                 longitude: classroomData.currentCoordinates.longitude,
             },
         });
+
+        setIsUpdating(false);
+
         if (error) {
             setUpdateErrorMessage(error.message);
-            setIsUpdating(false);
             return;
         }
 
@@ -229,13 +225,14 @@ export function UpdateClassroomModal({ isOpen, onClose }: UpdateClassroomModalPr
                     />
                 }
             />
-            {useFallback && <Map marginBottom="md" marginX="auto" coordinates={currentCoordinates} zoom={5} setCoordinates={setCurrentCoordinates} />}
+            {useFallback && <WorldMap2D coordinates={currentCoordinates} setCoordinates={setCurrentCoordinates} />}
             <Field
                 style={{ pointerEvents: 'none' }}
                 isRequired={useFallback}
                 name="country"
                 label="Pays"
                 marginBottom="md"
+                marginTop="md"
                 input={<CountrySelect value={currentCountry} onChange={setCurrentCountry} isFullWidth disabled />}
             />
         </Modal>
