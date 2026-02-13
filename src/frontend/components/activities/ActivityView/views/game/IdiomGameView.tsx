@@ -28,6 +28,7 @@ export const IdiomGameView = ({ activity }: ActivityContentViewProps) => {
                 title: idiom.value ?? '',
                 imageUrl: idiom.imageUrl ?? '',
                 options: roundOptions,
+                questionId: idiom.stepId,
             });
         }
 
@@ -38,10 +39,11 @@ export const IdiomGameView = ({ activity }: ActivityContentViewProps) => {
         return null;
     }
 
-    if (createRounds) {
+    if (createRounds && activity.id) {
         return (
             <GameEngine
                 rounds={createRounds}
+                gameId={activity.id}
                 question={t('Que signifie cette expression ?')}
                 successMessage={t("C'est exact ! Vous avez trouvé la signification de cette expression.")}
                 errorMessage={t("Dommage ! Ce n'est pas la bonne réponse. Essayez encore !")}
