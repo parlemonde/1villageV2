@@ -173,7 +173,15 @@ export type ChallengeActivity<T = Challenge> = {
 };
 export type ChallengeType = Challenge['theme'];
 
-export type Activities = FreeActivity | GameActivity | PuzzleActivity | HintActivity | ReportActivity | MascotActivity | ChallengeActivity | QuestionActivity;
+export type Activities =
+    | FreeActivity
+    | GameActivity
+    | PuzzleActivity
+    | HintActivity
+    | ReportActivity
+    | MascotActivity
+    | ChallengeActivity
+    | QuestionActivity;
 export type ActivityType = Activities['type'];
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI

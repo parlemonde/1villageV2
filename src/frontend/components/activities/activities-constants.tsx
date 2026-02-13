@@ -107,7 +107,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     mascotte: '/creer-sa-mascotte/5',
     reportage: '/creer-un-reportage/3',
     defi: '/lancer-un-defi/3',
-    question: '/poser-une-question/3'
+    question: '/poser-une-question/3',
 };
 
 // null means all roles
@@ -119,6 +119,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     reportage: null,
     mascotte: ['teacher'],
     defi: null,
+    question: null,
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

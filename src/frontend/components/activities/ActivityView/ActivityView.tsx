@@ -14,8 +14,8 @@ import { FreeContentView } from './views/FreeContentView';
 import { GameView } from './views/GameView';
 import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
-import { ReportView } from './views/ReportView';
 import { QuestionView } from './views/QuestionView';
+import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
     libre: FreeContentView,

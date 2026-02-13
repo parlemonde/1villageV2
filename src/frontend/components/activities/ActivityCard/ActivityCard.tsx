@@ -14,8 +14,8 @@ import { FreeContentCard } from './cards/FreeContentCard';
 import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
-import { ReportCard } from './cards/ReportCard';
 import { QuestionCard } from './cards/QuestionCard';
+import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
     return null;
