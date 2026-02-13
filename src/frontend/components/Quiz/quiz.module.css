@@ -1,13 +1,12 @@
-.root {
-    display: grid;
-    grid-template-rows: repeat(1fr, 3);
-}
-
 .item {
     all: unset;
     cursor: pointer;
     width: 23px;
     height: 23px;
+    max-width: 23px;
+    max-height: 23px;
+    min-width: 23px;
+    min-height: 23px;
     border-radius: 100%;
     border: 2px solid var(--grey-600);
     &:hover {
@@ -85,10 +84,26 @@
     pointer-events: none;
 }
 
+/* --- Game results grid --- */
 .container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 100%);
-    grid-template-rows: 10% 1fr 1fr 1fr;
+    width: 100%;
+    row-gap: 10px;
+    margin-bottom: 16px;
+    justify-items: center;
+    align-items: center;
+}
+
+.radioGroup {
+    display: contents;
+}
+
+.radioOption {
+    grid-column: 1;
+    display: flex;
+    flex-direction: row;
+    justify-self: start;
+    align-items: center;
 }
 
 .flagsHeader {
@@ -106,6 +121,7 @@
 }
 
 .flag {
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,16 +134,16 @@
 }
 
 .results {
-    display: flex;
-    flex-direction: row;
-    gap: 100px;
-    flex: 1;
+    grid-column: 2;
+    display: contents;
 }
 
 .avatarList {
     display: flex;
     flex-direction: row;
-    gap: 4px;
-    justify-content: stretch;
-    width: 100px;
+
+    & > *:not(:first-child) {
+        margin-left: -8px;
+    }
 }
+/* --- Game results grid --- */
