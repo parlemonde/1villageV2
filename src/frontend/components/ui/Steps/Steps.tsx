@@ -3,7 +3,6 @@ import type { MarginProps } from '@frontend/components/ui/css-styles';
 import { getMarginAndPaddingStyle } from '@frontend/components/ui/css-styles';
 import { CheckIcon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
-import React from 'react';
 
 import styles from './steps.module.css';
 
@@ -48,7 +47,7 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                         <div
                             className={classNames(styles.stepNumberLine, {
                                 [styles.stepNumberLineHidden]: index === steps.length - 1,
-                                [styles.stepNumberLineActive]: index < activeStep - 1,
+                                [styles.stepNumberLineActive]: index <= activeStep - 1,
                             })}
                         ></div>
                     </div>

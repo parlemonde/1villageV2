@@ -37,7 +37,15 @@ export default function CreerUnIndiceStep2() {
             <div style={{ marginTop: '16px' }}>
                 <ContentEditor
                     content={activity.data?.content}
-                    setContent={(content) => setActivity({ ...activity, data: { ...activity.data, content } })}
+                    setContent={(content) =>
+                        setActivity({
+                            data: {
+                                content,
+                                defaultHint: activity.data?.defaultHint ?? '',
+                                customHint: activity.data?.customHint ?? '',
+                            },
+                        })
+                    }
                     activityId={activity.id}
                     getActivityId={getOrCreateDraft}
                 />
