@@ -111,7 +111,15 @@ export const GameEngine = ({ rounds, gameId, question, successMessage, errorMess
                         {rounds[index].title}
                     </Title>
                     {rounds?.[index]?.imageUrl && (
-                        <div style={{ width: 'min(90%, 500px)', height: '300px', position: 'relative', margin: 'auto' }}>
+                        <div
+                            style={{
+                                width: 'min(90%, 500px)',
+                                aspectRatio: '3/2',
+                                height: 'auto',
+                                position: 'relative',
+                                margin: 'auto',
+                            }}
+                        >
                             <Image src={rounds[index].imageUrl} alt={rounds[index].title} fill sizes={'500px'} style={{ objectFit: 'contain' }} />
                         </div>
                     )}
@@ -121,7 +129,7 @@ export const GameEngine = ({ rounds, gameId, question, successMessage, errorMess
                         </div>
                     )}
                 </div>
-                <Title variant="h3" color="inherit" marginTop="md">
+                <Title variant="h3" color="inherit" marginTop="md" marginBottom="md">
                     {question}
                 </Title>
                 <Quiz
@@ -145,7 +153,7 @@ export const GameEngine = ({ rounds, gameId, question, successMessage, errorMess
                     {showError && errorMessage}
                 </p>
             </div>
-            <div style={{ marginTop: '32px', textAlign: 'right' }}>
+            <div style={{ margin: '32px 0', textAlign: 'right' }}>
                 {index < rounds[index].options.length - 1 ? (
                     <Button color="primary" label={tCommon('Jeu suivant')} rightIcon={<ChevronRightIcon />} onClick={goToNextQuestion} />
                 ) : (

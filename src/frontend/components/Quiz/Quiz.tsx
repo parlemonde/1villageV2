@@ -54,16 +54,19 @@ export const Quiz = ({ options, onChange, readonly, responses, showResponses, ..
         onChange?.(value);
     };
 
-    const optionPositionMap: Record<number, string> = {};
-    shuffledOptions.forEach((option, index) => (optionPositionMap[index] = option.value));
+    const optionPositionMap: Record<string, number> = {};
+    shuffledOptions.forEach((option, index) => (optionPositionMap[option.value] = index));
 
     const isError = (value: string) => value !== 'true' && checkedAnswers.includes(value);
     const isSuccess = (value: string) => value === 'true' && checkedAnswers.includes(value);
 
+    const rows = shuffledOptions.length + 1; // 1 row per option + 1 row for the flags
+    const cols = (village?.countries.length ?? 0) + 1; // 1 column per flag + 1 for the radio group
+
     return (
-        <div className={styles.container}>
-            {village?.countries.map((country) => (
-                <div key={country} className={styles.flag}>
+        <div className={styles.container} style={{ gridTemplateRows: `repeat(${rows}, auto)`, gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+            {village?.countries.map((country, index) => (
+                <div key={country} className={styles.flag} style={{ gridColumn: index + 2 /* grid starts at 1 + skip radio column */ }}>
                     <CountryFlag country={country} />
                     <p className={styles.flagDescription}>
                         {responses?.[country]?.length ?? 0} {responses?.[country]?.length === 1 ? tCommon('réponse') : tCommon('réponses')}
@@ -73,51 +76,58 @@ export const Quiz = ({ options, onChange, readonly, responses, showResponses, ..
 
             <RadixRadioGroup.Root
                 onValueChange={(checkedValue) => onValueChange(checkedValue)}
-                className={classNames(styles.root, { [styles.readonly]: readonly || isRight })}
+                className={classNames(styles.radioGroup, { [styles.readonly]: readonly || isRight })}
                 style={getMarginAndPaddingStyle(marginProps)}
             >
-                {shuffledOptions.map((option) => (
-                    <div
-                        key={option.value}
-                        style={{ display: 'flex', flexDirection: 'row', gap: '16px', alignItems: 'center', marginBottom: '12px' }}
-                    >
-                        <div style={{ flex: '0 0 auto', minWidth: '300px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <RadixRadioGroup.Item
-                                className={classNames(styles.item, {
+                {shuffledOptions.map((option, index) => (
+                    <div key={option.value} className={styles.radioOption} style={{ gridRow: index + 2 }}>
+                        <RadixRadioGroup.Item
+                            style={{ gridColumn: 1, gridRow: index }}
+                            className={classNames(styles.item, {
+                                [styles.error]: isError(option.value),
+                                [styles.success]: isSuccess(option.value),
+                            })}
+                            value={option.value}
+                            id={option.value}
+                        >
+                            <RadixRadioGroup.Indicator
+                                className={classNames(styles.indicator, {
                                     [styles.error]: isError(option.value),
                                     [styles.success]: isSuccess(option.value),
                                 })}
-                                value={option.value}
-                                id={option.value}
-                            >
-                                <RadixRadioGroup.Indicator
-                                    className={classNames(styles.indicator, {
-                                        [styles.error]: isError(option.value),
-                                        [styles.success]: isSuccess(option.value),
-                                    })}
-                                />
-                            </RadixRadioGroup.Item>
-                            <label className={styles.label} htmlFor={option.value}>
-                                {option.label}
-                            </label>
-                        </div>
-
-                        {responses && showResponses && (
-                            <div className={styles.results}>
-                                {village?.countries.map((country) => (
-                                    <div key={country} className={styles.avatarList}>
-                                        {responses?.[country]
-                                            ?.filter((r) => r.game_responses.response === option.value)
-                                            .map((r) => (
-                                                <Avatar key={r.classrooms.id} size="xs" classroom={r.classrooms} />
-                                            ))}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                            />
+                        </RadixRadioGroup.Item>
+                        <label className={styles.label} htmlFor={option.value}>
+                            {option.label}
+                        </label>
                     </div>
                 ))}
             </RadixRadioGroup.Root>
+
+            {responses && showResponses && (
+                <div className={styles.results}>
+                    {village?.countries.map((country, countryIndex) =>
+                        shuffledOptions.map((option, optionIndex) => {
+                            const avatarList = responses?.[country]?.filter((r) => r.game_responses?.response === option.value) ?? [];
+                            if (avatarList.length === 0) {
+                                return null;
+                            }
+
+                            return (
+                                <div
+                                    key={`${country}-${option.value}`}
+                                    className={styles.avatarList}
+                                    style={{ gridRow: optionIndex + 2, gridColumn: countryIndex + 2 }}
+                                >
+                                    {avatarList.map((a) => (
+                                        <Avatar key={a.classrooms.id} size="xs" classroom={a.classrooms} />
+                                    ))}
+                                </div>
+                            );
+                        }),
+                    )}
+                </div>
+            )}
         </div>
     );
 };
