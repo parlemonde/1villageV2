@@ -211,8 +211,6 @@ export type Activities =
     | ReportActivity
     | StoryActivity
     | MascotActivity
-    | ChallengeActivity;
-    | MascotActivity
     | ChallengeActivity
     | QuestionActivity;
 export type ActivityType = Activities['type'];
