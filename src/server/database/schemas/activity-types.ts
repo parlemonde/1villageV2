@@ -12,7 +12,7 @@ export type FreeActivity = {
     } | null;
 };
 
-type PelicoPresentation = {
+export type PelicoPresentation = {
     type: 'presentation-pelico';
     data: {
         title?: string;
@@ -94,7 +94,7 @@ type TaleElement = {
     tale: string | null;
 };
 
-type HintActivity = {
+export type HintActivity = {
     type: 'indice';
     data: {
         content: Content;
@@ -122,7 +122,7 @@ export type QuestionActivity = {
     };
 };
 
-type ReportActivity = {
+export type ReportActivity = {
     type: 'reportage';
     data: {
         defaultReport?: string;
