@@ -19,7 +19,7 @@ export default async function PelicoPage() {
                 </PageContainer>
             </div>
             <aside className={styles.sidebar}>
-                <ActivitySidePanel />
+                <ActivitySidePanel activityId={presentation?.id} />
             </aside>
         </div>
     );

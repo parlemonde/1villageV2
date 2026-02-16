@@ -3,7 +3,16 @@
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
-import type { FreeActivity, GameActivity, PuzzleActivity } from '@server/database/schemas/activity-types';
+import type {
+    ChallengeActivity,
+    FreeActivity,
+    GameActivity,
+    HintActivity,
+    MascotActivity,
+    PelicoPresentation,
+    PuzzleActivity,
+    ReportActivity,
+} from '@server/database/schemas/activity-types';
 import { eq } from 'drizzle-orm';
 
 type DbActivity = typeof activities.$inferSelect;
@@ -29,6 +38,36 @@ function mapToActivity(dbActivity: DbActivity): Activity | null {
                 ...dbActivity,
                 type: 'enigme',
                 data: dbActivity.data as PuzzleActivity['data'],
+            };
+        case 'indice':
+            return {
+                ...dbActivity,
+                type: 'indice',
+                data: dbActivity.data as HintActivity['data'],
+            };
+        case 'reportage':
+            return {
+                ...dbActivity,
+                type: 'reportage',
+                data: dbActivity.data as ReportActivity['data'],
+            };
+        case 'presentation-pelico':
+            return {
+                ...dbActivity,
+                type: 'presentation-pelico',
+                data: dbActivity.data as PelicoPresentation['data'],
+            };
+        case 'mascotte':
+            return {
+                ...dbActivity,
+                type: 'mascotte',
+                data: dbActivity.data as MascotActivity['data'],
+            };
+        case 'defi':
+            return {
+                ...dbActivity,
+                type: 'defi',
+                data: dbActivity.data as ChallengeActivity['data'],
             };
         default:
             throw new Error(`Unknown activity type: ${dbActivity.type}`);
