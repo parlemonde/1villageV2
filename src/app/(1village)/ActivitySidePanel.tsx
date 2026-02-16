@@ -76,7 +76,7 @@ export const ActivitySidePanel = () => {
         return () => clearInterval(interval);
     }, [weather]);
 
-    const isOnActivityPage = pathname.startsWith('/activities/');
+    const isOnActivityPage = pathname.startsWith('/activities/') || pathname.startsWith('/pelico');
 
     if (!isOnActivityPage) return null;
 
