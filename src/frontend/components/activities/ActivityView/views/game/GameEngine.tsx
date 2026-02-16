@@ -3,10 +3,10 @@
 import { Button } from '@frontend/components/ui/Button';
 import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
+import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { Title } from '@frontend/components/ui/Title';
 import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import Image from 'next/image';
 import { useExtracted } from 'next-intl';
 import { useState } from 'react';
 
@@ -63,7 +63,14 @@ export const GameEngine = ({ rounds, question, successMessage, errorMessage }: G
                         {rounds[index].title}
                     </Title>
                     {rounds?.[index]?.imageUrl && (
-                        <Image src={rounds[index].imageUrl} alt={rounds[index].title} width={500} height={300} style={{ objectFit: 'cover' }} />
+                        <ImageViewer
+                            imageUrl={rounds[index].imageUrl}
+                            alt={rounds[index].title}
+                            margin="auto"
+                            width="500px"
+                            height="300px"
+                            objectFit="contain"
+                        />
                     )}
                     {rounds?.[index]?.videoUrl && (
                         <div style={{ width: '80%', margin: 'auto' }}>

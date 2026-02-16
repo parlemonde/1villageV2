@@ -1,0 +1,11 @@
+.image {
+    cursor: pointer;
+}
+
+.contain {
+    object-fit: contain;
+}
+
+.cover {
+    object-fit: cover;
+}
