@@ -180,7 +180,6 @@ export type Activities =
     | PuzzleActivity
     | HintActivity
     | ReportActivity
-    | PelicoPresentation
     | MascotActivity
     | ChallengeActivity
     | PelicoPresentation;
