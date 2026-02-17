@@ -1,0 +1,30 @@
+.itemsPerPageLabel {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+.itemsPerPageSelect {
+    width: 60px;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+@media (max-width: 480px) {
+    /* hide label but keep it in DOM for accessibility */
+    .itemsPerPageLabel label[for='nbItemsPerPage'] {
+        position: absolute;
+        left: 100%;
+    }
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 32px;
+}

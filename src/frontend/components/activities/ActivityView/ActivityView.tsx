@@ -15,6 +15,7 @@ import { GameView } from './views/GameView';
 import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
 import { PuzzleView } from './views/PuzzleView';
+import { QuestionView } from './views/QuestionView';
 import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
@@ -25,6 +26,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     reportage: ReportView,
     mascotte: MascotView,
     defi: ChallengeView,
+    question: QuestionView,
 };
 
 interface ActivityViewProps {

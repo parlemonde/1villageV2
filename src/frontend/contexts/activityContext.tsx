@@ -2,7 +2,7 @@
 
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Modal } from '@frontend/components/ui/Modal';
-import { useLocalStorage } from '@frontend/hooks/useLocalStorage';
+import { useSessionStorage } from '@frontend/hooks/useSessionStorage';
 import { debounce } from '@frontend/lib/debounce';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
@@ -82,7 +82,7 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
     const pathname = usePathname();
     const tCommon = useExtracted('common');
 
-    const [localActivity, setLocalActivity] = useLocalStorage<Partial<Activity> | undefined>('activity', undefined);
+    const [localActivity, setLocalActivity] = useSessionStorage<Partial<Activity> | undefined>('activity', undefined);
 
     // Use a following ref for the activity to use in callbacks and effects without causing re-renders
     const localActivityRef = useRef<Partial<Activity> | undefined>(undefined);
