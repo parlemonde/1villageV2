@@ -1,6 +1,7 @@
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { H5pPlayer } from '@frontend/components/h5p';
 import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
+import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
 
 interface AnyContentViewerProps {
@@ -13,20 +14,7 @@ export const AnyContentViewer = ({ content, activityId }: AnyContentViewerProps)
         case 'html':
             return <HtmlViewer content={content.html} />;
         case 'image':
-            return (
-                <div
-                    style={{
-                        width: '100%',
-                        maxWidth: 600,
-                        maxHeight: 400,
-                        margin: '0 auto',
-                        overflow: 'hidden',
-                    }}
-                >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={content.imageUrl} alt="Image" style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: '300px' }} />
-                </div>
-            );
+            return <ImageViewer imageUrl={content.imageUrl} alt="Image" width="100%" height="300px" objectFit="contain" />;
         case 'audio':
             return (
                 <div

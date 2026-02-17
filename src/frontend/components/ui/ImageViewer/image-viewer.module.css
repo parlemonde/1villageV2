@@ -1,3 +1,7 @@
+.imageContainer {
+    position: relative;
+}
+
 .image {
     cursor: pointer;
 }
@@ -8,4 +12,11 @@
 
 .cover {
     object-fit: cover;
+}
+
+.modalImageContainer {
+    position: relative;
+    height: 75vh;
+    margin: auto;
+    width: 100%;
 }

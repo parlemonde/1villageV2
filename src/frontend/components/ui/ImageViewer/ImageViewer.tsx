@@ -10,8 +10,8 @@ import styles from './image-viewer.module.css';
 
 interface ImageViewerProps extends MarginProps {
     imageUrl: string;
-    width?: string;
-    height?: string;
+    width?: `${number}px` | `${number}%` | `${number}rem`;
+    height?: `${number}px` | `${number}%` | `${number}rem` | 'auto';
     alt?: string;
     aspectRatio?: string;
     objectFit?: 'contain' | 'cover';
@@ -36,7 +36,10 @@ export const ImageViewer = ({
 
     return (
         <>
-            <div style={{ width: `min(${width}, 100%)`, height, aspectRatio, position: 'relative', ...getMarginAndPaddingStyle(marginProps) }}>
+            <div
+                className={styles.imageContainer}
+                style={{ width: `min(${width}, 100%)`, height, aspectRatio, ...getMarginAndPaddingStyle(marginProps) }}
+            >
                 <Image
                     className={classNames(styles.image, className, {
                         [styles.contain]: objectFit === 'contain',
@@ -53,11 +56,13 @@ export const ImageViewer = ({
                 />
             </div>
 
-            <Modal isOpen={isFullScreen} onClose={() => setIsFullScreen(false)} title={alt ?? ''} hasCancelButton={false} width="xl">
-                <div style={{ position: 'relative', margin: 'auto', height: '75vh', width: '100%' }}>
-                    <Image className={styles.contain} src={imageUrl} sizes={'1200px'} fill alt={alt ?? ''} unoptimized={unoptimized} />
-                </div>
-            </Modal>
+            {isFullScreen && (
+                <Modal isOpen={isFullScreen} onClose={() => setIsFullScreen(false)} title={alt ?? ''} hasCancelButton={false} width="xl">
+                    <div className={styles.modalImageContainer}>
+                        <Image className={styles.contain} src={imageUrl} sizes={'1200px'} fill alt={alt ?? ''} unoptimized={unoptimized} />
+                    </div>
+                </Modal>
+            )}
         </>
     );
 };
