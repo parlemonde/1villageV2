@@ -14,6 +14,7 @@ import { FreeContentCard } from './cards/FreeContentCard';
 import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
+import { PuzzleCard } from './cards/PuzzleCard';
 import { QuestionCard } from './cards/QuestionCard';
 import { ReportCard } from './cards/ReportCard';
 
@@ -25,7 +26,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     libre: FreeContentCard,
     indice: HintCard,
     jeu: GameCard,
-    enigme: EmptyContentCard,
+    enigme: PuzzleCard,
     reportage: ReportCard,
     mascotte: MascotCard,
     defi: ChallengeCard,
