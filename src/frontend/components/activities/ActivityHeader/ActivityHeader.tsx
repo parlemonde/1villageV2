@@ -2,6 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ActivityTimer } from '@frontend/components/activities/ActivityTimer/ActivityTimer';
 import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
@@ -41,38 +42,52 @@ interface ActivityHeaderProps {
     user?: User;
     classroom?: Classroom;
     className?: string;
+    showIcon?: boolean;
+    showDetails?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className }: ActivityHeaderProps) => {
+export const ActivityHeader = ({ user, classroom, activity, className, showIcon = true, showDetails = true }: ActivityHeaderProps) => {
     if (!activity.type) {
         return null;
     }
     const Icon = activity.isPinned ? PinnedIcon : ACTIVITY_ICONS[activity.type];
+    if (activity.type === 'libre') {
+        showIcon = activity.isPinned || false;
+    }
     return (
         <div className={classNames(styles.activityHeader, className)}>
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
             <div className={styles.activityHeaderText}>
                 <span>
                     <ActivityDisplayName user={user} classroom={classroom} isPelico={activity.isPelico} />
-                    {' a '}
-                    <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
+                    {showDetails && (
+                        <>
+                            {' a '}
+                            <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
+                        </>
+                    )}
                 </span>
-                <div className={styles.activityHeaderInfo}>
-                    <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>
-                    {activity.isPelico && (
-                        <>
-                            <span>&nbsp;&middot;&nbsp;</span>
-                            <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
-                        </>
-                    )}
-                    {classroom && (
-                        <>
-                            <span>&nbsp;&middot;&nbsp;</span>
-                            <CountryFlag size="small" country={classroom?.countryCode} />
-                        </>
-                    )}
-                </div>
+                {showDetails && (
+                    <div className={styles.activityHeaderInfo}>
+                        <span>Publié le {toFormattedDate(activity.publishDate ?? null)}</span>
+                        {activity.isPelico && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <PelicoNeutre style={{ width: '18px', height: 'auto' }} />
+                            </>
+                        )}
+                        {classroom && (
+                            <>
+                                <span>&nbsp;&middot;&nbsp;</span>
+                                <CountryFlag size="small" country={classroom?.countryCode} />
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
-            {Icon && <Icon style={{ width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />}
+            {activity.type === 'enigme' && <ActivityTimer activity={activity} />}
+            {showDetails && showIcon && Icon && (
+                <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />
+            )}
         </div>
     );
 };

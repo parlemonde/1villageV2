@@ -1,0 +1,17 @@
+.card {
+    padding: 16px;
+    background-color: var(--grey-100);
+    border-radius: 8px;
+    margin: 32px 0;
+}
+
+.buttonContainer {
+    text-align: right;
+}
+
+.mainContainer {
+    margin: 32px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16;
+}

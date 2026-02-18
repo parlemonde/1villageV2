@@ -1,15 +1,18 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { ActivityCard } from '@frontend/components/activities/ActivityCard';
-import { ACTIVITY_LAST_PAGE_URLS } from '@frontend/components/activities/activities-constants';
+import { getActivityLastPageUrl } from '@frontend/components/activities/activities-constants';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Title } from '@frontend/components/ui/Title';
+import { UserContext } from '@frontend/contexts/userContext';
 import { setToLocalStorage } from '@frontend/hooks/useLocalStorage/local-storage';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import { deleteActivity } from '@server-actions/activities/delete-activity';
+import { deleteMascot } from '@server-actions/activities/delete-mascot';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -20,6 +23,7 @@ interface MyActivitiesProps {
 }
 export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps) => {
     const router = useRouter();
+    const { setClassroom } = React.useContext(UserContext);
     const [activityIdToDelete, setActivityIdToDelete] = React.useState<number | null>(null);
     const [isDeletingActivity, setIsDeletingActivity] = React.useState(false);
     const activityToDelete = activities.find((activity) => activity.id === activityIdToDelete);
@@ -61,7 +65,9 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         classroom={classroom}
                         onEdit={() => {
                             setToLocalStorage('activity', activity);
-                            router.push(ACTIVITY_LAST_PAGE_URLS[activity.type]);
+                            const theme = activity.type === 'jeu' ? activity.data?.theme : undefined;
+                            const route = getActivityLastPageUrl(activity.type, theme);
+                            router.push(route);
                         }}
                         onDelete={() => {
                             setActivityIdToDelete(activity.id);
@@ -82,14 +88,26 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         return;
                     }
                     setIsDeletingActivity(true);
-                    deleteActivity(activityIdToDelete)
-                        .catch(() => {
-                            // todo, display an error message
-                        })
-                        .finally(() => {
-                            setIsDeletingActivity(false);
-                            setActivityIdToDelete(null);
-                        });
+                    if (activityToDelete?.type === 'mascotte' && classroom) {
+                        deleteMascot(activityIdToDelete, classroom.id)
+                            .catch(() => {
+                                sendToast({ message: 'Une erreur est survenue lors de la suppression de la mascotte.', type: 'error' });
+                            })
+                            .finally(() => {
+                                setClassroom({ ...classroom, mascotteId: null, avatarUrl: null });
+                                setIsDeletingActivity(false);
+                                setActivityIdToDelete(null);
+                            });
+                    } else {
+                        deleteActivity(activityIdToDelete)
+                            .catch(() => {
+                                sendToast({ message: "Une erreur est survenue lors de la suppression de l'activité.", type: 'error' });
+                            })
+                            .finally(() => {
+                                setIsDeletingActivity(false);
+                                setActivityIdToDelete(null);
+                            });
+                    }
                 }}
                 width="lg"
             >

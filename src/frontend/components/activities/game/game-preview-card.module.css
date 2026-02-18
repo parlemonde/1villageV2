@@ -1,0 +1,23 @@
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    border: 1px solid var(--grey-300);
+    padding: 16px;
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image {
+    object-fit: cover;
+}
+
+.videoContainer {
+    width: 200px;
+}

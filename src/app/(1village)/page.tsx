@@ -1,8 +1,8 @@
 'use client';
 
-import { WorldMap } from '@frontend/components/WorldMap';
 import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
+import WorldMap3D from '@frontend/components/worldMaps/WorldMap3D/WorldMap3D';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import PelicoReflechit from '@frontend/svg/pelico/pelico-reflechit.svg';
@@ -40,7 +40,7 @@ export default function Home() {
     return (
         <>
             <div className={styles.WorldMapContainer}>
-                <WorldMap />
+                <WorldMap3D />
             </div>
             <div style={{ margin: '8px 16px 32px 16px' }}>
                 <Title marginBottom="sm">{t('Dernières activités')}</Title>

@@ -16,12 +16,17 @@
 }
 
 .content {
+    max-width: calc(100% - 320px - 16px); /* 320px (navigation width) - 16px (margin)  */
     flex: 1 1 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     gap: 16px;
+
+    @media (max-width: 850px) {
+        max-width: 100%;
+    }
 }
 
 .main {

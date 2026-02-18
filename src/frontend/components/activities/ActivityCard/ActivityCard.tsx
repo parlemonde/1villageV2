@@ -9,8 +9,13 @@ import classNames from 'clsx';
 
 import styles from './activity-card.module.css';
 import type { ActivityContentCardProps } from './activity-card.types';
+import { ChallengeCard } from './cards/ChallengeCard';
 import { FreeContentCard } from './cards/FreeContentCard';
+import { GameCard } from './cards/GameCard';
 import { HintCard } from './cards/HintCard';
+import { MascotCard } from './cards/MascotCard';
+import { PuzzleCard } from './cards/PuzzleCard';
+import { QuestionCard } from './cards/QuestionCard';
 import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
@@ -20,9 +25,12 @@ const EmptyContentCard = () => {
 const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = {
     libre: FreeContentCard,
     indice: HintCard,
-    jeu: EmptyContentCard,
-    enigme: EmptyContentCard,
+    jeu: GameCard,
+    enigme: PuzzleCard,
     reportage: ReportCard,
+    mascotte: MascotCard,
+    defi: ChallengeCard,
+    question: QuestionCard,
 };
 
 interface ActivityCardProps {
@@ -32,18 +40,25 @@ interface ActivityCardProps {
     onEdit?: () => void;
     onDelete?: () => void;
     shouldDisableButtons?: boolean;
+    hasActions?: boolean;
 }
-export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, shouldDisableButtons = false }: ActivityCardProps) => {
+export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, hasActions, shouldDisableButtons = false }: ActivityCardProps) => {
     if (!user || !activity.type) {
         return null;
     }
     const ContentCard = CONTENT_CARDS[activity.type] || EmptyContentCard;
     return (
         <div className={classNames(styles.activityCard, { [styles.isPinned]: activity.isPinned })}>
-            <ActivityHeader activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
+            <ActivityHeader showIcon activity={activity} user={user} classroom={classroom} className={styles.activityCardHeader} />
             {ContentCard && (
                 <div className={styles.activityCardBody}>
-                    <ContentCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />
+                    <ContentCard
+                        activity={activity}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                        hasActions={hasActions}
+                        shouldDisableButtons={shouldDisableButtons}
+                    />
                 </div>
             )}
         </div>
