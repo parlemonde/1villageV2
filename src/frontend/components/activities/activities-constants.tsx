@@ -24,6 +24,12 @@ export const useActivityName = () => {
                     return t('Indice');
                 case 'reportage':
                     return t('Reportage');
+                case 'mascotte':
+                    return t('Mascotte');
+                case 'defi':
+                    return t('Défi');
+                case 'question':
+                    return t('Question');
             }
         },
         [t],
@@ -41,6 +47,12 @@ export const useActivityName = () => {
                     return t('Créer un indice');
                 case 'reportage':
                     return t('Créer un reportage');
+                case 'mascotte':
+                    return t('Créer sa mascotte');
+                case 'defi':
+                    return t('Lancer un defi');
+                case 'question':
+                    return t('Poser une question');
             }
         },
         [t],
@@ -82,4 +94,16 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, string> = {
     enigme: '/creer-une-enigme/3',
     indice: '/creer-un-indice/3',
     reportage: '/creer-un-reportage/3',
+};
+
+// null means all roles
+export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
+    libre: null,
+    jeu: null,
+    enigme: null,
+    indice: null,
+    reportage: null,
+    mascotte: ['teacher'],
+    defi: null,
+    question: null,
 };

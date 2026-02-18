@@ -2,7 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { ACTIVITY_ICONS, ACTIVITY_URLS, useActivityName } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_ICONS, ACTIVITY_URLS, ACTIVITY_ROLES, useActivityName } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
@@ -57,7 +57,7 @@ const getActivityMenuItem = (
     type: ActivityType,
     activityLabel: string,
     firstPath: string,
-    hasVillageReachedPhase: boolean,
+    isActivityEnabled: boolean,
     onClick?: () => void,
 ): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
@@ -72,7 +72,7 @@ const getActivityMenuItem = (
         label: activityLabel,
         href,
         isActive: firstPath === href.split('/')[1],
-        isDisabled: !hasVillageReachedPhase,
+        isDisabled: !isActivityEnabled,
         onClick:
             firstPath === href.split('/')[1]
                 ? () => {
@@ -113,7 +113,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
         .map((type) => {
             const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
             const activityLabel = getActivityLabel(type as ActivityType);
-            return getActivityMenuItem(type, activityLabel, firstPath, hasVillageReachedPhase);
+            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
+            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
+            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled);
         })
         .filter((item) => item !== null);
 
@@ -176,7 +178,9 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
         .map((type) => {
             const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
             const activityLabel = getActivityLabel(type as ActivityType);
-            return getActivityMenuItem(type, activityLabel, firstPath, hasVillageReachedPhase, onClose);
+            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
+            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
+            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled, onClose);
         })
         .filter((item) => item !== null);
 
