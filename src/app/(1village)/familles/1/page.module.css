@@ -1,0 +1,28 @@
+.buttonContainer {
+    text-align: right;
+}
+
+.activities {
+    height: 500px;
+    overflow-x: auto;
+    border: 1px solid var(--grey-300);
+    display: flex;
+    flex-direction: column;
+}
+
+.visibilityToggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px;
+
+    &:hover {
+        background-color: var(--primary-100);
+    }
+}
+
+.marginBottom {
+    margin-bottom: 8px;
+}
