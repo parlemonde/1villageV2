@@ -38,22 +38,34 @@ export const useActivityName = () => {
         },
         [t],
     );
-    return { getActivityName };
+    const getActivityLabel = React.useCallback(
+        (type: ActivityType): string => {
+            switch (type) {
+                case 'libre':
+                    return t('Publier un contenu libre');
+                case 'jeu':
+                    return t('Créer un jeu');
+                case 'enigme':
+                    return t('Créer une énigme');
+                case 'indice':
+                    return t('Créer un indice');
+                case 'reportage':
+                    return t('Créer un reportage');
+                case 'mascotte':
+                    return t('Créer sa mascotte');
+                case 'defi':
+                    return t('Lancer un defi');
+                case 'question':
+                    return t('Poser une question');
+            }
+        },
+        [t],
+    );
+    return { getActivityName, getActivityLabel };
 };
 export const ActivityName = ({ type }: { type: ActivityType }): React.ReactNode => {
     const { getActivityName } = useActivityName();
     return getActivityName(type);
-};
-
-export const ACTIVITY_LABELS: Record<ActivityType, string> = {
-    libre: 'Publier un contenu libre',
-    jeu: 'Créer un jeu',
-    enigme: 'Créer une énigme',
-    indice: 'Créer un indice',
-    mascotte: 'Créer sa mascotte',
-    reportage: 'Créer un reportage',
-    defi: 'Lancer un defi',
-    question: 'Poser une question',
 };
 
 export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {

@@ -2,7 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
-import { ACTIVITY_ICONS, ACTIVITY_LABELS, ACTIVITY_ROLES, ACTIVITY_URLS } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_ICONS, ACTIVITY_URLS, ACTIVITY_ROLES, useActivityName } from '@frontend/components/activities/activities-constants';
 import { IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
@@ -16,7 +16,6 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
-import type { UserRole } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
@@ -54,9 +53,14 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
         : []),
 ];
 
-const getActivityMenuItem = (type: ActivityType, firstPath: string, role: UserRole, onClick?: () => void): MenuItem | null => {
+const getActivityMenuItem = (
+    type: ActivityType,
+    activityLabel: string,
+    firstPath: string,
+    isActivityEnabled: boolean,
+    onClick?: () => void,
+): MenuItem | null => {
     const Icon = ACTIVITY_ICONS[type];
-    const label = ACTIVITY_LABELS[type] || type;
     const href = ACTIVITY_URLS[type];
 
     if (!href) {
@@ -65,11 +69,16 @@ const getActivityMenuItem = (type: ActivityType, firstPath: string, role: UserRo
 
     return {
         icon: Icon !== null ? <Icon /> : undefined,
-        label,
+        label: activityLabel,
         href,
         isActive: firstPath === href.split('/')[1],
-        disabled: ACTIVITY_ROLES[type] !== null && !ACTIVITY_ROLES[type]?.includes(role),
-        onClick,
+        isDisabled: !isActivityEnabled,
+        onClick:
+            firstPath === href.split('/')[1]
+                ? () => {
+                      alert('Lien inactif');
+                  }
+                : onClick,
     };
 };
 
@@ -81,6 +90,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     const { user, classroom } = useContext(UserContext);
     const [phase] = usePhase();
     const pathname = usePathname();
+    const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
@@ -98,7 +108,16 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     }
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
-    const activityMenuItems = activityTypes.map((type) => getActivityMenuItem(type, firstPath, user.role)).filter((item) => item !== null);
+
+    const activityMenuItems = activityTypes
+        .map((type) => {
+            const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+            const activityLabel = getActivityLabel(type as ActivityType);
+            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
+            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
+            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled);
+        })
+        .filter((item) => item !== null);
 
     return (
         <div className={styles.navigationWrapper}>
@@ -141,6 +160,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     const classroomCountryCode = classroom?.countryCode;
     const { village } = useContext(VillageContext);
     const pathname = usePathname();
+    const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
 
@@ -155,12 +175,15 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
     }
 
     const activityMenuItems = activityTypes
-        .map((type) =>
-            getActivityMenuItem(type, firstPath, user.role, () => {
-                onClose();
-            }),
-        )
+        .map((type) => {
+            const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
+            const activityLabel = getActivityLabel(type as ActivityType);
+            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
+            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
+            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled, onClose);
+        })
         .filter((item) => item !== null);
+
     if (activityMenuItems.length > 0) {
         activityMenuItems[0].hasSeparatorTop = true;
     }
