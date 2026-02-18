@@ -4,6 +4,7 @@ import { ContentEditor } from '@frontend/components/content/ContentEditor/Conten
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button/Button';
 import { Loader } from '@frontend/components/ui/Loader';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import { updatePelicoPresentation } from '@server-actions/activities/update-pelico-presentation';
 import { useRouter } from 'next/navigation';
@@ -59,7 +60,15 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
                 getActivityId={async () => presentation?.id ?? null}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
+                <Button
+                    as="a"
+                    color="primary"
+                    variant="outlined"
+                    label={t('Retour')}
+                    href="/admin/manage"
+                    leftIcon={<ChevronLeftIcon width={18} height={18} />}
+                />
                 <Button label={t('Valider')} color="primary" variant="contained" disabled={!hasChanges} onClick={onSave} />
             </div>
         </div>
