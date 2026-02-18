@@ -57,7 +57,7 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
                 getActivityId={async () => presentation?.id ?? null}
             />
 
-            <div className={'actions'}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button label="Valider" color="primary" variant="contained" disabled={!hasChanges} onClick={onSave} />
             </div>
         </div>
