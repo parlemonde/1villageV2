@@ -7,6 +7,7 @@ import { Loader } from '@frontend/components/ui/Loader';
 import type { Activity } from '@server/database/schemas/activities';
 import { updatePelicoPresentation } from '@server-actions/activities/update-pelico-presentation';
 import { useRouter } from 'next/navigation';
+import { useExtracted } from 'next-intl';
 import { useState } from 'react';
 
 // import styles from './pelico.module.css';
@@ -16,6 +17,7 @@ interface PelicoPageProps {
 }
 
 export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
+    const t = useExtracted('app.admin.manage.pelico');
     const router = useRouter();
     const initialData = presentation?.type === 'presentation-pelico' ? presentation.data : null;
     const [presentationData, setPresentationData] = useState<{
@@ -58,7 +60,7 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
             />
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button label="Valider" color="primary" variant="contained" disabled={!hasChanges} onClick={onSave} />
+                <Button label={t('Valider')} color="primary" variant="contained" disabled={!hasChanges} onClick={onSave} />
             </div>
         </div>
     );
