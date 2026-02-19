@@ -2,6 +2,7 @@ import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
+import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
@@ -18,6 +19,7 @@ const activitiesSearchParams = {
     villageId: parseAsInteger, // -1 will mean null village activities
     isPelico: parseAsBoolean,
     countries: parseAsArrayOf(parseAsString),
+    visibility: parseAsStringEnum<'all' | 'visible' | 'hidden' | 'hidden'>(['all', 'visible', 'hidden']).withDefault('visible'),
 };
 const loadSearchParams = createLoader(activitiesSearchParams);
 
@@ -48,9 +50,10 @@ export const GET = async ({ nextUrl }: NextRequest) => {
 
     const result = await db
         .select({
-            activity: activities,
+            activity: { ...activities, isHidden: activityVisibility.isHidden },
         })
         .from(activities)
+        .innerJoin(activityVisibility, eq(activityVisibility.activityId, activities.id))
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
