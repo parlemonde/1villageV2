@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer, jsonb, text, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, integer, jsonb, text, uuid, boolean } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
 import { villages } from './villages';
@@ -21,5 +21,6 @@ export const classrooms = pgTable('classrooms', {
         onDelete: 'cascade',
     }),
     countryCode: varchar('countryCode', { length: 2 }).notNull(),
+    showOnlyClassroomActivities: boolean('showOnlyClassroomActivities').notNull().default(true),
 });
 export type Classroom = typeof classrooms.$inferSelect;

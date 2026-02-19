@@ -16,6 +16,28 @@ export default function FamillesStep3() {
     const tCommon = useExtracted('common');
 
     const [content, setContent] = useState<unknown>();
+    const [textValue, setTextValue] = useState(
+        `
+    <p>Bonjour, 
+    </br>
+    </br>
+    Notre classe participe au projet 1Village, de l’association Par Le Monde, agréée par le ministère de l’éducation nationale français. 
+    1Village est un projet de correspondances avec d’autres classes du monde, accessible de façon sécurisée sur un site internet.</p>
+    
+    <p>Si vous souhaitez accéder à ce site et observer les échanges en famille, il vous faut suivre cette démarche :</p>
+    
+    <ol>
+    <li>Créer un compte sur https://1v.parlemonde.org/inscription, en renseignant une adresse email et un mot de passe.</li>
+    <li>Confirmez votre adresse mail en cliquant sur le lien envoyé</li>
+    <li>Connectez-vous sur https://1v.parlemonde.org/inscription et rattachez votre compte à l’identifiant unique <strong>%identifiant</strong></li>
+    </ol>
+    
+    <p>Jusqu’à 5 personnes de votre famille peuvent créer un compte et le rattacher à l’identifiant unique de votre enfant.
+    </br>
+    </br>
+    Bonne journée</p>
+    `,
+    );
 
     const print = () => {
         // TODO
