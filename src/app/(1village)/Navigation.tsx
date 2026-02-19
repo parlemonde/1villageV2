@@ -11,6 +11,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
+import FamilyIcon from '@frontend/svg/navigation/family.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
@@ -218,6 +219,19 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                     },
+                    ...(user?.role === 'teacher'
+                        ? [
+                              {
+                                  icon: <FamilyIcon />,
+                                  label: 'Mes familles',
+                                  href: '/familles/1',
+                                  isActive: firstPath === 'familles',
+                                  onClick: () => {
+                                      onClose();
+                                  },
+                              },
+                          ]
+                        : []),
                     ...(user?.role === 'admin'
                         ? [
                               {

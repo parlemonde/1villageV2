@@ -11,6 +11,7 @@
 }
 
 .visibilityToggle {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -25,4 +26,13 @@
 
 .marginBottom {
     margin-bottom: 8px;
+}
+
+.cardWrapper {
+    width: 100%;
+}
+
+.grayOverlay {
+    filter: grayscale(100%);
+    opacity: 0.7;
 }

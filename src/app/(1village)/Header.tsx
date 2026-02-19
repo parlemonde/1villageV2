@@ -10,6 +10,7 @@ import { VillageSelector } from '@frontend/components/village/VillageSelector';
 import { UserContext } from '@frontend/contexts/userContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
+import FamilyIcon from '@frontend/svg/navigation/family.svg';
 import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
 import { logout } from '@server-actions/authentication/logout';
 import { useExtracted } from 'next-intl';
@@ -72,6 +73,7 @@ export const Header = () => {
                 <Dropdown trigger={<IconButton icon={CogIcon} variant="borderless" size="lg" isTabletUpOnly />} align="end">
                     {user?.role === 'admin' && <DropdownMenuItem label={tCommon('Portail admin')} href="/admin" icon={GearIcon} />}
                     <DropdownMenuItem label={tCommon('Mon compte')} href="/mon-compte" icon={AvatarIcon} />
+                    {user?.role === 'teacher' && <DropdownMenuItem label={tCommon('Mes familles')} href="/familles/1" icon={FamilyIcon} />}
                     {user?.role === 'admin' && <DropdownMenuItem label={tCommon('Paramètres')} href="/parametres" icon={MixerHorizontalIcon} />}
                     <DropdownMenuItem label={tCommon('Se déconnecter')} onClick={() => logout()} color="danger" icon={ExitIcon} />
                 </Dropdown>
