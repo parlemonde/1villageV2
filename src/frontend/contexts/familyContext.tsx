@@ -10,7 +10,7 @@ import { createContext, useCallback, useMemo, useState } from 'react';
 export interface FamilyForm {
     showOnlyClassroomActivities: boolean;
     hiddenActivities: number[];
-    students: string[];
+    students: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
     emailContent: unknown;
 }
 
@@ -68,7 +68,7 @@ const onSaveFormDebounced = debounce((form: Partial<FamilyForm>, setSaveStep: (s
 interface FamilyProviderProps {
     showOnlyClassroomActivities: boolean;
     hiddenActivities?: number[];
-    students?: [];
+    students?: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
 }
 export const FamilyProvider = ({
     showOnlyClassroomActivities,
