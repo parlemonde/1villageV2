@@ -1,29 +1,14 @@
 'use server';
 
-import type { FamilyForm } from '@frontend/contexts/familyContext';
+import type { StudentsForm } from '@frontend/contexts/familyContext';
 import { db } from '@server/database';
-import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import { classrooms } from '@server/database/schemas/classrooms';
 import { students } from '@server/database/schemas/students';
 import type { User } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import type { SQL } from 'drizzle-orm';
 import { and, eq, inArray, sql } from 'drizzle-orm';
-
-const updateClassroomActivitiesVisibility = async (classroomId: number, showOnlyClassroomActivities: boolean) => {
-    await db.update(classrooms).set({ showOnlyClassroomActivities }).where(eq(classrooms.id, classroomId));
-};
-
-const updateActivityVisibility = async (hiddenActivities: number[], user: User, classroom: Classroom) => {
-    await db.update(activityVisibility).set({
-        activityId: hiddenActivities[0],
-        teacherId: user.id,
-        classroomId: classroom.id,
-        isHidden: true,
-    });
-};
 
 const removeStudents = async (
     studentsList: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[],
@@ -72,7 +57,7 @@ const createStudent = async (
     );
 };
 
-export const saveForm = async ({ showOnlyClassroomActivities, students: studentsList, hiddenActivities }: Partial<FamilyForm>) => {
+export const saveStudents = async ({ students }: Partial<StudentsForm>) => {
     const user = await getCurrentUser();
     if (!user) {
         throw new Error('Unauthorized');
@@ -83,17 +68,9 @@ export const saveForm = async ({ showOnlyClassroomActivities, students: students
         throw new Error("Teacher doesn't have a classroom");
     }
 
-    if (showOnlyClassroomActivities) {
-        await updateClassroomActivitiesVisibility(classroom.id, showOnlyClassroomActivities);
-    }
-
-    if (hiddenActivities) {
-        await updateActivityVisibility(hiddenActivities, user, classroom);
-    }
-
-    if (studentsList) {
-        await removeStudents(studentsList, user, classroom);
-        await updateStudents(studentsList);
-        await createStudent(studentsList, user, classroom);
+    if (students && students.length > 0) {
+        await removeStudents(students, user, classroom);
+        await updateStudents(students);
+        await createStudent(students, user, classroom);
     }
 };

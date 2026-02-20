@@ -14,10 +14,14 @@ export const activityVisibility = pgTable(
             }),
         activityId: integer('activityId')
             .notNull()
-            .references(() => activities.id),
+            .references(() => activities.id, {
+                onDelete: 'cascade',
+            }),
         classroomId: integer('classroomId')
             .notNull()
-            .references(() => classrooms.id),
+            .references(() => classrooms.id, {
+                onDelete: 'cascade',
+            }),
         isHidden: boolean('isHidden').notNull().default(false),
     },
     (table) => [primaryKey({ columns: [table.teacherId, table.activityId, table.classroomId] })],

@@ -5,6 +5,7 @@ import type { ActivityFiltersState } from '@frontend/components/activities/Activ
 import { ActivityFilters } from '@frontend/components/activities/ActivityFilters/ActivityFilters';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -28,8 +29,9 @@ export default function FamillesStep1() {
     const tCommon = useExtracted('common');
 
     const { village, usersMap, classroomsMap } = useContext(VillageContext);
-    const { form, setForm } = useContext(FamilyContext);
+    const { form, setActivitiesVisibility } = useContext(FamilyContext);
 
+    const [isLoading, setIsLoading] = useState(false);
     const [filters, setFilters] = useState<ActivityFiltersState>({
         activityTypes: [], // Empty array -> all activity types
         countries: village?.countries ?? [],
@@ -37,15 +39,27 @@ export default function FamillesStep1() {
         search: '',
     });
 
-    const toggleVisibility = (activityId: number) => {
-        if (form.hiddenActivities.includes(activityId)) {
-            setForm({ ...form, hiddenActivities: form.hiddenActivities.filter((id) => id !== activityId) });
-        } else {
-            setForm({ ...form, hiddenActivities: [...form.hiddenActivities, activityId] });
-        }
+    const toggleVisibility = async (activityId: number) => {
+        const serverValue = activities?.find((a) => a.id === activityId)?.isHidden;
+        const currentValue = form.activityVisibilityMap[activityId] ?? serverValue ?? false;
+        await setActivitiesVisibility({
+            activityVisibilityMap: {
+                ...form.activityVisibilityMap,
+                [activityId]: !currentValue,
+            },
+        });
     };
 
-    const { data: activities } = useSWR<Activity[]>(
+    const toggleGlobalVisibility = async (value: string) => {
+        setIsLoading(true);
+        await setActivitiesVisibility({
+            showOnlyClassroomActivities: value === 'true',
+        });
+        await mutate();
+        setIsLoading(false);
+    };
+
+    const { data: activities, mutate } = useSWR<(Activity & { isHidden: boolean })[]>(
         village
             ? `/api/activities${serializeToQueryUrl({
                   villageId: village.id,
@@ -53,14 +67,16 @@ export default function FamillesStep1() {
                   isPelico: filters.isPelico,
                   search: filters.search,
                   type: filters.activityTypes,
-                  visibility: 'visible',
+                  visibility: 'all',
               })}`
             : null,
         jsonFetcher,
-        {
-            keepPreviousData: true,
-        },
     );
+
+    const mergedActivities = activities?.map((a) => ({
+        ...a,
+        isHidden: form.activityVisibilityMap[a.id] ?? a.isHidden,
+    }));
 
     return (
         <PageContainer>
@@ -85,7 +101,7 @@ export default function FamillesStep1() {
                     { label: t('Les familles ne peuvent voir que les activités publiées par notre classe'), value: 'true' },
                 ]}
                 value={`${form.showOnlyClassroomActivities}`}
-                onChange={(value) => setForm({ ...form, showOnlyClassroomActivities: value === 'true' })}
+                onChange={(value) => toggleGlobalVisibility(value)}
                 marginBottom="md"
             />
             <div className={styles.buttonContainer}>
@@ -101,17 +117,13 @@ export default function FamillesStep1() {
             <p className={styles.marginBottom}>{t('Vous pouvez également choisir individuellement la visibilité des activités déjà publiées :')}</p>
             <ActivityFilters filters={filters} setFilters={setFilters} />
             <div className={styles.activities}>
-                {activities?.map((activity) => (
+                {mergedActivities?.map((activity) => (
                     <div key={activity.id} className={styles.visibilityToggle} onClick={() => toggleVisibility(activity.id)}>
-                        {form.hiddenActivities.includes(activity.id) ? (
-                            <EyeNoneIcon width="40px" height="40px" />
-                        ) : (
-                            <EyeOpenIcon width="40px" height="40px" />
-                        )}
+                        {activity.isHidden ? <EyeNoneIcon width="40px" height="40px" /> : <EyeOpenIcon width="40px" height="40px" />}
 
                         <div
                             className={classNames(styles.cardWrapper, {
-                                [styles.grayOverlay]: form.hiddenActivities.includes(activity.id),
+                                [styles.grayOverlay]: activity.isHidden,
                             })}
                         >
                             <ActivityCard
@@ -123,6 +135,11 @@ export default function FamillesStep1() {
                         </div>
                     </div>
                 ))}
+                {isLoading && (
+                    <div className={styles.loader}>
+                        <CircularProgress />
+                    </div>
+                )}
             </div>
         </PageContainer>
     );

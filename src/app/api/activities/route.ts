@@ -5,6 +5,7 @@ import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { and, eq, ilike, inArray, isNotNull, isNull, or, sql, desc } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
@@ -18,7 +19,7 @@ const activitiesSearchParams = {
     villageId: parseAsInteger, // -1 will mean null village activities
     isPelico: parseAsBoolean,
     countries: parseAsArrayOf(parseAsString),
-    visibility: parseAsStringEnum<'all' | 'visible' | 'hidden' | 'hidden'>(['all', 'visible', 'hidden']).withDefault('visible'),
+    visibility: parseAsStringEnum<'all' | 'visible'>(['all', 'visible']).withDefault('visible'),
 };
 const loadSearchParams = createLoader(activitiesSearchParams);
 
@@ -26,6 +27,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     const user = await getCurrentUser();
     if (!user) {
         return new NextResponse(null, { status: 401 });
+    }
+
+    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+    if (!classroom) {
+        return new NextResponse(null, { status: 400 });
     }
 
     const { activityId, search, phase, villageId, type, isPelico, countries, visibility } = loadSearchParams(nextUrl.searchParams);
@@ -54,11 +60,8 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                visibility === 'visible'
-                    ? eq(activityVisibility.isHidden, false)
-                    : visibility === 'hidden'
-                      ? eq(activityVisibility.isHidden, true)
-                      : undefined,
+                visibility === 'visible' ? eq(activityVisibility.isHidden, false) : undefined,
+                classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
