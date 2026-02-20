@@ -2,6 +2,7 @@
 
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
+import { ActivityTimer } from '@frontend/components/activities/ActivityTimer/ActivityTimer';
 import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
@@ -44,11 +45,14 @@ interface ActivityHeaderProps {
     showIcon?: boolean;
     showDetails?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className, showIcon, showDetails = true }: ActivityHeaderProps) => {
+export const ActivityHeader = ({ user, classroom, activity, className, showIcon = true, showDetails = true }: ActivityHeaderProps) => {
     if (!activity.type) {
         return null;
     }
     const Icon = activity.isPinned ? PinnedIcon : ACTIVITY_ICONS[activity.type];
+    if (activity.type === 'libre') {
+        showIcon = activity.isPinned || false;
+    }
     return (
         <div className={classNames(styles.activityHeader, className)}>
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
@@ -80,7 +84,10 @@ export const ActivityHeader = ({ user, classroom, activity, className, showIcon,
                     </div>
                 )}
             </div>
-            {showDetails && showIcon && Icon && <Icon style={{ width: '30px', height: 'auto', marginRight: 8, color: 'var(--primary-color)' }} />}
+            {activity.type === 'enigme' && <ActivityTimer activity={activity} />}
+            {showDetails && showIcon && Icon && (
+                <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />
+            )}
         </div>
     );
 };
