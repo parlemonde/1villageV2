@@ -13,7 +13,7 @@ type ModalProps = {
     onClose: () => void;
     onCancel?: () => void;
     onConfirm?: () => void | Promise<void>;
-    title: string;
+    title?: string;
     description?: string;
     hasTopSeparator?: boolean;
     hasBottomSeparator?: boolean;
@@ -84,6 +84,7 @@ export const Modal = ({
                         className={classNames(styles.title, {
                             [styles.hasTopSeparator]: hasTopSeparator,
                         })}
+                        style={{ justifyContent: title ? 'space-between' : 'flex-end' }}
                     >
                         {title}
                         {hasCloseButton && (

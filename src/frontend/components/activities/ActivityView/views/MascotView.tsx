@@ -1,8 +1,8 @@
 import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
+import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import isoLanguages from '@server-actions/languages/iso-639-languages.json';
-import Image from 'next/image';
 import { useExtracted } from 'next-intl';
 
 export const MascotView = ({ activity }: ActivityContentViewProps) => {
@@ -56,27 +56,31 @@ export const MascotView = ({ activity }: ActivityContentViewProps) => {
             <p>{teachersDescription}</p>
             <p>{schoolDescription}</p>
             <div style={{ width: '100%', height: '300px', position: 'relative', margin: '16px 0' }}>
-                <div style={{ width: '80%', display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                    <Image
-                        unoptimized={activity?.data?.classroom?.imageUrl?.startsWith('https')}
-                        src={activity?.data?.classroom?.imageUrl || ''}
-                        alt={activity?.data?.mascot?.name || ''}
-                        fill
+                {activity?.data?.classroom?.imageUrl && (
+                    <ImageViewer
+                        imageUrl={activity.data.classroom.imageUrl}
+                        alt={activity.data.mascot?.name}
                         objectFit="contain"
+                        height="100%"
+                        width="100%"
+                        unoptimized={activity.data.classroom.imageUrl.startsWith('https')}
                     />
-                </div>
+                )}
             </div>
             <p style={{ textAlign: 'center' }}>{activity?.data?.classroom?.description}</p>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center', padding: '64px 0 16px 0' }}>
-                <div style={{ width: 'fit-content' }}>
-                    <Image
-                        unoptimized={activity?.data?.classroom?.imageUrl?.startsWith('https')}
-                        src={activity?.data?.mascot?.imageUrl || ''}
-                        alt={activity?.data?.mascot?.name || ''}
-                        width={150}
-                        height={150}
-                        style={{ objectFit: 'cover', borderRadius: '50%' }}
-                    />
+                <div style={{ width: '150px' }}>
+                    {activity?.data?.mascot?.imageUrl && (
+                        <ImageViewer
+                            imageUrl={activity.data.mascot.imageUrl}
+                            alt={activity.data.mascot?.name}
+                            objectFit="cover"
+                            height="150px"
+                            width="150px"
+                            unoptimized={activity.data.mascot.imageUrl.startsWith('https')}
+                            style={{ borderRadius: '50%' }}
+                        />
+                    )}
                 </div>
                 <div>
                     <p>

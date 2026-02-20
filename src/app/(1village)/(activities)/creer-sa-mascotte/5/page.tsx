@@ -3,6 +3,7 @@
 import { MASCOT_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-sa-mascotte/validators';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { Button } from '@frontend/components/ui/Button';
+import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
@@ -14,7 +15,6 @@ import { CURRENCIES } from '@lib/iso-4217-currencies-french';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import isoLanguages from '@server-actions/languages/iso-639-languages.json';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -137,16 +137,15 @@ export default function CreerSaMascotteStep5() {
                     })}
                 </p>
                 {activity.data?.classroom?.imageUrl && (
-                    <div className={styles.imageContainer}>
-                        <Image
-                            width={0}
-                            height={0}
-                            src={activity.data?.classroom?.imageUrl}
-                            alt={t('Notre classe')}
-                            sizes="600px"
-                            style={{ objectFit: 'cover', width: '600px', height: 'auto', margin: '16px 0' }}
-                        />
-                    </div>
+                    <ImageViewer
+                        unoptimized={activity.data.classroom.imageUrl.startsWith('https')}
+                        imageUrl={activity.data.classroom.imageUrl}
+                        alt={t('Notre classe')}
+                        width="600px"
+                        height="auto"
+                        objectFit="cover"
+                        marginTop="md"
+                    />
                 )}
                 <p>{activity.data?.mascot?.description}</p>
             </ActivityStepPreview>
@@ -159,12 +158,13 @@ export default function CreerSaMascotteStep5() {
                 <div className={styles.mascotStepContainer}>
                     <div className={styles.left}>
                         {activity.data?.mascot?.imageUrl && (
-                            <Image
-                                src={activity.data?.mascot?.imageUrl}
+                            <ImageViewer
+                                imageUrl={activity.data.mascot.imageUrl}
                                 alt={t('Notre mascotte')}
-                                width={150}
-                                height={150}
-                                style={{ objectFit: 'cover', borderRadius: '50%' }}
+                                width="150px"
+                                height="150px"
+                                objectFit="cover"
+                                style={{ borderRadius: '50%' }}
                             />
                         )}
                     </div>
