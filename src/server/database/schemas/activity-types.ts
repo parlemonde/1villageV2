@@ -1,6 +1,5 @@
-import type { AnyContent, Content } from '@frontend/components/content/content.types';
 import type { ThemeName } from '@frontend/components/activities/enigme-constants';
-import type { AnyContent } from '@frontend/components/content/content.types';
+import type { AnyContent, Content } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
 export type FreeActivity = {
