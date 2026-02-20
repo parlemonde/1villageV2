@@ -19,7 +19,7 @@ const activitiesSearchParams = {
     villageId: parseAsInteger, // -1 will mean null village activities
     isPelico: parseAsBoolean,
     countries: parseAsArrayOf(parseAsString),
-    visibility: parseAsStringEnum<'all' | 'visible' | 'hidden' | 'hidden'>(['all', 'visible', 'hidden']).withDefault('visible'),
+    visibility: parseAsStringEnum<'all' | 'visible'>(['all', 'visible']).withDefault('visible'),
 };
 const loadSearchParams = createLoader(activitiesSearchParams);
 
