@@ -24,13 +24,12 @@ export default function FamillesStep2() {
     const [editFirstName, setEditFirstName] = useState('');
     const [editLastName, setEditLastName] = useState('');
 
-    const [idToDelete, setIdToDelete] = useState<string | undefined>(undefined);
+    const [idToDelete, setIdToDelete] = useState<{ tempId: string; id?: number } | undefined>(undefined);
 
-    const { form, setForm } = useContext(FamilyContext);
+    const { form, setStudents } = useContext(FamilyContext);
 
     const addChild = () => {
-        setForm({
-            ...form,
+        setStudents({
             students: [...form.students, { tempId: `${firstName}${lastName}${new Date().getTime()}`, firstName, lastName }],
         });
         setFirstName('');
@@ -39,20 +38,21 @@ export default function FamillesStep2() {
 
     const deleteChild = (tempId: string, id?: number) => {
         if (id) {
-            setForm({
-                ...form,
+            setStudents({
                 students: form.students.map((student) => (student.id === id ? { ...student, isDeleted: true } : student)),
             });
+        } else {
+            setStudents({
+                ...form,
+                students: form.students.filter((student) => student.tempId !== tempId),
+            });
         }
-        setForm({
-            ...form,
-            students: form.students.filter((student) => student.tempId !== tempId),
-        });
+
+        setIdToDelete(undefined);
     };
 
     const editChild = (tempId: string) => {
-        setForm({
-            ...form,
+        setStudents({
             students: form.students.map((student) =>
                 student.tempId === tempId ? { ...student, firstName: editFirstName, lastName: editLastName } : student,
             ),
@@ -106,7 +106,7 @@ export default function FamillesStep2() {
                         </p>
                         <div className={styles.buttons}>
                             <IconButton icon={Pencil1Icon} color="primary" onClick={() => openEditionFields(s.tempId)} />
-                            <IconButton icon={TrashIcon} color="primary" onClick={() => deleteChild(s.tempId, s.id)} />
+                            <IconButton icon={TrashIcon} color="primary" onClick={() => setIdToDelete({ tempId: s.tempId, id: s.id })} />
                         </div>
                     </div>
                 ),
@@ -119,10 +119,12 @@ export default function FamillesStep2() {
                 isOpen={idToDelete !== undefined}
                 onClose={() => setIdToDelete(undefined)}
                 title={t("Supprimer l'élève")}
-                description={t('Voulez-vous vraiment supprimer cet élève ?')}
                 confirmLabel={tCommon('Supprimer')}
                 confirmLevel="error"
-            />
+                onConfirm={() => deleteChild(idToDelete!.tempId, idToDelete?.id)}
+            >
+                {t('Voulez-vous vraiment supprimer cet élève ?')}
+            </Modal>
         </PageContainer>
     );
 }
