@@ -3,6 +3,7 @@
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
+import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, isNull } from 'drizzle-orm';
 
@@ -24,6 +25,11 @@ export const saveDraft = async (activity: Partial<Activity>): Promise<number> =>
         if (!phase || !type) {
             throw new Error('Phase and type are required');
         }
+
+        if (!activity.classroomId) {
+            throw new Error('Classroom id is required');
+        }
+
         // Delete previous draft for same user and type if it exists
         await db.delete(activities).where(and(eq(activities.userId, user.id), isNull(activities.publishDate), eq(activities.type, type)));
         // Create new draft
@@ -38,6 +44,15 @@ export const saveDraft = async (activity: Partial<Activity>): Promise<number> =>
             .returning({
                 id: activities.id,
             });
-        return results[0]?.id;
+
+        const activityId = results[0].id;
+
+        await db.insert(activityVisibility).values({
+            activityId,
+            teacherId: user.id,
+            classroomId: activity.classroomId,
+        });
+
+        return activityId;
     }
 };
