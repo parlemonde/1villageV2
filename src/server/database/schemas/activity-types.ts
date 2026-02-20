@@ -17,7 +17,7 @@ export type IdiomGame = {
     language?: string;
     languageKnowledge?: string;
     idioms?: {
-        stepId?: number;
+        stepId: number;
         imageUrl?: string;
         value?: string;
         meaning?: string;

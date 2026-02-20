@@ -28,6 +28,7 @@ export const GestureGameView = ({ activity }: ActivityContentViewProps) => {
                 title: gesture.origin ?? '',
                 videoUrl: gesture.videoUrl ?? '',
                 options: roundOptions,
+                questionId: gesture.stepId,
             });
         }
 
@@ -38,10 +39,11 @@ export const GestureGameView = ({ activity }: ActivityContentViewProps) => {
         return null;
     }
 
-    if (createRounds) {
+    if (createRounds && activity.id) {
         return (
             <GameEngine
                 rounds={createRounds}
+                gameId={activity.id}
                 question={t('Que signifie cette mimique ?')}
                 successMessage={t("C'est exact ! Vous avez trouvé la signification de cette mimique.")}
                 errorMessage={t("Dommage ! Ce n'est pas la bonne réponse. Essayez encore !")}

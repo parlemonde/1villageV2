@@ -1,14 +1,12 @@
-.root {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 .item {
     all: unset;
     cursor: pointer;
     width: 23px;
     height: 23px;
+    max-width: 23px;
+    max-height: 23px;
+    min-width: 23px;
+    min-height: 23px;
     border-radius: 100%;
     border: 2px solid var(--grey-600);
     &:hover {
@@ -81,3 +79,71 @@
     padding-left: 15px;
     cursor: pointer;
 }
+
+.readonly {
+    pointer-events: none;
+}
+
+/* --- Game results grid --- */
+.container {
+    display: grid;
+    width: 100%;
+    row-gap: 10px;
+    margin-bottom: 16px;
+    justify-items: center;
+    align-items: center;
+}
+
+.radioGroup {
+    display: contents;
+}
+
+.radioOption {
+    grid-column: 1;
+    display: flex;
+    flex-direction: row;
+    justify-self: start;
+    align-items: center;
+}
+
+.flagsHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    height: 40px;
+}
+
+.flagsContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    flex: 1;
+}
+
+.flag {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100px;
+}
+
+.flagDescription {
+    font-size: 12px;
+}
+
+.results {
+    grid-column: 2;
+    display: contents;
+}
+
+.avatarList {
+    display: flex;
+    flex-direction: row;
+
+    & > *:not(:first-child) {
+        margin-left: -8px;
+    }
+}
+/* --- Game results grid --- */
