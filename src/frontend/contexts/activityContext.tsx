@@ -204,6 +204,13 @@ export const ActivityProvider = ({ children }: { children: React.ReactNode }) =>
                 title={tCommon('Brouillon en cours !')}
                 hasCloseButton={false}
                 onClose={() => {
+                    // User chose to create a new activity - reset the local activity with a new ID
+                    if (localActivity) {
+                        setLocalActivity({
+                            ...localActivity,
+                            id: undefined, // Reset the ID to create a new draft
+                        });
+                    }
                     setDraftActivity(undefined);
                 }}
                 onConfirm={() => {

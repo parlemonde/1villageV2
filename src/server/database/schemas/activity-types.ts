@@ -1,5 +1,5 @@
 import type { ThemeName } from '@frontend/components/activities/enigme-constants';
-import type { AnyContent } from '@frontend/components/content/content.types';
+import type { AnyContent, Content } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
 export type FreeActivity = {
@@ -66,12 +66,42 @@ export type PuzzleActivity = {
     } | null;
 };
 
+// Generic type for story elements and tale element
+type GenericStoryElement = {
+    imageId: number | null;
+    imageUrl: string | null;
+};
+
+// --- structure of each story ---
+export type StoryElement = GenericStoryElement & {
+    description: string | null;
+    inspiredStoryId?: number | null;
+};
+
+// --- structure of each tale ---
+type TaleElement = {
+    imageId: number | null;
+    imageStory: string | null;
+    tale: string | null;
+};
+
 type HintActivity = {
     type: 'indice';
     data: {
-        defaultHint?: string;
-        customHint?: string;
-        content?: AnyContent[];
+        content: Content;
+        customHint: string;
+        defaultHint: string;
+    } | null;
+};
+
+type StoryActivity = {
+    type: 'histoire';
+    data: {
+        odd: StoryElement;
+        object: StoryElement;
+        place: StoryElement;
+        tale: TaleElement;
+        isOriginal: boolean;
     } | null;
 };
 
@@ -183,10 +213,13 @@ export type Activities =
     | PuzzleActivity
     | HintActivity
     | ReportActivity
+    | StoryActivity
     | MascotActivity
     | ChallengeActivity
     | QuestionActivity;
 export type ActivityType = Activities['type'];
+export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
+
 // Use a map to catch missing values and ensure uniqueness
 // Order is important, it is used to display the activities in the correct order in the UI
 const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
@@ -196,6 +229,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     enigme: true,
     indice: true,
     reportage: true,
+    histoire: true,
     mascotte: true,
     question: true,
 };

@@ -17,7 +17,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import useSWR from 'swr';
 
 const CUSTOM_HINT_VALUE = '__CUSTOM_HINT__';
@@ -46,7 +46,8 @@ export default function CreerUnIndiceStep1() {
 
     const defaultHint = activity.data?.defaultHint;
     const useCustomHint = !defaultHint;
-    const hint = useCustomHint ? activity.data?.customHint : defaultHint;
+    // For display purposes, we need a string label
+    const hintLabel = useCustomHint ? 'Indice personnalisé' : defaultHint;
     const activities = allActivities.filter((a) => a.type === 'indice' && a.data?.defaultHint === activity.data?.defaultHint);
 
     const selectOptions = DEFAULT_HINTS.map((hint) => ({ label: hint.name, value: hint.name }));
@@ -60,7 +61,7 @@ export default function CreerUnIndiceStep1() {
             <BackButton href="/creer-un-indice" label="Retour" />
             <Steps
                 steps={[
-                    { label: hint || 'Indice', href: '/creer-un-indice/1' },
+                    { label: hintLabel || 'Indice', href: '/creer-un-indice/1' },
                     { label: "Créer l'indice", href: '/creer-un-indice/2' },
                     { label: 'Pré-visualiser', href: '/creer-un-indice/3' },
                 ]}
@@ -76,9 +77,21 @@ export default function CreerUnIndiceStep1() {
                 value={activity.data?.defaultHint || CUSTOM_HINT_VALUE}
                 onChange={(newValue) => {
                     if (newValue === CUSTOM_HINT_VALUE) {
-                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: undefined, customHint: '' } });
+                        setActivity({
+                            data: {
+                                content: activity.data?.content ?? [],
+                                defaultHint: '',
+                                customHint: '',
+                            },
+                        });
                     } else {
-                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: newValue } });
+                        setActivity({
+                            data: {
+                                content: activity.data?.content ?? [],
+                                defaultHint: newValue,
+                                customHint: activity.data?.customHint ?? '',
+                            },
+                        });
                     }
                 }}
             />
@@ -94,7 +107,13 @@ export default function CreerUnIndiceStep1() {
                         marginY="md"
                         value={activity.data?.customHint || ''}
                         onChange={(e) => {
-                            setActivity({ type: 'indice', ...activity, data: { ...activity.data, customHint: e.target.value } });
+                            setActivity({
+                                data: {
+                                    content: activity.data?.content ?? [],
+                                    defaultHint: activity.data?.defaultHint ?? '',
+                                    customHint: e.target.value,
+                                },
+                            });
                         }}
                     />
                 </>
@@ -124,7 +143,7 @@ export default function CreerUnIndiceStep1() {
                         >
                             <PelicoSearch style={{ width: '100px', height: 'auto' }} />
                             <p>
-                                Aucun indice trouvé pour le thème <strong>{hint}</strong>.
+                                Aucun indice trouvé pour le thème <strong>{hintLabel}</strong>.
                             </p>
                         </div>
                     )}

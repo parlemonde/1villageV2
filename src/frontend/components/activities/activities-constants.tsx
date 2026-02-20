@@ -8,6 +8,7 @@ import HintIcon from '@frontend/svg/activities/hint.svg';
 import MascotIcon from '@frontend/svg/activities/mascot.svg';
 import QuestionIcon from '@frontend/svg/activities/question.svg';
 import ReportageIcon from '@frontend/svg/activities/reportage.svg';
+import StoryIcon from '@frontend/svg/activities/story.svg';
 import type { ActivityType, GameType } from '@server/database/schemas/activity-types';
 import type { UserRole } from '@server/database/schemas/users';
 import { useExtracted } from 'next-intl';
@@ -28,6 +29,8 @@ export const useActivityName = () => {
                     return t('Indice');
                 case 'reportage':
                     return t('Reportage');
+                case 'histoire':
+                    return t('Histoire');
                 case 'mascotte':
                     return t('Mascotte');
                 case 'defi':
@@ -52,6 +55,7 @@ export const ACTIVITY_LABELS: Record<ActivityType, string> = {
     indice: 'Créer un indice',
     mascotte: 'Créer sa mascotte',
     reportage: 'Créer un reportage',
+    histoire: 'Inventer une histoire',
     defi: 'Lancer un defi',
     question: 'Poser une question',
 };
@@ -63,6 +67,7 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     indice: 'créé un indice',
     mascotte: 'créé sa mascotte',
     reportage: 'créé un reportage',
+    histoire: 'inventé une histoire',
     defi: 'lancé un defi',
     question: 'posé une question',
 };
@@ -74,6 +79,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     indice: HintIcon,
     mascotte: MascotIcon,
     reportage: ReportageIcon,
+    histoire: StoryIcon,
     defi: ChallengeIcon,
     question: QuestionIcon,
 };
@@ -85,6 +91,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     indice: '/creer-un-indice',
     mascotte: '/creer-sa-mascotte',
     reportage: '/creer-un-reportage',
+    histoire: '/creer-une-histoire',
     defi: '/lancer-un-defi',
     question: '/poser-une-question',
 };
@@ -106,6 +113,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     indice: '/creer-un-indice/3',
     mascotte: '/creer-sa-mascotte/5',
     reportage: '/creer-un-reportage/3',
+    histoire: '/creer-une-histoire/3',
     defi: '/lancer-un-defi/3',
     question: '/poser-une-question/3',
 };
@@ -117,6 +125,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     enigme: null,
     indice: null,
     reportage: null,
+    histoire: null,
     mascotte: ['teacher'],
     defi: null,
     question: null,

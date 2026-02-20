@@ -28,6 +28,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     jeu: GameCard,
     enigme: PuzzleCard,
     reportage: ReportCard,
+    histoire: EmptyContentCard,
     mascotte: MascotCard,
     defi: ChallengeCard,
     question: QuestionCard,
