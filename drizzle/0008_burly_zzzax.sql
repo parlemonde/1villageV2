@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "firstLogin" smallint DEFAULT 0 NOT NULL;
