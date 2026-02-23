@@ -9,7 +9,7 @@ import styles from './html-viewer.module.css';
 
 const serializer = DOMSerializer.fromSchema(viewSchema);
 
-const toHtml = (content: unknown) => {
+export const toHtml = (content: unknown) => {
     try {
         const doc = Node.fromJSON(schema, content);
         const element = serializer.serializeFragment(doc.content);

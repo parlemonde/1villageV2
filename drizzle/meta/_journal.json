@@ -78,6 +78,13 @@
       "when": 1775206569279,
       "tag": "0010_tranquil_rawhide_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1771843005366,
+      "tag": "0009_chubby_starhawk",
+      "breakpoints": true
     }
   ]
 }

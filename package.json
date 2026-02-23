@@ -49,6 +49,7 @@
     "drizzle-orm": "^0.45.2",
     "fs-extra": "^11.3.4",
     "fuzzyset.js": "^1.0.7",
+    "jspdf": "^4.2.0",
     "jszip": "^3.10.1",
     "maplibre-gl": "5.20.2",
     "mime-types": "^3.0.2",
