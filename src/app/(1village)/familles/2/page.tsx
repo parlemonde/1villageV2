@@ -85,7 +85,7 @@ export default function FamillesStep2() {
             </Title>
             <p>{t('Chaque enfant possède un "code enfant" qui permet à 5 membres de sa famille de se créer un compte.')}</p>
             <br />
-            <p>{t("Vous devez ajouter autant d'enfants qu'il y a dans votre classe (vous pouvez ajouter des enfants en cours d'années !):")}</p>
+            <p>{t("Vous devez ajouter autant d'enfants qu'il y a dans votre classe (vous pouvez ajouter des enfants en cours d'année !) :")}</p>
             <div className={styles.row}>
                 <Input type="text" placeholder={t('Prénom')} value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 <Input type="text" placeholder={t('Nom')} value={lastName} onChange={(e) => setLastName(e.target.value)} />
@@ -112,7 +112,7 @@ export default function FamillesStep2() {
                 ),
             )}
             <div className={styles.buttonsContainer}>
-                <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} rightIcon={<ChevronLeftIcon />} />
+                <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
                 <Button as="a" href="/familles/3" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
             </div>
             <Modal

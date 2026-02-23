@@ -5,171 +5,22 @@ import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { FamilyContext } from '@frontend/contexts/familyContext';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { generateAllInvitationsPdf } from '@server-actions/families/generate-all-invitations-pdf';
 import { useExtracted } from 'next-intl';
-import { useState } from 'react';
+import { useContext } from 'react';
 
 import styles from './page.module.css';
-
-const DEFAULT_MESSAGE = {
-    type: 'doc',
-    content: [
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Bonjour,',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Notre classe participe au projet 1Village, de l’association Par Le Monde, agréée par le ministère de l’éducation nationale français.  1Village est un projet de correspondances avec d’autres classes du monde, accessible de façon sécurisée sur un site internet.',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Si vous souhaitez accéder à ce site et observer les échanges en famille, il vous faut suivre cette démarche :',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: '    1. Créer un compte sur https://1v.parlemonde.org/inscription, en renseignant une adresse email et un mot de passe.',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: '    2. Confirmez votre adresse mail en cliquant sur le lien envoyé.',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: '    3. Connectez-vous sur https://1v.parlemonde.org/inscription et rattachez votre compte à l’identifiant unique ',
-                },
-                {
-                    type: 'text',
-                    marks: [
-                        {
-                            type: 'bold',
-                        },
-                    ],
-                    text: '%inviteCode',
-                },
-                {
-                    type: 'text',
-                    text: '.',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Jusqu’à 5 personnes de votre famille peuvent créer un compte et le rattacher à l’identifiant unique de votre enfant.',
-                },
-            ],
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-        },
-        {
-            type: 'paragraph',
-            attrs: {
-                align: 'left',
-            },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Bonne journée',
-                },
-            ],
-        },
-    ],
-};
 
 export default function FamillesStep3() {
     const t = useExtracted('app.(1village).familles.3');
     const tCommon = useExtracted('common');
 
-    const [content, setContent] = useState<unknown>(DEFAULT_MESSAGE);
+    const { form, setParentInvitationMessage } = useContext(FamilyContext);
 
     const print = () => {
-        // TODO
+        const pdf = await generateAllInvitationsPdf(form.parentInvitationMessage);
     };
 
     return (
@@ -198,12 +49,12 @@ export default function FamillesStep3() {
                     },
                 )}
             </p>
-            <HtmlEditor content={content} onChange={setContent} />
+            <HtmlEditor content={form.parentInvitationMessage} onChange={setParentInvitationMessage} />
             <div className={styles.printButtonContainer}>
                 <Button label={t('Imprimer')} color="secondary" variant="contained" onClick={print} />
             </div>
             <div className={styles.buttonsContainer}>
-                <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} rightIcon={<ChevronLeftIcon />} />
+                <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
                 <Button as="a" href="/familles/3" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
             </div>
         </PageContainer>
