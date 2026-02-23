@@ -1,5 +1,5 @@
 {
-  "id": "add5d1a1-d2f7-4f1f-82d4-0bd0ebe18fe3",
+  "id": "a309f2c6-d118-4a6e-93ee-28e0c1eb2a84",
   "prevId": "c11d9dde-9aaa-4c0c-a8ee-97e0220eec06",
   "version": "7",
   "dialect": "postgresql",
@@ -1077,6 +1077,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'teacher'"
+        },
+        "firstLogin": {
+          "name": "firstLogin",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "banned": {
           "name": "banned",

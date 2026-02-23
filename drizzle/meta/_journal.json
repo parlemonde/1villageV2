@@ -64,6 +64,13 @@
       "when": 1770902811212,
       "tag": "0008_old_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1771843995399,
+      "tag": "0008_burly_zzzax",
+      "breakpoints": true
     }
   ]
 }
