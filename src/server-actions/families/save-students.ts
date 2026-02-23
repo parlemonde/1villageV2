@@ -10,6 +10,8 @@ import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-curren
 import type { SQL } from 'drizzle-orm';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
+import { generateInviteCode } from './generate-invite-code';
+
 const removeStudents = async (
     studentsList: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[],
     user: User,
@@ -17,6 +19,10 @@ const removeStudents = async (
 ) => {
     const studentsToDelete = studentsList?.filter((student) => student.id && student.isDeleted) ?? [];
     const studentIdsToDelete = studentsToDelete.map((student) => student.id!);
+    if (studentIdsToDelete.length === 0) {
+        return;
+    }
+
     await db
         .delete(students)
         .where(and(eq(students.teacherId, user.id), eq(students.classroomId, classroom.id), inArray(students.id, studentIdsToDelete)));
@@ -24,6 +30,9 @@ const removeStudents = async (
 
 const updateStudents = async (studentsList: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[]) => {
     const studentsToUpdate = studentsList?.filter((student) => student.id) ?? [];
+    if (studentsToUpdate.length === 0) {
+        return;
+    }
 
     const sqlChunks: SQL[] = [];
     const ids: number[] = [];
@@ -47,14 +56,18 @@ const createStudent = async (
     classroom: Classroom,
 ) => {
     const studentsToCreate = studentsList?.filter((student) => !student.id) || [];
+    if (studentsToCreate.length === 0) {
+        return;
+    }
 
-    await db.insert(students).values(
-        studentsToCreate.map((student) => ({
-            name: `${student.firstName} ${student.lastName}`.trim(),
-            classroomId: classroom.id,
-            teacherId: user.id,
-        })),
-    );
+    const values = studentsToCreate.map((student) => ({
+        name: `${student.firstName} ${student.lastName}`.trim(),
+        classroomId: classroom.id,
+        teacherId: user.id,
+        inviteCode: generateInviteCode(),
+    }));
+
+    await db.insert(students).values(values);
 };
 
 export const saveStudents = async ({ students }: Partial<StudentsForm>) => {
@@ -69,8 +82,10 @@ export const saveStudents = async ({ students }: Partial<StudentsForm>) => {
     }
 
     if (students && students.length > 0) {
-        await removeStudents(students, user, classroom);
-        await updateStudents(students);
-        await createStudent(students, user, classroom);
+        await db.transaction(async () => {
+            await removeStudents(students, user, classroom);
+            await updateStudents(students);
+            await createStudent(students, user, classroom);
+        });
     }
 };

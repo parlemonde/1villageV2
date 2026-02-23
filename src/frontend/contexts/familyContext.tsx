@@ -4,6 +4,7 @@ import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor'
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { debounce } from '@frontend/lib/debounce';
 import { saveActivityVisibility } from '@server-actions/families/save-activity-visibility';
+import { saveParentInvitationMessage } from '@server-actions/families/save-parent-invitation-message';
 import { saveStudents } from '@server-actions/families/save-students';
 import { useExtracted } from 'next-intl';
 import { createContext, useCallback, useMemo, useState } from 'react';
@@ -17,20 +18,22 @@ export interface StudentsForm {
     students: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
 }
 
-export interface EmailContentForm {
-    emailContent: unknown;
+export interface ParentInvitationMessageForm {
+    parentInvitationMessage: unknown;
 }
 
-export interface FamilyForm extends ActivityVisibilityForm, StudentsForm, EmailContentForm {}
+export interface FamilyForm extends ActivityVisibilityForm, StudentsForm, ParentInvitationMessageForm {}
 
 export const FamilyContext = createContext<{
     form: FamilyForm;
     setActivitiesVisibility: (formState: Partial<ActivityVisibilityForm>) => Promise<void>;
     setStudents: (formState: Partial<StudentsForm>) => void;
+    setParentInvitationMessage: (message: unknown) => void;
 }>({
-    form: { showOnlyClassroomActivities: true, activityVisibilityMap: {}, students: [], emailContent: defaultContent },
+    form: { showOnlyClassroomActivities: true, activityVisibilityMap: {}, students: [], parentInvitationMessage: defaultContent },
     setActivitiesVisibility: () => Promise.resolve(),
     setStudents: () => {},
+    setParentInvitationMessage: () => {},
 });
 
 enum SaveState {
@@ -76,12 +79,14 @@ interface FamilyProviderProps {
     showOnlyClassroomActivities: boolean;
     activityVisibilityMap?: Record<number, boolean>;
     students?: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
+    parentInvitationMessage?: unknown;
 }
 export const FamilyProvider = ({
     showOnlyClassroomActivities,
     activityVisibilityMap = {},
     students = [],
     children,
+    parentInvitationMessage = defaultContent,
 }: React.PropsWithChildren<FamilyProviderProps>) => {
     const tCommon = useExtracted('common');
 
@@ -89,7 +94,7 @@ export const FamilyProvider = ({
         showOnlyClassroomActivities,
         activityVisibilityMap,
         students,
-        emailContent: defaultContent,
+        parentInvitationMessage,
     });
 
     const [saveStep, setSaveStep] = useState(SaveState.Idle);
@@ -98,6 +103,14 @@ export const FamilyProvider = ({
         () =>
             debounce((formState: StudentsForm) => {
                 onSaveForm(saveStudents, formState, setSaveStep).catch();
+            }, 2000),
+        [],
+    );
+
+    const onSaveParentInvitationMessage = useMemo(
+        () =>
+            debounce((formState: ParentInvitationMessageForm) => {
+                onSaveForm(saveParentInvitationMessage, formState, setSaveStep).catch();
             }, 2000),
         [],
     );
@@ -118,7 +131,21 @@ export const FamilyProvider = ({
         [onSaveStudentsDebounced],
     );
 
-    const value = useMemo(() => ({ form: formState, setActivitiesVisibility, setStudents }), [formState, setActivitiesVisibility, setStudents]);
+    const setParentInvitationMessage = useCallback(
+        (parentInvitationMessage: unknown) => {
+            setFormState((prev) => {
+                const next = { ...prev, parentInvitationMessage };
+                onSaveParentInvitationMessage({ parentInvitationMessage: next.parentInvitationMessage });
+                return next;
+            });
+        },
+        [onSaveParentInvitationMessage],
+    );
+
+    const value = useMemo(
+        () => ({ form: formState, setActivitiesVisibility, setStudents, setParentInvitationMessage }),
+        [formState, setActivitiesVisibility, setStudents, setParentInvitationMessage],
+    );
     return (
         <FamilyContext.Provider value={value}>
             {children}
