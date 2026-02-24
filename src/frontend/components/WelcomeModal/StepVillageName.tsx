@@ -27,15 +27,7 @@ export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
             <h2 className={styles.villageName} style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
                 {villageName}
             </h2>
-            <Button
-                label="Ce n'est pas mon village-monde !"
-                variant="outlined"
-                color="grey"
-                size="sm"
-                isUpperCase={false}
-                className={styles.reportButton}
-                onClick={handleReportError}
-            />
+            <Button label="Ce n'est pas mon village-monde !" variant="outlined" color="grey" size="sm" onClick={handleReportError} />
         </div>
     );
 };
