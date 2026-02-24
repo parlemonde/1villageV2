@@ -1,3 +1,4 @@
+import { WelcomeModal } from '@frontend/components/WelcomeModal';
 import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -32,6 +33,7 @@ export default async function VillageLayout({
                     </div>
                     <ActivitySidePanel />
                 </div>
+                <WelcomeModal />
             </VillageProvider>
         </UserProvider>
     );
