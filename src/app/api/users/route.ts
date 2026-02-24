@@ -23,6 +23,7 @@ const userColumns = {
     // useSSO: sql<boolean>`case when "accountRegistration" >= 10 then true else false end`,
     role: users.role,
     image: users.image,
+    firstLogin: users.firstLogin,
 };
 
 const getVillageUsers = async (villageId: number): Promise<User[]> => {
