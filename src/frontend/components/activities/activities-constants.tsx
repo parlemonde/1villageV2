@@ -125,9 +125,9 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     enigme: null,
     indice: null,
     reportage: null,
-    histoire: null,
     mascotte: ['teacher'],
     defi: null,
+    histoire: null,
     question: null,
 };
 
