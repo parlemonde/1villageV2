@@ -3,14 +3,18 @@
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
+import { StepCountry } from './StepCountry';
 import { StepVillageName } from './StepVillageName';
 import styles from './welcome-modal.module.css';
 
+const TOTAL_STEPS = 2;
+
 export const WelcomeModal = () => {
-    const { user } = useContext(UserContext);
+    const { user, classroom } = useContext(UserContext);
     const { village } = useContext(VillageContext);
+    const [currentStep, setCurrentStep] = useState(0);
 
     if (!user || !village || user.role !== 'teacher' || user.firstLogin !== 0) {
         return null;
@@ -28,7 +32,21 @@ export const WelcomeModal = () => {
             onOpenAutoFocus={false}
         >
             <div className={styles.stepContainer}>
-                <StepVillageName villageName={village.name} />
+                {currentStep === 0 && <StepVillageName villageName={village.name} />}
+                {currentStep === 1 && classroom && <StepCountry countryCode={classroom.countryCode} />}
+            </div>
+            <div className={styles.stepper}>
+                <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep - 1)} disabled={currentStep === 0}>
+                    <span className={styles.stepperArrow}>&lsaquo;</span> Pr&eacute;c&eacute;dent
+                </button>
+                <div className={styles.stepperDots}>
+                    {Array.from({ length: TOTAL_STEPS }, (_, i) => (
+                        <span key={i} className={`${styles.stepperDot} ${i === currentStep ? styles.stepperDotActive : ''}`} />
+                    ))}
+                </div>
+                <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep + 1)} disabled={currentStep === TOTAL_STEPS - 1}>
+                    Suivant <span className={styles.stepperArrow}>&rsaquo;</span>
+                </button>
             </div>
         </Modal>
     );
