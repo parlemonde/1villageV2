@@ -72,11 +72,6 @@
     pointer-events: none;
 }
 
-.stepperArrow {
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
 .stepperDots {
     display: flex;
     gap: 0.5rem;
