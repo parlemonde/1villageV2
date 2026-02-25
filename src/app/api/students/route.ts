@@ -19,7 +19,8 @@ export const GET = async () => {
     const result = await db
         .select()
         .from(students)
-        .where(and(eq(students.teacherId, user.id), eq(students.classroomId, classroom.id)));
+        .where(and(eq(students.teacherId, user.id), eq(students.classroomId, classroom.id)))
+        .orderBy(students.name);
 
     return NextResponse.json(result);
 };

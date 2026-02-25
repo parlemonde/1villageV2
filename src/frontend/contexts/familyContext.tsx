@@ -1,5 +1,6 @@
 'use client';
 
+import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { debounce } from '@frontend/lib/debounce';
@@ -19,7 +20,7 @@ export interface StudentsForm {
 }
 
 export interface ParentInvitationMessageForm {
-    parentInvitationMessage: unknown;
+    parentInvitationMessage: HtmlEditorContent;
 }
 
 export interface FamilyForm extends ActivityVisibilityForm, StudentsForm, ParentInvitationMessageForm {}
@@ -28,7 +29,7 @@ export const FamilyContext = createContext<{
     form: FamilyForm;
     setActivitiesVisibility: (formState: Partial<ActivityVisibilityForm>) => Promise<void>;
     setStudents: (formState: Partial<StudentsForm>) => void;
-    setParentInvitationMessage: (message: unknown) => void;
+    setParentInvitationMessage: (message: HtmlEditorContent) => void;
 }>({
     form: { showOnlyClassroomActivities: true, activityVisibilityMap: {}, students: [], parentInvitationMessage: defaultContent },
     setActivitiesVisibility: () => Promise.resolve(),
@@ -79,7 +80,7 @@ interface FamilyProviderProps {
     showOnlyClassroomActivities: boolean;
     activityVisibilityMap?: Record<number, boolean>;
     students?: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
-    parentInvitationMessage?: unknown;
+    parentInvitationMessage?: HtmlEditorContent;
 }
 export const FamilyProvider = ({
     showOnlyClassroomActivities,
@@ -132,7 +133,7 @@ export const FamilyProvider = ({
     );
 
     const setParentInvitationMessage = useCallback(
-        (parentInvitationMessage: unknown) => {
+        (parentInvitationMessage: HtmlEditorContent) => {
             setFormState((prev) => {
                 const next = { ...prev, parentInvitationMessage };
                 onSaveParentInvitationMessage({ parentInvitationMessage: next.parentInvitationMessage });
