@@ -4,6 +4,7 @@ import { FamilyProvider } from '@frontend/contexts/familyContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import type { ClassroomPreferences } from '@server/database/schemas/classroom-preferences';
 import type { Student } from '@server/database/schemas/students';
 import { useContext } from 'react';
 import useSWR from 'swr';
@@ -18,6 +19,12 @@ export default function FamillesLayout({ children }: { children: React.ReactNode
     const defaultMessage = useDefaultParentInvitationMessage();
 
     if (isLoadingStudents) {
+        return null;
+    }
+
+    const defaultMessage = useDefaultParentInvitationMessage();
+
+    if (isLoadingStudents || isLoadingPreferences) {
         return null;
     }
 

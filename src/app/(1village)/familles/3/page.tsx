@@ -9,6 +9,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { FamilyContext } from '@frontend/contexts/familyContext';
+import { downloadFile } from '@frontend/lib/download-file';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
 import { useExtracted } from 'next-intl';
@@ -218,7 +219,7 @@ export default function FamillesStep3() {
             <br />
             <p className={styles.mb8}>
                 {t.rich(
-                    'Attention à ne pas changer ou supprimer le "code enfant" <strong>%inviteCode</strong> qui se crée automatiquement pour chaque enfant.',
+                    'Attention à ne pas changer ou supprimer le "code enfant" <strong>%code</strong> qui se crée automatiquement pour chaque enfant.',
                     {
                         strong: (chunks) => <strong>{chunks}</strong>,
                     },

@@ -9,7 +9,7 @@ import styles from './html-viewer.module.css';
 
 const serializer = DOMSerializer.fromSchema(viewSchema);
 
-export const toHtml = (content: unknown) => {
+const toHtml = (content: unknown) => {
     try {
         const doc = Node.fromJSON(schema, content);
         const element = serializer.serializeFragment(doc.content);
@@ -23,7 +23,7 @@ export const toHtml = (content: unknown) => {
 };
 
 interface HtmlViewerProps {
-    content: unknown;
+    content: HtmlEditorContent;
 }
 export const HtmlViewer = ({ content }: HtmlViewerProps) => {
     // Use an external store sync to avoid hydration mismatch with the server

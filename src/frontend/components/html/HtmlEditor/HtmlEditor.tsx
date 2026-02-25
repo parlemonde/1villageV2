@@ -59,7 +59,7 @@ export interface HtmlEditorContent {
 }
 
 interface HtmlEditorProps {
-    content?: unknown;
+    content?: HtmlEditorContent;
     color?: 'primary' | 'secondary';
     variant?: 'default' | 'borderless';
     placeholder?: string;
