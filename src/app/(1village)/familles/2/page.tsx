@@ -71,7 +71,7 @@ export default function FamillesStep2() {
         <PageContainer>
             <Steps
                 steps={[
-                    { label: t('Visibilité'), href: '/familles/1' },
+                    { label: t('Visibilité'), href: '/familles/1', status: 'success' },
                     { label: t('Ajout enfants'), href: '/familles/2' },
                     { label: t('Communication'), href: '/familles/3' },
                     { label: t('Gestion'), href: '/familles/4' },

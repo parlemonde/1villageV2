@@ -1,29 +1,90 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
+import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
+import { FamilyContext } from '@frontend/contexts/familyContext';
+import { downloadFile } from '@frontend/lib/download-file';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
+import type { Student } from '@server/database/schemas/students';
+import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
 import { useExtracted } from 'next-intl';
+import { useContext, useState } from 'react';
+import useSWR from 'swr';
+
+import styles from './page.module.css';
+
+const isStep3Valid = (message: unknown) => {
+    const json = JSON.stringify(message);
+    return json.includes('%code');
+};
 
 export default function FamillesStep4() {
     const t = useExtracted('app.(1village).familles.4');
+    const tCommon = useExtracted('common');
 
-    const downloadAll = () => {
-        // TODO
+    const { data: students } = useSWR<Student[]>('/api/students', jsonFetcher, { keepPreviousData: true });
+
+    const [checked, setChecked] = useState<number[]>([]);
+
+    const { form } = useContext(FamilyContext);
+
+    const handleCheck = (id: number) => {
+        if (checked.includes(id)) {
+            setChecked(checked.filter((i) => i !== id));
+        } else {
+            setChecked([...checked, id]);
+        }
     };
 
-    const download = () => {
-        // TODO
+    const download = async (studentIds: number[]) => {
+        const pdfBuffer = await generateInvitationsPdf(form.parentInvitationMessage, studentIds);
+        if (!pdfBuffer) {
+            sendToast({ type: 'error', message: t('Une erreur est survenue lors de la génération du PDF') });
+            return;
+        }
+
+        downloadPdf(pdfBuffer);
+    };
+
+    const generatePdfName = () => {
+        const date = new Date();
+        const code = t('code-enfants');
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = String(date.getFullYear()).slice(-2);
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${year}${month}${day}_${hours}${minutes}${seconds}_${code}.pdf`;
+    };
+
+    const downloadPdf = async (pdfBuffer: Uint8Array<ArrayBufferLike>) => {
+        const buffer = new Uint8Array(pdfBuffer);
+        const blob = new Blob([buffer], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        downloadFile(url, generatePdfName());
+    };
+
+    const checkAll = () => {
+        if (checked.length === students?.length) {
+            setChecked([]);
+        } else {
+            setChecked(students?.map((s) => s.id) ?? []);
+        }
     };
 
     return (
         <PageContainer>
             <Steps
                 steps={[
-                    { label: t('Visibilité'), href: '/familles/1' },
-                    { label: t('Ajout enfants'), href: '/familles/2' },
-                    { label: t('Communication'), href: '/familles/3' },
+                    { label: t('Visibilité'), href: '/familles/1', status: 'success' },
+                    { label: t('Ajout enfants'), href: '/familles/2', status: 'success' },
+                    { label: t('Communication'), href: '/familles/3', status: isStep3Valid(form.parentInvitationMessage) ? 'success' : 'warning' },
                     { label: t('Gestion'), href: '/familles/4' },
                 ]}
                 activeStep={4}
@@ -36,27 +97,52 @@ export default function FamillesStep4() {
                     'Pour chaque enfant de votre classe, vous pouvez voir le nombre de compte famille crée ainsi que télécharger individuellement le texte de présentation (si une famille a perdu le sien par exemple).',
                 )}
             </p>
-            <Button onClick={downloadAll} label={t('Télécharger X présentations')} color="primary" marginTop="md" />
-            <table>
-                <thead>
-                    <tr>
-                        <th scope="col">{t("Prénom et nom de l'enfant")}</th>
-                        <th scope="col">{t('Accès familles')}</th>
-                        <th scope="col">{t('Code enfant')}</th>
-                        <th scope="col">{t('Actions')}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <Button label={t('Télécharger la présentation')} color="primary" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {students && (
+                <>
+                    <Button
+                        onClick={() => download(checked.length === 0 ? students.map((s) => s.id) : checked)}
+                        label={t('Télécharger {count} {presentations}', {
+                            count: checked.length === 0 ? students.length.toString() : checked.length.toString(),
+                            presentations: checked.length === 1 ? t('presentation') : t('presentations'),
+                        })}
+                        color="primary"
+                        marginY="lg"
+                    />
+                    <table className={styles.table}>
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <Checkbox name="all_checkbox" isChecked={checked.length === students.length} onChange={() => checkAll()} />
+                                </th>
+                                <th scope="col">{t("Prénom et nom de l'enfant")}</th>
+                                <th scope="col">{t('Accès familles')}</th>
+                                <th scope="col">{t('Code enfant')}</th>
+                                <th scope="col">{t('Actions')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {students.map((student) => (
+                                <tr key={student.id}>
+                                    <td>
+                                        <Checkbox
+                                            name={`${student.id}_checkbox`}
+                                            isChecked={checked.includes(student.id)}
+                                            onChange={() => handleCheck(student.id)}
+                                        />
+                                    </td>
+                                    <td>{student.name}</td>
+                                    <td>0 {/* TODO */}</td>
+                                    <td>{student.inviteCode}</td>
+                                    <td>
+                                        <Button label={t('Télécharger la présentation')} color="primary" onClick={() => download([student.id])} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            )}
+            <Button as="a" href="/familles/3" label={tCommon('Étape précédente')} color="primary" leftIcon={<ChevronLeftIcon />} marginY="xl" />
         </PageContainer>
     );
 }

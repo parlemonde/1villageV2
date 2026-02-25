@@ -1,14 +1,26 @@
 'use server';
+import type { ParentInvitationMessageForm } from '@frontend/contexts/familyContext';
 import { db } from '@server/database';
-import { userPreferences } from '@server/database/schemas/user-preferences';
+import { classroomPreferences } from '@server/database/schemas/classroom-preferences';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq } from 'drizzle-orm';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 
-export const saveParentInvitationMessage = async (message: unknown) => {
+export const saveParentInvitationMessage = async (parentInvitationMessage: Partial<ParentInvitationMessageForm>) => {
     const user = await getCurrentUser();
     if (!user) {
         throw new Error('Unauthorized');
     }
 
-    await db.update(userPreferences).set({ parentInvitationMessage: message }).where(eq(userPreferences.userId, user.id));
+    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+    if (!classroom) {
+        throw new Error("Teacher doesn't have a classroom");
+    }
+
+    await db
+        .insert(classroomPreferences)
+        .values({ userId: user.id, classroomId: classroom.id, ...parentInvitationMessage })
+        .onConflictDoUpdate({
+            target: [classroomPreferences.userId, classroomPreferences.classroomId],
+            set: { ...parentInvitationMessage },
+        });
 };

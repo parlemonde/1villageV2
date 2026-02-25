@@ -1,36 +1,16 @@
 'use client';
 
-import { ALIGN_VALUES, schema } from '@frontend/components/html/HtmlEditor/schema';
-import { Node, Schema } from 'prosemirror-model';
+import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
+import { schema, viewSchema } from '@lib/html-schema';
+import { Node } from 'prosemirror-model';
 import { DOMSerializer } from 'prosemirror-model';
 import { useSyncExternalStore } from 'react';
 
 import styles from './html-viewer.module.css';
 
-// Use a custom view schema to override the default behavior of the paragraph node to DOM
-const viewSchema = new Schema({
-    nodes: {
-        ...schema.spec.nodes.toObject(),
-        paragraph: {
-            ...schema.spec.nodes.get('paragraph'),
-            toDOM(node) {
-                const alignStyle = ALIGN_VALUES.has(node.attrs.align)
-                    ? {
-                          style: node.attrs.align !== 'left' ? `text-align: ${node.attrs.align};` : undefined,
-                      }
-                    : {};
-                if (!node.content.size) {
-                    return ['p', alignStyle, ['br']];
-                }
-                return ['p', alignStyle, 0];
-            },
-        },
-    },
-    marks: schema.spec.marks,
-});
 const serializer = DOMSerializer.fromSchema(viewSchema);
 
-export const toHtml = (content: unknown) => {
+const toHtml = (content: unknown) => {
     try {
         const doc = Node.fromJSON(schema, content);
         const element = serializer.serializeFragment(doc.content);
@@ -44,7 +24,7 @@ export const toHtml = (content: unknown) => {
 };
 
 interface HtmlViewerProps {
-    content: unknown;
+    content: HtmlEditorContent;
 }
 export const HtmlViewer = ({ content }: HtmlViewerProps) => {
     // Use an external store sync to avoid hydration mismatch with the server

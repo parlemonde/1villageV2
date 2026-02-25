@@ -1,5 +1,6 @@
 'use client';
 
+import { schema } from '@lib/html-schema';
 import classNames from 'clsx';
 import { baseKeymap } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
@@ -11,9 +12,8 @@ import isEqual from 'react-fast-compare';
 
 import { Toolbar } from './Toolbar';
 import styles from './html-editor.module.css';
-import { schema } from './schema';
 
-export const defaultContent = {
+export const defaultContent: HtmlEditorContent = {
     type: 'doc',
     content: [],
 };
@@ -53,13 +53,18 @@ function placeholderPlugin(text: string) {
     });
 }
 
+export interface HtmlEditorContent {
+    type: 'doc';
+    content: unknown[];
+}
+
 interface HtmlEditorProps {
-    content?: unknown;
+    content?: HtmlEditorContent;
     color?: 'primary' | 'secondary';
     variant?: 'default' | 'borderless';
     placeholder?: string;
     className?: string;
-    onChange?: (content: unknown) => void;
+    onChange?: (content: HtmlEditorContent) => void;
 }
 
 export const HtmlEditor = (props: HtmlEditorProps) => {
@@ -71,7 +76,7 @@ export const HtmlEditor = (props: HtmlEditorProps) => {
     const viewRef = React.useRef<EditorView | null>(null);
 
     // Keep the state in sync with the content if the editor is controlled
-    const isNotInSync = 'content' in props && !parentDoc.eq(state.doc);
+    const isNotInSync = !parentDoc.eq(state.doc);
     React.useEffect(() => {
         if (isNotInSync) {
             const newState = getNewState(parentDoc, placeholder);

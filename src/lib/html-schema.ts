@@ -101,3 +101,25 @@ export const schema = new Schema({
         },
     },
 });
+
+// Use a custom view schema to override the default behavior of the paragraph node to DOM
+export const viewSchema = new Schema({
+    nodes: {
+        ...schema.spec.nodes.toObject(),
+        paragraph: {
+            ...schema.spec.nodes.get('paragraph'),
+            toDOM(node) {
+                const alignStyle = ALIGN_VALUES.has(node.attrs.align)
+                    ? {
+                          style: node.attrs.align !== 'left' ? `text-align: ${node.attrs.align};` : undefined,
+                      }
+                    : {};
+                if (!node.content.size) {
+                    return ['p', alignStyle, ['br']];
+                }
+                return ['p', alignStyle, 0];
+            },
+        },
+    },
+    marks: schema.spec.marks,
+});
