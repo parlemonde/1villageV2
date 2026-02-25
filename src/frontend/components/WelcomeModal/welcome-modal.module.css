@@ -2,7 +2,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 300px;
+    height: 100vh;
+}
+
+@media (min-width: 900px) {
+    .stepContainer {
+        height: 75vh;
+    }
 }
 
 .stepCenter {
@@ -22,4 +28,69 @@
     font-size: 1.2rem;
     margin: 1rem 0;
     color: var(--primary-color);
+}
+
+.countryName {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Stepper navigation */
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-top: 1px solid var(--grey-200);
+    margin-top: auto;
+}
+
+.stepperButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--font-color);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.15s;
+}
+
+.stepperButton:hover:not(:disabled) {
+    background-color: var(--grey-100);
+}
+
+.stepperButton:disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.stepperArrow {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.stepperDots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.stepperDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--grey-300);
+    transition: background-color 0.2s;
+}
+
+.stepperDotActive {
+    background-color: var(--primary-color);
 }
