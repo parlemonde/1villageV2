@@ -28,7 +28,7 @@ export const StepCountry = ({ countryCode }: StepCountryProps) => {
                 <span>{countryName}</span>
                 <CountryFlag country={countryCode} size="medium" />
             </h2>
-            <Button label="Ce n'est pas mon pays !" variant="outlined" color="grey" size="sm" onClick={handleReportError} />
+            <Button label="Ce n'est pas mon pays !" variant="outlined" color="grey" size="sm" isUpperCase={false} onClick={handleReportError} />
         </div>
     );
 };

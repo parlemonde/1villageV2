@@ -3,6 +3,7 @@
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { useContext, useState } from 'react';
 
 import { StepCountry } from './StepCountry';
@@ -37,7 +38,8 @@ export const WelcomeModal = () => {
             </div>
             <div className={styles.stepper}>
                 <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep - 1)} disabled={currentStep === 0}>
-                    <span className={styles.stepperArrow}>&lsaquo;</span> Pr&eacute;c&eacute;dent
+                    <ChevronLeftIcon />
+                    Précédent
                 </button>
                 <div className={styles.stepperDots}>
                     {Array.from({ length: TOTAL_STEPS }, (_, i) => (
@@ -45,7 +47,8 @@ export const WelcomeModal = () => {
                     ))}
                 </div>
                 <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep + 1)} disabled={currentStep === TOTAL_STEPS - 1}>
-                    Suivant <span className={styles.stepperArrow}>&rsaquo;</span>
+                    Suivant
+                    <ChevronRightIcon />
                 </button>
             </div>
         </Modal>
