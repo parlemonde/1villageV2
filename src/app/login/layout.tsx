@@ -15,6 +15,7 @@ export default async function RootLayout({
     if (user) {
         redirect(user.role === 'admin' ? '/admin' : '/');
     }
+
     return (
         <main className={styles.loginLayout}>
             <div className={styles.loginContainer}>
