@@ -1,0 +1,22 @@
+.imageContainer {
+    position: relative;
+}
+
+.image {
+    cursor: pointer;
+}
+
+.contain {
+    object-fit: contain;
+}
+
+.cover {
+    object-fit: cover;
+}
+
+.modalImageContainer {
+    position: relative;
+    height: 75vh;
+    margin: auto;
+    width: 100%;
+}
