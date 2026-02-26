@@ -33,6 +33,7 @@ export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
                 color="grey"
                 size="sm"
                 isUpperCase={false}
+                className={styles.reportButton}
                 onClick={handleReportError}
             />
         </div>

@@ -1,6 +1,5 @@
+import { CGU } from '@frontend/components/CGU/CGU';
 import React from 'react';
-
-import { CGU } from './CGU';
 
 const CGUPage = () => {
     return <CGU />;
