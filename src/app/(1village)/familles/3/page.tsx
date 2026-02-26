@@ -1,5 +1,6 @@
 'use client';
 
+import { downloadPdf } from '@app/(1village)/familles/helpers';
 import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
 import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
@@ -8,7 +9,6 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { FamilyContext } from '@frontend/contexts/familyContext';
-import { downloadFile } from '@frontend/lib/download-file';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
 import { useExtracted } from 'next-intl';
@@ -38,6 +38,7 @@ export const useDefaultParentInvitationMessage = () => {
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
@@ -58,6 +59,7 @@ export const useDefaultParentInvitationMessage = () => {
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
@@ -76,6 +78,7 @@ export const useDefaultParentInvitationMessage = () => {
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
@@ -131,6 +134,7 @@ export const useDefaultParentInvitationMessage = () => {
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
@@ -151,12 +155,14 @@ export const useDefaultParentInvitationMessage = () => {
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
                 attrs: {
                     align: 'left',
                 },
+                content: [],
             },
             {
                 type: 'paragraph',
@@ -189,10 +195,7 @@ export default function FamillesStep3() {
             return;
         }
 
-        const buffer = new Uint8Array(pdfBuffer);
-        const blob = new Blob([buffer], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        downloadFile(url, 'invitations.pdf');
+        downloadPdf(pdfBuffer, t('code-enfants'));
     };
 
     return (

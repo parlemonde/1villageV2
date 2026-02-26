@@ -91,26 +91,28 @@ export default function FamillesStep2() {
                 <Input type="text" placeholder={t('Nom')} value={lastName} onChange={(e) => setLastName(e.target.value)} />
                 <Button onClick={addChild} color="primary" label={t('Ajouter un enfant')} />
             </div>
-            {form.students.map((s) =>
-                idToEdit === s.tempId ? (
-                    <div key={s.tempId} className={styles.row}>
-                        <Input type="text" placeholder={t('Prénom')} value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} />
-                        <Input type="text" placeholder={t('Nom')} value={editLastName} onChange={(e) => setEditLastName(e.target.value)} />
-                        <Button color="primary" label={tCommon('Enregistrer')} onClick={() => editChild(s.tempId)} />
-                        <Button color="primary" label={tCommon('Annuler')} onClick={() => setIdToEdit('')} />
-                    </div>
-                ) : (
-                    <div key={s.tempId} className={styles.child}>
-                        <p>
-                            {s.firstName} {s.lastName}
-                        </p>
-                        <div className={styles.buttons}>
-                            <IconButton icon={Pencil1Icon} color="primary" onClick={() => openEditionFields(s.tempId)} />
-                            <IconButton icon={TrashIcon} color="primary" onClick={() => setIdToDelete({ tempId: s.tempId, id: s.id })} />
+            {form.students
+                .filter((s) => !s.isDeleted)
+                .map((s) =>
+                    idToEdit === s.tempId ? (
+                        <div key={s.tempId} className={styles.row}>
+                            <Input type="text" placeholder={t('Prénom')} value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} />
+                            <Input type="text" placeholder={t('Nom')} value={editLastName} onChange={(e) => setEditLastName(e.target.value)} />
+                            <Button color="primary" label={tCommon('Enregistrer')} onClick={() => editChild(s.tempId)} />
+                            <Button color="primary" label={tCommon('Annuler')} onClick={() => setIdToEdit('')} />
                         </div>
-                    </div>
-                ),
-            )}
+                    ) : (
+                        <div key={s.tempId} className={styles.child}>
+                            <p>
+                                {s.firstName} {s.lastName}
+                            </p>
+                            <div className={styles.buttons}>
+                                <IconButton icon={Pencil1Icon} color="primary" onClick={() => openEditionFields(s.tempId)} />
+                                <IconButton icon={TrashIcon} color="primary" onClick={() => setIdToDelete({ tempId: s.tempId, id: s.id })} />
+                            </div>
+                        </div>
+                    ),
+                )}
             <div className={styles.buttonsContainer}>
                 <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
                 <Button as="a" href="/familles/3" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
