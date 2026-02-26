@@ -79,7 +79,7 @@ const toHtml = (content: HtmlEditorContent) => {
         const element = serializer.serializeFragment(doc.content, { document });
         const divElement = document.createElement('div');
         divElement.appendChild(element);
-        dom.window.document.body.appendChild(divElement);
+        document.body.appendChild(divElement);
         return dom.serialize();
     } catch (e) {
         // ignore
@@ -90,6 +90,16 @@ const toHtml = (content: HtmlEditorContent) => {
 
 const generateStudentCard = (student: Student, instructions: HtmlEditorContent): unknown[] => {
     return [generateStudentName(student.name), ...instructions.content, separator];
+};
+
+const generatePdf = async (pdf: string): Promise<Uint8Array<ArrayBufferLike>> => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(pdf, { waitUntil: 'networkidle0' });
+    const pdfBuffer = await page.pdf({ format: 'A4', scale: 0.98, margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' } });
+
+    await browser.close();
+    return pdfBuffer;
 };
 
 export const generateInvitationsPdf = async (instructions: HtmlEditorContent, studentListIds?: number[]) => {
@@ -110,34 +120,26 @@ export const generateInvitationsPdf = async (instructions: HtmlEditorContent, st
 
     const studentList = await db.select().from(students).where(filters).orderBy(students.name);
 
-    const jsonPdf: HtmlEditorContent = {
-        type: 'doc',
-        content: [],
-    };
-
+    let stringPdf = '';
     const jsonAsString = JSON.stringify(instructions);
 
     for (const student of studentList) {
         if (!student.inviteCode) {
             continue;
         }
+
         const stringWithInviteCode = jsonAsString.replace('%code', student.inviteCode);
-        const filledInstructions = JSON.parse(stringWithInviteCode);
+        const filledInstructions: HtmlEditorContent = JSON.parse(stringWithInviteCode);
         const card = generateStudentCard(student, filledInstructions);
-        jsonPdf.content.push(...card);
+
+        const cardDoc: HtmlEditorContent = {
+            type: 'doc',
+            content: card,
+        };
+        const htmlCard = toHtml(cardDoc);
+        const wrapper = `<div style="page-break-inside: avoid;">${htmlCard}</div>`;
+        stringPdf += wrapper;
     }
 
-    const html = toHtml(jsonPdf);
-    if (!html) {
-        throw new Error('Unable to generate PDF');
-    }
-
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: 'networkidle0' });
-    const pdfBuffer = await page.pdf({ format: 'A4', scale: 0.98, margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' } });
-
-    await browser.close();
-
-    return pdfBuffer;
+    return await generatePdf(stringPdf);
 };

@@ -28,7 +28,7 @@ export const GET = async ({ nextUrl }: NextRequest): Promise<NextResponse<Partia
 
     const [preferences] = await db.select(columns).from(classroomPreferences).where(eq(classroomPreferences.userId, user.id)).limit(1);
     if (!preferences) {
-        return new NextResponse(null, { status: 404 });
+        return new NextResponse(null, { status: 204 });
     }
     return NextResponse.json(preferences);
 };
