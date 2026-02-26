@@ -23,7 +23,7 @@ const toHtml = (content: unknown) => {
 };
 
 interface HtmlViewerProps {
-    content: HtmlEditorContent;
+    content: unknown;
 }
 export const HtmlViewer = ({ content }: HtmlViewerProps) => {
     // Use an external store sync to avoid hydration mismatch with the server
