@@ -1,6 +1,5 @@
 'use client';
 
-import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { schema, viewSchema } from '@lib/html-schema';
 import { Node } from 'prosemirror-model';
 import { DOMSerializer } from 'prosemirror-model';
@@ -24,7 +23,7 @@ const toHtml = (content: unknown) => {
 };
 
 interface HtmlViewerProps {
-    content: HtmlEditorContent;
+    content: unknown;
 }
 export const HtmlViewer = ({ content }: HtmlViewerProps) => {
     // Use an external store sync to avoid hydration mismatch with the server
