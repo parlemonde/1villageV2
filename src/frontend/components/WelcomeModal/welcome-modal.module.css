@@ -1,3 +1,9 @@
+.modal {
+    max-height: calc(100% - 64px);
+    max-width: 1200px;
+    width: calc(100% - 64px);
+}
+
 .stepContainer {
     display: flex;
     flex-direction: column;
@@ -37,6 +43,29 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.reportButton {
+    margin-top: 2rem;
+}
+
+/* CGU step */
+.cguScrollArea {
+    height: 19rem;
+    overflow-y: auto;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid var(--grey-200);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cguCheckboxArea {
+    max-width: 800px;
+    width: 100%;
+    margin: 1rem auto 0;
+    text-align: right;
 }
 
 /* Stepper navigation */
