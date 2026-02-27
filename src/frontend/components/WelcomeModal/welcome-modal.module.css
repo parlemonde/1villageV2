@@ -118,3 +118,27 @@
 .stepperDotActive {
     background-color: var(--primary-color);
 }
+
+/* Profile step */
+.stepProfileContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.stepProfileSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.stepProfileTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0 0 0.75rem 0;
+}
