@@ -1,3 +1,4 @@
+import type { AttributeValue } from '@opentelemetry/api';
 import { ROOT_CONTEXT, trace } from '@opentelemetry/api';
 import { logs, SeverityNumber } from '@opentelemetry/api-logs';
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http';
@@ -18,13 +19,13 @@ class LoggingOTLPTraceExporter extends OTLPTraceExporter {
     override export(spans: ReadableSpan[], resultCallback: (result: { code: number; error?: Error }) => void): void {
         for (const span of spans) {
             if (span.attributes['next.span_type'] === 'BaseServer.handleRequest') {
-                this.emitRequestLog(span);
+                this.emitRequestLog(span, spans);
             }
         }
         super.export(spans, resultCallback);
     }
 
-    private emitRequestLog(span: ReadableSpan): void {
+    private emitRequestLog(span: ReadableSpan, allSpans: ReadableSpan[]): void {
         const logger = logs.getLogger('default');
         const spanContext = span.spanContext();
 
@@ -48,47 +49,49 @@ class LoggingOTLPTraceExporter extends OTLPTraceExporter {
             severityNumber = SeverityNumber.WARN;
         }
 
+        // Find user attributes from a child span in the same trace (set by proxy)
+        const traceId = spanContext.traceId;
+        const userSpan = allSpans.find((s) => s.spanContext().traceId === traceId && s.attributes['user.id']);
+
         const method = span.attributes['http.method'];
         const target = span.attributes['http.target'];
+
+        const attributes: Record<string, AttributeValue | undefined> = {
+            // HTTP attributes
+            'http.method': span.attributes['http.method'],
+            'http.target': span.attributes['http.target'],
+            'http.route': span.attributes['http.route'],
+            'http.status_code': statusCode ?? 0,
+
+            // Timing
+            'duration.ms': durationMs,
+
+            // Next.js specific
+            'next.span_name': span.attributes['next.span_name'],
+            'next.route': span.attributes['next.route'],
+            'next.rsc': span.attributes['next.rsc'],
+
+            // Operation info
+            'operation.name': span.attributes['operation.name'],
+            'resource.name': span.attributes['resource.name'],
+
+            // User (from proxy child span)
+            'user.id': userSpan?.attributes['user.id'],
+            'user.email': userSpan?.attributes['user.email'],
+            'user.name': userSpan?.attributes['user.name'],
+        };
+        // Remove undefined attributes
+        for (const key of Object.keys(attributes)) {
+            if (attributes[key] === undefined) {
+                delete attributes[key];
+            }
+        }
         logger.emit({
             context: logContext,
             timestamp,
             severityNumber,
             body: `${method} ${target} ${statusCode ?? '-'} ${durationMs.toFixed(2)}ms`,
-            attributes: {
-                // HTTP attributes
-                'http.method': span.attributes['http.method'] as string,
-                'http.target': span.attributes['http.target'] as string,
-                'http.route': span.attributes['http.route'] as string,
-                'http.status_code': statusCode ?? 0,
-
-                // Timing
-                'duration.ms': durationMs,
-
-                // Next.js specific
-                'next.span_name': span.attributes['next.span_name'] as string,
-                'next.route': span.attributes['next.route'] as string,
-                'next.rsc': span.attributes['next.rsc'] as boolean,
-
-                // Operation info
-                'operation.name': span.attributes['operation.name'] as string,
-                'resource.name': span.attributes['resource.name'] as string,
-
-                // CloudFront viewer attributes
-                'viewer.country': span.attributes['viewer.country'] as string,
-                'viewer.country_region': span.attributes['viewer.country_region'] as string,
-                'viewer.country_region_name': span.attributes['viewer.country_region_name'] as string,
-                'viewer.city': span.attributes['viewer.city'] as string,
-                'viewer.latitude': span.attributes['viewer.latitude'] as string,
-                'viewer.longitude': span.attributes['viewer.longitude'] as string,
-                'viewer.time_zone': span.attributes['viewer.time_zone'] as string,
-                'viewer.address': span.attributes['viewer.address'] as string,
-                'viewer.asn': span.attributes['viewer.asn'] as string,
-                'viewer.is_desktop': span.attributes['viewer.is_desktop'] as string,
-                'viewer.is_mobile': span.attributes['viewer.is_mobile'] as string,
-                'viewer.is_tablet': span.attributes['viewer.is_tablet'] as string,
-                'viewer.is_smarttv': span.attributes['viewer.is_smarttv'] as string,
-            },
+            attributes,
         });
     }
 }
@@ -103,21 +106,6 @@ export function register() {
             // Default OTLP HTTP endpoint - configurable via OTEL_EXPORTER_OTLP_ENDPOINT env var
             url: `${getEnvVariable('OTEL_EXPORTER_OTLP_ENDPOINT')}/v1/traces`,
         }),
-        attributesFromHeaders: {
-            'viewer.country': 'CloudFront-Viewer-Country',
-            'viewer.country_region': 'CloudFront-Viewer-Country-Region',
-            'viewer.country_region_name': 'CloudFront-Viewer-Country-Region-Name',
-            'viewer.city': 'CloudFront-Viewer-City',
-            'viewer.latitude': 'CloudFront-Viewer-Latitude',
-            'viewer.longitude': 'CloudFront-Viewer-Longitude',
-            'viewer.time_zone': 'CloudFront-Viewer-Time-Zone',
-            'viewer.address': 'CloudFront-Viewer-Address',
-            'viewer.asn': 'CloudFront-Viewer-ASN',
-            'viewer.is_desktop': 'CloudFront-Is-Desktop-Viewer',
-            'viewer.is_mobile': 'CloudFront-Is-Mobile-Viewer',
-            'viewer.is_tablet': 'CloudFront-Is-Tablet-Viewer',
-            'viewer.is_smarttv': 'CloudFront-Is-SmartTV-Viewer',
-        },
         instrumentations: [new PgInstrumentation()],
     });
     registerLogs();
