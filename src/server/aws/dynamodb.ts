@@ -1,5 +1,6 @@
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 
 import { getAwsClient } from './aws-client';
 
@@ -30,7 +31,7 @@ export async function getDynamoDBItem<T>(key: string): Promise<T | undefined> {
 
         return isAttributeItemObject(data) ? unmarshall(data.Item).value : undefined;
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return undefined;
     }
 }
@@ -52,7 +53,7 @@ export async function deleteDynamoDBItem(key: string): Promise<void> {
             }),
         });
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -76,7 +77,7 @@ export async function deleteDynamoDBItems(keys: string[]): Promise<void> {
             }),
         });
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -98,7 +99,7 @@ export async function updateDynamoDBItem<T>(key: string, value: T): Promise<void
             }),
         });
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -139,7 +140,7 @@ export async function scanDynamoDB<T>(query: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return data.Items.map((item: any) => unmarshall(item));
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return [];
     }
 }

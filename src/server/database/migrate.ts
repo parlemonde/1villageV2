@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { auth } from '@server/lib/auth';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Client } from 'pg';
@@ -26,7 +27,7 @@ async function createDatabase(): Promise<void> {
         }
         await client.end();
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -60,7 +61,7 @@ async function createAdminUser(): Promise<void> {
             await db.delete(auth_sessions).where(eq(auth_sessions.token, result.token));
         }
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return;
     }
 }
@@ -89,5 +90,5 @@ const start = async () => {
 };
 
 start()
-    .catch(console.error)
+    .catch(logger.error)
     .finally(() => process.exit());

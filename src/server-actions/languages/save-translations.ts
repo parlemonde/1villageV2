@@ -3,6 +3,7 @@
 import { setDynamoDBItem } from '@server/aws/dynamodb';
 import type { TranslationGroup } from '@server/i18n/get-grouped-messages';
 import { getDefaultMessages, isObject } from '@server/i18n/request';
+import { logger } from '@server/lib/logger';
 import { revalidatePath } from 'next/cache';
 
 /**
@@ -88,7 +89,7 @@ export async function saveTranslations(languageCode: string, translationGroups: 
             await setDynamoDBItem(dynamoKey, JSON.stringify(cleanedTranslations));
         }
     } catch (error) {
-        console.error('Failed to save translations:', error);
+        logger.error('Failed to save translations:', { error });
     }
     revalidatePath(`/admin/manage/translations/${languageCode}`);
 }

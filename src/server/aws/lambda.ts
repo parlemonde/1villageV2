@@ -1,4 +1,5 @@
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 
 import { getAwsClient } from './aws-client';
 
@@ -24,13 +25,13 @@ export const invokeTranscodeVideosLambda = async (event: TranscodeVideosLambdaEv
         );
         // Do not await the response if we are using the local lambda
         if (getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL') === 'http://localhost:9000') {
-            response.catch(console.error);
+            response.catch(logger.error);
         } else {
             await response;
         }
         return true;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return false;
     }
 };

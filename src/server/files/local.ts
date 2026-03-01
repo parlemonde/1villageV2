@@ -1,5 +1,6 @@
 import { getBuffer } from '@server/lib/get-buffer';
 import { getSingleBytesRange } from '@server/lib/get-single-bytes-range';
+import { logger } from '@server/lib/logger';
 import fs from 'fs-extra';
 import mime from 'mime-types';
 import path from 'node:path';
@@ -20,7 +21,7 @@ export async function getLocalFileData(key: string): Promise<FileData | null> {
             LastModified: stats.mtime,
         };
     } catch {
-        console.error(`File ${key} not found !`);
+        logger.error(`File ${key} not found !`);
         return null;
     }
 }
@@ -31,7 +32,7 @@ export async function getLocalFile(key: string, range?: string): Promise<Readabl
         const singleBytesRange = getSingleBytesRange(stats.size, range);
         return fs.createReadStream(getFilePath(key), singleBytesRange ? { start: singleBytesRange.start, end: singleBytesRange.end } : undefined);
     } catch {
-        console.error(`File ${key} not found !`);
+        logger.error(`File ${key} not found !`);
         return null;
     }
 }
@@ -44,7 +45,7 @@ export async function uploadLocalFile(key: string, filedata: Buffer | Readable |
         await fs.mkdirs(directory);
         await fs.writeFile(getFilePath(key), buffer);
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -52,7 +53,7 @@ export async function deleteLocalFile(key: string): Promise<void> {
     try {
         await fs.remove(getFilePath(key));
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -74,7 +75,7 @@ export async function listLocalFiles(prefix: string): Promise<string[]> {
         await walkDirectory(temporaryDirectory);
         return files;
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return [];
     }
 }
@@ -98,7 +99,7 @@ export async function listLocalFolders(prefix: string): Promise<string[]> {
 
         return Array.from(folders).sort();
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return [];
     }
 }

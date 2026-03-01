@@ -1,4 +1,5 @@
 import { H5pError, utils } from '@lumieducation/h5p-server';
+import { logger } from '@server/lib/logger';
 
 const { generalizedSanitizeFilename } = utils;
 
@@ -10,11 +11,11 @@ const { generalizedSanitizeFilename } = utils;
  */
 export function validateFilename(filename: string): void {
     if (/\.\.\//.test(filename)) {
-        console.error(`Relative paths in filenames are not allowed: ${filename} is illegal`);
+        logger.error(`Relative paths in filenames are not allowed: ${filename} is illegal`);
         throw new H5pError('illegal-filename', { filename }, 400);
     }
     if (filename.startsWith('/')) {
-        console.error(`Absolute paths in filenames are not allowed: ${filename} is illegal`);
+        logger.error(`Absolute paths in filenames are not allowed: ${filename} is illegal`);
         throw new H5pError('illegal-filename', { filename }, 400);
     }
 
@@ -24,7 +25,7 @@ export function validateFilename(filename: string): void {
     // &$@=;:+ ,?\\{^}%`]'">[~<#
 
     if (/[^A-Za-z0-9\-._!()@/]/g.test(filename)) {
-        console.error(`Found illegal character in filename: ${filename}`);
+        logger.error(`Found illegal character in filename: ${filename}`);
         throw new H5pError('illegal-filename', { filename }, 400);
     }
 }

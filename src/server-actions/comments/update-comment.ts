@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { and, eq, sql } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
@@ -27,7 +28,7 @@ export const updateComment = async (comment: Partial<Comment>): Promise<ServerAc
             .where(and(eq(comments.id, id), eq(comments.userId, user.id)));
         return {};
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return { error: { message: t('Une erreur est survenue lors de la modification du commentaire.') } };
     }
 };

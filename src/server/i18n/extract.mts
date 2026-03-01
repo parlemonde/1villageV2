@@ -11,5 +11,5 @@ await unstable_extractMessages({
     },
 });
 
-// eslint-disable-next-line no-console
-console.log('✔ Messages extracted');
+// eslint-disable-next-line no-logger
+logger.log('✔ Messages extracted');

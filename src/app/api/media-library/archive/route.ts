@@ -9,6 +9,7 @@ import { villages } from '@server/database/schemas/villages';
 import { getLocalFile } from '@server/files/local';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import { eq, inArray, desc, and } from 'drizzle-orm';
 import JSZip from 'jszip';
 import type { NextRequest } from 'next/server';
@@ -81,7 +82,7 @@ export const GET = async (request: NextRequest) => {
         const url = media.metadata && 'originalFilePath' in media.metadata ? media.metadata.originalFilePath : media.url;
         const file = USE_S3 ? await getS3File(url) : await getLocalFile(url);
         if (!file) {
-            console.error(`File not found: ${url}`);
+            logger.error(`File not found: ${url}`);
             return null;
         }
 
