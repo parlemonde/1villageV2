@@ -8,6 +8,7 @@ import type { Village } from '@server/database/schemas/villages';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import { isNotNull } from 'drizzle-orm';
 import FuzzySet from 'fuzzyset.js';
 
@@ -41,7 +42,7 @@ export async function importVillages(): Promise<void> {
             })}`,
         );
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return;
     }
 

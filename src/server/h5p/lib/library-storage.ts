@@ -9,6 +9,7 @@ import type {
 import { InstalledLibrary, streamToString, LibraryName, H5pError } from '@lumieducation/h5p-server';
 import { deleteDynamoDBItem, getDynamoDBItem, scanDynamoDB, setDynamoDBItem } from '@server/aws/dynamodb';
 import { deleteFile, getFile, getFileData, listFiles, uploadFile } from '@server/files/file-upload';
+import { logger } from '@server/lib/logger';
 import * as path from 'path';
 import { Readable } from 'stream';
 
@@ -31,7 +32,7 @@ type ExtendedLibraryMetadata = ILibraryMetadata & { additionalMetadata?: Additio
 const getKey = (library: ILibraryName, filename: string): string => {
     const key = `h5p/libraries/${LibraryName.toUberName(library)}/${filename}`;
     if (key.length > 1024) {
-        console.error(
+        logger.error(
             `The S3 key for "${filename}" in library object for library ${LibraryName.toUberName(library)} is ${
                 key.length
             } bytes long, but only 1024 are allowed.`,
@@ -59,7 +60,7 @@ export class LibraryStorage implements ILibraryStorage {
         try {
             await uploadFile(getKey(library, filename), readStream);
         } catch (error) {
-            console.error(`Error while uploading file "${filename}" to S3 storage: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error while uploading file "${filename}" to S3 storage: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError(`library-storage:s3-upload-error`, { ubername: LibraryName.toUberName(library), filename }, 500);
         }
         return true;
@@ -70,7 +71,7 @@ export class LibraryStorage implements ILibraryStorage {
         try {
             await setDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${ubername}`, { ...libraryData, additionalMetadata: { restricted } });
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-adding-metadata');
         }
         return InstalledLibrary.fromMetadata({ ...libraryData, restricted });
@@ -95,7 +96,7 @@ export class LibraryStorage implements ILibraryStorage {
                 }
             }
         } catch (error) {
-            console.error(`There was an error while clearing the files: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`There was an error while clearing the files: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('library-storage:deleting-files-error');
         }
     }
@@ -109,7 +110,7 @@ export class LibraryStorage implements ILibraryStorage {
         try {
             await deleteDynamoDBItem(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-deleting', {
                 ubername: LibraryName.toUberName(library),
             });
@@ -122,7 +123,7 @@ export class LibraryStorage implements ILibraryStorage {
             const result = await getFileData(getKey(library, filename));
             return result !== null && result.ContentLength > 0;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return false;
         }
     }
@@ -145,7 +146,7 @@ export class LibraryStorage implements ILibraryStorage {
                 ubername: row.key.slice(LIBRARY_PREFIX.length),
             }));
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-getting-dependents');
         }
 
@@ -192,7 +193,7 @@ export class LibraryStorage implements ILibraryStorage {
             });
             return results.length;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-getting-dependents', {
                 ubername: LibraryName.toUberName(library),
             });
@@ -259,7 +260,7 @@ export class LibraryStorage implements ILibraryStorage {
             }
             return results.map((d) => LibraryName.fromUberName(d.key.slice(LIBRARY_PREFIX.length)));
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-getting-libraries');
         }
     }
@@ -275,7 +276,7 @@ export class LibraryStorage implements ILibraryStorage {
             } while (result.nextContinuationToken);
             return files.filter((file) => path.extname(file) === '.json').map((file) => path.basename(file, '.json'));
         } catch {
-            console.error(
+            logger.error(
                 `There was an error while getting list of files from S3. This might not be a problem if no languages were added to the library.`,
             );
             return [];
@@ -298,7 +299,7 @@ export class LibraryStorage implements ILibraryStorage {
         try {
             return (await getDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`)) !== undefined;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return false;
         }
     }
@@ -312,7 +313,7 @@ export class LibraryStorage implements ILibraryStorage {
             });
             return results.map((row) => row.value).map(({ additionalMetadata, ...metadata }) => metadata);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:error-getting-addons');
         }
     }
@@ -331,7 +332,7 @@ export class LibraryStorage implements ILibraryStorage {
             }
             return files;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return [];
         }
     }
@@ -347,7 +348,7 @@ export class LibraryStorage implements ILibraryStorage {
                 additionalMetadata,
             });
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:update-additional-metadata-error', {
                 ubername: LibraryName.toUberName(library),
             });
@@ -366,7 +367,7 @@ export class LibraryStorage implements ILibraryStorage {
                 ...additionalMetadata,
             });
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('library-storage:update-error', {
                 ubername,
             });

@@ -1,6 +1,8 @@
 // All Environment Variables should be defined here
 // Use empty string if the variable can't have a default value
 const DEFAULT_ENV_VARIABLES = {
+    NODE_ENV: 'development',
+    NEXT_RUNTIME: 'nodejs',
     BETTER_AUTH_SECRET: '01234567890123456789012345678901',
     BETTER_AUTH_URL: 'http://localhost:3000',
     HOST_URL: 'http://localhost:3000',
@@ -23,6 +25,7 @@ const DEFAULT_ENV_VARIABLES = {
     TRANSCODE_VIDEOS_LAMBDA_URL: 'http://localhost:9000',
     TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME: 'server-transcode-videos',
     OPEN_WEATHER_APP_ID: '',
+    OTEL_EXPORTER_OTLP_ENDPOINT: 'http://localhost:4318',
 };
 
 export const getEnvVariable = (variable: keyof typeof DEFAULT_ENV_VARIABLES): string => {

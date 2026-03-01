@@ -1,6 +1,7 @@
 import { getFile, getFileData, listFolders } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getSingleBytesRange } from '@server/lib/get-single-bytes-range';
+import { logger } from '@server/lib/logger';
 import mime from 'mime-types';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -86,7 +87,7 @@ export async function getArchiveFolders(): Promise<string[]> {
     try {
         return await listFolders('archives');
     } catch (error) {
-        console.error('Erreur lors de la lecture des dossiers archives:', error);
+        logger.error('Erreur lors de la lecture des dossiers archives:', { error });
         return [];
     }
 }

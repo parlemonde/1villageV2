@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
 
@@ -25,7 +26,7 @@ export const postComment = async ({ activityId, content }: { activityId: number;
             .returning();
         return { data };
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return { error: { message: t('Une erreur est survenue lors de la publication du commentaire.') } };
     }
 };

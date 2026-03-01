@@ -3,6 +3,7 @@
 import { db } from '@server/database';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { and, eq } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
@@ -21,7 +22,7 @@ export const deleteComment = async (commentId: number): Promise<ServerActionResp
         await db.delete(comments).where(filters);
         return {};
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return {
             error: { message: t('Une erreur est survenue lors de la suppression du commentaire') },
         };

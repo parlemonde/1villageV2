@@ -1,6 +1,7 @@
 import type { IFileStats, ITemporaryFile, ITemporaryFileStorage, IUser } from '@lumieducation/h5p-server';
 import { H5pError } from '@lumieducation/h5p-server';
 import { deleteFile, getFile, getFileData, uploadFile } from '@server/files/file-upload';
+import { logger } from '@server/lib/logger';
 import type { ReadStream } from 'fs-extra';
 import type { Readable } from 'stream';
 
@@ -9,7 +10,7 @@ import { validateFilename } from './sanitize-filename';
 const getS3Key = (filename: string): string => {
     const key = `h5p/temp/${filename}`;
     if (key.length > 1024) {
-        console.error(`The S3 key for "${filename}" is ${key.length} bytes long, but only 1024 are allowed.`);
+        logger.error(`The S3 key for "${filename}" is ${key.length} bytes long, but only 1024 are allowed.`);
         throw new H5pError('content-storage:filename-too-long', { filename }, 400);
     }
     return key;
@@ -26,7 +27,7 @@ export class TemporaryStorage implements ITemporaryFileStorage {
         try {
             await deleteFile(getS3Key(filename));
         } catch (error) {
-            console.error(`Error while deleting a file from S3 storage: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error while deleting a file from S3 storage: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('s3-temporary-storage:deleting-file-error', { filename }, 500);
         }
     }
@@ -37,7 +38,7 @@ export class TemporaryStorage implements ITemporaryFileStorage {
             const result = await getFileData(getS3Key(filename));
             return result !== null && result.ContentLength > 0;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return false;
         }
     }
@@ -75,7 +76,7 @@ export class TemporaryStorage implements ITemporaryFileStorage {
                 expiresAt: expirationTime,
             };
         } catch (error) {
-            console.error(`Error while uploading file "${filename}" to S3 storage: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error while uploading file "${filename}" to S3 storage: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError(`content-storage:upload-error`, { filename }, 500);
         }
     }

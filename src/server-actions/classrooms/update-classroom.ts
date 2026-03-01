@@ -3,6 +3,7 @@
 import { db } from '@server/database';
 import { classrooms, type Classroom } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { and, eq } from 'drizzle-orm';
 
@@ -30,7 +31,7 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Se
                 .returning(),
         };
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return { error: { message: 'Une erreur est survenue lors de la modification de la classe' } };
     }
 };
