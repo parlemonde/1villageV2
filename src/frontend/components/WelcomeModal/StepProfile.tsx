@@ -1,8 +1,7 @@
 'use client';
 
-import { Field } from '@frontend/components/ui/Form';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
-import { Input } from '@frontend/components/ui/Form/Input';
+import classNames from 'clsx';
 
 import styles from './welcome-modal.module.css';
 
@@ -19,6 +18,36 @@ interface StepProfileProps {
     countryCode: string;
 }
 
+interface PanelInputProps {
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    isRequired?: boolean;
+    hasError?: boolean;
+    disabled?: boolean;
+}
+
+const PanelInput = ({ label, value, onChange, placeholder, isRequired = false, hasError = false, disabled = false }: PanelInputProps) => (
+    <div className={styles.panelField}>
+        <label>
+            {label}
+            {isRequired && <span style={{ color: 'red' }}>*</span>}
+        </label>
+        <input
+            type="text"
+            className={classNames(styles.panelInput, {
+                [styles.panelInputError]: hasError,
+                [styles.panelInputDisabled]: disabled,
+            })}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            disabled={disabled}
+        />
+    </div>
+);
+
 export const StepProfile = ({ profileData, onProfileDataChange, countryCode }: StepProfileProps) => {
     const updateField = (field: keyof ProfileData, value: string) => {
         onProfileDataChange({ ...profileData, [field]: value });
@@ -28,83 +57,46 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode }: S
         <div className={styles.stepProfileContainer}>
             <div className={styles.stepProfileSection}>
                 <h3 className={styles.stepProfileTitle}>{"Professionnel de l'éducation"}</h3>
-                <Field
-                    name="userName"
-                    label="Nom"
+                <PanelInput
+                    label="Nom : "
+                    value={profileData.userName}
+                    onChange={(v) => updateField('userName', v)}
+                    placeholder="Entrez votre nom"
                     isRequired
-                    marginBottom="md"
-                    input={
-                        <Input
-                            id="userName"
-                            type="text"
-                            isFullWidth
-                            hasError={!profileData.userName.trim()}
-                            value={profileData.userName}
-                            onChange={(e) => updateField('userName', e.target.value)}
-                            placeholder="Entrez votre nom"
-                        />
-                    }
+                    hasError={!profileData.userName.trim()}
                 />
             </div>
 
             <div className={styles.stepProfileSection}>
                 <h3 className={styles.stepProfileTitle}>{'Établissement'}</h3>
-                <Field
-                    name="schoolName"
-                    label="École"
+                <PanelInput
+                    label="École : "
+                    value={profileData.schoolName}
+                    onChange={(v) => updateField('schoolName', v)}
+                    placeholder="Nom de votre école"
                     isRequired
-                    marginBottom="md"
-                    input={
-                        <Input
-                            id="schoolName"
-                            type="text"
-                            isFullWidth
-                            hasError={!profileData.schoolName.trim()}
-                            value={profileData.schoolName}
-                            onChange={(e) => updateField('schoolName', e.target.value)}
-                            placeholder="Nom de votre école"
-                        />
-                    }
+                    hasError={!profileData.schoolName.trim()}
                 />
-                <Field
-                    name="classLevel"
-                    label="Niveau de la classe"
-                    marginBottom="md"
-                    input={
-                        <Input
-                            id="classLevel"
-                            type="text"
-                            isFullWidth
-                            value={profileData.classLevel}
-                            onChange={(e) => updateField('classLevel', e.target.value)}
-                            placeholder="Niveau de votre classe"
-                        />
-                    }
+                <PanelInput
+                    label="Niveau de la classe : "
+                    value={profileData.classLevel}
+                    onChange={(v) => updateField('classLevel', v)}
+                    placeholder="Niveau de votre classe"
                 />
-                <Field
-                    name="schoolAddress"
-                    label="Adresse de l'école"
+                <PanelInput
+                    label="Adresse de l'école : "
+                    value={profileData.schoolAddress}
+                    onChange={(v) => updateField('schoolAddress', v)}
+                    placeholder="Adresse de votre école"
                     isRequired
-                    marginBottom="md"
-                    input={
-                        <Input
-                            id="schoolAddress"
-                            type="text"
-                            isFullWidth
-                            hasError={!profileData.schoolAddress.trim()}
-                            value={profileData.schoolAddress}
-                            onChange={(e) => updateField('schoolAddress', e.target.value)}
-                            placeholder="Adresse de votre école"
-                        />
-                    }
+                    hasError={!profileData.schoolAddress.trim()}
                 />
-                <Field
-                    style={{ pointerEvents: 'none' }}
-                    name="country"
-                    label="Pays"
-                    marginBottom="md"
-                    input={<CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />}
-                />
+                <div className={styles.panelField} style={{ pointerEvents: 'none' }}>
+                    <label>Pays :</label>
+                    <div style={{ marginLeft: '0.5rem', width: '450px', maxWidth: '100%' }}>
+                        <CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />
+                    </div>
+                </div>
             </div>
         </div>
     );
