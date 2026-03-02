@@ -3,9 +3,7 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 
 export function getClassroomFromMap(map: Partial<Record<number, Classroom | ClassroomVillageTeacher>>, id: number | null) {
     if (id === null) return undefined;
-    const entry = map[id];
-    if (entry && 'classroom' in entry) return entry.classroom;
-    return undefined;
+    return map[id];
 }
 
 export function getClassroomFromProp(classroom: Classroom | ClassroomVillageTeacher | undefined): Classroom | undefined {
