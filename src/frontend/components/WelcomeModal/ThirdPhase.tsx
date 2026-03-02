@@ -40,9 +40,7 @@ export const ThirdPhase = () => {
     return (
         <Modal isOpen={isOpen} onClose={() => {}} title="La phase 3 a commencé !" hasCloseButton={false} hasFooter={false} width="md" isFullWidth>
             <div className={styles.phaseContent}>
-                <p>
-                    {"Avant de passer à la phase 3, prenez 5 minutes pour nous faire vos retours sur la phase 2 :"}
-                </p>
+                <p>{'Avant de passer à la phase 3, prenez 5 minutes pour nous faire vos retours sur la phase 2 :'}</p>
                 <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" className={styles.phaseLink}>
                     {"Vos retours sur la phase 2 d'1Village"}
                 </a>
@@ -52,7 +50,7 @@ export const ThirdPhase = () => {
                         <Button label="Rester en phase 2" variant="outlined" color="primary" isUpperCase={false} onClick={handleStayPhase2} />
                     </div>
                     <div className={styles.phaseOption}>
-                        <p>{"Pour imaginer le village-monde idéal, passez en phase 3."}</p>
+                        <p>{'Pour imaginer le village-monde idéal, passez en phase 3.'}</p>
                         <Button label="Passer en phase 3" variant="outlined" color="primary" isUpperCase={false} onClick={handleGoToPhase3} />
                     </div>
                 </div>
