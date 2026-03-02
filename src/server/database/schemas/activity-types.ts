@@ -88,9 +88,9 @@ type TaleElement = {
 type HintActivity = {
     type: 'indice';
     data: {
-        content: Content;
-        customHint: string;
-        defaultHint: string;
+        defaultHint?: string;
+        customHint?: string;
+        content?: AnyContent[];
     } | null;
 };
 

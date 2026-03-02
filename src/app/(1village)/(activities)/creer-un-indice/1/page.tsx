@@ -76,21 +76,9 @@ export default function CreerUnIndiceStep1() {
                 value={activity.data?.defaultHint || CUSTOM_HINT_VALUE}
                 onChange={(newValue) => {
                     if (newValue === CUSTOM_HINT_VALUE) {
-                        setActivity({
-                            data: {
-                                content: activity.data?.content ?? [],
-                                defaultHint: '',
-                                customHint: '',
-                            },
-                        });
+                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: undefined, customHint: '' } });
                     } else {
-                        setActivity({
-                            data: {
-                                content: activity.data?.content ?? [],
-                                defaultHint: newValue,
-                                customHint: activity.data?.customHint ?? '',
-                            },
-                        });
+                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: newValue } });
                     }
                 }}
             />
@@ -106,13 +94,7 @@ export default function CreerUnIndiceStep1() {
                         marginY="md"
                         value={activity.data?.customHint || ''}
                         onChange={(e) => {
-                            setActivity({
-                                data: {
-                                    content: activity.data?.content ?? [],
-                                    defaultHint: activity.data?.defaultHint ?? '',
-                                    customHint: e.target.value,
-                                },
-                            });
+                            setActivity({ type: 'indice', ...activity, data: { ...activity.data, customHint: e.target.value } });
                         }}
                     />
                 </>
