@@ -31,7 +31,6 @@ export const WelcomeModal = () => {
         schoolName: classroom?.name || '',
         classLevel: classroom?.level || '',
         schoolAddress: classroom?.address || '',
-        alias: classroom?.alias || '',
     });
 
     if (!user || !village || user.role !== 'teacher' || user.firstLogin !== 0) {
@@ -66,7 +65,6 @@ export const WelcomeModal = () => {
                 name: profileData.schoolName.trim(),
                 level: profileData.classLevel.trim(),
                 address: profileData.schoolAddress.trim(),
-                alias: profileData.alias.trim() || null,
             });
             if (classroomError) {
                 sendToast({ message: classroomError.message, type: 'error' });
