@@ -9,7 +9,6 @@ import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-// import type { Classroom } from '@server/database/schemas/classrooms';
 import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
 import useSWR from 'swr';
