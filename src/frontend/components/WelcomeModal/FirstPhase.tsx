@@ -31,7 +31,6 @@ export const FirstPhase = () => {
         schoolName: classroom?.name || '',
         classLevel: classroom?.level || '',
         schoolAddress: classroom?.address || '',
-        classAlias: classroom?.alias || '',
     });
 
     if (!user || !village || !classroom) {
@@ -66,10 +65,6 @@ export const FirstPhase = () => {
                 name: profileData.schoolName.trim(),
                 level: profileData.classLevel.trim(),
                 address: profileData.schoolAddress.trim(),
-                alias: profileData.classAlias.trim() || null,
-                ...(profileData.coordinates && {
-                    coordinates: { latitude: profileData.coordinates.lat, longitude: profileData.coordinates.lng },
-                }),
             });
             if (classroomError) {
                 sendToast({ message: classroomError.message, type: 'error' });
@@ -153,13 +148,7 @@ export const FirstPhase = () => {
                 {currentStep === 1 && <StepCountry countryCode={classroom.countryCode} />}
                 {currentStep === 2 && <StepCGU cguChecked={cguChecked} onCguCheckedChange={setCguChecked} />}
                 {currentStep === 3 && (
-                    <StepProfile
-                        profileData={profileData}
-                        onProfileDataChange={setProfileData}
-                        countryCode={classroom.countryCode}
-                        user={user}
-                        classroom={classroom}
-                    />
+                    <StepProfile profileData={profileData} onProfileDataChange={setProfileData} countryCode={classroom.countryCode} />
                 )}
             </div>
             <div className={styles.stepper}>
