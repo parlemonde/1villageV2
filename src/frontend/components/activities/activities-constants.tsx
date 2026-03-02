@@ -150,7 +150,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     defi: null,
     histoire: null,
     question: null,
-    'presentation-pelico': null,
+    'presentation-pelico': ['admin', 'mediator'],
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

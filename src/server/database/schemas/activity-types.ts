@@ -222,14 +222,11 @@ export type Activities =
     | PuzzleActivity
     | HintActivity
     | ReportActivity
-    | PelicoPresentation
     | StoryActivity
     | MascotActivity
     | ChallengeActivity
     | QuestionActivity
-    | PelicoPresentation
-    | MascotActivity
-    | ChallengeActivity;
+    | PelicoPresentation;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
