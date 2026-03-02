@@ -4,9 +4,7 @@ import { getClassroomMarker } from '@frontend/components/worldMaps/classroom-mar
 import { useFullScreen } from '@frontend/components/worldMaps/use-full-screen';
 import styles from '@frontend/components/worldMaps/world-map.module.css';
 import { VillageContext } from '@frontend/contexts/villageContext';
-import { getClassroomFromProp } from '@lib/get-classroom';
 import type { Activity } from '@server/database/schemas/activities';
-import type { Classroom } from '@server/database/schemas/classrooms';
 import { LngLatBounds, type Map } from 'maplibre-gl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
@@ -81,13 +79,10 @@ const WorldMap3D = ({ activity = null }: WorldMapProps) => {
         const bounds = new LngLatBounds();
 
         const markers = Object.values(classroomsMap)
-            .filter((classroom) => {
-                if (classroom === undefined) return false;
+            .filter((classroom) => classroom !== undefined)
+            .filter((classroom) => classroom.teacherId === activity?.userId)
+            .map((classroom) => getClassroomMarker({ classroom, canvas }));
 
-                const cls: Classroom | undefined = getClassroomFromProp(classroom);
-                return activity === null || cls?.teacherId === activity.userId;
-            })
-            .map((classroomVT) => getClassroomMarker({ classroomVT, canvas }));
         markers.forEach((marker) => {
             marker.marker.addTo(map);
             bounds.extend(marker.marker.getLngLat());
