@@ -142,3 +142,32 @@
     color: var(--primary-color);
     margin: 0 0 0.75rem 0;
 }
+
+/* Phase transition modals (SecondPhase / ThirdPhase) */
+.phaseContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 15rem;
+    gap: 1rem;
+}
+
+.phaseLink {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+.phaseActions {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.phaseOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
