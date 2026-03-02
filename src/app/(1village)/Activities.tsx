@@ -53,15 +53,18 @@ export const Activities = () => {
         <div>
             <ActivityFilters filters={filters} setFilters={setFilters} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {activities?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((activity) => (
-                    <ActivityCard
-                        key={activity.id}
-                        activity={activity}
-                        user={usersMap[activity.userId]}
-                        classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
-                        hasActions={activity.type === 'question'}
-                    />
-                ))}
+                {activities
+                    ?.filter((activity) => activity.type !== 'presentation-pelico')
+                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                    .map((activity) => (
+                        <ActivityCard
+                            key={activity.id}
+                            activity={activity}
+                            user={usersMap[activity.userId]}
+                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                            hasActions={activity.type === 'question'}
+                        />
+                    ))}
             </div>
             <div className={styles.paginationContainer}>
                 <Field
