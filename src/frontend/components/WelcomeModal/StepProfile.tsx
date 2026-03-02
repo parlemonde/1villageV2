@@ -11,7 +11,6 @@ export interface ProfileData {
     schoolName: string;
     classLevel: string;
     schoolAddress: string;
-    alias: string;
 }
 
 interface StepProfileProps {
@@ -105,21 +104,6 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode }: S
                     label="Pays"
                     marginBottom="md"
                     input={<CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />}
-                />
-                <Field
-                    name="alias"
-                    label="Pseudo"
-                    marginBottom="md"
-                    input={
-                        <Input
-                            id="alias"
-                            type="text"
-                            isFullWidth
-                            value={profileData.alias}
-                            onChange={(e) => updateField('alias', e.target.value)}
-                            placeholder={profileData.userName || 'Pseudo affiché sur le site'}
-                        />
-                    }
                 />
             </div>
         </div>
