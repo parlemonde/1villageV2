@@ -85,6 +85,13 @@
       "when": 1771843005366,
       "tag": "0009_chubby_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1772463294400,
+      "tag": "0009_broad_johnny_blaze",
+      "breakpoints": true
     }
   ]
 }
