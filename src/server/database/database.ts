@@ -12,6 +12,7 @@ import { classrooms } from './schemas/classrooms';
 import { comments } from './schemas/comments';
 import { languages } from './schemas/languages';
 import { medias } from './schemas/medias';
+import { parentsStudents } from './schemas/parents-students';
 import { sessions } from './schemas/sessions';
 import { students } from './schemas/students';
 import { users } from './schemas/users';
@@ -33,6 +34,7 @@ export const db = registerService('db', () =>
             activityVisibility,
             students,
             medias,
+            parentsStudents,
             sessions,
             phaseActivityTypes,
             auth_sessions,
