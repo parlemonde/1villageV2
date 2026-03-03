@@ -159,31 +159,79 @@
     white-space: nowrap;
 }
 
-/* V1-like underline input (standard variant) */
-.panelInput {
+/* V1-like underline input wrapper (MUI standard variant replica) */
+.panelInputWrapper {
+    position: relative;
     width: 450px;
     max-width: 100%;
     margin-left: 0.5rem;
+}
+
+/* Static underline (MUI ::before) */
+.panelInputWrapper::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.panelInputWrapper:hover::before {
+    border-bottom: 2px solid var(--font-color);
+}
+
+/* Animated underline (MUI ::after) — expands from center on focus */
+.panelInputWrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 2px solid var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.panelInputWrapper:focus-within::after {
+    transform: scaleX(1);
+}
+
+/* Error state underlines */
+.panelInputWrapper.panelInputError::before {
+    border-bottom-color: var(--error-color);
+}
+
+.panelInputWrapper.panelInputError::after {
+    border-bottom-color: var(--error-color);
+}
+
+/* Disabled state */
+.panelInputWrapper.panelInputDisabled::before {
+    border-bottom-style: dotted;
+    border-bottom-color: rgba(0, 0, 0, 0.42);
+}
+
+.panelInputWrapper.panelInputDisabled::after {
+    display: none;
+}
+
+/* The actual input element */
+.panelInput {
+    width: 100%;
     border: none;
-    border-bottom: 1px solid var(--grey-400);
     border-radius: 0;
     padding: 4px 0 5px;
     font-size: 1rem;
-    line-height: 1.4375em;
+    line-height: 1.45em;
     background: transparent;
-    transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.panelInput:hover {
-    border-color: transparent;
-    border-bottom-color: var(--font-color);
+    color: var(--font-color);
 }
 
 .panelInput:focus {
-    border-color: transparent;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 4px;
-    box-shadow: none;
     outline: none;
 }
 
@@ -191,19 +239,7 @@
     outline: none;
 }
 
-.panelInput.panelInputError,
-.panelInput.panelInputError:hover {
-    border-bottom-color: var(--error-color);
-    animation: none;
-}
-
-.panelInput.panelInputError:focus {
-    border-bottom: 2px solid var(--error-color);
-    box-shadow: none;
-}
-
-.panelInput.panelInputDisabled {
-    border-bottom-style: dotted;
+.panelInput:disabled {
     color: var(--grey-500);
     pointer-events: none;
 }
