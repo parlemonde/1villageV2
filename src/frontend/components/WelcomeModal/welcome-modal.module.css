@@ -119,16 +119,75 @@
     background-color: var(--primary-color);
 }
 
-/* Profile step */
+/* Profile step - two-column layout (form left, preview right) */
 .stepProfileContainer {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    max-width: 600px;
     width: 100%;
-    margin: 0 auto;
     overflow-y: auto;
     padding: 0.5rem;
+}
+
+@media (min-width: 900px) {
+    .stepProfileContainer {
+        flex-direction: row;
+        gap: 2rem;
+    }
+}
+
+.stepProfileForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.stepProfilePreview {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: var(--grey-100);
+    padding: 0.5rem 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+.stepProfilePreviewTitle {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* V1-style PresentationCard preview */
+.previewCard {
+    background-color: white;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    margin-top: 0.25rem;
+}
+
+.previewCardHeader {
+    padding: 4px;
+}
+
+.previewCardBody {
+    padding: 0.25rem 0.5rem 0.5rem;
+}
+
+.previewCardTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+}
+
+.previewCardText {
+    font-size: 0.9rem;
+    color: var(--grey-500);
+    margin: 0;
+    text-align: justify;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .stepProfileSection {
