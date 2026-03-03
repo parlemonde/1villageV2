@@ -18,7 +18,7 @@ export const students = pgTable(
                 onDelete: 'cascade',
             })
             .notNull(),
-        inviteCode: text('inviteCode'),
+        inviteCode: text('inviteCode').unique(),
     },
     (table) => [index('inviteCode_idx').on(table.inviteCode)],
 );

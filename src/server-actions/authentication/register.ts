@@ -3,6 +3,7 @@
 import { db } from '@server/database';
 import { parentsStudents } from '@server/database/schemas/parents-students';
 import { students } from '@server/database/schemas/students';
+import { userPreferences } from '@server/database/schemas/user-preferences';
 import { users } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { getStringValue } from '@server/lib/get-string-value';
@@ -58,6 +59,7 @@ export async function register(_previousState: ServerActionResponse, formData: F
             },
         });
         await db.update(users).set({ role: 'parent' }).where(eq(users.id, response.user.id));
+        await db.insert(userPreferences).values({ userId: response.user.id, wantsNewsletter: acceptedNewsletter === 'on' });
 
         await db.insert(parentsStudents).values({ parentId: response.user.id, studentId: row.studentId });
     } catch (error) {
