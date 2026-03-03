@@ -1,6 +1,10 @@
 'use client';
 
+import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
+import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
+import type { Classroom } from '@server/database/schemas/classrooms';
+import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';
 
 import styles from './welcome-modal.module.css';
@@ -10,12 +14,15 @@ export interface ProfileData {
     schoolName: string;
     classLevel: string;
     schoolAddress: string;
+    classAlias: string;
 }
 
 interface StepProfileProps {
     profileData: ProfileData;
     onProfileDataChange: (data: ProfileData) => void;
     countryCode: string;
+    user: User;
+    classroom: Classroom;
 }
 
 interface PanelInputProps {
@@ -52,53 +59,96 @@ const PanelInput = ({ label, value, onChange, placeholder, isRequired = false, h
     </div>
 );
 
-export const StepProfile = ({ profileData, onProfileDataChange, countryCode }: StepProfileProps) => {
+export const StepProfile = ({ profileData, onProfileDataChange, countryCode, user, classroom }: StepProfileProps) => {
     const updateField = (field: keyof ProfileData, value: string) => {
         onProfileDataChange({ ...profileData, [field]: value });
     };
 
+    const previewUser: User = {
+        ...user,
+        name: profileData.userName || user.name,
+    };
+
+    const defaultAlias = `La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`;
+
+    const previewClassroom: Classroom = {
+        ...classroom,
+        id: -1,
+        alias: profileData.classAlias || defaultAlias,
+    };
+
     return (
         <div className={styles.stepProfileContainer}>
-            <div className={styles.stepProfileSection}>
-                <h3 className={styles.stepProfileTitle}>{"Professionnel de l'éducation"}</h3>
-                <PanelInput
-                    label="Nom : "
-                    value={profileData.userName}
-                    onChange={(v) => updateField('userName', v)}
-                    placeholder="Entrez votre nom"
-                    isRequired
-                    hasError={!profileData.userName.trim()}
-                />
+            <div className={styles.stepProfileForm}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
+                    <PelicoSearch style={{ width: '4rem', height: 'auto', marginRight: '1rem' }} />
+                </div>
+                <div className={styles.stepProfileSection}>
+                    <h3 className={styles.stepProfileTitle}>{"Professionnel de l'éducation"}</h3>
+                    <PanelInput
+                        label="Nom : "
+                        value={profileData.userName}
+                        onChange={(v) => updateField('userName', v)}
+                        placeholder="Entrez votre nom"
+                        isRequired
+                        hasError={!profileData.userName.trim()}
+                    />
+                </div>
+
+                <div className={styles.stepProfileSection}>
+                    <h3 className={styles.stepProfileTitle}>{'Établissement'}</h3>
+                    <PanelInput
+                        label="École : "
+                        value={profileData.schoolName}
+                        onChange={(v) => updateField('schoolName', v)}
+                        placeholder="Nom de votre école"
+                        isRequired
+                        hasError={!profileData.schoolName.trim()}
+                    />
+                    <PanelInput
+                        label="Niveau de la classe : "
+                        value={profileData.classLevel}
+                        onChange={(v) => updateField('classLevel', v)}
+                        placeholder="Niveau de votre classe"
+                    />
+                    <PanelInput
+                        label="Adresse de l'école : "
+                        value={profileData.schoolAddress}
+                        onChange={(v) => updateField('schoolAddress', v)}
+                        placeholder="Adresse de votre école"
+                        isRequired
+                        hasError={!profileData.schoolAddress.trim()}
+                    />
+                    <div className={styles.panelField} style={{ pointerEvents: 'none' }}>
+                        <label>Pays :</label>
+                        <div style={{ marginLeft: '0.5rem', width: '450px', maxWidth: '100%' }}>
+                            <CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />
+                        </div>
+                    </div>
+                    <PanelInput
+                        label="Alias :"
+                        value={profileData.classAlias}
+                        onChange={(v) => updateField('classAlias', v)}
+                        placeholder={`La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`}
+                    />
+                </div>
             </div>
 
-            <div className={styles.stepProfileSection}>
-                <h3 className={styles.stepProfileTitle}>{'Établissement'}</h3>
-                <PanelInput
-                    label="École : "
-                    value={profileData.schoolName}
-                    onChange={(v) => updateField('schoolName', v)}
-                    placeholder="Nom de votre école"
-                    isRequired
-                    hasError={!profileData.schoolName.trim()}
-                />
-                <PanelInput
-                    label="Niveau de la classe : "
-                    value={profileData.classLevel}
-                    onChange={(v) => updateField('classLevel', v)}
-                    placeholder="Niveau de votre classe"
-                />
-                <PanelInput
-                    label="Adresse de l'école : "
-                    value={profileData.schoolAddress}
-                    onChange={(v) => updateField('schoolAddress', v)}
-                    placeholder="Adresse de votre école"
-                    isRequired
-                    hasError={!profileData.schoolAddress.trim()}
-                />
-                <div className={styles.panelField} style={{ pointerEvents: 'none' }}>
-                    <label>Pays :</label>
-                    <div style={{ marginLeft: '0.5rem', width: '450px', maxWidth: '100%' }}>
-                        <CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />
+            <div className={styles.stepProfilePreview}>
+                <span className={styles.stepProfilePreviewTitle}>Prévisualisation de vos publications :</span>
+                <div className={styles.previewCard}>
+                    <ActivityHeader
+                        activity={{
+                            type: 'libre',
+                            publishDate: new Date().toISOString(),
+                        }}
+                        user={previewUser}
+                        classroom={previewClassroom}
+                        className={styles.previewCardHeader}
+                    />
+                    <div className={styles.previewCardBody}>
+                        <h3 className={styles.previewCardTitle}>Présentation de notre école</h3>
+                        <p className={styles.previewCardText}>........................</p>
                     </div>
                 </div>
             </div>
