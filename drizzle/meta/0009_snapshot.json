@@ -1,5 +1,5 @@
 {
-  "id": "72548be2-fca5-40b1-b37d-23761fb2f6ec",
+  "id": "4ecbec9b-ec3a-45eb-a6b1-8162825b0b90",
   "prevId": "0a09bd61-22c1-4a3e-b481-41d593daa179",
   "version": "7",
   "dialect": "postgresql",
@@ -1135,6 +1135,53 @@
           "tableTo": "classrooms",
           "columnsFrom": [
             "classroomId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "students_inviteCode_unique": {
+          "name": "students_inviteCode_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "inviteCode"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_preferences": {
+      "name": "user_preferences",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wantsNewsletter": {
+          "name": "wantsNewsletter",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_preferences_userId_users_id_fk": {
+          "name": "user_preferences_userId_users_id_fk",
+          "tableFrom": "user_preferences",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
           ],
           "columnsTo": [
             "id"
