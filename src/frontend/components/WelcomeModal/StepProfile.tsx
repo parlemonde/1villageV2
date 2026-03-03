@@ -34,17 +34,21 @@ const PanelInput = ({ label, value, onChange, placeholder, isRequired = false, h
             {label}
             {isRequired && <span style={{ color: 'red' }}>*</span>}
         </label>
-        <input
-            type="text"
-            className={classNames(styles.panelInput, {
+        <div
+            className={classNames(styles.panelInputWrapper, {
                 [styles.panelInputError]: hasError,
                 [styles.panelInputDisabled]: disabled,
             })}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            disabled={disabled}
-        />
+        >
+            <input
+                type="text"
+                className={styles.panelInput}
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                disabled={disabled}
+            />
+        </div>
     </div>
 );
 
