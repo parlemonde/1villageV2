@@ -173,12 +173,12 @@ export const RegisterForm = () => {
             </div>
             <div>
                 <Field
-                    name="confirmPassword"
+                    name="passwordConfirmation"
                     label={t('Confirmation du mot de passe')}
                     input={
                         <Input
-                            id="confirmPassword"
-                            name="confirmPassword"
+                            id="passwordConfirmation"
+                            name="passwordConfirmation"
                             type={showConfirmPassword ? 'text' : 'password'}
                             isFullWidth
                             required
