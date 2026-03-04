@@ -80,7 +80,9 @@ const WorldMap3D = ({ activity = null }: WorldMapProps) => {
 
         const markers = Object.values(classroomsMap)
             .filter((classroom) => classroom !== undefined)
-            .filter((classroom) => classroom.teacherId === activity?.userId)
+            .filter((classroom) => {
+                return activity === null || classroom.teacherId === activity?.userId;
+            })
             .map((classroom) => getClassroomMarker({ classroom, canvas }));
 
         markers.forEach((marker) => {
