@@ -90,6 +90,7 @@ export const GameEngine = ({ rounds, gameId, question, successMessage, errorMess
 
     const goToNextQuestion = () => {
         setShowAnswers(false);
+        setResponses({});
         setIndex(index + 1);
     };
 
