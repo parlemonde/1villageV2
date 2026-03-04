@@ -8,6 +8,7 @@ import { users } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { getStringValue } from '@server/lib/get-string-value';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
+import { updateLocale } from '@server-actions/settings/update-locale';
 import { APIError } from 'better-auth';
 import { count, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
@@ -26,6 +27,7 @@ export async function register(_previousState: ServerActionResponse, formData: F
         const passwordConfirmation = getStringValue(formData.get('passwordConfirmation'));
         const acceptedTerms = getStringValue(formData.get('acceptTerms'));
         const acceptedNewsletter = getStringValue(formData.get('acceptNewsletter'));
+        const locale = getStringValue(formData.get('locale'));
 
         if (!email || !firstName || !lastName || !inviteCode || !password || !passwordConfirmation || !acceptedTerms) {
             return { error: { message: t('Veuillez remplir tous les champs') } };
@@ -62,6 +64,8 @@ export async function register(_previousState: ServerActionResponse, formData: F
         await db.insert(userPreferences).values({ userId: response.user.id, wantsNewsletter: acceptedNewsletter === 'on' });
 
         await db.insert(parentsStudents).values({ parentId: response.user.id, studentId: row.studentId });
+
+        await updateLocale(locale);
     } catch (error) {
         if (error instanceof APIError) {
             // TODO log

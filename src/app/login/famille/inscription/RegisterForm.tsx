@@ -4,10 +4,14 @@ import { Button } from '@frontend/components/ui/Button';
 import { IconButton } from '@frontend/components/ui/Button/IconButton';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
+import { Select } from '@frontend/components/ui/Form/Select';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import type { Language } from '@server/database/schemas/languages';
 import { register } from '@server-actions/authentication/register';
-import { useExtracted } from 'next-intl';
+import { useExtracted, useLocale } from 'next-intl';
 import { useActionState, useState } from 'react';
+import useSWR from 'swr';
 
 import { TermsModal } from './TermsModal';
 
@@ -16,6 +20,8 @@ const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).
 
 export const RegisterForm = () => {
     const t = useExtracted('app.login.famille.inscription');
+    const currentLocale = useLocale();
+
     const [message, formAction] = useActionState(register, {});
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -27,6 +33,7 @@ export const RegisterForm = () => {
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [language, setLanguage] = useState(currentLocale);
 
     const [newsletterAccepted, setNewsletterAccepted] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
@@ -41,6 +48,9 @@ export const RegisterForm = () => {
     const isPasswordValid = password.match(passwordRegex);
     const isPasswordConfirmationValid = password === passwordConfirmation;
     const isFormValid = isEmailValid && isInviteCodeValid && isPasswordValid && isPasswordConfirmationValid && termsAccepted;
+
+    const { data: availableLanguages } = useSWR<Language[]>('/api/languages', jsonFetcher);
+    const languagesOptions = availableLanguages?.map((language) => ({ label: language.labelInLanguage, value: language.code })) ?? [];
 
     const openModal = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -209,6 +219,22 @@ export const RegisterForm = () => {
                     </p>
                 )}
             </div>
+            <Field
+                name="locale"
+                label={t('Langue')}
+                marginBottom="sm"
+                input={
+                    <Select
+                        id="locale"
+                        name="locale"
+                        isFullWidth
+                        placeholder={t('Choisissez une langue')}
+                        value={language}
+                        onChange={(value) => setLanguage(value)}
+                        options={languagesOptions}
+                    />
+                }
+            />
             <Checkbox
                 name="acceptNewsletter"
                 label={t('Accepter de recevoir des nouvelles du projet 1Village')}
