@@ -2,6 +2,7 @@ import type { ContentId, IContentMetadata, IContentStorage, IFileStats, ILibrary
 import { H5pError } from '@lumieducation/h5p-server';
 import { deleteDynamoDBItem, getDynamoDBItem, scanDynamoDB, setDynamoDBItem } from '@server/aws/dynamodb';
 import { deleteFile, getFile, getFileData, listFiles, uploadFile } from '@server/files/file-upload';
+import { logger } from '@server/lib/logger';
 import type { Readable } from 'stream';
 import { v4 } from 'uuid';
 
@@ -12,7 +13,7 @@ const CONTENT_PREFIX = `H5P_Content_`;
 const getStaticStorageKey = (contentId: ContentId, filename: string) => {
     const key = `h5p/content/${contentId}/${filename}`;
     if (key.length > 1024) {
-        console.error(`The key for "${filename}" in content object with id ${contentId} is ${key.length} bytes long, but only 1024 are allowed.`);
+        logger.error(`The key for "${filename}" in content object with id ${contentId} is ${key.length} bytes long, but only 1024 are allowed.`);
         throw new H5pError('content-storage:filename-too-long', { filename }, 400);
     }
     return key;
@@ -29,7 +30,7 @@ export class ContentStorage implements IContentStorage {
             });
             return newContentId;
         } catch (error) {
-            console.error(`Error when adding or updating content in MongoDB: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error when adding or updating content in MongoDB: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('content-storage:add-update-error', {}, 500);
         }
     }
@@ -39,7 +40,7 @@ export class ContentStorage implements IContentStorage {
         try {
             await uploadFile(getStaticStorageKey(contentId, filename), readStream);
         } catch (error) {
-            console.error(`Error while uploading file "${filename}" to storage: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error while uploading file "${filename}" to storage: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError(`content-storage:upload-error`, { filename }, 500);
         }
     }
@@ -49,13 +50,13 @@ export class ContentStorage implements IContentStorage {
             const result = await getDynamoDBItem<unknown>(`${CONTENT_PREFIX}${contentId}`);
             return result !== undefined;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return false;
         }
     }
 
     public async deleteContent(contentId: string): Promise<void> {
-        console.warn(`Deleting content with id ${contentId}.`);
+        logger.warn(`Deleting content with id ${contentId}.`);
         try {
             // 1. Delete all files from the storage
             // S3 batch deletes only work with 1000 files at a time, so we might have to do this in several requests.
@@ -70,7 +71,7 @@ export class ContentStorage implements IContentStorage {
             // 2. Delete the content object from DynamoDB
             await deleteDynamoDBItem(`${CONTENT_PREFIX}${contentId}`);
         } catch (error) {
-            console.error(`There was an error while deleting the content object: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`There was an error while deleting the content object: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('content-storage:deleting-content-error', {}, 500);
         }
     }
@@ -80,7 +81,7 @@ export class ContentStorage implements IContentStorage {
         try {
             await deleteFile(getStaticStorageKey(contentId, filename));
         } catch (error) {
-            console.error(`Error while deleting a file from storage: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error while deleting a file from storage: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('content-storage:deleting-file-error', { filename }, 500);
         }
     }
@@ -91,7 +92,7 @@ export class ContentStorage implements IContentStorage {
             const result = await getFileData(getStaticStorageKey(contentId, filename));
             return result !== null && result.ContentLength > 0;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return false;
         }
     }
@@ -115,7 +116,7 @@ export class ContentStorage implements IContentStorage {
         validateFilename(filename);
 
         if (!contentId) {
-            console.error(`ContentId not set!`);
+            logger.error(`ContentId not set!`);
             throw new H5pError('content-storage:content-not-found', {}, 404);
         }
 
@@ -124,7 +125,7 @@ export class ContentStorage implements IContentStorage {
             rangeStart && rangeEnd ? `bytes=${rangeStart}-${rangeEnd}` : undefined,
         );
         if (!readable) {
-            console.error(`File not found: ${getStaticStorageKey(contentId, filename)}`);
+            logger.error(`File not found: ${getStaticStorageKey(contentId, filename)}`);
             throw new H5pError('content-storage:file-not-found', { contentId, filename }, 404);
         }
 
@@ -175,7 +176,7 @@ export class ContentStorage implements IContentStorage {
             });
             return { asMainLibrary: asMainLibraryResults.length, asDependency: asDependencyResults.length };
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return { asMainLibrary: 0, asDependency: 0 };
         }
     }
@@ -189,7 +190,7 @@ export class ContentStorage implements IContentStorage {
             });
             return result.map((r) => r.key.slice(CONTENT_PREFIX.length));
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return [];
         }
     }
@@ -204,12 +205,11 @@ export class ContentStorage implements IContentStorage {
                 files = files.concat(result.files.map((f) => f.slice(prefix.length)));
             } while (result.nextContinuationToken);
         } catch (error) {
-            console.error(error);
-            console.error(`There was an error while getting list of files from storage.`);
+            logger.error(error);
+            logger.error(`There was an error while getting list of files from storage.`);
             return [];
         }
-        // eslint-disable-next-line no-console
-        console.info(`Found ${files.length} file(s) in storage.`);
+        logger.info(`Found ${files.length} file(s) in storage.`);
         return files;
     }
 }

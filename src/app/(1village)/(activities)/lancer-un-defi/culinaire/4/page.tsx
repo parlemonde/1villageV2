@@ -6,13 +6,13 @@ import { sendToast } from '@frontend/components/Toasts';
 import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { Button } from '@frontend/components/ui/Button';
+import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -93,12 +93,12 @@ export default function LancerUnDefiCulinaireStep4() {
                 <div className={styles.dish}>
                     <div className={styles.dishImage}>
                         {activity?.data?.dish?.imageUrl && (
-                            <Image
-                                src={activity.data.dish.imageUrl}
+                            <ImageViewer
+                                imageUrl={activity.data.dish.imageUrl}
                                 alt={activity.data.dish?.name || ''}
-                                width={200}
-                                height={200}
-                                style={{ objectFit: 'cover' }}
+                                width="200px"
+                                height="200px"
+                                objectFit="cover"
                             />
                         )}
                     </div>

@@ -4,6 +4,7 @@ import { USE_S3 } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { hmac, buf2hex } from '@server/lib/crypto';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import mime from 'mime-types';
 import path from 'node:path';
 import { v4 } from 'uuid';
@@ -38,7 +39,7 @@ export async function getS3UploadParameters(
     const contentType = mime.lookup(key) || undefined;
 
     if (!contentType || (!contentType.startsWith('audio/') && !contentType.startsWith('video/') && !contentType.startsWith('application/'))) {
-        console.error('Invalid file', contentType);
+        logger.error('Invalid file', { contentType });
         throw new Error('Invalid file');
     }
 

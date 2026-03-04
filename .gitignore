@@ -41,6 +41,9 @@ yarn-error.log*
 next-env.d.ts
 .postgres-data
 .dynamodb
+.clickhouse-data
+docker-compose-otel.yml
+otel-collector-config.yaml
 tmp
 server-transcode-videos/target
 

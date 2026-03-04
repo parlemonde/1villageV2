@@ -24,6 +24,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     enigme: PuzzleView,
     indice: HintView,
     reportage: ReportView,
+    histoire: () => null,
     mascotte: MascotView,
     defi: ChallengeView,
     question: QuestionView,

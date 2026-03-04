@@ -1,6 +1,7 @@
 import type { IContentUserData, IContentUserDataStorage, IFinishedUserData, IUser } from '@lumieducation/h5p-server';
 import { H5pError } from '@lumieducation/h5p-server';
 import { deleteDynamoDBItems, getDynamoDBItem, scanDynamoDB, setDynamoDBItem } from '@server/aws/dynamodb';
+import { logger } from '@server/lib/logger';
 
 const USER_DATA_PREFIX = `H5P_UserDataContent_`;
 const getUserDataKey = (contentId: string, dataType: string, subContentId: string, userId: string, contextId?: string | undefined): string =>
@@ -29,7 +30,7 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
             }).then((results) => results.map((row) => row.key));
             await deleteDynamoDBItems(keysToDelete);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -43,7 +44,7 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
             }).then((results) => results.map((row) => row.key));
             await deleteDynamoDBItems(keysToDelete);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -57,7 +58,7 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
             }).then((results) => results.map((row) => row.key));
             await deleteDynamoDBItems(keysToDelete);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -138,7 +139,7 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
             }).then((results) => results.map((row) => row.key));
             await deleteDynamoDBItems(keysToDelete);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('Could not delete finished data');
         }
     }
@@ -152,7 +153,7 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
             }).then((results) => results.map((row) => row.key));
             await deleteDynamoDBItems(keysToDelete);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new H5pError('Could not delete finished data');
         }
     }

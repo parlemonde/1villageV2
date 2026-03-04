@@ -5,6 +5,7 @@ import { db } from '@server/database';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { and, eq } from 'drizzle-orm';
 
@@ -64,7 +65,7 @@ export const createClassroom = async (createClassroom: CreateClassroomArgs): Pro
 
         return {};
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return { error: { message: 'Une erreur est survenue lors de la création de la classe' } };
     }
 };

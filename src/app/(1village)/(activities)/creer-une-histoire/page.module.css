@@ -1,0 +1,47 @@
+.text {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.odd-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.odd-column {
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.odd-image-wrapper {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 1rem;
+    position: relative;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.odd-delete-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+}
+
+.preview-block {
+    padding: 0.5rem;
+    border-radius: 5px;
+    position: relative;
+    min-height: calc(34px + 1rem);
+    margin-bottom: 1rem;
+    padding-right: 2.5rem;
+}
+
+.preview-block-valid {
+    border: 1px dashed #008000;
+}
+
+.preview-block-error {
+    border: 1px dashed var(--warning-color);
+}

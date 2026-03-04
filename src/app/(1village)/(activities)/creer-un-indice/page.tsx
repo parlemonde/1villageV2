@@ -60,7 +60,9 @@ export default function CreerUnIndicePage() {
                         className={styles.themeLink}
                         onClick={() => {
                             onCreateActivity('indice', isPelico, {
+                                content: [],
                                 defaultHint: theme.name,
+                                customHint: '',
                             });
                             router.push('/creer-un-indice/1');
                         }}

@@ -2,6 +2,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { FileData } from '@server/files/files.types';
 import { getBuffer } from '@server/lib/get-buffer';
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import type Stream from 'node:stream';
 import type { ReadableStream } from 'node:stream/web';
 import { Readable } from 'stream';
@@ -26,7 +27,7 @@ export async function getS3File(key: string, range?: string): Promise<Readable |
         }
         return null;
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return null;
     }
 }
@@ -47,7 +48,7 @@ export async function getS3FileData(key: string): Promise<FileData | null> {
         }
         return null;
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return null;
     }
 }
@@ -65,7 +66,7 @@ export async function uploadS3File(key: string, filedata: Buffer | Readable | St
             },
         });
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -76,7 +77,7 @@ export async function deleteS3File(key: string): Promise<void> {
             method: 'DELETE',
         });
     } catch (e) {
-        console.error(e);
+        logger.error(e);
     }
 }
 
@@ -106,7 +107,7 @@ export async function listS3Files(
             nextContinuationToken: data.IsTruncated ? data.NextContinuationToken : undefined,
         };
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return { files: [] };
     }
 }
@@ -150,7 +151,7 @@ export async function listS3Folders(prefix: string): Promise<string[]> {
 
         return Array.from(folders).sort();
     } catch (e) {
-        console.error(e);
+        logger.error(e);
         return [];
     }
 }

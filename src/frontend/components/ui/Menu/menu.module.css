@@ -43,6 +43,12 @@
     color: white;
     width: calc(100% + 16px);
 }
+.menuItem.disabled {
+    pointer-events: none;
+    border-color: var(--grey-300);
+    background-color: var(--grey-200);
+    color: var(--grey-400);
+}
 .menuItemIcon {
     display: flex;
 }
@@ -62,15 +68,6 @@
 .text-right {
     text-align: right;
     justify-content: flex-end;
-}
-
-.disabled {
-    pointer-events: none;
-    border: none;
-    color: var(--grey-500);
-    box-shadow: none;
-    background-color: var(--grey-100);
-    border: 1px solid var(--grey-100);
 }
 
 .color-secondary {
