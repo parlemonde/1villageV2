@@ -1,7 +1,5 @@
 'use client';
 
-import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
-import { getClassroomFromProp } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -13,7 +11,7 @@ import useSWR from 'swr';
 export const VillageContext = createContext<{
     village: Village | undefined;
     usersMap: Partial<Record<string, User>>;
-    classroomsMap: Partial<Record<number, Classroom | ClassroomVillageTeacher>>;
+    classroomsMap: Partial<Record<number, Classroom>>;
     invalidateClassrooms: () => void;
 }>({
     village: undefined,
@@ -28,7 +26,7 @@ interface VillageProviderProps {
 export const VillageProvider = ({ village, children }: React.PropsWithChildren<VillageProviderProps>) => {
     const { data: users } = useSWR<User[]>(village ? `/api/users${serializeToQueryUrl({ villageId: village.id })}` : null, jsonFetcher);
 
-    const { data: classrooms, mutate } = useSWR<Classroom[] | ClassroomVillageTeacher[]>(
+    const { data: classrooms, mutate } = useSWR<Classroom[]>(
         village ? `/api/classrooms${serializeToQueryUrl({ villageId: village.id })}` : null,
         jsonFetcher,
     );
@@ -38,15 +36,8 @@ export const VillageProvider = ({ village, children }: React.PropsWithChildren<V
     }, [mutate]);
 
     const usersMap: Partial<Record<string, User>> = React.useMemo(() => Object.fromEntries(users?.map((user) => [user.id, user]) ?? []), [users]);
-    const classroomsMap: Partial<Record<number, Classroom | ClassroomVillageTeacher>> = React.useMemo(
-        () =>
-            Object.fromEntries(
-                classrooms?.map((classroom) => {
-                    const cls: Classroom | undefined = getClassroomFromProp(classroom);
-                    const classroomId = cls?.id;
-                    return [classroomId, classroom];
-                }) ?? [],
-            ),
+    const classroomsMap: Partial<Record<number, Classroom>> = React.useMemo(
+        () => Object.fromEntries(classrooms?.map((classroom) => [classroom.id, classroom]) ?? []),
         [classrooms],
     );
 
