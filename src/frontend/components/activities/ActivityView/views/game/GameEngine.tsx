@@ -5,13 +5,13 @@ import { Quiz } from '@frontend/components/Quiz/Quiz';
 import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
-import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { ImageViewer } from '@frontend/components/ui/ImageViewer/ImageViewer';
 import { Title } from '@frontend/components/ui/Title';
 import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
 import { UserContext } from '@frontend/contexts/userContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { insertGameResponse } from '@server-actions/game-responses/insert-game-responses';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 

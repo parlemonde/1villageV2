@@ -69,7 +69,13 @@ export const Quiz = ({ options, onChange, readonly, responses, showResponses, ..
                 <div key={country} className={styles.flag} style={{ gridColumn: index + 2 /* grid starts at 1 + skip radio column */ }}>
                     <CountryFlag country={country} />
                     <p className={styles.flagDescription}>
-                        {responses?.[country]?.length ?? 0} {responses?.[country]?.length === 1 ? tCommon('réponse') : tCommon('réponses')}
+                        {showResponses ? (
+                            <>
+                                {responses?.[country]?.length ?? 0} {responses?.[country]?.length === 1 ? tCommon('réponse') : tCommon('réponses')}
+                            </>
+                        ) : (
+                            '?'
+                        )}
                     </p>
                 </div>
             ))}
