@@ -6,6 +6,7 @@ import { getTeacherClassroom } from '@server/entities/classrooms/get-teacher-cla
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { and, eq, isNull, desc } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 
 import { MyActivities } from './my-activities';
 
@@ -16,6 +17,10 @@ export default async function MyClassroom() {
     if (!user || !village) {
         // Login redirection is handled by the parent layout
         return null;
+    }
+
+    if (user.role === 'parent') {
+        redirect('/');
     }
 
     const allActivities = (await db

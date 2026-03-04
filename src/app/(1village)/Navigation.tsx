@@ -26,33 +26,41 @@ import useSWR from 'swr';
 
 import styles from './navigation.module.css';
 
-const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode, isPelico?: boolean): MenuItem[] => [
-    {
-        icon: <HomeIcon />,
-        label: 'Accueil',
-        href: '/',
-        isActive: firstPath === '',
-        onClick,
-    },
-    {
-        icon: avatar || <AvatarIcon />,
-        label: isPelico ? 'Activités de Pélico' : 'Nos activités',
-        href: '/my-activities',
-        isActive: firstPath === 'my-activities',
-        onClick,
-    },
-    ...(isPelico
-        ? [
-              {
-                  icon: <FreeContentIcon />,
-                  label: 'Publier un contenu libre',
-                  href: '/contenu-libre',
-                  isActive: firstPath === 'contenu-libre',
-                  onClick,
-              },
-          ]
-        : []),
-];
+const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode, role?: string): MenuItem[] => {
+    const isPelico = role === 'admin' || role === 'mediator';
+    const isParent = role === 'parent';
+    return [
+        {
+            icon: <HomeIcon />,
+            label: 'Accueil',
+            href: '/',
+            isActive: firstPath === '',
+            onClick,
+        },
+        ...(!isParent
+            ? [
+                  {
+                      icon: avatar || <AvatarIcon />,
+                      label: isPelico ? 'Activités de Pélico' : 'Nos activités',
+                      href: '/my-activities',
+                      isActive: firstPath === 'my-activities',
+                      onClick,
+                  },
+              ]
+            : []),
+        ...(isPelico
+            ? [
+                  {
+                      icon: <FreeContentIcon />,
+                      label: 'Publier un contenu libre',
+                      href: '/contenu-libre',
+                      isActive: firstPath === 'contenu-libre',
+                      onClick,
+                  },
+              ]
+            : []),
+    ];
+};
 
 const getActivityMenuItem = (
     type: ActivityType,
@@ -133,9 +141,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         ))}
                 </div>
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
-                    <Menu items={getMenuItems(firstPath, undefined, avatar, isPelico)} />
+                    <Menu items={getMenuItems(firstPath, undefined, avatar, user.role)} />
                 </div>
-                {activityMenuItems.length > 0 && (
+                {user.role !== 'parent' && activityMenuItems.length > 0 && (
                     <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
                         <Menu items={activityMenuItems} />
                     </div>
@@ -212,7 +220,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                             onClose();
                         },
                         avatar,
-                        isPelico,
+                        user.role,
                     ),
                     ...activityMenuItems,
                     ...(user?.role === 'admin'
