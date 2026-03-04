@@ -23,16 +23,12 @@ export type ClassroomVillageTeacher = {
     teacherName: string | null;
 };
 
-const getVillageClassroomsWithVillage = async (villageId: number | null): Promise<ClassroomVillageTeacher[]> => {
-    const query = db
+const getVillageClassroomsWithVillage = async (): Promise<ClassroomVillageTeacher[]> => {
+    return await db
         .select({ classroom: classrooms, villageName: villages?.name, teacherName: users.name })
         .from(classrooms)
         .leftJoin(villages, eq(villages.id, classrooms.villageId))
         .leftJoin(users, eq(users.id, classrooms.teacherId));
-
-    if (villageId !== null) query.where(eq(classrooms.villageId, villageId));
-
-    return await query;
 };
 
 const getVillageClassrooms = async (villageId: number): Promise<Classroom[]> => {
@@ -58,17 +54,9 @@ const getAllClassrooms = async (): Promise<Classroom[]> => {
     return await db.select().from(classrooms).orderBy(classrooms.id);
 };
 
-const buildQuery = async (
-    villageId: number | null,
-    country: string | null,
-    withVillage: boolean,
-    classroomId: number | null,
-): Promise<Classroom[] | ClassroomVillageTeacher[]> => {
+const buildQuery = async (villageId: number | null, country: string | null, classroomId: number | null): Promise<Classroom[]> => {
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
-    }
-    if (withVillage) {
-        return await getVillageClassroomsWithVillage(null);
     }
     if (villageId) {
         return await getVillageClassrooms(villageId);
@@ -84,6 +72,7 @@ const buildQuery = async (
 
 export const GET = async ({ nextUrl }: NextRequest) => {
     const user = await getCurrentUser();
+    let result;
 
     if (!user) {
         return new NextResponse(null, { status: 401 });
@@ -94,6 +83,10 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 403 });
     }
 
-    const result = await buildQuery(villageId, country, withVillage, classroomId);
+    if (withVillage) {
+        result = await getVillageClassroomsWithVillage();
+    } else {
+        result = await buildQuery(villageId, country, classroomId);
+    }
     return NextResponse.json(result);
 };

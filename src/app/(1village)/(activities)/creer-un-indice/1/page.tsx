@@ -12,7 +12,6 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
-import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -77,21 +76,9 @@ export default function CreerUnIndiceStep1() {
                 value={activity.data?.defaultHint || CUSTOM_HINT_VALUE}
                 onChange={(newValue) => {
                     if (newValue === CUSTOM_HINT_VALUE) {
-                        setActivity({
-                            data: {
-                                content: activity.data?.content ?? [],
-                                defaultHint: '',
-                                customHint: '',
-                            },
-                        });
+                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: undefined, customHint: '' } });
                     } else {
-                        setActivity({
-                            data: {
-                                content: activity.data?.content ?? [],
-                                defaultHint: newValue,
-                                customHint: activity.data?.customHint ?? '',
-                            },
-                        });
+                        setActivity({ type: 'indice', ...activity, data: { ...activity.data, defaultHint: newValue } });
                     }
                 }}
             />
@@ -107,13 +94,7 @@ export default function CreerUnIndiceStep1() {
                         marginY="md"
                         value={activity.data?.customHint || ''}
                         onChange={(e) => {
-                            setActivity({
-                                data: {
-                                    content: activity.data?.content ?? [],
-                                    defaultHint: activity.data?.defaultHint ?? '',
-                                    customHint: e.target.value,
-                                },
-                            });
+                            setActivity({ type: 'indice', ...activity, data: { ...activity.data, customHint: e.target.value } });
                         }}
                     />
                 </>
@@ -124,7 +105,7 @@ export default function CreerUnIndiceStep1() {
                             key={activity.id}
                             activity={activity}
                             user={usersMap[activity.userId]}
-                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                            classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
                         />
                     ))}
                     {activities.length === 0 && (
