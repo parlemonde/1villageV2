@@ -222,7 +222,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                         avatar,
                         user.role,
                     ),
-                    ...activityMenuItems,
+                    ...(user.role !== 'parent' ? activityMenuItems : []),
                     ...(user?.role === 'admin'
                         ? [
                               {
