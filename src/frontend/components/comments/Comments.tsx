@@ -126,13 +126,15 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     <p>{t("Aucune réaction n'a été publiée pour le moment")}</p>
                 )}
             </div>
-            <div className={styles.editorContainer}>
-                <div className={styles.editor}>
-                    <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
-                    <HtmlEditor content={content} onChange={setContent} />
-                    <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+            {user.role !== 'parent' && (
+                <div className={styles.editorContainer}>
+                    <div className={styles.editor}>
+                        <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
+                        <HtmlEditor content={content} onChange={setContent} />
+                        <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+                    </div>
                 </div>
-            </div>
+            )}
 
             <Modal
                 isOpen={isDeleteModalOpen}

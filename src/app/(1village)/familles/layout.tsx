@@ -6,13 +6,18 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { ClassroomPreferences } from '@server/database/schemas/classroom-preferences';
 import type { Student } from '@server/database/schemas/students';
+import { redirect } from 'next/navigation';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
 import { useDefaultParentInvitationMessage } from './3/page';
 
 export default function FamillesLayout({ children }: { children: React.ReactNode }) {
-    const { classroom } = useContext(UserContext);
+    const { user, classroom } = useContext(UserContext);
+
+    if (user?.role !== 'teacher') {
+        redirect('/');
+    }
 
     const { data: students, isLoading: isLoadingStudents } = useSWR<Student[]>('/api/students', jsonFetcher, { keepPreviousData: true });
     const { data: preferences, isLoading: isLoadingPreferences } = useSWR<Partial<ClassroomPreferences>>(

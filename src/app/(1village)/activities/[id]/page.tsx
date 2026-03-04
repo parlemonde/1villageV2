@@ -4,10 +4,7 @@ import { Link } from '@frontend/components/ui/Link';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { db } from '@server/database';
-import { activities } from '@server/database/schemas/activities';
-import type { Activity } from '@server/database/schemas/activities';
-import { eq, isNotNull, and } from 'drizzle-orm';
+import { getActivity } from '@server-actions/activities/get-activity';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -27,12 +24,8 @@ const getActivityId = (param: string) => {
 
 export default async function ActivityPage({ params }: ServerPageProps) {
     const activityId = getActivityId((await params).id);
-    const activity =
-        activityId !== null
-            ? ((await db.query.activities.findFirst({
-                  where: and(eq(activities.id, activityId), isNotNull(activities.publishDate)),
-              })) as Activity | undefined)
-            : undefined;
+
+    const activity = await getActivity(activityId);
 
     if (!activity) {
         notFound();
