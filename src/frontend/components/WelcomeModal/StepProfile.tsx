@@ -2,6 +2,8 @@
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
+import Map2D from '@frontend/components/worldMaps/WorldMap2D/WorldMap2D';
+import type { Coordinates } from '@frontend/components/worldMaps/world-map.types';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
@@ -15,6 +17,7 @@ export interface ProfileData {
     classLevel: string;
     schoolAddress: string;
     classAlias: string;
+    coordinates?: Coordinates;
 }
 
 interface StepProfileProps {
@@ -151,6 +154,15 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         <p className={styles.previewCardText}>........................</p>
                     </div>
                 </div>
+                {!classroom.coordinates && (
+                    <div style={{ marginTop: '1rem' }}>
+                        <span className={styles.stepProfilePreviewTitle}>Est-ce que votre école est bien placée ?</span>
+                        <Map2D
+                            coordinates={profileData.coordinates}
+                            setCoordinates={(coords) => onProfileDataChange({ ...profileData, coordinates: coords })}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     );
