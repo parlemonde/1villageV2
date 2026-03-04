@@ -20,7 +20,7 @@ export const GameCard = ({ activity, onEdit, onDelete, shouldDisableButtons }: A
             {onEdit || onDelete ? (
                 <>
                     {onEdit && <Button color="secondary" variant="contained" onClick={onEdit} label={tCommon('Modifier')} />}
-                    {onDelete && <Button color="error" variant="contained" onClick={onDelete} label={tCommon('Supprimer')} />}
+                    {onDelete && <Button color="error" variant="contained" onClick={onDelete} label={tCommon('Supprimer')} marginLeft="sm" />}
                 </>
             ) : (
                 <Button
