@@ -1,5 +1,5 @@
 import type { ThemeName } from '@frontend/components/activities/enigme-constants';
-import type { AnyContent, Content } from '@frontend/components/content/content.types';
+import type { AnyContent } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
 export type FreeActivity = {
@@ -88,9 +88,9 @@ type TaleElement = {
 type HintActivity = {
     type: 'indice';
     data: {
-        content: Content;
-        customHint: string;
-        defaultHint: string;
+        defaultHint?: string;
+        customHint?: string;
+        content?: AnyContent[];
     } | null;
 };
 
