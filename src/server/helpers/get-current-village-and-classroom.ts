@@ -15,10 +15,10 @@ const getNumber = (value: string | undefined) => {
 };
 
 export const getCurrentVillageAndClassroomForUser = cache(
-    async (user: User): Promise<{ village: Village | undefined; classroom: Classroom | undefined }> => {
+    async (user: User, classroomId?: number): Promise<{ village: Village | undefined; classroom: Classroom | undefined }> => {
         switch (user.role) {
             case 'teacher': {
-                const classroom = await getTeacherClassroom(user.id);
+                const classroom = await getTeacherClassroom(user.id, classroomId);
                 if (classroom) {
                     return {
                         village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
