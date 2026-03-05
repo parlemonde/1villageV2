@@ -67,6 +67,9 @@ export const FirstPhase = () => {
                 level: profileData.classLevel.trim(),
                 address: profileData.schoolAddress.trim(),
                 alias: profileData.classAlias.trim() || null,
+                ...(profileData.coordinates && {
+                    coordinates: { latitude: profileData.coordinates.lat, longitude: profileData.coordinates.lng },
+                }),
             });
             if (classroomError) {
                 sendToast({ message: classroomError.message, type: 'error' });
