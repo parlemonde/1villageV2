@@ -3,6 +3,7 @@
 import { isGestureGame } from '@app/(1village)/(activities)/creer-un-jeu/mimique/helpers';
 import { GESTURE_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/mimique/validators';
 import { sendToast } from '@frontend/components/Toasts';
+import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { GamePreviewCard } from '@frontend/components/activities/game/GamePreviewCard';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -63,13 +64,14 @@ export default function CreerUnJeuMimiqueStep4() {
                 });
 
                 return (
-                    <GamePreviewCard
-                        key={index}
-                        label={gesture.origin}
-                        videoUrl={gesture.videoUrl}
-                        options={options}
+                    <ActivityStepPreview
+                        key={gesture.stepId}
+                        stepName={[t('1ère mimique'), t('2ème mimique'), t('3ème mimique')][index]}
                         href={`/creer-un-jeu/mimique/${gesture.stepId}`}
-                    />
+                        status={GESTURE_GAME_STEPS_VALIDATORS.isGestureFormValid(activity, index + 1) ? 'success' : 'warning'}
+                    >
+                        <GamePreviewCard label={gesture.origin} videoUrl={gesture.videoUrl} options={options} />
+                    </ActivityStepPreview>
                 );
             });
     };
