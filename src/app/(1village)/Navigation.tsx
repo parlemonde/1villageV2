@@ -16,12 +16,14 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
 
+import { ClassroomSelect } from './ClassroomSelect';
 import styles from './navigation.module.css';
 
 const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode, isPelico?: boolean): MenuItem[] => [
@@ -144,8 +146,9 @@ export const Navigation = () => {
 
 interface NavigationMobileMenuProps {
     onClose: () => void;
+    classrooms?: Classroom[];
 }
-export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
+export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMenuProps) => {
     const { user, classroom } = useContext(UserContext);
     const [phase] = usePhase();
     const classroomCountryCode = classroom?.countryCode;
@@ -245,8 +248,17 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                               },
                           ]
                         : []),
+                ]}
+            />
+            {classrooms && (
+                <>
+                    <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: '16px' }} />
+                    <ClassroomSelect classrooms={classrooms} className={styles.classroomSelect} />
+                </>
+            )}
+            <MobileMenu
+                items={[
                     {
-                        hasSeparatorTop: true,
                         icon: <ExitIcon />,
                         label: 'Se déconnecter',
                         textAlign: 'center',
