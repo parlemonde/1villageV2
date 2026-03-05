@@ -52,7 +52,9 @@ export const Header = () => {
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </Link>
-                    {classrooms && classrooms.length > 1 && <ClassroomSelect marginLeft="md" classrooms={classrooms} />}
+                    {classrooms && classrooms.length > 1 && (
+                        <ClassroomSelect className={styles.classroomSelect} marginLeft="md" classrooms={classrooms} />
+                    )}
                     {user?.role === 'teacher' && (
                         <div className={styles.teacherButtonContainer}>
                             <Button
@@ -91,7 +93,7 @@ export const Header = () => {
             </header>
             {isOpen && (
                 <BackDrop onClick={() => setIsOpen(false)}>
-                    <NavigationMobileMenu onClose={() => setIsOpen(false)} />
+                    <NavigationMobileMenu classrooms={classrooms} onClose={() => setIsOpen(false)} />
                 </BackDrop>
             )}
         </div>

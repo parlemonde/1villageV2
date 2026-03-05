@@ -15,9 +15,10 @@ import { useContext, useState } from 'react';
 
 interface ClassroomSelectProps extends MarginProps, PaddingProps {
     classrooms: Classroom[];
+    className?: string;
 }
 
-export const ClassroomSelect = ({ classrooms, ...props }: ClassroomSelectProps) => {
+export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSelectProps) => {
     const router = useRouter();
     const t = useExtracted('app.(1village)');
     const tCommon = useExtracted('common');
@@ -77,6 +78,7 @@ export const ClassroomSelect = ({ classrooms, ...props }: ClassroomSelectProps) 
         <>
             {isLoading && <Loader isLoading />}
             <Select
+                className={className}
                 {...props}
                 placeholder={t('Sélectionner une classe')}
                 options={classroomOptions}
