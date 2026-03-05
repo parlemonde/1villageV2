@@ -11,11 +11,16 @@ import { UserContext } from '@frontend/contexts/userContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import FamilyIcon from '@frontend/svg/navigation/family.svg';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { logout } from '@server-actions/authentication/logout';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
+import useSWR from 'swr';
 
+import { ClassroomSelect } from './ClassroomSelect';
 import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
 
@@ -23,6 +28,11 @@ export const Header = () => {
     const { user } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
     const tCommon = useExtracted('common');
+
+    const { data: classrooms } = useSWR<Classroom[]>(
+        user.role === 'teacher' ? `/api/classrooms${serializeToQueryUrl({ teacherId: user?.id })}` : undefined,
+        jsonFetcher,
+    );
 
     return (
         <div className={styles.headerContainer}>
@@ -42,6 +52,7 @@ export const Header = () => {
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </Link>
+                    {classrooms && classrooms.length > 1 && <ClassroomSelect marginLeft="md" classrooms={classrooms} />}
                     {user?.role === 'teacher' && (
                         <div className={styles.teacherButtonContainer}>
                             <Button

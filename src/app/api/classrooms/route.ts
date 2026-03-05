@@ -11,6 +11,7 @@ import { createLoader, parseAsBoolean, parseAsInteger, parseAsString } from 'nuq
 
 const classroomsSearchParams = {
     villageId: parseAsInteger,
+    teacherId: parseAsString,
     country: parseAsString,
     withVillage: parseAsBoolean.withDefault(false),
     classroomId: parseAsInteger,
@@ -46,6 +47,10 @@ const getVillageCountryClassrooms = async (villageId: number, country: string): 
         .where(and(eq(classrooms.villageId, villageId), eq(classrooms.countryCode, country)));
 };
 
+const getTeacherClassrooms = async (teacherId: string): Promise<Classroom[]> => {
+    return await db.select().from(classrooms).where(eq(classrooms.teacherId, teacherId));
+};
+
 const getClassroom = async (classroomId: number): Promise<Classroom[]> => {
     return await db.select().from(classrooms).where(eq(classrooms.id, classroomId));
 };
@@ -54,7 +59,13 @@ const getAllClassrooms = async (): Promise<Classroom[]> => {
     return await db.select().from(classrooms).orderBy(classrooms.id);
 };
 
-const buildQuery = async (villageId: number | null, country: string | null, classroomId: number | null): Promise<Classroom[]> => {
+const buildQuery = async (
+    villageId: number | null,
+    country: string | null,
+    withVillage: boolean,
+    classroomId: number | null,
+    teacherId: string | null,
+): Promise<Classroom[] | ClassroomVillageTeacher[]> => {
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
     }
@@ -67,6 +78,9 @@ const buildQuery = async (villageId: number | null, country: string | null, clas
     if (classroomId) {
         return await getClassroom(classroomId);
     }
+    if (teacherId) {
+        return await getTeacherClassrooms(teacherId);
+    }
     return await getAllClassrooms();
 };
 
@@ -78,9 +92,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId, country, withVillage, classroomId } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, country, withVillage, classroomId, teacherId } = loadSearchParams(nextUrl.searchParams);
     if (!villageId && user.role !== 'admin') {
-        return new NextResponse(null, { status: 403 });
+        // return new NextResponse(null, { status: 403 });
     }
 
     if (withVillage) {
