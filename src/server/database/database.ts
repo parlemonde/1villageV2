@@ -6,6 +6,7 @@ import { Pool } from 'pg';
 
 import { activities } from './schemas/activities';
 import { phaseActivityTypes } from './schemas/activity-types';
+import { activityVisibility } from './schemas/activity-visibility';
 import { auth_sessions, auth_accounts, auth_verifications } from './schemas/auth-schemas';
 import { classrooms } from './schemas/classrooms';
 import { comments } from './schemas/comments';
@@ -30,6 +31,7 @@ export const db = registerService('db', () =>
             languages,
             villages,
             activities,
+            activityVisibility,
             students,
             medias,
             sessions,

@@ -1,0 +1,17 @@
+.table {
+    border-collapse: collapse;
+    border: 1px solid var(--grey-300);
+    width: 100%;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.table td {
+    padding: 16px;
+    border-top: 1px solid var(--grey-300);
+}
+
+.table th {
+    padding: 16px;
+    border-bottom: 1px solid var(--grey-300);
+}
