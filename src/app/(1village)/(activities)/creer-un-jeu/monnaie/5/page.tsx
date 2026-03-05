@@ -3,6 +3,7 @@
 import { isCurrencyGame } from '@app/(1village)/(activities)/creer-un-jeu/monnaie/helpers';
 import { CURRENCY_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/monnaie/validators';
 import { sendToast } from '@frontend/components/Toasts';
+import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { GamePreviewCard } from '@frontend/components/activities/game/GamePreviewCard';
 import { Button } from '@frontend/components/ui/Button';
 import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
@@ -65,13 +66,14 @@ export default function CreerUnJeuMonnaieStep5() {
                 });
 
                 return (
-                    <GamePreviewCard
-                        key={index}
-                        label={obj.name}
-                        imageUrl={obj.imageUrl}
-                        options={options}
+                    <ActivityStepPreview
+                        key={obj.stepId}
+                        stepName={[t('Objet 1'), t('Objet 2'), t('Objet 3')][index]}
                         href={`/creer-un-jeu/monnaie/${obj.stepId}`}
-                    />
+                        status={CURRENCY_GAME_STEPS_VALIDATORS.isObjectStepValid(activity, index + 1) ? 'success' : 'warning'}
+                    >
+                        <GamePreviewCard label={obj.name} imageUrl={obj.imageUrl} options={options} />
+                    </ActivityStepPreview>
                 );
             });
     };
@@ -110,6 +112,15 @@ export default function CreerUnJeuMonnaieStep5() {
                 {t('Pré-visualisez votre jeu et publiez-le')}
             </Title>
             <p>{tCommon('Relisez votre publication une dernière fois avant de la publier !')}</p>
+            <ActivityStepPreview
+                key={1}
+                stepName={activity.data?.currency ? CURRENCIES[activity.data.currency] : t('Monnaie')}
+                href="/creer-un-jeu/monnaie/1"
+                status={CURRENCY_GAME_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning'}
+                style={{ marginTop: '16px' }}
+            >
+                {activity.data.currency}
+            </ActivityStepPreview>
             <div className={styles.gamePreview}>{renderGameCards()}</div>
             <div className={styles.buttonsContainer}>
                 <Button as="a" href="/creer-un-jeu/monnaie/4" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
