@@ -2,6 +2,7 @@ import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { ActivitySidePanel } from './ActivitySidePanel';
@@ -19,13 +20,17 @@ export default async function VillageLayout({
     if (!user) {
         redirect('/login');
     }
-    const { village, classroom } = await getCurrentVillageAndClassroomForUser(user);
+
+    const cookieStore = await cookies();
+    const selectedClassroomIdStr = cookieStore.get('classroomId')?.value;
+    const selectedClassroomId = selectedClassroomIdStr ? Number(selectedClassroomIdStr) : undefined;
+    const { village, classroom } = await getCurrentVillageAndClassroomForUser(user, selectedClassroomId);
     return (
         <UserProvider initialUser={user} initialClassroom={classroom}>
-            <VillageProvider village={village}>
+            <VillageProvider initialVillage={village}>
                 <Header />
                 <div className={styles.rootLayout}>
-                    {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
+                    {village && <Navigation />}
                     <div className={styles.content}>
                         {village && <Phases />}
                         <main className={styles.main}>{children}</main>

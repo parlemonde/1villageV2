@@ -7,25 +7,28 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
-import React, { createContext, useCallback, useMemo } from 'react';
+import React, { createContext, useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
 export const VillageContext = createContext<{
     village: Village | undefined;
+    setVillage: (village: Village | undefined) => void;
     usersMap: Partial<Record<string, User>>;
     classroomsMap: Partial<Record<number, Classroom | ClassroomVillageTeacher>>;
     invalidateClassrooms: () => void;
 }>({
     village: undefined,
+    setVillage: () => {},
     usersMap: {},
     classroomsMap: {},
     invalidateClassrooms: () => {},
 });
 
 interface VillageProviderProps {
-    village: Village | undefined;
+    initialVillage: Village | undefined;
 }
-export const VillageProvider = ({ village, children }: React.PropsWithChildren<VillageProviderProps>) => {
+export const VillageProvider = ({ initialVillage, children }: React.PropsWithChildren<VillageProviderProps>) => {
+    const [village, setVillage] = useState<Village | undefined>(initialVillage);
     const { data: users } = useSWR<User[]>(village ? `/api/users${serializeToQueryUrl({ villageId: village.id })}` : null, jsonFetcher);
 
     const { data: classrooms, mutate } = useSWR<Classroom[] | ClassroomVillageTeacher[]>(
@@ -51,7 +54,7 @@ export const VillageProvider = ({ village, children }: React.PropsWithChildren<V
     );
 
     const value = useMemo(
-        () => ({ village, usersMap, classroomsMap, invalidateClassrooms }),
+        () => ({ village, setVillage, usersMap, classroomsMap, invalidateClassrooms }),
         [village, usersMap, classroomsMap, invalidateClassrooms],
     );
     return <VillageContext.Provider value={value}>{children}</VillageContext.Provider>;

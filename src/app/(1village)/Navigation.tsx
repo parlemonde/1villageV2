@@ -16,13 +16,14 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
-import type { Village } from '@server/database/schemas/villages';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
 import React, { useContext } from 'react';
 import useSWR from 'swr';
 
+import { ClassroomSelect } from './ClassroomSelect';
 import styles from './navigation.module.css';
 
 const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.ReactNode, isPelico?: boolean): MenuItem[] => [
@@ -77,12 +78,9 @@ const getActivityMenuItem = (
     };
 };
 
-interface NavigationProps {
-    village: Village;
-    classroomCountryCode?: string;
-}
-export const Navigation = ({ village, classroomCountryCode }: NavigationProps) => {
+export const Navigation = () => {
     const { user, classroom } = useContext(UserContext);
+    const { village } = useContext(VillageContext);
     const [phase] = usePhase();
     const pathname = usePathname();
     const { getActivityLabel } = useActivityName();
@@ -106,7 +104,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
 
     const activityMenuItems = activityTypes
         .map((type) => {
-            const hasVillageReachedPhase = !!(phase && village.activePhase >= phase);
+            const hasVillageReachedPhase = !!(phase && village?.activePhase && village.activePhase >= phase);
             const activityLabel = getActivityLabel(type as ActivityType);
             const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
             const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
@@ -119,9 +117,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
             <div className={styles.stickyContent}>
                 <div className={classNames(styles.navigationCard, styles.navigationCardTitle)}>
                     <strong>Village-monde</strong>
-                    {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
-                    {village.countries
-                        .filter((country) => country !== classroomCountryCode)
+                    {classroom?.countryCode && <CountryFlag country={classroom.countryCode} />}
+                    {village?.countries
+                        .filter((country) => country !== classroom?.countryCode)
                         .map((country, index) => (
                             <CountryFlag
                                 key={village.activePhase === 1 ? `mistery-${index}` : country}
@@ -148,8 +146,9 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
 
 interface NavigationMobileMenuProps {
     onClose: () => void;
+    classrooms?: Classroom[];
 }
-export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => {
+export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMenuProps) => {
     const { user, classroom } = useContext(UserContext);
     const [phase] = usePhase();
     const classroomCountryCode = classroom?.countryCode;
@@ -249,8 +248,17 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                               },
                           ]
                         : []),
+                ]}
+            />
+            {classrooms && (
+                <>
+                    <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: '16px' }} />
+                    <ClassroomSelect classrooms={classrooms} className={styles.classroomSelect} />
+                </>
+            )}
+            <MobileMenu
+                items={[
                     {
-                        hasSeparatorTop: true,
                         icon: <ExitIcon />,
                         label: 'Se déconnecter',
                         textAlign: 'center',
