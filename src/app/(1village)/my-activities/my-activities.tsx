@@ -6,7 +6,7 @@ import { getActivityLastPageUrl } from '@frontend/components/activities/activiti
 import { Modal } from '@frontend/components/ui/Modal';
 import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
-import { setToLocalStorage } from '@frontend/hooks/useLocalStorage/local-storage';
+import { setToSessionStorage } from '@frontend/hooks/useSessionStorage';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -43,7 +43,7 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         user={user}
                         classroom={classroom}
                         onEdit={() => {
-                            setToLocalStorage('activity', activity);
+                            setToSessionStorage('activity', activity);
                             router.push(activity.draftUrl || '/contenu-libre/3');
                         }}
                         onDelete={() => {
@@ -64,7 +64,7 @@ export const MyActivities = ({ activities, user, classroom }: MyActivitiesProps)
                         user={user}
                         classroom={classroom}
                         onEdit={() => {
-                            setToLocalStorage('activity', activity);
+                            setToSessionStorage('activity', activity);
                             const theme = activity.type === 'jeu' ? activity.data?.theme : undefined;
                             const route = getActivityLastPageUrl(activity.type, theme);
                             router.push(route);
