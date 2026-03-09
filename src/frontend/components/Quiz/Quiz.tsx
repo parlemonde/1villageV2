@@ -9,7 +9,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import classNames from 'clsx';
 import { useExtracted } from 'next-intl';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import styles from './quiz.module.css';
 
@@ -38,11 +38,14 @@ export const Quiz = ({ options, onChange, readonly, responses, showResponses, ..
     const [checkedAnswers, setCheckedAnswers] = useState<string[]>([]);
     const [isRight, setIsRight] = useState(false);
 
-    // useMemo to avoid re-shuffle on each render
-    const shuffledOptions = useMemo(() => {
+    const [shuffledOptions, setShuffledOptions] = useState(options);
+
+    // Shuffle on mount because Math.random() will run with different results on the server and the client and causes hydration mismatch
+    useEffect(() => {
         const copy = [...options];
         shuffle(copy);
-        return copy;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setShuffledOptions(copy);
     }, [options]);
 
     const onValueChange = (value: string) => {
