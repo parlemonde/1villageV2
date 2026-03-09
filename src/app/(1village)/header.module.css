@@ -100,11 +100,13 @@
     border-right: 1px solid #e0e0e0;
 }
 
-.classroomSelect {
-    @media (max-width: 900px) {
+@media (max-width: 900px) {
+    .classroomSelect {
         width: 270px;
     }
-    @media (max-width: 850px) {
+}
+@media (max-width: 850px) {
+    .classroomSelect {
         display: none;
     }
 }
