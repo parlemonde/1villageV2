@@ -1,7 +1,9 @@
 .card {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 20px;
     justify-content: space-between;
     padding: 16px;
 }
