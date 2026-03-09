@@ -47,11 +47,25 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
         const imgSrc = classroom.avatarUrl || getGravatarUrl(`classroom-${classroom.id}@parlemonde.org`, dimension);
         return classroom.mascotteId && isLink ? (
             <Link href={`/activities/${classroom.mascotteId}`} className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <Image unoptimized={imgSrc.startsWith('https')} alt="Avatar" src={imgSrc} width={dimension} height={dimension} />
+                <Image
+                    unoptimized={imgSrc.startsWith('https')}
+                    alt="Avatar"
+                    src={imgSrc}
+                    width={dimension}
+                    height={dimension}
+                    style={{ objectFit: 'cover' }}
+                />
             </Link>
         ) : (
             <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <Image unoptimized={imgSrc.startsWith('https')} alt="Avatar" src={imgSrc} width={dimension} height={dimension} />
+                <Image
+                    unoptimized={imgSrc.startsWith('https')}
+                    alt="Avatar"
+                    src={imgSrc}
+                    width={dimension}
+                    height={dimension}
+                    style={{ objectFit: 'cover' }}
+                />
             </div>
         );
     }
@@ -59,7 +73,14 @@ export const Avatar = ({ user, classroom, isPelico, size = 'md', isLink = true }
         const imgSrc = user.image || getGravatarUrl(user.email, dimension);
         return (
             <div className={styles.avatar} style={{ width: dimension, height: dimension }}>
-                <Image alt="Avatar" src={imgSrc} width={dimension} height={dimension} unoptimized={imgSrc.startsWith('https')} />
+                <Image
+                    alt="Avatar"
+                    src={imgSrc}
+                    width={dimension}
+                    height={dimension}
+                    unoptimized={imgSrc.startsWith('https')}
+                    style={{ objectFit: 'cover' }}
+                />
             </div>
         );
     }
