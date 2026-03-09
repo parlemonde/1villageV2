@@ -1,6 +1,7 @@
 'use client';
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
+import { UserViews } from '@frontend/components/activities/Reactions/UserViews';
 import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
@@ -62,6 +63,7 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, hasA
                     />
                 </div>
             )}
+            <UserViews activity={activity} />
         </div>
     );
 };
