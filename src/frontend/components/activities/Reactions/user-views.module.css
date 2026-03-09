@@ -1,0 +1,9 @@
+.userViews {
+    display: flex;
+    align-items: center;
+    color: var(--grey-600);
+}
+
+.userViewsIcon {
+    margin-right: 10px;
+}

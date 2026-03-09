@@ -103,9 +103,6 @@ export const Comments = ({ activityId }: CommentsProps) => {
 
     return (
         <>
-            <div className={styles.separator}>
-                <strong>{t('Réaction des pélicopains')}</strong>
-            </div>
             <div className={styles.commentsFeed}>
                 {comments && comments.length > 0 ? (
                     comments?.map((c) => (
