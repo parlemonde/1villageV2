@@ -43,7 +43,7 @@ const updateActivityClassroomViews = async function (activity: Activity) {
     if (shouldUpdateViews) {
         await db
             .update(activities)
-            .set({ views: activity.views?.push(classroom.id) })
+            .set({ views: [...(activity.views ?? []), classroom.id] })
             .where(and(eq(activities.id, activity.id), isNotNull(activities.publishDate)));
     }
 };
