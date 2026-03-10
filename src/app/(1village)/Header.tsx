@@ -53,7 +53,9 @@ export const Header = () => {
                         <span className={styles.title}>1Village</span>
                     </Link>
                     {classrooms && classrooms.length > 1 && (
-                        <ClassroomSelect className={styles.classroomSelect} marginLeft="md" classrooms={classrooms} />
+                        <div className={styles.classroomSelect}>
+                            <ClassroomSelect marginLeft="md" classrooms={classrooms} />
+                        </div>
                     )}
                     {user?.role === 'teacher' && (
                         <div className={styles.teacherButtonContainer}>

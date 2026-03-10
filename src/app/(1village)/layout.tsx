@@ -2,7 +2,7 @@ import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { cookies } from 'next/headers';
+import { getCookie } from '@server-actions/cookies/get-cookie';
 import { redirect } from 'next/navigation';
 
 import { ActivitySidePanel } from './ActivitySidePanel';
@@ -21,8 +21,7 @@ export default async function VillageLayout({
         redirect('/login');
     }
 
-    const cookieStore = await cookies();
-    const selectedClassroomIdStr = cookieStore.get('classroomId')?.value;
+    const selectedClassroomIdStr = await getCookie('classroomId');
     const selectedClassroomId = selectedClassroomIdStr ? Number(selectedClassroomIdStr) : undefined;
     const { village, classroom } = await getCurrentVillageAndClassroomForUser(user, selectedClassroomId);
     return (

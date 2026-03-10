@@ -101,8 +101,8 @@
 }
 
 @media (max-width: 900px) {
-    .classroomSelect {
-        width: 270px;
+    .classroomSelect > button {
+        width: 260px;
     }
 }
 @media (max-width: 850px) {
