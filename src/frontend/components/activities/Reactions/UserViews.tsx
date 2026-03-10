@@ -9,7 +9,7 @@ import React, { useEffect, useContext } from 'react';
 import styles from './user-views.module.css';
 
 interface UserViewsProps {
-    activity: Activity;
+    activity: Partial<Activity>;
 }
 
 export const UserViews: React.FC<UserViewsProps> = ({ activity }) => {
