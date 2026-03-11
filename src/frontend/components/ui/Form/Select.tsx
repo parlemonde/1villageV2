@@ -2,6 +2,7 @@
 
 import { getMarginAndPaddingStyle, type MarginProps } from '@frontend/components/ui/css-styles';
 import ArrowDownIcon from '@frontend/svg/arrowDown.svg';
+import { Cross2Icon } from '@radix-ui/react-icons';
 import classNames from 'clsx';
 import { Select as RadixSelect, ScrollArea } from 'radix-ui';
 import { useState } from 'react';
@@ -22,6 +23,7 @@ export interface SelectProps extends MarginProps {
     placeholder?: string;
     style?: React.CSSProperties;
     hasError?: boolean;
+    hasCross?: boolean;
 }
 
 export const Select = (props: SelectProps) => {
@@ -38,6 +40,7 @@ export const Select = (props: SelectProps) => {
         style = {},
         hasError = false,
         disabled = false,
+        hasCross = false,
         className = '',
         ...marginProps
     } = props;
@@ -45,6 +48,7 @@ export const Select = (props: SelectProps) => {
     const isControlled = 'value' in props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
+    const [key, setKey] = useState(0);
 
     if (selectedValue !== value && isControlled) {
         setSelectedValue(value);
@@ -52,8 +56,17 @@ export const Select = (props: SelectProps) => {
 
     const selectedValueLabel = options.find((option) => option.value === selectedValue)?.label;
 
+    // Radix select doesn't allow an option with empty string value so we re render the component to display the placeholder
+    const clear = () => {
+        if (isControlled) {
+            setKey(key + 1);
+        }
+        onChange?.('');
+    };
+
     return (
         <RadixSelect.Root
+            key={key}
             disabled={disabled}
             value={value}
             onValueChange={(newValue) => {
@@ -75,6 +88,20 @@ export const Select = (props: SelectProps) => {
                 <span className={styles.selectValue}>
                     {selectedValueLabel !== undefined ? selectedValueLabel : <RadixSelect.Value placeholder={placeholder} />}
                 </span>
+                {hasCross && value && (
+                    <Cross2Icon
+                        className={styles.clearIcon}
+                        onPointerDown={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            clear();
+                        }}
+                    />
+                )}
                 <ArrowDownIcon className={styles.selectIcon} />
             </RadixSelect.Trigger>
             <RadixSelect.Portal>
