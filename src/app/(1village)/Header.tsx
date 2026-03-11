@@ -12,7 +12,6 @@ import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import FamilyIcon from '@frontend/svg/navigation/family.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import { logout } from '@server-actions/authentication/logout';
@@ -29,10 +28,7 @@ export const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const tCommon = useExtracted('common');
 
-    const { data: classrooms } = useSWR<Classroom[]>(
-        user.role === 'teacher' ? `/api/classrooms${serializeToQueryUrl({ teacherId: user?.id })}` : undefined,
-        jsonFetcher,
-    );
+    const { data: classrooms } = useSWR<Classroom[]>(user.role === 'teacher' ? `/api/classrooms/me` : undefined, jsonFetcher);
 
     return (
         <div className={styles.headerContainer}>
