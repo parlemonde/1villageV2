@@ -1,10 +1,8 @@
 'use client';
 
-import { IconButton } from '@frontend/components/ui/Button';
 import type { RadioOption } from '@frontend/components/ui/Form/RadioGroup';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { VideoPlayer } from '@frontend/components/ui/VideoPlayer';
-import { Pencil1Icon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
 import styles from './game-preview-card.module.css';
@@ -14,10 +12,9 @@ interface GamePreviewCardProps {
     imageUrl?: string;
     videoUrl?: string;
     options: RadioOption[];
-    href: string;
 }
 
-export const GamePreviewCard = ({ label, imageUrl, videoUrl, options, href }: GamePreviewCardProps) => {
+export const GamePreviewCard = ({ label, imageUrl, videoUrl, options }: GamePreviewCardProps) => {
     if (!label && !imageUrl && options.length === 0) return null;
     return (
         <div className={styles.card}>
@@ -31,7 +28,6 @@ export const GamePreviewCard = ({ label, imageUrl, videoUrl, options, href }: Ga
                 <p>{label}</p>
             </div>
             <RadioGroup readonly options={options} value="true" />
-            <IconButton as="a" href={href} icon={Pencil1Icon} variant="outlined" color="primary" />
         </div>
     );
 };
