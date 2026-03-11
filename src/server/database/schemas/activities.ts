@@ -39,6 +39,9 @@ export const activities = pgTable('activities', {
     responseActivityId: integer('responseActivityId').references((): AnyPgColumn => activities.id, {
         onDelete: 'cascade',
     }),
+    views: integer('views')
+        .array()
+        .default(sql`'{}'::integer[]`), // defaultValue: empty Array []
 });
 
 type InferredActivity = typeof activities.$inferSelect;
