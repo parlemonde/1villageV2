@@ -1,6 +1,4 @@
-import type { ClassroomVillageTeacher } from '@app/api/classrooms/route';
 import { getGravatarUrl } from '@frontend/components/Avatar/Avatar';
-import { getClassroomFromProp } from '@lib/get-classroom';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import { Marker } from 'maplibre-gl';
 import { v4 } from 'uuid';
@@ -10,7 +8,7 @@ import type { Disposable } from './world-map.types';
 interface MarkerSVGProps {
     markerId: string;
     avatarUrl: string;
-    classroom: Classroom | undefined;
+    classroom: Classroom;
 }
 const MarkerSVG = ({
     markerId,
@@ -48,11 +46,11 @@ const MarkerSVG = ({
         <div style="display: flex; align-items: center; gap: 8px">
             <img src="${avatarUrl}" alt="avatar" style="flex-basis: 40px;width: 40px; height: 40px; border-radius: 20px; object-fit: cover;background-color: var(--grey-100);border: 1px solid var(--grey-100);">
             <div>
-                <h2 style="margin: 0; padding: 0;">${classroom?.name}</h2>
+                <h2 style="margin: 0; padding: 0;">${classroom.name}</h2>
                 <div style="display: flex; align-items: center; gap: 8px">
-                    <span style="margin: 0; padding: 0; font-size: 0.75rem; color: #666; line-height: 1.2">${classroom?.address}</span>
+                    <span style="margin: 0; padding: 0; font-size: 0.75rem; color: #666; line-height: 1.2">${classroom.address}</span>
                     <p style="margin: 0; padding: 0; font-size: 0.75rem; color: #666">&middot;</p>
-                    <img alt="${classroom?.countryCode} flag" style="width:auto;height:16px;border-radius:2px;box-shadow:0 0 2px var(--grey-400)" src="/static/country-flags/${classroom?.countryCode?.toLowerCase()}.svg">
+                    <img alt="${classroom.countryCode} flag" style="width:auto;height:16px;border-radius:2px;box-shadow:0 0 2px var(--grey-400)" src="/static/country-flags/${classroom.countryCode.toLowerCase()}.svg">
                 </div>
             </div>
         </div>
@@ -64,14 +62,12 @@ export interface DisposableMarker extends Disposable {
     setClickHandler: (handler: (event: MouseEvent) => void) => void;
 }
 interface GetClassroomMarkerArgs {
-    classroomVT: Classroom | ClassroomVillageTeacher | undefined;
+    classroom: Classroom;
     canvas: HTMLDivElement;
 }
-export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
-    const classroom: Classroom | undefined = getClassroomFromProp(classroomVT);
-
+export const getClassroomMarker = ({ classroom, canvas }: GetClassroomMarkerArgs): DisposableMarker => {
     const markerId = v4();
-    const avatarUrl = classroom?.avatarUrl || getGravatarUrl(`classroom-${classroom?.id}@parlemonde.org`, 40);
+    const avatarUrl = classroom.avatarUrl || getGravatarUrl(`classroom-${classroom.id}@parlemonde.org`, 40);
 
     const el = document.createElement('div');
     el.innerHTML = MarkerSVG({
@@ -84,8 +80,8 @@ export const getClassroomMarker = ({ classroomVT, canvas }: GetClassroomMarkerAr
         anchor: 'bottom',
         offset: [0, 6],
     }).setLngLat({
-        lng: classroom?.coordinates?.longitude || 0,
-        lat: classroom?.coordinates?.latitude || 0,
+        lng: classroom.coordinates?.longitude || 0,
+        lat: classroom.coordinates?.latitude || 0,
     });
     const setPopoverPosition = (popover: HTMLElement) => {
         const popoverBoundingClientRect = popover.getBoundingClientRect();

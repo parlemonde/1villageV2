@@ -12,7 +12,6 @@ import { Title } from '@frontend/components/ui/Title';
 import { ActivityContext } from '@frontend/contexts/activityContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
-import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -107,7 +106,7 @@ export default function CreerUnReportageStep1() {
                             key={activity.id}
                             activity={activity}
                             user={usersMap[activity.userId]}
-                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                            classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
                         />
                     ))}
                     {activities.length === 0 && (

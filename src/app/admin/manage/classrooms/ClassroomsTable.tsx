@@ -6,11 +6,9 @@ import { IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
-import { getClassroomFromProp } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import type { Classroom } from '@server/database/schemas/classrooms';
 import { deleteClassroom } from '@server-actions/classrooms/delete-classroom';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -24,27 +22,20 @@ export function ClassroomsTable() {
         data: classrooms,
         isLoading,
         mutate,
-    } = useSWR<Classroom[] | ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
+    } = useSWR<ClassroomVillageTeacher[]>(`/api/classrooms${serializeToQueryUrl({ withVillage: true })}`, jsonFetcher);
 
-    const classroomToDelete = classrooms?.find((c) => {
-        const id = 'classroom' in c ? c.classroom.id : c.id;
-        return id === classroomToDeleteId;
-    });
+    const classroomToDelete = classrooms?.find((c) => c.classroom.id === classroomToDeleteId);
 
-    const filteredClassrooms = classrooms?.filter((classroom) => {
-        if (classroom === undefined) return false;
-
-        const cls: Classroom | undefined = getClassroomFromProp(classroom);
+    const filteredClassrooms = classrooms?.filter((c) => {
+        const cls = c.classroom;
 
         return (
-            cls?.name.toLowerCase().includes(search.toLowerCase()) ||
-            cls?.address.toLowerCase().includes(search.toLowerCase()) ||
-            cls?.level?.toLowerCase().includes(search.toLowerCase()) ||
-            cls?.alias?.toLowerCase().includes(search.toLowerCase())
+            cls.name.toLowerCase().includes(search.toLowerCase()) ||
+            cls.address.toLowerCase().includes(search.toLowerCase()) ||
+            cls.level?.toLowerCase().includes(search.toLowerCase()) ||
+            cls.alias?.toLowerCase().includes(search.toLowerCase())
         );
     });
-
-    const classroomData: Classroom | undefined = getClassroomFromProp(classroomToDelete);
 
     return (
         <>
@@ -108,16 +99,13 @@ export function ClassroomsTable() {
                     {
                         id: 'actions',
                         header: 'Actions',
-                        accessor: (classroom) => {
-                            const cls: Classroom | undefined = getClassroomFromProp(classroom);
-                            const classroomId = cls?.id;
-
+                        accessor: (classroom: ClassroomVillageTeacher) => {
                             return (
                                 <>
                                     <Tooltip content="Modifier la classe" hasArrow>
                                         <IconButton
                                             as="a"
-                                            href={`/admin/manage/classrooms/${classroomId}`}
+                                            href={`/admin/manage/classrooms/${classroom.classroom.id}`}
                                             variant="borderless"
                                             color="primary"
                                             icon={Pencil1Icon}
@@ -129,7 +117,7 @@ export function ClassroomsTable() {
                                             variant="borderless"
                                             color="error"
                                             icon={TrashIcon}
-                                            onClick={() => setClassroomToDeleteId(classroomId)}
+                                            onClick={() => setClassroomToDeleteId(classroom.classroom.id)}
                                         />
                                     </Tooltip>
                                 </>
@@ -169,7 +157,7 @@ export function ClassroomsTable() {
             >
                 {classroomToDelete !== undefined && (
                     <p>
-                        Êtes-vous sûr de vouloir supprimer la classe <strong>{classroomData?.name}</strong> ?
+                        Êtes-vous sûr de vouloir supprimer la classe <strong>{classroomToDelete?.classroom.name}</strong> ?
                     </p>
                 )}
             </Modal>
