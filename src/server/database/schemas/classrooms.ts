@@ -1,3 +1,4 @@
+import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { pgTable, serial, varchar, integer, jsonb, text, uuid, boolean } from 'drizzle-orm/pg-core';
 
 import { users } from './users';
@@ -22,5 +23,6 @@ export const classrooms = pgTable('classrooms', {
     }),
     countryCode: varchar('countryCode', { length: 2 }).notNull(),
     showOnlyClassroomActivities: boolean('showOnlyClassroomActivities').notNull().default(true),
+    parentInvitationMessage: jsonb('parentInvitationMessage').$type<HtmlEditorContent>(),
 });
 export type Classroom = typeof classrooms.$inferSelect;

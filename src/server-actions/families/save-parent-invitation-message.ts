@@ -1,9 +1,11 @@
 'use server';
+
 import type { ParentInvitationMessageForm } from '@frontend/contexts/familyContext';
 import { db } from '@server/database';
-import { classroomPreferences } from '@server/database/schemas/classroom-preferences';
+import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
+import { eq } from 'drizzle-orm';
 
 export const saveParentInvitationMessage = async (parentInvitationMessage: Partial<ParentInvitationMessageForm>) => {
     const user = await getCurrentUser();
@@ -17,10 +19,9 @@ export const saveParentInvitationMessage = async (parentInvitationMessage: Parti
     }
 
     await db
-        .insert(classroomPreferences)
-        .values({ userId: user.id, classroomId: classroom.id, ...parentInvitationMessage })
-        .onConflictDoUpdate({
-            target: [classroomPreferences.userId, classroomPreferences.classroomId],
-            set: { ...parentInvitationMessage },
-        });
+        .update(classrooms)
+        .set({
+            parentInvitationMessage,
+        })
+        .where(eq(classrooms.id, classroom.id));
 };

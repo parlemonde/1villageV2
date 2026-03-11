@@ -93,7 +93,11 @@ export default function FamillesStep4() {
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    <Checkbox name="all_checkbox" isChecked={checked.length === students.length} onChange={() => checkAll()} />
+                                    <Checkbox
+                                        name="all_checkbox"
+                                        isChecked={checked.length !== 0 && checked.length === students.length}
+                                        onChange={() => checkAll()}
+                                    />
                                 </th>
                                 <th scope="col">{t("Prénom et nom de l'enfant")}</th>
                                 <th scope="col">{t('Accès familles')}</th>

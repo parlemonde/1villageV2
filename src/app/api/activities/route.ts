@@ -2,7 +2,6 @@ import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
-import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
@@ -19,7 +18,6 @@ const activitiesSearchParams = {
     villageId: parseAsInteger, // -1 will mean null village activities
     isPelico: parseAsBoolean,
     countries: parseAsArrayOf(parseAsString),
-    visibility: parseAsStringEnum<'all' | 'visible'>(['all', 'visible']).withDefault('visible'),
 };
 const loadSearchParams = createLoader(activitiesSearchParams);
 
@@ -34,7 +32,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 400 });
     }
 
-    const { activityId, search, phase, villageId, type, isPelico, countries, visibility } = loadSearchParams(nextUrl.searchParams);
+    const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
 
     if (activityId) {
         const result = await db.query.activities.findFirst({
@@ -52,15 +50,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     }
 
     const result = await db
-        .select({
-            activity: { ...activities, isHidden: activityVisibility.isHidden },
-        })
+        .select()
         .from(activities)
-        .innerJoin(activityVisibility, eq(activityVisibility.activityId, activities.id))
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                visibility === 'visible' ? eq(activityVisibility.isHidden, false) : undefined,
                 classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
@@ -78,6 +72,5 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
-    const allActivities = result.map(({ activity }) => activity);
-    return NextResponse.json(allActivities);
+    return NextResponse.json(result);
 };

@@ -4,7 +4,6 @@ import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/Htm
 import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { debounce } from '@frontend/lib/debounce';
-import { saveActivityVisibility } from '@server-actions/families/save-activity-visibility';
 import { saveParentInvitationMessage } from '@server-actions/families/save-parent-invitation-message';
 import { saveStudents } from '@server-actions/families/save-students';
 import { useExtracted } from 'next-intl';
@@ -12,7 +11,6 @@ import { createContext, useCallback, useMemo, useState } from 'react';
 
 export interface ActivityVisibilityForm {
     showOnlyClassroomActivities: boolean;
-    activityVisibilityMap: Record<number, boolean>;
 }
 
 export interface StudentsForm {
@@ -27,12 +25,10 @@ export interface FamilyForm extends ActivityVisibilityForm, StudentsForm, Parent
 
 export const FamilyContext = createContext<{
     form: FamilyForm;
-    setActivitiesVisibility: (formState: Partial<ActivityVisibilityForm>) => Promise<void>;
     setStudents: (formState: Partial<StudentsForm>) => void;
     setParentInvitationMessage: (message: HtmlEditorContent) => void;
 }>({
-    form: { showOnlyClassroomActivities: true, activityVisibilityMap: {}, students: [], parentInvitationMessage: defaultContent },
-    setActivitiesVisibility: () => Promise.resolve(),
+    form: { showOnlyClassroomActivities: true, students: [], parentInvitationMessage: defaultContent },
     setStudents: () => {},
     setParentInvitationMessage: () => {},
 });
@@ -44,7 +40,7 @@ enum SaveState {
 }
 
 let onCancelPreviousPromise: () => void = () => {};
-const onSaveForm = async <T,>(serverAction: (form: Partial<T>) => Promise<void>, form: Partial<T>, setSaveStep: (step: number) => void) => {
+async function onSaveForm<T>(serverAction: (form: Partial<T>) => Promise<void>, form: Partial<T>, setSaveStep: (step: number) => void) {
     onCancelPreviousPromise();
     let cancelled = false;
     onCancelPreviousPromise = () => {
@@ -74,17 +70,15 @@ const onSaveForm = async <T,>(serverAction: (form: Partial<T>) => Promise<void>,
         setSaveStep(SaveState.Idle);
     }
     onCancelPreviousPromise = () => {};
-};
+}
 
 interface FamilyProviderProps {
     showOnlyClassroomActivities: boolean;
-    activityVisibilityMap?: Record<number, boolean>;
     students?: { id?: number; tempId: string; isDeleted?: boolean; firstName: string; lastName: string }[];
     parentInvitationMessage?: HtmlEditorContent;
 }
 export const FamilyProvider = ({
     showOnlyClassroomActivities,
-    activityVisibilityMap = {},
     students = [],
     children,
     parentInvitationMessage = defaultContent,
@@ -93,7 +87,6 @@ export const FamilyProvider = ({
 
     const [formState, setFormState] = useState<FamilyForm>({
         showOnlyClassroomActivities,
-        activityVisibilityMap,
         students,
         parentInvitationMessage,
     });
@@ -115,11 +108,6 @@ export const FamilyProvider = ({
             }, 2000),
         [],
     );
-
-    const setActivitiesVisibility = useCallback(async (formState: Partial<ActivityVisibilityForm>) => {
-        setFormState((prev) => ({ ...prev, ...formState }));
-        await onSaveForm(saveActivityVisibility, formState, setSaveStep);
-    }, []);
 
     const setStudents = useCallback(
         (formState: Partial<StudentsForm>) => {
@@ -143,10 +131,7 @@ export const FamilyProvider = ({
         [onSaveParentInvitationMessage],
     );
 
-    const value = useMemo(
-        () => ({ form: formState, setActivitiesVisibility, setStudents, setParentInvitationMessage }),
-        [formState, setActivitiesVisibility, setStudents, setParentInvitationMessage],
-    );
+    const value = useMemo(() => ({ form: formState, setStudents, setParentInvitationMessage }), [formState, setStudents, setParentInvitationMessage]);
     return (
         <FamilyContext.Provider value={value}>
             {children}
