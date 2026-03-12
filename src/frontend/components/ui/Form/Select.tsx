@@ -48,7 +48,6 @@ export const Select = (props: SelectProps) => {
     const isControlled = 'value' in props;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value);
-    const [key, setKey] = useState(0);
 
     if (selectedValue !== value && isControlled) {
         setSelectedValue(value);
@@ -56,17 +55,12 @@ export const Select = (props: SelectProps) => {
 
     const selectedValueLabel = options.find((option) => option.value === selectedValue)?.label;
 
-    // Radix select doesn't allow an option with empty string value so we re render the component to display the placeholder
     const clear = () => {
-        if (isControlled) {
-            setKey(key + 1);
-        }
         onChange?.('');
     };
 
     return (
         <RadixSelect.Root
-            key={key}
             disabled={disabled}
             value={value}
             onValueChange={(newValue) => {
