@@ -1,0 +1,16 @@
+.reactionsContainer {
+    display: flex;
+    justify-self: start;
+    align-items: center;
+    gap: 8px;
+}
+
+.reactionsContainer .reactionButton {
+    position: relative;
+    background-color: var(--primary-300);
+}
+
+.reactionsContainer .reactionButton.active,
+.reactionsContainer .reactionButton:hover {
+    background-color: var(--primary-500);
+}
