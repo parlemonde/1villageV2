@@ -24,6 +24,7 @@ type ModalProps = {
     hasFooter?: boolean;
     cancelLabel?: string;
     cancelLevel?: 'primary' | 'secondary' | 'error';
+    cancelIsUpperCase?: boolean;
     confirmLabel?: string;
     confirmLevel?: 'primary' | 'secondary' | 'error';
     isConfirmDisabled?: boolean | (() => boolean);
@@ -49,6 +50,7 @@ export const Modal = ({
     hasCancelButton = true,
     cancelLabel = 'Annuler',
     cancelLevel = 'secondary',
+    cancelIsUpperCase = true,
     confirmLabel = 'Valider',
     confirmLevel = 'secondary',
     isConfirmDisabled = false,
@@ -112,6 +114,7 @@ export const Modal = ({
                                     }}
                                     color={cancelLevel}
                                     variant="outlined"
+                                    isUpperCase={cancelIsUpperCase}
                                 ></Button>
                             )}
                             {onConfirm && (
