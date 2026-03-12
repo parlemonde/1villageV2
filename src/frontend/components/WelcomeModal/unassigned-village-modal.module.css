@@ -1,0 +1,8 @@
+.modal {
+    overflow: visible !important;
+}
+
+/* Override overflow on all direct children (notamment le div .content qui a overflow-y: auto) */
+.modal > * {
+    overflow: visible !important;
+}
