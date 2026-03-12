@@ -37,7 +37,7 @@ export const GET = async ({ nextUrl }: NextRequest): Promise<NextResponse<UserCo
         .select()
         .from(comments)
         .innerJoin(users, eq(comments.userId, users.id))
-        .leftJoin(classrooms, eq(classrooms.teacherId, user.id))
+        .leftJoin(classrooms, eq(comments.classroomId, classrooms.id))
         .where(eq(comments.activityId, activityId));
 
     return NextResponse.json(

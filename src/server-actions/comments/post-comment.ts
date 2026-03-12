@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
@@ -16,10 +17,12 @@ export const postComment = async ({ activityId, content }: { activityId: number;
         if (!user) {
             throw new Error('Unauthorized');
         }
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
         const [data] = await db
             .insert(comments)
             .values({
                 activityId: activityId,
+                classroomId: classroom?.id,
                 userId: user.id,
                 content: content,
             })

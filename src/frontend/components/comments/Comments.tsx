@@ -43,6 +43,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
                 content,
                 activityId,
                 userId: user.id,
+                classroomId: classroom?.id ? classroom.id : null,
                 createDate: new Date().toISOString(),
                 updateDate: new Date().toISOString(),
             },
@@ -108,8 +109,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     comments?.map((c) => (
                         <CommentCard
                             key={c.comment.id}
-                            canEdit={user.id === c.user.id}
-                            canDelete={user.id === c.user.id || isPelico}
+                            canEdit={user.id === c.user.id && classroom?.id === c?.classroom?.id}
+                            canDelete={(user.id === c.user.id && classroom?.id === c?.classroom?.id) || isPelico}
                             user={c.user}
                             classroom={c.classroom}
                             comment={c.comment}

@@ -50,15 +50,16 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
     };
 
     const fetchClassroom = async (classroomId: string): Promise<Classroom | null> => {
-        const classroomResponse = await fetch(`/api/classrooms${serializeToQueryUrl({ classroomId: classroomId })}`);
+        const classroomResponse = await fetch(`/api/classrooms/${classroomId}`);
         if (!classroomResponse.ok) {
             sendToast({
                 message: tCommon('Une erreur est survenue'),
                 type: 'error',
             });
+            return null;
         }
-        const [classroom]: Classroom[] = await classroomResponse.json();
-        return classroom;
+
+        return await classroomResponse.json();
     };
 
     const fetchVillage = async (villageId: number): Promise<Village> => {
