@@ -3,7 +3,6 @@
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import { Comments } from '@frontend/components/comments/Comments';
 import { VillageContext } from '@frontend/contexts/villageContext';
-import { getClassroomFromMap } from '@lib/get-classroom';
 import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { useContext } from 'react';
@@ -46,7 +45,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
             <ActivityHeader
                 activity={activity}
                 user={usersMap[activity.userId]}
-                classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
+                classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}

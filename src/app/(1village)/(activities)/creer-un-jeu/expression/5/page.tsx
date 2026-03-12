@@ -3,6 +3,7 @@
 import { isIdiomGame } from '@app/(1village)/(activities)/creer-un-jeu/expression/helpers';
 import { IDIOM_GAME_STEPS_VALIDATORS } from '@app/(1village)/(activities)/creer-un-jeu/expression/validators';
 import { sendToast } from '@frontend/components/Toasts';
+import { ActivityStepPreview } from '@frontend/components/activities/ActivityStepPreview';
 import { GamePreviewCard } from '@frontend/components/activities/game/GamePreviewCard';
 import { Button } from '@frontend/components/ui/Button';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -66,13 +67,14 @@ export default function CreerUnJeuExpressionStep5() {
                 });
 
                 return (
-                    <GamePreviewCard
-                        key={index}
-                        label={idiom.value}
-                        imageUrl={idiom.imageUrl}
-                        options={options}
+                    <ActivityStepPreview
+                        key={idiom.stepId}
+                        stepName={[t('1ère expression'), t('2ème expression'), t('3ème expression')][index]}
                         href={`/creer-un-jeu/expression/${idiom.stepId}`}
-                    />
+                        status={IDIOM_GAME_STEPS_VALIDATORS.isIdiomStepValid(activity, index + 1) ? 'success' : 'warning'}
+                    >
+                        <GamePreviewCard label={idiom.value} imageUrl={idiom.imageUrl} options={options} />
+                    </ActivityStepPreview>
                 );
             });
     };
@@ -111,10 +113,25 @@ export default function CreerUnJeuExpressionStep5() {
                 {t('Pré-visualisez votre jeu et publiez-le')}
             </Title>
             <p>{tCommon('Relisez votre publication une dernière fois avant de la publier !')}</p>
+            <ActivityStepPreview
+                key={1}
+                stepName={language || t('Langue')}
+                href="/creer-un-jeu/expression/1"
+                status={IDIOM_GAME_STEPS_VALIDATORS.isStep1Valid(activity) ? 'success' : 'warning'}
+                style={{ margin: '16px 0' }}
+            >
+                {activity.data.languageKnowledge}
+            </ActivityStepPreview>
             <div className={styles.gamePreview}>{renderGameCards()}</div>
             <div className={styles.buttonsContainer}>
                 <Button as="a" href="/creer-un-jeu/expression/4" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
-                <Button onClick={onSubmit} color="primary" label={tCommon('Publier')} variant="contained" />
+                <Button
+                    onClick={onSubmit}
+                    color="primary"
+                    label={tCommon('Publier')}
+                    variant="contained"
+                    disabled={!IDIOM_GAME_STEPS_VALIDATORS.areAllStepsValid(activity)}
+                />
             </div>
             <Loader isLoading={isSubmitting} />
         </PageContainer>

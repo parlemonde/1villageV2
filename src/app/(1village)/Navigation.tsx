@@ -73,12 +73,7 @@ const getActivityMenuItem = (
         href,
         isActive: firstPath === href.split('/')[1],
         isDisabled: !isActivityEnabled,
-        onClick:
-            firstPath === href.split('/')[1]
-                ? () => {
-                      alert('Lien inactif');
-                  }
-                : onClick,
+        onClick: firstPath === href.split('/')[1] ? () => {} : onClick,
     };
 };
 

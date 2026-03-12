@@ -29,6 +29,7 @@ export const CurrencyGameView = ({ activity }: ActivityContentViewProps) => {
                 title: obj.name ?? '',
                 imageUrl: obj.imageUrl ?? '',
                 options: roundOptions,
+                questionId: obj.stepId,
             });
         }
 
@@ -39,10 +40,11 @@ export const CurrencyGameView = ({ activity }: ActivityContentViewProps) => {
         return null;
     }
 
-    if (createRounds) {
+    if (createRounds && activity.id) {
         return (
             <GameEngine
                 rounds={createRounds}
+                gameId={activity.id}
                 question={t('Combien vaut cet objet ?')}
                 successMessage={t("C'est exact ! Vous avez trouvé combien vaut cet objet.")}
                 errorMessage={t("Dommage ! Ce n'est pas la bonne réponse. Essayez encore !")}

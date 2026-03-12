@@ -32,7 +32,7 @@ export const ActivitySidePanel = ({ activityId: activityIdProp }: ActivitySidePa
     const { data: activity } = useSWR<Activity>(activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
     const { data: activityClassroom } = useSWR<Classroom[]>(
-        `/api/classrooms${serializeToQueryUrl({ classroomId: activity?.classroomId })}`,
+        activity?.classroomId ? `/api/classrooms${serializeToQueryUrl({ classroomId: activity.classroomId })}` : null,
         jsonFetcher,
     );
 

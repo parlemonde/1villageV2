@@ -7,7 +7,6 @@ import { Select } from '@frontend/components/ui/Form/Select';
 import { Pagination } from '@frontend/components/ui/Pagination/Pagination';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
-import { getClassroomFromMap } from '@lib/get-classroom';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
@@ -53,18 +52,15 @@ export const Activities = () => {
         <div>
             <ActivityFilters filters={filters} setFilters={setFilters} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {activities
-                    ?.filter((activity) => activity.type !== 'presentation-pelico')
-                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                    .map((activity) => (
-                        <ActivityCard
-                            key={activity.id}
-                            activity={activity}
-                            user={usersMap[activity.userId]}
-                            classroom={getClassroomFromMap(classroomsMap, activity.classroomId)}
-                            hasActions={activity.type === 'question'}
-                        />
-                    ))}
+                {activities?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((activity) => (
+                    <ActivityCard
+                        key={activity.id}
+                        activity={activity}
+                        user={usersMap[activity.userId]}
+                        classroom={activity.classroomId !== null ? classroomsMap[activity.classroomId] : undefined}
+                        hasActions={activity.type === 'question'}
+                    />
+                ))}
             </div>
             <div className={styles.paginationContainer}>
                 <Field

@@ -1,10 +1,10 @@
 .card {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 20px;
     justify-content: space-between;
-    border-radius: 10px;
-    border: 1px solid var(--grey-300);
     padding: 16px;
 }
 

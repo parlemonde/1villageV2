@@ -124,7 +124,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
             case 'expression':
                 return '/creer-un-jeu/expression/5';
             case 'mimique':
-                return '/creer-un-jeu/mimique/5';
+                return '/creer-un-jeu/mimique/4';
             case 'monnaie':
                 return '/creer-un-jeu/monnaie/5';
         }
