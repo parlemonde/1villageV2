@@ -8,6 +8,7 @@ import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import classNames from 'clsx';
+import { useExtracted } from 'next-intl';
 
 import styles from './welcome-modal.module.css';
 
@@ -63,6 +64,7 @@ const PanelInput = ({ label, value, onChange, placeholder, isRequired = false, h
 );
 
 export const StepProfile = ({ profileData, onProfileDataChange, countryCode, user, classroom }: StepProfileProps) => {
+    const t = useExtracted('StepProfile');
     const updateField = (field: keyof ProfileData, value: string) => {
         onProfileDataChange({ ...profileData, [field]: value });
     };
@@ -87,49 +89,49 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                     <PelicoSearch style={{ width: '4rem', height: 'auto', marginRight: '1rem' }} />
                 </div>
                 <div className={styles.stepProfileSection}>
-                    <h3 className={styles.stepProfileTitle}>{"Professionnel de l'éducation"}</h3>
+                    <h3 className={styles.stepProfileTitle}>{t("Professionnel de l'éducation")}</h3>
                     <PanelInput
-                        label="Nom : "
+                        label={t('Nom : ')}
                         value={profileData.userName}
                         onChange={(v) => updateField('userName', v)}
-                        placeholder="Entrez votre nom"
+                        placeholder={t('Entrez votre nom')}
                         isRequired
                         hasError={!profileData.userName.trim()}
                     />
                 </div>
 
                 <div className={styles.stepProfileSection}>
-                    <h3 className={styles.stepProfileTitle}>{'Établissement'}</h3>
+                    <h3 className={styles.stepProfileTitle}>{t('Établissement')}</h3>
                     <PanelInput
-                        label="École : "
+                        label={t('École : ')}
                         value={profileData.schoolName}
                         onChange={(v) => updateField('schoolName', v)}
-                        placeholder="Nom de votre école"
+                        placeholder={t('Nom de votre école')}
                         isRequired
                         hasError={!profileData.schoolName.trim()}
                     />
                     <PanelInput
-                        label="Niveau de la classe : "
+                        label={t('Niveau de la classe : ')}
                         value={profileData.classLevel}
                         onChange={(v) => updateField('classLevel', v)}
-                        placeholder="Niveau de votre classe"
+                        placeholder={t('Niveau de votre classe')}
                     />
                     <PanelInput
-                        label="Adresse de l'école : "
+                        label={t("Adresse de l'école : ")}
                         value={profileData.schoolAddress}
                         onChange={(v) => updateField('schoolAddress', v)}
-                        placeholder="Adresse de votre école"
+                        placeholder={t("Adresse de votre école")}
                         isRequired
                         hasError={!profileData.schoolAddress.trim()}
                     />
                     <div className={styles.panelField} style={{ pointerEvents: 'none' }}>
-                        <label>Pays :</label>
+                        <label>{t('Pays :')}</label>
                         <div style={{ marginLeft: '0.5rem', width: '450px', maxWidth: '100%' }}>
                             <CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />
                         </div>
                     </div>
                     <PanelInput
-                        label="Alias :"
+                        label={t('Alias :')}
                         value={profileData.classAlias}
                         onChange={(v) => updateField('classAlias', v)}
                         placeholder={`La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`}
@@ -138,7 +140,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
             </div>
 
             <div className={styles.stepProfilePreview}>
-                <span className={styles.stepProfilePreviewTitle}>Prévisualisation de vos publications :</span>
+                <span className={styles.stepProfilePreviewTitle}>{t('Prévisualisation de vos publications :')}</span>
                 <div className={styles.previewCard}>
                     <ActivityHeader
                         activity={{
@@ -150,13 +152,13 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         className={styles.previewCardHeader}
                     />
                     <div className={styles.previewCardBody}>
-                        <h3 className={styles.previewCardTitle}>Présentation de notre école</h3>
+                        <h3 className={styles.previewCardTitle}>{t('Présentation de notre école')}</h3>
                         <p className={styles.previewCardText}>........................</p>
                     </div>
                 </div>
                 {!classroom.coordinates && (
                     <div style={{ marginTop: '1rem' }}>
-                        <span className={styles.stepProfilePreviewTitle}>Est-ce que votre école est bien placée ?</span>
+                        <span className={styles.stepProfilePreviewTitle}>{t('Est-ce que votre école est bien placée ?')}</span>
                         <Map2D
                             coordinates={profileData.coordinates}
                             setCoordinates={(coords) => onProfileDataChange({ ...profileData, coordinates: coords })}
