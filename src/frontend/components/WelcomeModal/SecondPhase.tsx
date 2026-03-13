@@ -41,7 +41,15 @@ export const SecondPhase = () => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={() => {}} title={t('La phase 2 a commencé !')} hasCloseButton={false} hasFooter={false} width="md" isFullWidth>
+        <Modal
+            isOpen={isOpen}
+            onClose={() => {}}
+            title={t('La phase 2 a commencé !')}
+            hasCloseButton={false}
+            hasFooter={false}
+            width="md"
+            isFullWidth
+        >
             <div className={styles.phaseContent}>
                 <p>{t('Avant de passer à la phase 2, prenez 5 minutes pour nous faire vos retours sur la phase 1 :')}</p>
                 <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" className={styles.phaseLink}>

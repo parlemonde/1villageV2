@@ -25,7 +25,13 @@ export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
     return (
         <div className={styles.stepCenter}>
             <span className={styles.stepText}>{t('Votre classe appartient au village-monde')}</span>
-            <Button label={isVisible ? t('Cacher') : t('Montrer')} variant="contained" color="primary" size="md" onClick={() => setIsVisible(!isVisible)} />
+            <Button
+                label={isVisible ? t('Cacher') : t('Montrer')}
+                variant="contained"
+                color="primary"
+                size="md"
+                onClick={() => setIsVisible(!isVisible)}
+            />
             <h2 className={styles.villageName} style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
                 {villageName}
             </h2>

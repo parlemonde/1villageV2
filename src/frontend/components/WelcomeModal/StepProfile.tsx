@@ -120,7 +120,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         label={t("Adresse de l'école : ")}
                         value={profileData.schoolAddress}
                         onChange={(v) => updateField('schoolAddress', v)}
-                        placeholder={t("Adresse de votre école")}
+                        placeholder={t('Adresse de votre école')}
                         isRequired
                         hasError={!profileData.schoolAddress.trim()}
                     />
