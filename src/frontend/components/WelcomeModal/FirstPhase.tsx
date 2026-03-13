@@ -9,6 +9,7 @@ import { authClient } from '@frontend/lib/auth-client';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
 import { updateFirstLogin } from '@server-actions/users/update-first-login';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import { StepCGU } from './StepCGU';
@@ -21,6 +22,7 @@ import styles from './welcome-modal.module.css';
 const TOTAL_STEPS = 4;
 
 export const FirstPhase = () => {
+    const t = useExtracted('FirstPhase');
     const { user, setUser, classroom, setClassroom } = useContext(UserContext);
     const { village, invalidateClassrooms } = useContext(VillageContext);
     const [currentStep, setCurrentStep] = useState(0);
@@ -54,7 +56,7 @@ export const FirstPhase = () => {
                 name: profileData.userName.trim(),
             });
             if (userError) {
-                sendToast({ message: 'Erreur lors de la mise à jour du nom.', type: 'error' });
+                sendToast({ message: t('Erreur lors de la mise à jour du nom.'), type: 'error' });
                 setIsLoading(false);
                 return;
             }
@@ -92,7 +94,7 @@ export const FirstPhase = () => {
                 invalidateClassrooms();
             }
         } catch {
-            sendToast({ message: 'Une erreur inconnue est survenue...', type: 'error' });
+            sendToast({ message: t('Une erreur inconnue est survenue...'), type: 'error' });
         } finally {
             setIsLoading(false);
         }
@@ -105,7 +107,7 @@ export const FirstPhase = () => {
         if (isLastStep) {
             return (
                 <Button
-                    label="Terminer"
+                    label={t('Terminer')}
                     variant="contained"
                     color="primary"
                     size="sm"
@@ -118,7 +120,7 @@ export const FirstPhase = () => {
         if (isCguStep) {
             return (
                 <Button
-                    label="Accepter"
+                    label={t('Accepter')}
                     variant="contained"
                     color="primary"
                     size="sm"
@@ -130,7 +132,7 @@ export const FirstPhase = () => {
 
         return (
             <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep + 1)} disabled={currentStep === TOTAL_STEPS - 1}>
-                Suivant
+                {t('Suivant')}
                 <ChevronRightIcon />
             </button>
         );
@@ -140,7 +142,7 @@ export const FirstPhase = () => {
         <Modal
             isOpen={true}
             onClose={() => {}}
-            title="Bienvenue sur 1Village !"
+            title={t('Bienvenue sur 1Village !')}
             hasCloseButton={false}
             hasFooter={false}
             width="lg"
@@ -165,7 +167,7 @@ export const FirstPhase = () => {
             <div className={styles.stepper}>
                 <button className={styles.stepperButton} onClick={() => setCurrentStep(currentStep - 1)} disabled={currentStep === 0}>
                     <ChevronLeftIcon />
-                    Précédent
+                    {t('Précédent')}
                 </button>
                 <div className={styles.stepperDots}>
                     {Array.from({ length: TOTAL_STEPS }, (_, i) => (
