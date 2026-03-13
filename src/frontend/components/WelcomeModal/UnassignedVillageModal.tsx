@@ -5,15 +5,18 @@ import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import PelicoVacances from '@frontend/svg/pelico/pelico-vacances.svg';
 import { logout } from '@server-actions/authentication/logout';
+import { useExtracted } from 'next-intl';
 import { useRef } from 'react';
 
 import styles from './unassigned-village-modal.module.css';
 
 export const UnassignedVillageModal = () => {
+    const t = useExtracted('UnassignedVillageModal');
+    const tCommon = useExtracted('common');
     const alreadyAsked = useRef(false);
 
     const onAskVillage = () => {
-        sendToast({ message: "Votre demande d'assignation à un village a bien été envoyée à un administrateur !", type: 'success' });
+        sendToast({ message: t("Votre demande d'assignation à un village a bien été envoyée à un administrateur !"), type: 'success' });
         alreadyAsked.current = true;
     };
 
@@ -24,7 +27,7 @@ export const UnassignedVillageModal = () => {
             hasCloseButton={false}
             hasTopSeparator={false}
             hasFooter={true}
-            cancelLabel="Se déconnecter"
+            cancelLabel={tCommon('Se déconnecter')}
             cancelIsUpperCase={false}
             hasCancelButton={true}
             onCancel={() => logout()}
@@ -45,9 +48,9 @@ export const UnassignedVillageModal = () => {
                     }}
                 />
                 <div style={{ width: '100%', padding: '1rem', textAlign: 'center' }}>
-                    <h2>{"Mince, votre classe n'est pas dans un village !"}</h2>
+                    <h2>{t("Mince, votre classe n'est pas dans un village !")}</h2>
                     <Button
-                        label="Demander à être assigné à un village"
+                        label={t('Demander à être assigné à un village')}
                         variant="contained"
                         color="primary"
                         size="md"
