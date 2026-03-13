@@ -1,4 +1,5 @@
 import { getEnvVariable } from '@server/lib/get-env-variable';
+import { logger } from '@server/lib/logger';
 import type { Transporter } from 'nodemailer';
 import nodemailer from 'nodemailer';
 
@@ -16,9 +17,10 @@ export const getTransporter = async () => {
 
     if (!user || !password) {
         const testAccount = await nodemailer.createTestAccount();
-        console.log('Created test account:');
-        console.log('  User: %s', testAccount.user);
-        console.log('  Pass: %s', testAccount.pass);
+        logger.info(`Created test account:
+            User: ${testAccount.user},
+            Pass: ${testAccount.pass}`);
+
         _transporter = nodemailer.createTransport({
             host: testAccount.smtp.host,
             port: testAccount.smtp.port,
