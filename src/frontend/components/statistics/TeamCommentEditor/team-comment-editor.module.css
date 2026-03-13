@@ -1,0 +1,26 @@
+.container {
+    position: relative;
+    background-color: var(--primary-100);
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    padding: 16px;
+    min-height: 150px;
+    margin-bottom: 16px;
+}
+
+.topRight {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.editor {
+    margin-top: 16px;
+    background-color: white;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}

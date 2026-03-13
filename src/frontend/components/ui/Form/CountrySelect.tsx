@@ -20,6 +20,7 @@ export function CountrySelect(props: CountrySelectProps) {
         isFullWidth = false,
         placeholder = 'Choisir un pays',
         disabled = false,
+        hasCross = false,
         filter,
     } = props;
 
@@ -42,6 +43,7 @@ export function CountrySelect(props: CountrySelectProps) {
             name={name}
             size={size}
             disabled={disabled}
+            hasCross={hasCross}
         />
     );
 }

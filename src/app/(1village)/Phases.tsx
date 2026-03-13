@@ -7,7 +7,7 @@ import Puzzle from '@frontend/svg/phases/puzzle.svg';
 import Step2 from '@frontend/svg/phases/step2.svg';
 import classNames from 'clsx';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import styles from './phases.module.css';
 
