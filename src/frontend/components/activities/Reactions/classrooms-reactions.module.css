@@ -14,3 +14,7 @@
 .reactionsContainer .reactionButton:hover {
     background-color: var(--primary-500);
 }
+
+.reactionsNumber {
+    position: relative;
+}

@@ -17,12 +17,12 @@ const REACTION_EMOJIS = [
 ] as const;
 
 type ReactionEmoji = (typeof REACTION_EMOJIS)[number]['value'];
-
 interface ClassroomsReactionsProps {
     activity: Partial<Activity>;
+    isDisabled: boolean;
 }
 
-export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity }) => {
+export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
     const t = useExtracted('ClassroomsReactions');
     const [currentReaction, setCurrentReaction] = useState<ReactionEmoji | null>(null);
     const [nbReactions, setNbReactions] = useState(3);
@@ -34,13 +34,15 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             <span style={{ fontSize: '10px', color: 'green', backgroundColor: 'lightgreen' }}>
                 {activity.id} / {activity.type} / {currentReaction}
             </span>
-            <Button
-                title={t('Réagir')}
-                onClick={() => setIsModalOpen(true)}
-                label={<EyeOpenIcon className={styles.addReactionIcon} />}
-                color="grey"
-                variant="borderless"
-            ></Button>
+            {isDisabled ? null : (
+                <Button
+                    title={t('Réagir')}
+                    onClick={() => setIsModalOpen(true)}
+                    label={<EyeOpenIcon className={styles.addReactionIcon} />}
+                    color="grey"
+                    variant="borderless"
+                ></Button>
+            )}
             <div className={styles.reactionsListWrapper}>
                 {/* read new table in activity-reactions to get all activities reactions for activityId
                 grouped by reaction type
@@ -53,19 +55,23 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         label={reaction.emoji}
                         size="sm"
                         variant="contained"
+                        disabled={isDisabled}
                         className={classNames(styles.reactionButton, { [styles.active]: currentReaction === reaction.value })}
                         style={{ zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
                     />
                 ))}
             </div>
-            <Button
-                onClick={() => setIsModalOpen(true)}
-                label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbReactions })}
-                size="sm"
-                variant="borderless"
-                color="primary"
-                className={styles.reactionsNumber}
-            ></Button>
+            {isDisabled ? null : (
+                <Button
+                    onClick={() => setIsModalOpen(true)}
+                    label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbReactions })}
+                    size="sm"
+                    variant="borderless"
+                    color="primary"
+                    className={styles.reactionsNumber}
+                    style={{ left: REACTION_EMOJIS.length * -8 + 'px' }}
+                ></Button>
+            )}
 
             {isModalOpen && (
                 <Modal
