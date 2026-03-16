@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 16px;
+    gap: 16px;
+}
+
+.legendColor {
+    width: 20px;
+    height: 20px;
+    clip-path: circle(50%);
+    flex: 0 0 auto;
+}
+
+.legendItem {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 8px;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legendLabel {
+    text-decoration: underline;
+}
+
+.map {
+    min-height: 300px;
+    height: 500px;
+    cursor: pointer;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.mapContainer {
+    position: relative;
+    width: 100%;
+}
+
+.tooltip {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    background: var(--grey-100);
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 0.8rem;
+}
