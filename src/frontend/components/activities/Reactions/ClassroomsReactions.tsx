@@ -10,16 +10,25 @@ import React, { useState } from 'react';
 
 import styles from './classrooms-reactions.module.css';
 
-const REACTION_EMOJIS = [
-    { value: 'wow', emoji: '😮' },
-    { value: 'like', emoji: '👍' },
-    { value: 'love', emoji: '❤️' },
-] as const;
+type ReactionEmoji = {
+    value: string;
+    label: string;
+    emoji: string;
+};
 
-type ReactionEmoji = (typeof REACTION_EMOJIS)[number]['value'];
+const useReactionEmoji = () => {
+    const t = useExtracted('ClassroomsReactions');
+
+    return [
+        { value: 'wow', label: t('wow'), emoji: '😮' },
+        { value: 'like', label: t('like'), emoji: '👍' },
+        { value: 'love', label: t('love'), emoji: '❤️' },
+    ] as const;
+};
+
 interface ClassroomsReactionsProps {
     activity: Partial<Activity>;
-    isDisabled: boolean;
+    isDisabled?: boolean;
 }
 
 export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
@@ -28,11 +37,24 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const [nbReactions, setNbReactions] = useState(3);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
+    const REACTION_EMOJIS = useReactionEmoji();
+
+    function onReactionButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
+        const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === e.currentTarget?.value) || null;
+        setCurrentReaction(reacted);
+        setNbReactions((prev) => prev + 1);
+    }
+
+    function onReactionSubmit() {
+        // call server action with currentReaction, activity.id and classroom.id
+        setIsModalOpen(false);
+        console.warn('onReactionSubmit....', activity.id, currentReaction);
+    }
 
     return (
         <div className={styles.reactionsContainer}>
             <span style={{ fontSize: '10px', color: 'green', backgroundColor: 'lightgreen' }}>
-                {activity.id} / {activity.type} / {currentReaction}
+                {activity.id} / {activity.type} / {currentReaction?.label}
             </span>
             {isDisabled ? null : (
                 <Button
@@ -50,14 +72,18 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 {REACTION_EMOJIS.map((reaction, index) => (
                     <Button
                         key={index}
-                        title={reaction.value}
-                        onClick={() => setCurrentReaction(reaction.value)}
+                        title={reaction.label}
+                        value={reaction.value}
+                        onClick={(e) => {
+                            onReactionButtonClick(e);
+                            onReactionSubmit();
+                        }}
                         label={reaction.emoji}
                         size="sm"
                         variant="contained"
                         disabled={isDisabled}
-                        className={classNames(styles.reactionButton, { [styles.active]: currentReaction === reaction.value })}
-                        style={{ zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
+                        className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
+                        style={{ position: 'relative', zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
                     />
                 ))}
             </div>
@@ -68,27 +94,35 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     size="sm"
                     variant="borderless"
                     color="primary"
-                    className={styles.reactionsNumber}
-                    style={{ left: REACTION_EMOJIS.length * -8 + 'px' }}
+                    style={{ position: 'relative', left: REACTION_EMOJIS.length * -8 + 'px' }}
                 ></Button>
             )}
 
             {isModalOpen && (
                 <Modal
-                    title={t('Réactions des Pélicopains')}
+                    title={t('La Réaction de votre classe')}
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    hasCancelButton={false}
+                    onConfirm={() => onReactionSubmit()}
+                    isConfirmDisabled={() => currentReaction === null}
                     width="sm"
+                    contentClassName={styles.setReactionModal}
                 >
-                    {t('Liste des réactions possibles')}
-                    <Button
-                        label={t('ma réaction')}
-                        onClick={() => {
-                            setCurrentReaction('wow');
-                            setNbReactions((prev) => prev + 1);
-                        }}
-                    />
+                    {REACTION_EMOJIS.map((reaction, index) => (
+                        <div key={index} className={styles.reactionButtonWrapper}>
+                            <span>{reaction.label}</span>
+                            <Button
+                                title={reaction.label}
+                                value={reaction.value}
+                                onClick={(e) => onReactionButtonClick(e)}
+                                label={reaction.emoji}
+                                size="sm"
+                                variant="contained"
+                                disabled={isDisabled}
+                                className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
+                            />
+                        </div>
+                    ))}
                 </Modal>
             )}
         </div>

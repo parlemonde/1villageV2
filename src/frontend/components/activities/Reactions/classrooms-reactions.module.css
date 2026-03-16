@@ -6,7 +6,6 @@
 }
 
 .reactionsContainer .reactionButton {
-    position: relative;
     background-color: var(--primary-300);
 }
 
@@ -15,6 +14,18 @@
     background-color: var(--primary-500);
 }
 
-.reactionsNumber {
-    position: relative;
+.reactionButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.setReactionModal .reactionButton {
+    background-color: var(--primary-300);
+}
+
+.setReactionModal .reactionButton.active,
+.setReactionModal .reactionButton:hover {
+    background-color: var(--primary-500);
 }
