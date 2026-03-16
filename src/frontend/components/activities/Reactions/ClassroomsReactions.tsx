@@ -1,14 +1,23 @@
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
-// import { EyeOpenIcon } from '@radix-ui/react-icons';
+import { UserContext } from '@frontend/contexts/userContext';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import classNames from 'clsx';
-// import { usePathname } from 'next/navigation';
 import { useExtracted } from 'next-intl';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import useSWR from 'swr';
 
 import styles from './classrooms-reactions.module.css';
+
+type Reaction = {
+    reactionValue: string;
+    reactionCount: number;
+    classroomIds: number[];
+};
 
 type ReactionEmoji = {
     value: string;
@@ -33,28 +42,58 @@ interface ClassroomsReactionsProps {
 
 export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
     const t = useExtracted('ClassroomsReactions');
-    const [currentReaction, setCurrentReaction] = useState<ReactionEmoji | null>(null);
-    const [nbReactions, setNbReactions] = useState(3);
+    const REACTION_EMOJIS = useReactionEmoji();
+    let classroomReaction;
+    const { classroom } = useContext(UserContext);
+
+    const { data: nbClassroomsPerReactions = [] } = useSWR<Reaction[]>(
+        activity
+            ? `/api/reactions${serializeToQueryUrl({
+                  activityId: activity.id,
+              })}`
+            : null,
+        jsonFetcher,
+    );
+
+    if (!classroom) {
+        isDisabled = true;
+        classroomReaction = null;
+    } else {
+        classroomReaction = getCurrentClassroomReaction(classroom);
+    }
+
+    const [currentReaction, setCurrentReaction] = useState<ReactionEmoji | null>(classroomReaction);
+    const [nbReactions, setNbReactions] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
-    const REACTION_EMOJIS = useReactionEmoji();
+
+    function getCountForReaction(value: string) {
+        const column = nbClassroomsPerReactions?.find((col) => col.reactionValue === value);
+        return column?.reactionCount || 0;
+    }
+
+    function getCurrentClassroomReaction(classroom: Classroom) {
+        const column = nbClassroomsPerReactions?.find((col) => col.classroomIds.includes(classroom.id));
+        return REACTION_EMOJIS.find((item) => item.value === column?.reactionValue) ?? null;
+    }
 
     function onReactionButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
         const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === e.currentTarget?.value) || null;
         setCurrentReaction(reacted);
-        setNbReactions((prev) => prev + 1);
     }
 
     function onReactionSubmit() {
         // call server action with currentReaction, activity.id and classroom.id
         setIsModalOpen(false);
+        setNbReactions((prev) => prev + 1);
         console.warn('onReactionSubmit....', activity.id, currentReaction);
     }
 
     return (
         <div className={styles.reactionsContainer}>
-            <span style={{ fontSize: '10px', color: 'green', backgroundColor: 'lightgreen' }}>
-                {activity.id} / {activity.type} / {currentReaction?.label}
+            {/* TODO remove this */}
+            <span style={{ width: '50%', fontSize: '10px', color: 'green', backgroundColor: 'lightgreen' }}>
+                nbReaction : {JSON.stringify(nbClassroomsPerReactions)}
             </span>
             {isDisabled ? null : (
                 <Button
@@ -66,9 +105,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 ></Button>
             )}
             <div className={styles.reactionsListWrapper}>
-                {/* read new table in activity-reactions to get all activities reactions for activityId
-                grouped by reaction type
-                map to render <ReactionIcon>s according to grouped reaction type (and count ?) */}
+                {/* render all activities reactions for activityId grouped by reaction type */}
                 {REACTION_EMOJIS.map((reaction, index) => (
                     <Button
                         key={index}
@@ -79,6 +116,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                             onReactionSubmit();
                         }}
                         label={reaction.emoji}
+                        rightIcon={<span className={styles.counterBadge}>{getCountForReaction(reaction.value)}</span>}
                         size="sm"
                         variant="contained"
                         disabled={isDisabled}
