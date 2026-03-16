@@ -190,6 +190,13 @@
     white-space: nowrap;
 }
 
+.classIndexLabel {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin: 0;
+}
+
 .stepProfileSection {
     display: flex;
     flex-direction: column;
