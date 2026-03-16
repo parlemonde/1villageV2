@@ -21,7 +21,7 @@ export const UserViews: React.FC<UserViewsProps> = ({ activity }) => {
             <div className={styles.userViews}>
                 <EyeOpenIcon className={styles.userViewsIcon} width={24} height={24} />
                 {isOnActivityPage ? (
-                    <span className={styles.userViewsNumberLarge}>
+                    <span>
                         {t(
                             "{count, plural, =0 {aucune classe n'a vu cette activité} =1 {# classe a vu cette activité} other {# classes ont vu cette activité}}",
                             {
@@ -30,9 +30,7 @@ export const UserViews: React.FC<UserViewsProps> = ({ activity }) => {
                         )}
                     </span>
                 ) : (
-                    <span className={styles.userViewsNumberSmall}>
-                        {t('{count, plural, =0 {aucune vue} =1 {# vue} other {# vues}}', { count: nbVues })}
-                    </span>
+                    <span>{t('{count, plural, =0 {aucune vue} =1 {# vue} other {# vues}}', { count: nbVues })}</span>
                 )}
             </div>
         </>
