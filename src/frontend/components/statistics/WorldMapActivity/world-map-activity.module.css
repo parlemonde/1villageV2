@@ -4,6 +4,10 @@
     width: 100%;
     margin-top: 16px;
     gap: 16px;
+
+    @media (max-width: 850px) {
+        flex-direction: column;
+    }
 }
 
 .legendColor {
@@ -31,7 +35,7 @@
 }
 
 .map {
-    min-height: 300px;
+    touch-action: none;
     height: 500px;
     cursor: pointer;
     border: 1px solid var(--grey-300);
