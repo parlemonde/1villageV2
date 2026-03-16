@@ -9,7 +9,7 @@ import { activities } from '@server/database/schemas/activities';
 import type { Activity } from '@server/database/schemas/activities';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { eq, isNotNull, and } from 'drizzle-orm';
+import { eq, isNotNull, and, sql } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -43,8 +43,16 @@ const updateActivityClassroomViews = async function (activity: Activity) {
     if (shouldUpdateViews) {
         await db
             .update(activities)
-            .set({ views: [...(activity.views ?? []), classroom.id] })
-            .where(and(eq(activities.id, activity.id), isNotNull(activities.publishDate)));
+            .set({
+                views: sql`array_append(${activities.views}, ${classroom.id})`,
+            })
+            .where(
+                and(
+                    eq(activities.id, activity.id),
+                    isNotNull(activities.publishDate),
+                    sql`NOT (${classroom.id} = ANY(${activities.views}))`, // évite les doublons
+                ),
+            );
     }
 };
 
