@@ -1,5 +1,5 @@
 {
-  "id": "4f6d7c78-ece5-4bb7-acb1-ab1bbea1f2e5",
+  "id": "b9df9325-5a2b-4eb9-922d-77aef796093e",
   "prevId": "ea916200-b851-4556-994e-163aff646790",
   "version": "7",
   "dialect": "postgresql",
@@ -1078,8 +1078,8 @@
           "notNull": true,
           "default": "'teacher'"
         },
-        "firstLogin": {
-          "name": "firstLogin",
+        "first_login": {
+          "name": "first_login",
           "type": "smallint",
           "primaryKey": false,
           "notNull": true,

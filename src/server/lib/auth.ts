@@ -38,7 +38,7 @@ export const auth = registerService('auth', () =>
             additionalFields: {
                 firstLogin: {
                     type: 'number',
-                    fieldName: 'firstLogin',
+                    fieldName: 'first_login',
                     input: false,
                 },
             },
