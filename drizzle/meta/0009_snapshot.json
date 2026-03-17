@@ -1,6 +1,6 @@
 {
-  "id": "ea916200-b851-4556-994e-163aff646790",
-  "prevId": "c11d9dde-9aaa-4c0c-a8ee-97e0220eec06",
+  "id": "4f6d7c78-ece5-4bb7-acb1-ab1bbea1f2e5",
+  "prevId": "ea916200-b851-4556-994e-163aff646790",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1077,6 +1077,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'teacher'"
+        },
+        "firstLogin": {
+          "name": "firstLogin",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "banned": {
           "name": "banned",
