@@ -266,7 +266,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                         : []),
                 ]}
             />
-            {classrooms && (
+            {classrooms && classrooms.length > 1 && (
                 <>
                     <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: '16px' }} />
                     <ClassroomSelect classrooms={classrooms} className={styles.classroomSelect} />

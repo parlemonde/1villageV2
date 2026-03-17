@@ -48,36 +48,38 @@ export const Header = () => {
                         <LogoSVG className={styles.logo} />
                         <span className={styles.title}>1Village</span>
                     </Link>
-                    {classrooms && classrooms.length > 1 && (
-                        <div className={styles.classroomSelect}>
-                            <ClassroomSelect marginLeft="md" classrooms={classrooms} />
-                        </div>
-                    )}
                     {user?.role === 'teacher' && (
-                        <div className={styles.teacherButtonContainer}>
-                            <Button
-                                leftIcon={<DrawingPinIcon width="24" height="24" />}
-                                variant="borderless"
-                                color="primary"
-                                size="md"
-                                isUpperCase={false}
-                                label={tCommon('Mes ressources')}
-                                hideLabelOnMobile
-                                as="a"
-                                href="https://prof.parlemonde.org/les-ressources/"
-                            />
-                            <Button
-                                leftIcon={<ChatBubbleIcon width="24" height="24" />}
-                                variant="borderless"
-                                color="primary"
-                                size="md"
-                                isUpperCase={false}
-                                label={tCommon('Ma messagerie')}
-                                hideLabelOnMobile
-                                as="a"
-                                href="https://prof.parlemonde.org/la-salle/"
-                            />
-                        </div>
+                        <>
+                            {classrooms && classrooms.length > 1 && (
+                                <div className={styles.classroomSelect}>
+                                    <ClassroomSelect marginLeft="md" classrooms={classrooms} />
+                                </div>
+                            )}
+                            <div className={styles.teacherButtonContainer}>
+                                <Button
+                                    leftIcon={<DrawingPinIcon width="24" height="24" />}
+                                    variant="borderless"
+                                    color="primary"
+                                    size="md"
+                                    isUpperCase={false}
+                                    label={tCommon('Mes ressources')}
+                                    hideLabelOnMobile
+                                    as="a"
+                                    href="https://prof.parlemonde.org/les-ressources/"
+                                />
+                                <Button
+                                    leftIcon={<ChatBubbleIcon width="24" height="24" />}
+                                    variant="borderless"
+                                    color="primary"
+                                    size="md"
+                                    isUpperCase={false}
+                                    label={tCommon('Ma messagerie')}
+                                    hideLabelOnMobile
+                                    as="a"
+                                    href="https://prof.parlemonde.org/la-salle/"
+                                />
+                            </div>
+                        </>
                     )}
                 </div>
                 {user.role === 'admin' && <VillageSelector />}

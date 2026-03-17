@@ -37,7 +37,7 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
 
     const updateClassroom = async (classroomId: string) => {
         setIsLoading(true);
-        const classroom = await fetchClassroom(classroomId);
+        const classroom = classrooms.find((classroom) => classroom.id.toString() === classroomId);
         if (classroom) {
             const village = classroom?.villageId ? await fetchVillage(classroom.villageId) : undefined;
 
@@ -47,19 +47,6 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
         }
         router.push('/');
         setIsLoading(false);
-    };
-
-    const fetchClassroom = async (classroomId: string): Promise<Classroom | null> => {
-        const classroomResponse = await fetch(`/api/classrooms/${classroomId}`);
-        if (!classroomResponse.ok) {
-            sendToast({
-                message: tCommon('Une erreur est survenue'),
-                type: 'error',
-            });
-            return null;
-        }
-
-        return await classroomResponse.json();
     };
 
     const fetchVillage = async (villageId: number): Promise<Village> => {
