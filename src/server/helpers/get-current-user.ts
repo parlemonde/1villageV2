@@ -1,6 +1,8 @@
 import { trace } from '@opentelemetry/api';
-import type { User } from '@server/database/schemas/users';
+import { db } from '@server/database';
+import { users, type User } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
+import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { cache } from 'react';
 
@@ -12,15 +14,29 @@ export const getCurrentUser = cache(async (): Promise<User | undefined> => {
             const session = await auth.api.getSession({
                 headers: await headers(),
             });
-            const user = session?.user as User | undefined;
-            if (user) {
-                span.setAttributes({
-                    'user.id': user.id,
-                    'user.email': user.email,
-                    'user.name': user.name,
-                });
+            const sessionUser = session?.user as User | undefined;
+            if (!sessionUser) {
+                return undefined;
             }
-            return user;
+
+            span.setAttributes({
+                'user.id': sessionUser.id,
+                'user.email': sessionUser.email,
+                'user.name': sessionUser.name,
+            });
+
+            // Cookie cache doesn't include additionalFields like firstLogin,
+            // so we fetch it directly from the database.
+            const dbUser = await db
+                .select({ firstLogin: users.firstLogin })
+                .from(users)
+                .where(eq(users.id, sessionUser.id))
+                .then((rows) => rows[0]);
+
+            return {
+                ...sessionUser,
+                firstLogin: dbUser?.firstLogin ?? 0,
+            };
         } finally {
             span.end();
         }
