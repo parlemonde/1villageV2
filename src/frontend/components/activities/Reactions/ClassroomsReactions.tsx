@@ -43,7 +43,7 @@ interface ClassroomsReactionsProps {
 export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
     const t = useExtracted('ClassroomsReactions');
     const REACTION_EMOJIS = useReactionEmoji();
-    let classroomReaction;
+    let classroomReaction, totalReactions;
     const { classroom } = useContext(UserContext);
 
     const { data: nbClassroomsPerReactions = [] } = useSWR<Reaction[]>(
@@ -58,14 +58,16 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     if (!classroom) {
         isDisabled = true;
         classroomReaction = null;
+        totalReactions = 0;
     } else {
         classroomReaction = getCurrentClassroomReaction(classroom);
+        totalReactions = getTotalClassroomsReaction();
     }
 
     const [currentReaction, setCurrentReaction] = useState<ReactionEmoji | null>(classroomReaction);
-    const [nbReactions, setNbReactions] = useState(0);
+    const [nbReactions, setNbReactions] = useState<number>(totalReactions);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
+    const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
 
     function getCountForReaction(value: string) {
         const column = nbClassroomsPerReactions?.find((col) => col.reactionValue === value);
@@ -75,6 +77,12 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     function getCurrentClassroomReaction(classroom: Classroom) {
         const column = nbClassroomsPerReactions?.find((col) => col.classroomIds.includes(classroom.id));
         return REACTION_EMOJIS.find((item) => item.value === column?.reactionValue) ?? null;
+    }
+
+    function getTotalClassroomsReaction() {
+        return nbClassroomsPerReactions?.reduce((total, item) => {
+            return (total += item.reactionCount);
+        }, 0);
     }
 
     function onReactionButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
@@ -91,10 +99,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
     return (
         <div className={styles.reactionsContainer}>
-            {/* TODO remove this */}
-            <span style={{ width: '50%', fontSize: '10px', color: 'green', backgroundColor: 'lightgreen' }}>
-                nbReaction : {JSON.stringify(nbClassroomsPerReactions)}
-            </span>
             {isDisabled ? null : (
                 <Button
                     title={t('Réagir')}
@@ -125,15 +129,25 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     />
                 ))}
             </div>
-            {isDisabled ? null : (
-                <Button
-                    onClick={() => setIsModalOpen(true)}
-                    label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbReactions })}
-                    size="sm"
-                    variant="borderless"
-                    color="primary"
-                    style={{ position: 'relative', left: REACTION_EMOJIS.length * -8 + 'px' }}
-                ></Button>
+            <Button
+                onClick={() => setIsAllReactionsModalOpen(true)}
+                label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbReactions })}
+                size="sm"
+                variant="borderless"
+                color="primary"
+                style={{ position: 'relative', left: REACTION_EMOJIS.length * -8 + 'px' }}
+            ></Button>
+
+            {isAllReactionsModalOpen && (
+                <Modal
+                    title={t('La Réaction de vos Pélicopains')}
+                    isOpen={isAllReactionsModalOpen}
+                    onClose={() => setIsAllReactionsModalOpen(false)}
+                    width="sm"
+                    contentClassName={styles.getAllReactionModal}
+                >
+                    {/* TODO */}
+                </Modal>
             )}
 
             {isModalOpen && (
