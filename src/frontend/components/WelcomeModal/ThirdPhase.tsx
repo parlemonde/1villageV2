@@ -29,14 +29,19 @@ export const ThirdPhase = () => {
     };
 
     const handleGoToPhase3 = async () => {
-        const { error } = await updateFirstLogin(3);
-        if (error) {
-            sendToast({ message: error.message, type: 'error' });
-            return;
+        try {
+            const { error } = await updateFirstLogin(3);
+            if (error) {
+                sendToast({ message: error.message, type: 'error' });
+                return;
+            }
+            setUser({ ...user, firstLogin: 3 });
+            setPhase(3);
+            setIsOpen(false);
+        } catch (e) {
+            console.error(e);
+            sendToast({ message: t('Une erreur est survenue'), type: 'error' });
         }
-        setUser({ ...user, firstLogin: 3 });
-        setPhase(3);
-        setIsOpen(false);
     };
 
     return (
