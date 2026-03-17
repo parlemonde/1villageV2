@@ -6,7 +6,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
-export const GameCard = ({ activity, onEdit, onDelete, shouldDisableButtons }: ActivityContentCardProps) => {
+export const GameCard = ({ activity, onEdit, onDelete, shouldDisableButtons, children }: ActivityContentCardProps) => {
     const tCommon = useExtracted('common');
 
     const { user } = useContext(UserContext);
@@ -16,7 +16,15 @@ export const GameCard = ({ activity, onEdit, onDelete, shouldDisableButtons }: A
     }
 
     return (
-        <div style={{ textAlign: 'right' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                gap: '8px',
+            }}
+        >
+            {children}
             {onEdit || onDelete ? (
                 <>
                     {onEdit && <Button color="secondary" variant="contained" onClick={onEdit} label={tCommon('Modifier')} />}

@@ -1,7 +1,7 @@
 import type { ActivityContentCardProps } from '@frontend/components/activities/ActivityCard/activity-card.types';
 import { Button } from '@frontend/components/ui/Button';
 
-export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDelete, children }: ActivityContentCardProps) => {
     if (activity.type !== 'libre') {
         return null;
     }
@@ -40,7 +40,15 @@ export const FreeContentCard = ({ activity, shouldDisableButtons, onEdit, onDele
                     <span style={{ fontWeight: 500 }}>{activity.data?.title}</span>
                     <p style={{ fontSize: '15px' }}>{activity.data?.resume}</p>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        gap: '8px',
+                    }}
+                >
+                    {children}
                     {onEdit || onDelete ? (
                         <>
                             {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}

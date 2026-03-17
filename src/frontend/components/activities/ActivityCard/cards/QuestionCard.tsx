@@ -8,7 +8,7 @@ import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 import { mutate } from 'swr';
 
-export const QuestionCard = ({ activity, onEdit, onDelete, hasActions, shouldDisableButtons }: ActivityContentCardProps) => {
+export const QuestionCard = ({ activity, onEdit, onDelete, hasActions, shouldDisableButtons, children }: ActivityContentCardProps) => {
     const t = useExtracted('QuestionCard');
     const { user, classroom } = useContext(UserContext);
 
@@ -45,9 +45,11 @@ export const QuestionCard = ({ activity, onEdit, onDelete, hasActions, shouldDis
                     style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: showAskSameButton ? 'space-between' : 'flex-end',
+                        justifyContent: 'flex-end',
+                        gap: '8px',
                     }}
                 >
+                    {children}
                     {showAskSameButton && (
                         <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', alignItems: 'center' }}>
                             <Button

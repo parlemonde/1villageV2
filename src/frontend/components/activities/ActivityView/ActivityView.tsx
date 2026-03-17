@@ -1,13 +1,16 @@
 'use client';
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
+import { UserViews } from '@frontend/components/activities/Reactions/UserViews';
 import { Comments } from '@frontend/components/comments/Comments';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
+import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
 import type { ActivityContentViewProps } from './activity-view.types';
+import styles from './activity-views.module.css';
 import { ChallengeView } from './views/ChallengeView';
 import { FreeContentView } from './views/FreeContentView';
 import { GameView } from './views/GameView';
@@ -35,6 +38,7 @@ interface ActivityViewProps {
 }
 export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps) => {
     const { usersMap, classroomsMap } = useContext(VillageContext);
+    const t = useExtracted('ActivityView');
 
     if (!activity) return null;
 
@@ -48,6 +52,12 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                 showDetails={showDetails}
             />
             {showDetails && ContentView && <ContentView activity={activity} />}
+            {showDetails && (
+                <div className={styles.separator}>
+                    <strong>{t('Réaction des pélicopains')}</strong>
+                </div>
+            )}
+            {showDetails && <UserViews activity={activity} />}
             {showDetails && <Comments activityId={activity.id} />}
         </>
     );

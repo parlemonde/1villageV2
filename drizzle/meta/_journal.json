@@ -64,6 +64,13 @@
       "when": 1770902811212,
       "tag": "0008_old_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1773227349285,
+      "tag": "0009_dry_donald_blake",
+      "breakpoints": true
     }
   ]
 }
