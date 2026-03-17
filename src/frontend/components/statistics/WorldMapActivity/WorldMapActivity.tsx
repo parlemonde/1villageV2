@@ -1,6 +1,7 @@
 'use client';
 
 import type { WorldStats } from '@app/api/statistics/world/route';
+import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Title } from '@frontend/components/ui/Title';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { jsonFetcher } from '@lib/json-fetcher';
@@ -20,9 +21,10 @@ interface WorldMapActivityProps {
 
 export const WorldMapActivity = ({ setCountry }: WorldMapActivityProps) => {
     const t = useExtracted('WorldMapActivity');
-    const { data: countriesStatus } = useSWR<WorldStats[]>('/api/statistics/world', jsonFetcher);
+    const { data: countriesStatus, isLoading } = useSWR<WorldStats[]>('/api/statistics/world', jsonFetcher);
 
-    const [toolTip, setToolTip] = useState<{ x: number; y: number; country: string } | null>(null);
+    const [tooltipCountry, setTooltipCountry] = useState<string>('');
+    const tooltipRef = useRef<HTMLDivElement>(null);
 
     const svgRef = useRef<SVGSVGElement>(null);
     const gRef = useRef<SVGGElement>(null);
@@ -67,6 +69,11 @@ export const WorldMapActivity = ({ setCountry }: WorldMapActivityProps) => {
     return (
         <div className={styles.container}>
             <div className={styles.mapContainer}>
+                {isLoading && (
+                    <div className={styles.loader}>
+                        <CircularProgress />
+                    </div>
+                )}
                 <svg ref={svgRef} className={styles.map} width="100%">
                     <rect width="300%" height="100%" fill="#a1e1ff" />
                     <g ref={gRef}>
@@ -74,27 +81,33 @@ export const WorldMapActivity = ({ setCountry }: WorldMapActivityProps) => {
                             ?.filter((f) => f.properties?.['name'] !== 'Antarctica')
                             .map((f) => {
                                 const feature = f as GeoJSON.Feature<GeoJSON.Geometry>;
-                                const country = feature.properties?.['wb_a2'];
+                                const country = feature.properties?.['iso_a2'];
                                 const status = statusByCountry?.[country];
                                 return (
                                     <path
+                                        className={styles.country}
                                         key={feature.properties?.['name']}
                                         d={path(feature) ?? undefined}
                                         fill={status ? statusColors[status] : '#ffffff'}
                                         stroke="#979797"
-                                        onMouseMove={(e) => {
-                                            setToolTip({ x: e.clientX, y: e.clientY, country: COUNTRIES[country] ?? '' });
+                                        onMouseEnter={() => {
+                                            setTooltipCountry(COUNTRIES[country] || '');
                                         }}
-                                        onMouseLeave={() => setToolTip(null)}
+                                        onMouseMove={(e) => {
+                                            if (tooltipRef.current) {
+                                                tooltipRef.current.style.transform = `translate(${e.clientX + 5}px, ${e.clientY - 35}px)`;
+                                            }
+                                        }}
+                                        onMouseLeave={() => setTooltipCountry('')}
                                         onClick={() => setCountry(country)}
                                     />
                                 );
                             })}
                     </g>
                 </svg>
-                {toolTip && (
-                    <div className={styles.tooltip} style={{ left: toolTip.x + 5, top: toolTip.y - 35 }}>
-                        <p>{toolTip.country}</p>
+                {tooltipCountry && (
+                    <div ref={tooltipRef} className={styles.tooltip}>
+                        <p>{tooltipCountry}</p>
                     </div>
                 )}
             </div>
