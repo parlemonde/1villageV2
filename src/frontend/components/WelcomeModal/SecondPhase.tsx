@@ -30,14 +30,19 @@ export const SecondPhase = () => {
     };
 
     const handleGoToPhase2 = async () => {
-        const { error } = await updateFirstLogin(2);
-        if (error) {
-            sendToast({ message: error.message, type: 'error' });
-            return;
+        try {
+            const { error } = await updateFirstLogin(2);
+            if (error) {
+                sendToast({ message: error.message, type: 'error' });
+                return;
+            }
+            setUser({ ...user, firstLogin: 2 });
+            setPhase(2);
+            setIsOpen(false);
+        } catch (e) {
+            console.error(e);
+            sendToast({ message: t('Une erreur est survenue'), type: 'error' });
         }
-        setUser({ ...user, firstLogin: 2 });
-        setPhase(2);
-        setIsOpen(false);
     };
 
     return (

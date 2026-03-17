@@ -72,6 +72,17 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     const { villageId, role } = loadSearchParams(nextUrl.searchParams);
 
     if (villageId !== null) {
+        // Check that the user belongs to the requested village (or is admin)
+        if (user.role !== 'admin') {
+            const userClassroom = await db
+                .select({ id: classrooms.id })
+                .from(classrooms)
+                .where(and(eq(classrooms.teacherId, user.id), eq(classrooms.villageId, villageId)))
+                .limit(1);
+            if (userClassroom.length === 0) {
+                return new NextResponse(null, { status: 403 });
+            }
+        }
         return NextResponse.json(await getVillageUsers(villageId));
     } else {
         if (user.role !== 'admin') {
