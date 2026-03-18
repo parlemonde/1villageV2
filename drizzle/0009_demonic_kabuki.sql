@@ -1,1 +1,0 @@
-ALTER TABLE "users" ADD COLUMN "first_login" smallint DEFAULT 0 NOT NULL;
