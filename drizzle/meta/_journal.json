@@ -61,15 +61,8 @@
     {
       "idx": 8,
       "version": "7",
-      "when": 1773756112100,
-      "tag": "0008_small_titanium_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1773758365386,
-      "tag": "0009_demonic_kabuki",
+      "when": 1770902811212,
+      "tag": "0008_old_bishop",
       "breakpoints": true
     }
   ]
