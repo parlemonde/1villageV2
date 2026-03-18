@@ -13,10 +13,10 @@ import useSWR from 'swr';
 
 import styles from './classrooms-reactions.module.css';
 
-type Reaction = {
+type ReactionCounter = {
     reactionValue: string;
     reactionCount: number;
-    classroomIds: number[];
+    classrooms: Classroom[];
 };
 
 type ReactionEmoji = {
@@ -46,7 +46,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     let classroomReaction, totalReactions;
     const { classroom } = useContext(UserContext);
 
-    const { data: nbClassroomsPerReactions = [] } = useSWR<Reaction[]>(
+    const { data: nbClassroomsPerReactions = [] } = useSWR<ReactionCounter[]>(
         activity
             ? `/api/reactions${serializeToQueryUrl({
                   activityId: activity.id,
@@ -74,9 +74,9 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         return column?.reactionCount || 0;
     }
 
-    function getCurrentClassroomReaction(classroom: Classroom) {
-        const column = nbClassroomsPerReactions?.find((col) => col.classroomIds.includes(classroom.id));
-        return REACTION_EMOJIS.find((item) => item.value === column?.reactionValue) ?? null;
+    function getCurrentClassroomReaction(curClassroom: Classroom) {
+        const curReaction = nbClassroomsPerReactions?.find((col) => col.classrooms?.find((c) => c.id === curClassroom.id));
+        return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
     function getTotalClassroomsReaction() {

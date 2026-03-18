@@ -1,5 +1,6 @@
 import { db } from '@server/database';
 import { activityReactions } from '@server/database/schemas/activity-reactions';
+import { classrooms, type Classroom } from '@server/database/schemas/classrooms';
 import { eq, count, sql } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -21,9 +22,10 @@ export const GET = async ({ nextUrl }: NextRequest): Promise<NextResponse> => {
         .select({
             reactionValue: activityReactions.reaction,
             reactionCount: count(),
-            classroomIds: sql`array_agg(${activityReactions.classroomId})`,
+            classrooms: sql<Classroom[]>`array_agg(row_to_json(${classrooms}))`,
         })
         .from(activityReactions)
+        .leftJoin(classrooms, eq(activityReactions.classroomId, classrooms.id))
         .where(eq(activityReactions.activityId, activityId))
         .groupBy(activityReactions.reaction);
 
