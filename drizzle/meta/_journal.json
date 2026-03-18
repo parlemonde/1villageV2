@@ -71,6 +71,13 @@
       "when": 1773227349285,
       "tag": "0009_dry_donald_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1774364155941,
+      "tag": "0010_wide_giant_man",
+      "breakpoints": true
     }
   ]
 }
