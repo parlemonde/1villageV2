@@ -85,8 +85,9 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         }, 0);
     }
 
-    function onReactionButtonClick(e: React.MouseEvent<HTMLButtonElement>) {
-        const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === e.currentTarget?.value) || null;
+    function onReactionButtonClick(e: React.MouseEvent<HTMLElement>) {
+        const buttonEl = e.currentTarget as HTMLButtonElement;
+        const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === buttonEl.value) || null;
         setCurrentReaction(reacted);
     }
 
