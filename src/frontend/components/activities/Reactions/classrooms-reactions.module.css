@@ -53,3 +53,18 @@
 .setReactionModal .reactionButton:hover {
     background-color: var(--primary-500);
 }
+
+.allReactionModal {
+    .line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+    }
+    .left {
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+    }
+}

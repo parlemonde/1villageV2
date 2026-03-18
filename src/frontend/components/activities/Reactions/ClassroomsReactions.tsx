@@ -1,3 +1,4 @@
+import { Avatar } from '@frontend/components/Avatar';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -19,10 +20,18 @@ type ReactionCounter = {
     classrooms: Classroom[];
 };
 
-type ReactionEmoji = {
+type ReactionExtended = {
     value: string;
     label: string;
     emoji: string;
+};
+
+// type ReactionEmoji = ReactionExtended['emoji'] | undefined;
+type ReactionValue = ReactionExtended['value'] | undefined;
+
+type ClassroomReaction = {
+    classroom: Classroom;
+    reaction: ReactionValue;
 };
 
 const useReactionEmoji = () => {
@@ -43,7 +52,7 @@ interface ClassroomsReactionsProps {
 export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
     const t = useExtracted('ClassroomsReactions');
     const REACTION_EMOJIS = useReactionEmoji();
-    let classroomReaction, totalReactions;
+    let classroomReaction: ReactionExtended | null, totalReactions: number, allClassroomsReactions: ClassroomReaction[] | null;
     const { classroom } = useContext(UserContext);
 
     const { data: nbClassroomsPerReactions = [] } = useSWR<ReactionCounter[]>(
@@ -58,13 +67,15 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     if (!classroom) {
         isDisabled = true;
         classroomReaction = null;
+        allClassroomsReactions = null;
         totalReactions = 0;
     } else {
         classroomReaction = getCurrentClassroomReaction(classroom);
+        allClassroomsReactions = getAllClassroomReaction();
         totalReactions = getTotalClassroomsReaction();
     }
 
-    const [currentReaction, setCurrentReaction] = useState<ReactionEmoji | null>(classroomReaction);
+    const [currentReaction, setCurrentReaction] = useState<ReactionExtended | null>(classroomReaction);
     const [nbReactions, setNbReactions] = useState<number>(totalReactions);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
@@ -83,6 +94,19 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         return nbClassroomsPerReactions?.reduce((total, item) => {
             return (total += item.reactionCount);
         }, 0);
+    }
+
+    function getAllClassroomReaction() {
+        const allreactions = nbClassroomsPerReactions?.reduce((acc, item) => {
+            const result = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue }));
+            return [...acc, ...result];
+        }, []);
+        return allreactions || null;
+    }
+
+    function getEmojiFromValue(value?: ReactionValue) {
+        const reaction = REACTION_EMOJIS.find((item) => item.value === value) ?? null;
+        return reaction?.emoji;
     }
 
     function onReactionButtonClick(e: React.MouseEvent<HTMLElement>) {
@@ -145,9 +169,17 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     isOpen={isAllReactionsModalOpen}
                     onClose={() => setIsAllReactionsModalOpen(false)}
                     width="sm"
-                    contentClassName={styles.getAllReactionModal}
+                    contentClassName={styles.allReactionModal}
                 >
-                    {/* TODO */}
+                    {allClassroomsReactions?.map((cr) => (
+                        <div key={cr.classroom.id} className={styles.line}>
+                            <span className={styles.left}>
+                                <Avatar classroom={cr.classroom} isPelico={false} size="sm" />
+                                <strong>{cr.classroom.name}</strong>
+                            </span>
+                            <span>{getEmojiFromValue(cr.reaction)}</span>
+                        </div>
+                    )) || t('Pas encore de réactions')}
                 </Modal>
             )}
 
