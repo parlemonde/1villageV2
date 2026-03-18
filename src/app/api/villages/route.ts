@@ -1,13 +1,14 @@
 import { db } from '@server/database';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { createLoader, parseAsInteger } from 'nuqs/server';
+import { createLoader, parseAsInteger, parseAsString } from 'nuqs/server';
 
 const GetVillagesParams = {
     villageId: parseAsInteger,
+    country: parseAsString,
 };
 
 const loadSearchParams = createLoader(GetVillagesParams);
@@ -18,10 +19,10 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, country } = loadSearchParams(nextUrl.searchParams);
 
     const allVillages = await db.query.villages.findMany({
-        where: villageId ? eq(villages.id, villageId) : undefined,
+        where: and(villageId ? eq(villages.id, villageId) : undefined, country ? sql`${villages.countries} ? ${country}` : undefined),
         orderBy: villages.id,
     });
     return NextResponse.json(allVillages);

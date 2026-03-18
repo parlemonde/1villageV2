@@ -3,7 +3,7 @@ import { Button } from '@frontend/components/ui/Button';
 import Image from 'next/image';
 import { useExtracted } from 'next-intl';
 
-export const MascotCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+export const MascotCard = ({ activity, shouldDisableButtons, onEdit, onDelete, children }: ActivityContentCardProps) => {
     const t = useExtracted('MascotCard');
     const tCommon = useExtracted('common');
 
@@ -62,7 +62,15 @@ export const MascotCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
                     </p>
                 </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    gap: '8px',
+                }}
+            >
+                {children}
                 {onEdit || onDelete ? (
                     <>
                         {onEdit && <Button label={tCommon('Modifier')} variant="contained" color="secondary" onClick={onEdit} />}
