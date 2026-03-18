@@ -1,1 +1,0 @@
-ALTER TABLE "activities" ADD COLUMN "views" integer[] DEFAULT '{}'::integer[];
