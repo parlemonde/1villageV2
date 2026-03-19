@@ -48,10 +48,9 @@ const useReactionEmoji = () => {
 
 interface ClassroomsReactionsProps {
     activity: Partial<Activity>;
-    isDisabled?: boolean;
 }
 
-export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
+export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity }) => {
     const t = useExtracted('ClassroomsReactions');
     const REACTION_EMOJIS = useReactionEmoji();
     const { classroom } = useContext(UserContext);
@@ -70,7 +69,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     let totalReactions: number;
 
     if (!classroom) {
-        isDisabled = true;
         currentClassroomReaction = null;
         allClassroomsReactions = null;
         totalReactions = 0;
@@ -199,15 +197,13 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
     return (
         <div className={styles.reactionsContainer}>
-            {isDisabled ? null : (
-                <Button
-                    title={t('Réagir')}
-                    onClick={() => setIsModalOpen(true)}
-                    label={<EyeOpenIcon className={styles.addReactionIcon} />}
-                    color="grey"
-                    variant="borderless"
-                ></Button>
-            )}
+            <Button
+                title={t('Réagir')}
+                onClick={() => setIsModalOpen(true)}
+                label={<EyeOpenIcon className={styles.addReactionIcon} />}
+                color="grey"
+                variant="borderless"
+            ></Button>
             <div className={styles.reactionsListWrapper}>
                 {/* render all activities reactions for activityId grouped by reaction type */}
                 {REACTION_EMOJIS.map((reaction, index) => (
@@ -223,7 +219,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         rightIcon={<span className={styles.counterBadge}>{getCountForReaction(reaction.value)}</span>}
                         size="sm"
                         variant="contained"
-                        disabled={isDisabled}
                         className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
                         style={{ position: 'relative', zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
                     />
@@ -278,7 +273,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                                 label={reaction.emoji}
                                 size="sm"
                                 variant="contained"
-                                disabled={isDisabled}
                                 className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
                             />
                         </div>
