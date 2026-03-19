@@ -20,14 +20,14 @@ type ReactionCounter = {
     classrooms: Classroom[];
 };
 
-type ReactionExtended = {
+type ReactionRaw = {
     value: string;
     label: string;
     emoji: string;
 };
 
-// type ReactionEmoji = ReactionExtended['emoji'] | undefined;
-type ReactionValue = ReactionExtended['value'] | undefined;
+// type ReactionEmoji = ReactionRaw['emoji'] | undefined;
+type ReactionValue = ReactionRaw['value'] | undefined;
 
 type ClassroomReaction = {
     classroom: Classroom;
@@ -52,7 +52,6 @@ interface ClassroomsReactionsProps {
 export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, isDisabled = false }) => {
     const t = useExtracted('ClassroomsReactions');
     const REACTION_EMOJIS = useReactionEmoji();
-    let classroomReaction: ReactionExtended | null, totalReactions: number, allClassroomsReactions: ClassroomReaction[] | null;
     const { classroom } = useContext(UserContext);
 
     const { data: nbClassroomsPerReactions = [] } = useSWR<ReactionCounter[]>(
@@ -64,18 +63,22 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         jsonFetcher,
     );
 
+    let currentClassroomReaction: ReactionRaw | null;
+    let allClassroomsReactions: ClassroomReaction[] | null;
+    let totalReactions: number;
+
     if (!classroom) {
         isDisabled = true;
-        classroomReaction = null;
+        currentClassroomReaction = null;
         allClassroomsReactions = null;
         totalReactions = 0;
     } else {
-        classroomReaction = getCurrentClassroomReaction(classroom);
+        currentClassroomReaction = getCurrentClassroomReaction(classroom);
         allClassroomsReactions = getAllClassroomReaction();
-        totalReactions = getTotalClassroomsReaction();
+        totalReactions = allClassroomsReactions?.length ?? 0;
     }
 
-    const [currentReaction, setCurrentReaction] = useState<ReactionExtended | null>(classroomReaction);
+    const [currentReaction, setCurrentReaction] = useState<ReactionRaw | null>(currentClassroomReaction);
     const [nbReactions, setNbReactions] = useState<number>(totalReactions);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
@@ -97,8 +100,8 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     }
 
     function getAllClassroomReaction() {
-        const allreactions = nbClassroomsPerReactions?.reduce((acc, item) => {
-            const result = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue }));
+        const allreactions = nbClassroomsPerReactions?.reduce((acc: ClassroomReaction[], item) => {
+            const result = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
             return [...acc, ...result];
         }, []);
         return allreactions || null;
