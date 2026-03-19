@@ -112,11 +112,11 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         setCurrentReaction(reacted);
     }
 
-    async function onReactionSubmit() {
-        if (!classroom || !activity.id || !currentReaction?.value) return;
+    async function onReactionSubmit(selectedReaction: ReactionRaw | null) {
+        if (!classroom || !activity.id || !selectedReaction?.value) return;
 
         const previousData = nbClassroomsPerReactions;
-        const isToggleOff = currentClassroomReaction?.value === currentReaction.value;
+        const isToggleOff = currentClassroomReaction?.value === selectedReaction.value;
 
         // Helper to update reactions data optimistically
         const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: string | null, removingReaction: boolean) => {
@@ -169,12 +169,12 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                           }
                         : counter,
                 ),
-                currentReaction.value,
+                selectedReaction.value,
                 false,
             ).filter((counter) => counter.reactionCount > 0);
 
             await mutate(optimisticData, false);
-            setCurrentReaction(currentReaction);
+            setCurrentReaction(selectedReaction);
             if (!currentClassroomReaction) {
                 setNbReactions((prev) => prev + 1);
             }
@@ -183,7 +183,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             const result = await postReaction({
                 activityId: activity.id,
                 classroomId: classroom.id,
-                reaction: currentReaction.value,
+                reaction: selectedReaction.value,
             });
 
             // Revalidate if there was an error
@@ -211,10 +211,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         key={index}
                         title={reaction.label}
                         value={reaction.value}
-                        onClick={(e) => {
-                            onReactionButtonClick(e);
-                            onReactionSubmit();
-                        }}
+                        onClick={() => onReactionSubmit(reaction)}
                         label={reaction.emoji}
                         rightIcon={<span className={styles.counterBadge}>{getCountForReaction(reaction.value)}</span>}
                         size="sm"
@@ -258,7 +255,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     title={t('La Réaction de votre classe')}
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onConfirm={() => onReactionSubmit()}
+                    onConfirm={() => onReactionSubmit(currentReaction)}
                     isConfirmDisabled={() => currentReaction === null}
                     width="sm"
                     contentClassName={styles.setReactionModal}
