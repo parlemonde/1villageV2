@@ -18,6 +18,9 @@ export async function updatePelicoPresentation(
     if (!user) {
         throw new Error('Unauthorized');
     }
+    if (user.role !== 'admin') {
+        throw new Error('Forbidden');
+    }
 
     const existing = await db.select().from(activities).where(eq(activities.type, 'presentation-pelico')).limit(1);
 
