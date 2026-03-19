@@ -8,7 +8,7 @@ import { getExtracted } from 'next-intl/server';
 import styles from './page.module.css';
 
 export default async function PelicoPage() {
-    const t = await getExtracted('app.pelico');
+    const t = await getExtracted('app.(1village).pelico');
     const presentation = await getPelicoPresentation();
     const presentationData = presentation?.type === 'presentation-pelico' ? presentation.data : null;
 
