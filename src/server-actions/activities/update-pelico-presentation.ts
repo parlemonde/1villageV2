@@ -29,7 +29,7 @@ export async function updatePelicoPresentation(
             type: 'presentation-pelico',
             data: data,
             userId: user.id,
-            phase: 1, // ?
+            phase: 1, //Just set to match not null constraint on database, but no rule associated with phase inside pelico presentation
             isPelico: true,
             isPinned: false,
         });
