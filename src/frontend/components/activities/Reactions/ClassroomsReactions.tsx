@@ -7,6 +7,8 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import { deleteReaction } from '@server-actions/reactions/delete-reaction';
+import { postReaction } from '@server-actions/reactions/post-reaction';
 import classNames from 'clsx';
 import { useExtracted } from 'next-intl';
 import React, { useState, useContext } from 'react';
@@ -54,7 +56,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const REACTION_EMOJIS = useReactionEmoji();
     const { classroom } = useContext(UserContext);
 
-    const { data: nbClassroomsPerReactions = [] } = useSWR<ReactionCounter[]>(
+    const { data: nbClassroomsPerReactions = [], mutate } = useSWR<ReactionCounter[]>(
         activity
             ? `/api/reactions${serializeToQueryUrl({
                   activityId: activity.id,
@@ -93,12 +95,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
-    function getTotalClassroomsReaction() {
-        return nbClassroomsPerReactions?.reduce((total, item) => {
-            return (total += item.reactionCount);
-        }, 0);
-    }
-
     function getAllClassroomReaction() {
         const allreactions = nbClassroomsPerReactions?.reduce((acc: ClassroomReaction[], item) => {
             const result = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
@@ -118,11 +114,87 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         setCurrentReaction(reacted);
     }
 
-    function onReactionSubmit() {
-        // call server action with currentReaction, activity.id and classroom.id
+    async function onReactionSubmit() {
+        if (!classroom || !activity.id || !currentReaction?.value) return;
+
+        const previousData = nbClassroomsPerReactions;
+        const isToggleOff = currentClassroomReaction?.value === currentReaction.value;
+
+        // Helper to update reactions data optimistically
+        const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: string | null, removingReaction: boolean) => {
+            return data
+                .map((counter) => {
+                    if (removingReaction && counter.reactionValue === currentClassroomReaction?.value) {
+                        // Removing current reaction
+                        return {
+                            ...counter,
+                            reactionCount: Math.max(0, counter.reactionCount - 1),
+                            classrooms: counter.classrooms.filter((c) => c.id !== classroom.id),
+                        };
+                    } else if (!removingReaction && counter.reactionValue === newReaction) {
+                        // Adding new reaction
+                        return {
+                            ...counter,
+                            reactionCount: counter.reactionCount + 1,
+                            classrooms: [...counter.classrooms, classroom],
+                        };
+                    }
+                    return counter;
+                })
+                .filter((counter) => counter.reactionCount > 0);
+        };
+
+        // Optimistic update: immediately show the change in the UI
+        if (isToggleOff) {
+            // Removing reaction
+            const optimisticData = updateReactionsOptimistically(previousData, null, true);
+            await mutate(optimisticData, false);
+            setCurrentReaction(null);
+            setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
+
+            // Server request in background
+            const result = await deleteReaction(activity.id, classroom.id);
+
+            // Revalidate if there was an error
+            if (result?.error) {
+                mutate();
+            }
+        } else {
+            // Adding/updating reaction
+            const optimisticData = updateReactionsOptimistically(
+                previousData.map((counter) =>
+                    counter.reactionValue === currentClassroomReaction?.value
+                        ? {
+                              ...counter,
+                              reactionCount: Math.max(0, counter.reactionCount - 1),
+                              classrooms: counter.classrooms.filter((c) => c.id !== classroom.id),
+                          }
+                        : counter,
+                ),
+                currentReaction.value,
+                false,
+            ).filter((counter) => counter.reactionCount > 0);
+
+            await mutate(optimisticData, false);
+            setCurrentReaction(currentReaction);
+            if (!currentClassroomReaction) {
+                setNbReactions((prev) => prev + 1);
+            }
+
+            // Server request in background
+            const result = await postReaction({
+                activityId: activity.id,
+                classroomId: classroom.id,
+                reaction: currentReaction.value,
+            });
+
+            // Revalidate if there was an error
+            if (result?.error) {
+                mutate();
+            }
+        }
+
         setIsModalOpen(false);
-        setNbReactions((prev) => prev + 1);
-        console.warn('onReactionSubmit....', activity.id, currentReaction);
     }
 
     return (
