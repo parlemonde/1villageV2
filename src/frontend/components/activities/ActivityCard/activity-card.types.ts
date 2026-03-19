@@ -1,4 +1,5 @@
 import type { Activity } from '@server/database/schemas/activities';
+import type React from 'react';
 
 export type ActivityContentCardProps = {
     activity: Partial<Activity>;
@@ -6,4 +7,5 @@ export type ActivityContentCardProps = {
     onEdit?: () => void;
     onDelete?: () => void;
     hasActions?: boolean;
+    children?: React.ReactNode;
 };

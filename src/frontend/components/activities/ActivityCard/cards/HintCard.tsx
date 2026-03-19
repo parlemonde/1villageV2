@@ -2,7 +2,7 @@ import type { ActivityContentCardProps } from '@frontend/components/activities/A
 import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer';
 import { Button } from '@frontend/components/ui/Button';
 
-export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete, children }: ActivityContentCardProps) => {
     if (activity.type !== 'indice') {
         return null;
     }
@@ -64,7 +64,15 @@ export const HintCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: A
                         <HtmlViewerText content={firstHtmlText} />
                     </p>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        gap: '8px',
+                    }}
+                >
+                    {children}
                     {onEdit || onDelete ? (
                         <>
                             {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}

@@ -4,7 +4,7 @@ import { HtmlViewerText } from '@frontend/components/html/HtmlViewer/HtmlViewer'
 import { Button } from '@frontend/components/ui/Button';
 import { useExtracted } from 'next-intl';
 
-export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete, children }: ActivityContentCardProps) => {
     const tCommon = useExtracted('common');
     const { getThemeLabel } = useEnigmeThemes();
     const themeLabel = getThemeLabel((activity.type === 'enigme' && activity.data?.defaultTheme) || CUSTOM_THEME_VALUE);
@@ -70,7 +70,15 @@ export const PuzzleCard = ({ activity, shouldDisableButtons, onEdit, onDelete }:
                         <HtmlViewerText content={firstHtmlText} />
                     </p>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        gap: '8px',
+                    }}
+                >
+                    {children}
                     {onEdit || onDelete ? (
                         <>
                             {onEdit && <Button label={tCommon('Modifier')} variant="contained" color="secondary" onClick={onEdit} />}

@@ -7,7 +7,7 @@ import { EcologicalChallengeCard } from './challenge/EcologicalChallengeCard';
 import { FreeThemeChallengeCard } from './challenge/FreeThemeChallengeCard';
 import { LinguisticChallengeCard } from './challenge/LinguisticChallengeCard';
 
-export const ChallengeCard = ({ activity, shouldDisableButtons, onEdit, onDelete }: ActivityContentCardProps) => {
+export const ChallengeCard = ({ activity, shouldDisableButtons, onEdit, onDelete, children }: ActivityContentCardProps) => {
     if (activity.type !== 'defi') {
         return null;
     }
@@ -26,7 +26,15 @@ export const ChallengeCard = ({ activity, shouldDisableButtons, onEdit, onDelete
                 <>
                     <ChallengeCard activity={activity} onEdit={onEdit} onDelete={onDelete} shouldDisableButtons={shouldDisableButtons} />
 
-                    <div style={{ textAlign: 'right' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            gap: '8px',
+                        }}
+                    >
+                        {children}
                         {onEdit || onDelete ? (
                             <>
                                 {onEdit && <Button label="Modifier" variant="contained" color="secondary" onClick={onEdit} />}
