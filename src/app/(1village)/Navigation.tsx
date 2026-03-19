@@ -98,8 +98,8 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
     }
     activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
 
-    // Do not display navigation on activity page
-    if (pathname.startsWith('/activities/')) {
+    // Do not display navigation on activity or pelico page
+    if (pathname.startsWith('/activities/') || pathname.startsWith('/pelico')) {
         return null;
     }
 
