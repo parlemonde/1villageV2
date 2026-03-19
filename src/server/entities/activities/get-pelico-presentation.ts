@@ -1,5 +1,3 @@
-'use server';
-
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';

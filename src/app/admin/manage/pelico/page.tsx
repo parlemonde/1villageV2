@@ -3,7 +3,7 @@ import { PageContainer } from '@frontend/components/ui/PageContainer/PageContain
 import { Title } from '@frontend/components/ui/Title';
 import type { UserRole } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getPelicoPresentation } from '@server-actions/activities/get-pelico-presentation';
+import { getPelicoPresentation } from '@server/entities/activities/get-pelico-presentation';
 import { getExtracted } from 'next-intl/server';
 
 import { PelicoPresentationPage } from './PelicoPresentationPage';

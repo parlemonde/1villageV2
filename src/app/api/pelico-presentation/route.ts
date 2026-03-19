@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getPelicoPresentation } from '@server-actions/activities/get-pelico-presentation';
+import { getPelicoPresentation } from '@server/entities/activities/get-pelico-presentation';
 import { NextResponse } from 'next/server';
 
 export const GET = async () => {

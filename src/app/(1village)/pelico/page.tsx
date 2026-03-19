@@ -1,7 +1,7 @@
 import { ContentViewer } from '@frontend/components/content/ContentViewer/ContentViewer';
 import { PageContainer } from '@frontend/components/ui/PageContainer/PageContainer';
 import { Title } from '@frontend/components/ui/Title';
-import { getPelicoPresentation } from '@server-actions/activities/get-pelico-presentation';
+import { getPelicoPresentation } from '@server/entities/activities/get-pelico-presentation';
 import { getExtracted } from 'next-intl/server';
 
 import styles from './page.module.css';
