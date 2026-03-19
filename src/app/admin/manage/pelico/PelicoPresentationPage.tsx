@@ -11,8 +11,6 @@ import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useState } from 'react';
 
-// import styles from './pelico.module.css';
-
 interface PelicoPageProps {
     presentation: Activity | null;
 }
@@ -40,7 +38,6 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
         try {
             await updatePelicoPresentation(presentationData);
             setHasChanges(false);
-            //router.push('/admin/newportal/manage/settings');
             router.refresh();
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
