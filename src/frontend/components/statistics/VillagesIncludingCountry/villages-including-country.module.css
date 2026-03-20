@@ -1,0 +1,35 @@
+.container {
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.villageList {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 16px;
+    column-gap: 64px;
+}
+
+.statusColor {
+    width: 20px;
+    height: 20px;
+    clip-path: circle(50%);
+    flex: 0 0 auto;
+}
+
+.villageItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.heading {
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 16px;
+}
