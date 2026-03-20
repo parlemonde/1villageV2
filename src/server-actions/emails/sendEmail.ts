@@ -1,6 +1,6 @@
 'use server';
-import { getTemplate } from '@server/emails/templates/getTemplate';
-import type { EmailTemplateProps, EmailType } from '@server/emails/templates/types';
+import { getTemplate } from '@server/emails/templates/utils/getTemplate';
+import type { EmailTemplateProps, EmailType } from '@server/emails/templates/utils/types';
 import { getTransporter } from '@server/emails/transporter';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { logger } from '@server/lib/logger';
@@ -18,14 +18,14 @@ export const sendEmail = async <T extends EmailType>(
         const user = getEnvVariable('NODEMAILER_USER');
         const transporter = await getTransporter();
 
-        const template = await getTemplate(emailType, props);
+        const { html, text } = await getTemplate(emailType, props);
 
         await transporter.sendMail({
             from: `"Par le Monde" <${user}>`,
             to,
             subject,
-            text: template.text,
-            html: template.html,
+            html,
+            text,
         });
 
         return {};
