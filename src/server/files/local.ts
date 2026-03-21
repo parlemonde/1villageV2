@@ -1,3 +1,4 @@
+import { CancelablePromise, isCancelablePromiseCanceledError } from '@lib/cancelablePromise';
 import { getBuffer } from '@server/lib/get-buffer';
 import { getSingleBytesRange } from '@server/lib/get-single-bytes-range';
 import { logger } from '@server/lib/logger';
@@ -26,27 +27,34 @@ export async function getLocalFileData(key: string): Promise<FileData | null> {
     }
 }
 
-export async function getLocalFile(key: string, range?: string): Promise<Readable | null> {
-    try {
-        const stats = fs.statSync(getFilePath(key));
-        const singleBytesRange = getSingleBytesRange(stats.size, range);
-        return fs.createReadStream(getFilePath(key), singleBytesRange ? { start: singleBytesRange.start, end: singleBytesRange.end } : undefined);
-    } catch {
-        logger.error(`File ${key} not found !`);
-        return null;
-    }
+export function getLocalFile(key: string, range?: string, abortController?: AbortController): CancelablePromise<Readable | null> {
+    return CancelablePromise.from(() => {
+        try {
+            const stats = fs.statSync(getFilePath(key));
+            const singleBytesRange = getSingleBytesRange(stats.size, range);
+            return fs.createReadStream(getFilePath(key), singleBytesRange ? { start: singleBytesRange.start, end: singleBytesRange.end } : undefined);
+        } catch {
+            logger.error(`File ${key} not found !`);
+            return null;
+        }
+    }, abortController);
 }
 
-export async function uploadLocalFile(key: string, filedata: Buffer | Readable | Stream): Promise<void> {
-    try {
-        const buffer = await getBuffer(filedata);
-        const previousFolders = key.split('/').slice(0, -1).join('/');
-        const directory = path.join(temporaryDirectory, previousFolders);
-        await fs.mkdirs(directory);
-        await fs.writeFile(getFilePath(key), buffer);
-    } catch (e) {
-        logger.error(e);
-    }
+export function uploadLocalFile(key: string, filedata: Buffer | Readable | Stream, abortController?: AbortController): CancelablePromise<void> {
+    return CancelablePromise.from(async () => {
+        try {
+            const buffer = await getBuffer(filedata, abortController);
+            const previousFolders = key.split('/').slice(0, -1).join('/');
+            const directory = path.join(temporaryDirectory, previousFolders);
+            await fs.mkdirs(directory);
+            await fs.writeFile(getFilePath(key), buffer);
+        } catch (e) {
+            if (isCancelablePromiseCanceledError(e)) {
+                throw e;
+            }
+            logger.error(e);
+        }
+    }, abortController);
 }
 
 export async function deleteLocalFile(key: string): Promise<void> {

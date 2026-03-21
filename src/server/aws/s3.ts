@@ -1,3 +1,4 @@
+import { CancelablePromise, isCancelablePromiseCanceledError } from '@lib/cancelablePromise';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { FileData } from '@server/files/files.types';
 import { getBuffer } from '@server/lib/get-buffer';
@@ -15,21 +16,27 @@ export function getS3FileUrl(key: string): string {
     return `${S3_BASE_URL}/${key}`;
 }
 
-export async function getS3File(key: string, range?: string): Promise<Readable | null> {
-    try {
-        const awsClient = getAwsClient();
-        const response = await awsClient.fetch(getS3FileUrl(key), {
-            method: 'GET',
-            headers: range ? { Range: range } : {},
-        });
-        if (response.ok) {
-            return response.body === null ? null : Readable.fromWeb(response.body as ReadableStream);
+export function getS3File(key: string, range?: string, abortController?: AbortController): CancelablePromise<Readable | null> {
+    return CancelablePromise.from(async (signal) => {
+        try {
+            const awsClient = getAwsClient();
+            const response = await awsClient.fetch(getS3FileUrl(key), {
+                method: 'GET',
+                headers: range ? { Range: range } : {},
+                signal,
+            });
+            if (response.ok) {
+                return response.body === null ? null : Readable.fromWeb(response.body as ReadableStream);
+            }
+            return null;
+        } catch (e) {
+            if (signal.aborted || isCancelablePromiseCanceledError(e)) {
+                throw e;
+            }
+            logger.error(e);
+            return null;
         }
-        return null;
-    } catch (e) {
-        logger.error(e);
-        return null;
-    }
+    }, abortController);
 }
 
 export async function getS3FileData(key: string): Promise<FileData | null> {
@@ -53,21 +60,32 @@ export async function getS3FileData(key: string): Promise<FileData | null> {
     }
 }
 
-export async function uploadS3File(key: string, filedata: Buffer | Readable | Stream, contentType?: string): Promise<void> {
-    try {
-        const buffer = await getBuffer(filedata);
-        const awsClient = getAwsClient();
-        await awsClient.fetch(getS3FileUrl(key), {
-            method: 'PUT',
-            body: buffer as unknown as BodyInit,
-            headers: {
-                'Content-Length': buffer.length.toString(),
-                'Content-Type': contentType || 'binary/octet-stream',
-            },
-        });
-    } catch (e) {
-        logger.error(e);
-    }
+export function uploadS3File(
+    key: string,
+    filedata: Buffer | Readable | Stream,
+    contentType?: string,
+    abortController?: AbortController,
+): CancelablePromise<void> {
+    return CancelablePromise.from(async (signal) => {
+        try {
+            const buffer = await getBuffer(filedata, abortController);
+            const awsClient = getAwsClient();
+            await awsClient.fetch(getS3FileUrl(key), {
+                method: 'PUT',
+                body: buffer as unknown as BodyInit,
+                signal,
+                headers: {
+                    'Content-Length': buffer.length.toString(),
+                    'Content-Type': contentType || 'binary/octet-stream',
+                },
+            });
+        } catch (e) {
+            if (signal.aborted || isCancelablePromiseCanceledError(e)) {
+                throw e;
+            }
+            logger.error(e);
+        }
+    }, abortController);
 }
 
 export async function deleteS3File(key: string): Promise<void> {
