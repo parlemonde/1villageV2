@@ -80,6 +80,12 @@ export class CancelablePromise<T> extends Promise<T> {
             }
         });
         this._abortController = abortController;
+        // `await` internally calls `.then(...)` and ignores the returned promise.
+        // Since this class returns another CancelablePromise from `then`, those
+        // internal bridge promises can be aborted without any user-land consumer.
+        // A native no-op rejection handler keeps them marked as handled while
+        // preserving normal rejection behavior for real callers.
+        void Promise.prototype.then.call(this, undefined, () => undefined);
     }
 
     get signal() {
@@ -91,24 +97,24 @@ export class CancelablePromise<T> extends Promise<T> {
         onRejected?: ((reason?: unknown) => TResult2 | PromiseLike<TResult2>) | null,
     ): CancelablePromise<TResult1 | TResult2> {
         return new CancelablePromise<TResult1 | TResult2>((resolve, reject) => {
-            void super.then(
-                (value) => {
+            const chainedPromise = super.then(
+                (value): TResult1 | PromiseLike<TResult1> => {
                     if (onFulfilled === undefined || onFulfilled === null) {
-                        resolve(value as unknown as TResult1);
-                        return;
+                        return value as unknown as TResult1;
                     }
 
-                    Promise.resolve(onFulfilled(value)).then(resolve, reject);
+                    return onFulfilled(value);
                 },
-                (reason) => {
+                (reason): TResult2 | PromiseLike<TResult2> => {
                     if (onRejected === undefined || onRejected === null) {
-                        reject(reason);
-                        return;
+                        throw reason;
                     }
 
-                    Promise.resolve(onRejected(reason)).then(resolve, reject);
+                    return onRejected(reason);
                 },
             );
+
+            void chainedPromise.then(resolve, reject);
         }, this._abortController);
     }
 
