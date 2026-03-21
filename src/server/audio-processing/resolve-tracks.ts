@@ -8,6 +8,8 @@ import path from 'node:path';
 import type { AudioMixJob } from './types';
 import { isInternalMediaSource } from './validate-track';
 
+const TRACK_RESOLUTION_BATCH_SIZE = 5;
+
 const getTempExtension = (sourceKey: string, contentType?: string | null) => {
     const sourceExtension = path.extname(sourceKey);
     if (sourceExtension !== '') {
@@ -77,12 +79,19 @@ const resolveRemoteSourceToFile = async (job: AudioMixJob, sourceKey: string, wo
 export const resolveTrackSourcesToFiles = async (job: AudioMixJob, workdir: string) => {
     const inputFiles: string[] = [];
 
-    for (const [index, track] of job.tracks.entries()) {
-        const filePath = isInternalMediaSource(track.sourceKey)
-            ? await resolveInternalSourceToFile(job, track.sourceKey, workdir, index)
-            : await resolveRemoteSourceToFile(job, track.sourceKey, workdir, index);
+    for (let batchStart = 0; batchStart < job.tracks.length; batchStart += TRACK_RESOLUTION_BATCH_SIZE) {
+        const currentTracks = job.tracks.slice(batchStart, batchStart + TRACK_RESOLUTION_BATCH_SIZE);
+        const resolvedBatch = await Promise.all(
+            currentTracks.map((track, batchIndex) => {
+                const index = batchStart + batchIndex;
 
-        inputFiles.push(filePath);
+                return isInternalMediaSource(track.sourceKey)
+                    ? resolveInternalSourceToFile(job, track.sourceKey, workdir, index)
+                    : resolveRemoteSourceToFile(job, track.sourceKey, workdir, index);
+            }),
+        );
+
+        inputFiles.push(...resolvedBatch);
     }
 
     return inputFiles;
