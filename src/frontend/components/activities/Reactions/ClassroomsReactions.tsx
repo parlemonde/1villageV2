@@ -2,9 +2,9 @@ import { Avatar } from '@frontend/components/Avatar';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
+import AddReactionIcon from '@frontend/svg/addReaction.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
-import { EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
@@ -202,9 +202,11 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             <Button
                 title={t('Réagir')}
                 onClick={() => setIsModalOpen(true)}
-                label={<EyeOpenIcon className={styles.addReactionIcon} />}
+                label={<AddReactionIcon className={styles.addReactionIcon} />}
                 color="grey"
-                variant="borderless"
+                size="sm"
+                variant="contained"
+                className={styles.addReactionButton}
             ></Button>
             <div className={styles.reactionsListWrapper}>
                 {/* render all activities reactions for activityId grouped by reaction type */}
@@ -229,7 +231,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 size="sm"
                 variant="borderless"
                 color="primary"
-                style={{ position: 'relative', left: REACTION_EMOJIS.length * -8 + 'px' }}
+                style={{ position: 'relative', left: (REACTION_EMOJIS.length - 1) * -8 + 'px' }}
             ></Button>
 
             {isAllReactionsModalOpen && (

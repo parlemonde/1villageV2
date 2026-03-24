@@ -2,7 +2,16 @@
     display: flex;
     justify-self: start;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+}
+
+.reactionsContainer .addReactionButton {
+    color: var(--primary-600);
+    background-color: white;
+}
+
+.reactionsContainer .addReactionButton:hover {
+    background-color: var(--primary-300);
 }
 
 .reactionsContainer .reactionButton {
