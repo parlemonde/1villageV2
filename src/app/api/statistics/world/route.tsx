@@ -21,9 +21,9 @@ export const GET = async () => {
     WITH stats AS (
         SELECT
             "classrooms"."countryCode" AS country,
-            COUNT(*) AS total,
-            COUNT(*) FILTER (WHERE "activities"."publishDate" >= NOW() - INTERVAL '21 days') AS hasPostedRecently,
-            COUNT(*) FILTER (WHERE "auth_sessions"."updated_at" < NOW() - INTERVAL '21 days') AS ghost
+            COUNT(DISTINCT "classrooms"."id") AS total,
+            COUNT(DISTINCT "activities"."classroomId") FILTER (WHERE "activities"."publishDate" >= NOW() - INTERVAL '21 days') AS hasPostedRecently,
+            COUNT("users"."id") FILTER (WHERE "auth_sessions"."updated_at" < NOW() - INTERVAL '21 days') AS ghost
         FROM "activities"
         INNER JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
         INNER JOIN "users" ON "activities"."userId" = "users"."id"

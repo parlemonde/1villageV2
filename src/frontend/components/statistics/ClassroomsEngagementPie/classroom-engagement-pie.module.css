@@ -1,0 +1,45 @@
+.container {
+    background-color: var(--grey-100);
+    border-radius: 10px;
+    padding: 16px;
+    width: max-content;
+    position: relative;
+}
+
+.pie {
+    width: 100%;
+    max-width: 300px;
+    max-height: 300px;
+}
+.legend {
+    width: fit-content;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legendColor {
+    width: 20px;
+    height: 20px;
+    clip-path: circle(50%);
+    flex: 0 0 auto;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

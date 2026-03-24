@@ -32,7 +32,7 @@ export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id:
         FROM "villages"
         INNER JOIN "classrooms" on "classrooms"."villageId" = "villages"."id"
         INNER JOIN "users" ON "classrooms"."teacherId" = "users"."id"
-        LEFT JOIN "activities" ON "activities"."userId" = "users"."id"
+        LEFT JOIN "activities" ON "activities"."classroomId" = "classrooms"."id"
         LEFT JOIN "auth_sessions" ON "users"."id" = "auth_sessions"."user_id"
         WHERE "classrooms"."countryCode" = ${countryCode}
         GROUP BY "villages"."name", "villages"."id", "classrooms"."id"
@@ -56,9 +56,9 @@ export const GET = async (_req: NextRequest, { params }: { params: Promise<{ id:
         "villageName",
         "villageId",
         CASE
-            WHEN ghost >= total * 0.5 THEN 'ghost'
             WHEN active >= total * 0.5 THEN 'active'
-            ELSE 'inactive'
+            WHEN ghost >= total * 0.5 THEN 'ghost'
+            ELSE 'observer'
         END AS status
     FROM stats;`);
 

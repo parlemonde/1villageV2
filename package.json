@@ -66,6 +66,7 @@
     "react-fast-compare": "^3.2.2",
     "react-remove-scroll": "^2.7.2",
     "react-select": "^5.10.2",
+    "recharts": "^3.8.0",
     "sanitize-filename": "^1.6.3",
     "sharp": "^0.34.5",
     "swr": "^2.3.8",
