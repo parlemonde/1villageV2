@@ -1,5 +1,6 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { ContentEditor } from '@frontend/components/content/ContentEditor/ContentEditor';
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { Button } from '@frontend/components/ui/Button/Button';
@@ -39,8 +40,10 @@ export const PelicoPresentationPage = ({ presentation }: PelicoPageProps) => {
             await updatePelicoPresentation(presentationData);
             setHasChanges(false);
             router.refresh();
+            sendToast({ message: t('Sauvegarde réussie'), type: 'success' });
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
+            sendToast({ message: t('Erreur lors de la sauvegarde'), type: 'error' });
         } finally {
             setIsSaving(false);
         }
