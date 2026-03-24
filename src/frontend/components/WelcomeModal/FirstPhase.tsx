@@ -24,7 +24,13 @@ import styles from './welcome-modal.module.css';
 const FIXED_STEPS = 3;
 
 const buildInitialProfileData = (
-    classroom: { name: string; level: string | null; address: string; alias: string | null },
+    classroom: {
+        name: string;
+        level: string | null;
+        address: string;
+        alias: string | null;
+        coordinates?: { latitude: number; longitude: number } | null;
+    },
     userName: string,
 ): ProfileData => ({
     userName,
@@ -32,6 +38,9 @@ const buildInitialProfileData = (
     classLevel: classroom.level || '',
     schoolAddress: classroom.address,
     classAlias: classroom.alias || '',
+    ...(classroom.coordinates && {
+        coordinates: { lat: classroom.coordinates.latitude, lng: classroom.coordinates.longitude },
+    }),
 });
 
 export const FirstPhase = () => {
@@ -225,6 +234,7 @@ export const FirstPhase = () => {
                 {currentStep === 2 && <StepCGU cguChecked={cguChecked} onCguCheckedChange={setCguChecked} />}
                 {currentStep >= FIXED_STEPS && (
                     <StepProfile
+                        key={currentClassroomIndex}
                         profileData={currentProfileData}
                         onProfileDataChange={(data) => updateProfileData(currentClassroomIndex, data)}
                         countryCode={allClassrooms[currentClassroomIndex].countryCode}
