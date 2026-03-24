@@ -1,0 +1,78 @@
+// from globals.css
+const emailStyles = {
+    fontColor: '#2e343b',
+    fontDetailColor: '#666666',
+    backgroundColor: '#f5f5f5',
+
+    primaryColor: '#4c3ed9',
+    primary100: '#eceaf9',
+    primary200: '#dad7f7',
+    primary300: '#cbc7f4',
+    primary400: '#a099eb',
+    primary500: '#796fe3',
+    primary600: '#4c3ed9',
+    primary700: '#3426c2',
+
+    secondaryColor: '#80cbc4',
+    secondary100: '#d3ecea',
+    secondary200: '#b9e2df',
+    secondary300: '#80cbc4',
+    secondary400: '#49afa8',
+    secondary500: '#3a8b85',
+    secondary600: '#2d6b66',
+    secondary700: '#204c49',
+
+    successColor: '#008000',
+
+    errorColor: '#d93939',
+    error100: '#f9e2e2',
+    error200: '#f6d1d1',
+    error300: '#f3bfbf',
+    error400: '#e78383',
+    error500: '#d93939',
+    error600: '#bb2424',
+    error700: '#871a1a',
+
+    warningColor: '#b0710d',
+    warning100: '#fbe4c1',
+    warning200: '#f8d59d',
+    warning300: '#f5c474',
+    warning400: '#ca8621',
+    warning500: '#b0710d',
+    warning600: '#87570a',
+    warning700: '#613e07',
+
+    grey100: '#f0f1f5',
+    grey200: '#d9dae0',
+    grey300: '#cacbd4',
+    grey400: '#9c9faf',
+    grey500: '#7a7d93',
+    grey600: '#5d6073',
+    grey700: '#424552',
+
+    textOrangeBackground: 'rgb(243, 121, 52)',
+
+    button: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        verticalAlign: 'middle',
+        userSelect: 'none',
+        textDecoration: 'none',
+        fontFamily: `"Roboto", Arial, sans-serif`,
+        fontWeight: 500,
+        minWidth: '0',
+        boxSizing: 'border-box',
+        borderRadius: '10px',
+        color: 'white',
+        padding: '6px 12px',
+        fontSize: '14px',
+        lineHeight: '22px',
+        gap: '6px',
+        cursor: 'pointer',
+        boxShadow: 'rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, ' + 'rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, ' + 'rgba(0, 0, 0, 0.12) 0px 1px 5px 0px',
+    },
+} as const;
+
+export default emailStyles;
