@@ -27,12 +27,13 @@ export const ActivitySidePanel = ({ activityId: activityIdProp }: ActivitySidePa
     const pathname = usePathname();
     const params = useParams();
     const isPelicoPage = pathname.startsWith('/pelico');
-    const { data: pelicoPresentation } = useSWR<Activity>(isPelicoPage ? '/api/pelico-presentation' : null, jsonFetcher);
-    const activityId = activityIdProp ?? (isPelicoPage ? pelicoPresentation?.id : Number(params?.id));
+    const activityId = activityIdProp ?? Number(params?.id);
     const t = useExtracted('app.(1village)');
 
-    const { data: fetchedActivity } = useSWR<Activity>(!isPelicoPage && activityId ? `/api/activity/${activityId}` : null, jsonFetcher);
-    const activity = isPelicoPage ? pelicoPresentation : fetchedActivity;
+    const { data: activity } = useSWR<Activity>(
+        isPelicoPage ? '/api/pelico-presentation' : activityId ? `/api/activity/${activityId}` : null,
+        jsonFetcher,
+    );
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
     const { data: activityClassroom } = useSWR<Classroom[]>(
         activity?.classroomId ? `/api/classrooms${serializeToQueryUrl({ classroomId: activity.classroomId })}` : null,
