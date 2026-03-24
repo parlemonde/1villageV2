@@ -31,7 +31,7 @@ export const ActivitySidePanel = ({ activityId: activityIdProp }: ActivitySidePa
     const t = useExtracted('app.(1village)');
 
     const { data: activity } = useSWR<Activity>(
-        isPelicoPage ? '/api/pelico-presentation' : activityId ? `/api/activity/${activityId}` : null,
+        isPelicoPage ? '/api/activities/pelico-presentation' : activityId ? `/api/activity/${activityId}` : null,
         jsonFetcher,
     );
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
