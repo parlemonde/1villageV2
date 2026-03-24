@@ -1,6 +1,7 @@
 'use client';
 
 import type { WorldStats } from '@app/api/statistics/world/route';
+import { statusColors } from '@frontend/components/statistics/utils/statusColors';
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Title } from '@frontend/components/ui/Title';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
@@ -50,12 +51,6 @@ export const WorldMapActivity = ({ setCountry }: WorldMapActivityProps) => {
 
         svg.call(zoomBehavior).call(zoomBehavior.transform, zoomIdentity);
     }, []);
-
-    const statusColors = {
-        ghost: '#FFD678',
-        observer: '#6082FC',
-        active: '#4CC64A',
-    };
 
     const projection = geoNaturalEarth1().fitSize([1000, 500], {
         type: 'FeatureCollection',
