@@ -57,7 +57,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             COUNT("classroomId")::int AS count,
             CASE
                 WHEN hasPostedRecently THEN 'active'
-                WHEN lastSeen < NOW() - INTERVAL '21 days' THEN 'ghost'
+                WHEN lastSeen < NOW() - INTERVAL '21 days' OR lastSeen IS NULL THEN 'ghost'
                 ELSE 'observer'
             END AS status
         FROM stats
