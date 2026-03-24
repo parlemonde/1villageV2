@@ -7,6 +7,7 @@ import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import type { User } from '@server/database/schemas/users';
 import { deleteReaction } from '@server-actions/reactions/delete-reaction';
 import { postReaction } from '@server-actions/reactions/post-reaction';
 import classNames from 'clsx';
@@ -20,6 +21,7 @@ type ReactionCounter = {
     reactionValue: string;
     reactionCount: number;
     classrooms: Classroom[];
+    users: User[];
 };
 
 type ReactionRaw = {

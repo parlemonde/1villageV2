@@ -11,10 +11,12 @@ import { getExtracted } from 'next-intl/server';
 export const postReaction = async ({
     activityId,
     classroomId,
+    userId,
     reaction,
 }: {
     activityId: number;
-    classroomId: number;
+    classroomId?: number;
+    userId?: string;
     reaction: string;
 }): Promise<ServerActionResponse<ActivityReaction>> => {
     const t = await getExtracted('common');
@@ -25,11 +27,15 @@ export const postReaction = async ({
             throw new Error('Unauthorized');
         }
 
+        if (!classroomId && !userId) {
+            throw new Error('Either classroomId or userId is required');
+        }
+
         const [data] = await db
             .insert(activityReactions)
-            .values({ activityId, classroomId, reaction: reaction })
+            .values({ activityId, classroomId, userId, reaction: reaction })
             .onConflictDoUpdate({
-                target: [activityReactions.activityId, activityReactions.classroomId],
+                target: [activityReactions.activityId, activityReactions.classroomId, activityReactions.userId],
                 set: { reaction: reaction },
             })
             .returning();
