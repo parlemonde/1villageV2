@@ -16,7 +16,7 @@ export const activityReactions = pgTable(
         reaction: text('reaction').notNull(), // 'thumbs_up' | 'heart' | 'wow' | ...
         createdAt: timestamp('createdAt', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
     },
-    (t) => [unique().on(t.activityId, t.classroomId, t.userId)],
+    (t) => [unique().on(t.activityId, t.classroomId, t.userId).nullsNotDistinct()],
 );
 
 export type ActivityReaction = typeof activityReactions.$inferSelect;
