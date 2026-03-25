@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+    clip-path: circle(50%);
+    flex: 0 0 auto;
+}
+
+.status {
+    font-weight: 500;
+}

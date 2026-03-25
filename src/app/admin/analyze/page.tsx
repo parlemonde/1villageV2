@@ -2,6 +2,7 @@
 
 import { ClassroomsEngagementPie } from '@frontend/components/statistics/ClassroomsEngagementPie/ClassroomsEngagementPie';
 import { StatisticFilters } from '@frontend/components/statistics/StatisticFilters/StatisticFilters';
+import { StatusComponent } from '@frontend/components/statistics/StatusComponent/StatusComponent';
 import { TeamCommentEditor } from '@frontend/components/statistics/TeamCommentEditor/TeamCommentEditor';
 import { VillagesIncludingCountry } from '@frontend/components/statistics/VillagesIncludingCountry/VillagesIncludingCountry';
 import { WorldMapActivity } from '@frontend/components/statistics/WorldMapActivity/WorldMapActivity';
@@ -32,6 +33,8 @@ export default function AdminAnalyzePage() {
     const [tab, setTab] = useState<'classroom' | 'family'>('classroom');
 
     const showWorldComponents = !country && !village && !classroom && !phase;
+    const showCountryComponents = country && !village && !classroom;
+    const showCountryAndVillageComponents = (country || village) && !classroom;
 
     return (
         <PageContainer title="Analyser">
@@ -47,9 +50,11 @@ export default function AdminAnalyzePage() {
                 setPhase={setPhase}
             />
             {showWorldComponents && <WorldMapActivity setCountry={setCountry} />}
-            {country && <VillagesIncludingCountry countryCode={country} setVillage={setVillage} />}
+
+            {(country || village || classroom) && <StatusComponent countryCode={country} villageId={village} classroomId={classroom} marginY="md" />}
+            {showCountryComponents && <VillagesIncludingCountry countryCode={country} setVillage={setVillage} />}
             <Tabs tabs={tabs} value={tab} onChange={setTab} marginY="lg" />
-            {tab === 'classroom' && country && <ClassroomsEngagementPie country={country} villageId={village} />}
+            {tab === 'classroom' && showCountryAndVillageComponents && <ClassroomsEngagementPie country={country} villageId={village} />}
         </PageContainer>
     );
 }
