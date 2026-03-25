@@ -86,7 +86,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if (classroom) {
             currentStoredReaction = getCurrentClassroomReaction(classroom);
         }
-        allReactions = getAllPeopleReactions();
+        allReactions = getAllPeopleReactions(undefined);
         totalReactions = allReactions?.length ?? 0;
     } else {
         allReactions = null;
@@ -114,8 +114,9 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
-    function getAllPeopleReactions() {
-        const allreactions = nbPeoplePerReactions?.reduce((acc: PeopleReaction[], item) => {
+    function getAllPeopleReactions(optimisticData: ReactionCounter[] | undefined) {
+        const data = optimisticData || nbPeoplePerReactions;
+        const allreactions = data?.reduce((acc: PeopleReaction[], item) => {
             const classroomsReactions = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
             const pelicoReaction = item.users?.map((u) => Object.assign({}, { user: u, reaction: item.reactionValue })) ?? [];
             return [...acc, ...classroomsReactions, ...pelicoReaction];
@@ -196,10 +197,10 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if (isToggleOff) {
             // Removing reaction
             const optimisticData = updateReactionsOptimistically(previousData, null, true);
-            await mutate(optimisticData, false);
+            await mutate(optimisticData, { revalidate: false });
             setCurrentReaction(null);
             setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
-            // setAllPeopleReactions(getAllPeopleReactions());
+            setAllPeopleReactions(getAllPeopleReactions(optimisticData));
 
             // Server request in background
             const result = await deleteReaction(activity.id, classroom?.id, user.id);
@@ -212,12 +213,12 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             // Adding/updating reaction
             const optimisticData = updateReactionsOptimistically(previousData, selectedReaction.value, false);
 
-            await mutate(optimisticData, false);
+            await mutate(optimisticData, { revalidate: false });
             setCurrentReaction(selectedReaction);
             if (!currentStoredReaction) {
                 setNbReactions((prev) => prev + 1);
             }
-            // setAllPeopleReactions(getAllPeopleReactions());
+            setAllPeopleReactions(getAllPeopleReactions(optimisticData));
 
             // Server request in background
             const result = await postReaction({
