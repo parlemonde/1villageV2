@@ -86,7 +86,10 @@ export const ActivityHeader = ({ user, classroom, activity, className, showIcon 
             </div>
             {activity.type === 'enigme' && <ActivityTimer activity={activity} />}
             {showDetails && showIcon && Icon && (
-                <Icon style={activity.type === 'enigme' ? {} : { width: '20px', height: 'auto', marginRight: 8 }} fill="var(--primary-color)" />
+                <Icon
+                    style={activity.type === 'enigme' ? {} : { width: '25px', height: 'auto', marginRight: 8 }}
+                    className={styles.activityTypeIcon}
+                />
             )}
         </div>
     );
