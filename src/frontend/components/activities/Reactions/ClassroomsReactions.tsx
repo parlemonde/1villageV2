@@ -134,7 +134,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     }
 
     async function onReactionSubmit(selectedReaction: ReactionRaw | null) {
-        if (!classroom || !isPelico || !activity.id || !selectedReaction?.value) return;
+        if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
 
         const previousData = nbClassroomsPerReactions;
         const isToggleOff = currentStoredReaction?.value === selectedReaction.value;
@@ -185,7 +185,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
 
             // Server request in background
-            const result = await deleteReaction(activity.id, classroom.id);
+            const result = await deleteReaction(activity.id, classroom?.id, user.id);
 
             // Revalidate if there was an error
             if (result?.error) {
@@ -204,7 +204,8 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             // Server request in background
             const result = await postReaction({
                 activityId: activity.id,
-                classroomId: classroom.id,
+                classroomId: classroom?.id,
+                userId: user.id,
                 reaction: selectedReaction.value,
             });
 
@@ -223,27 +224,31 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 title={t('Réagir')}
                 onClick={() => setIsModalOpen(true)}
                 label={<AddReactionIcon className={styles.addReactionIcon} />}
-                color="grey"
+                color="primary"
                 size="sm"
                 variant="contained"
                 className={styles.addReactionButton}
             ></Button>
             <div className={styles.reactionsListWrapper}>
                 {/* render all activities reactions for activityId grouped by reaction type */}
-                {REACTION_EMOJIS.map((reaction, index) => (
-                    <Button
-                        key={index}
-                        title={reaction.label}
-                        value={reaction.value}
-                        onClick={() => onReactionSubmit(reaction)}
-                        label={reaction.emoji}
-                        rightIcon={<span className={styles.counterBadge}>{getCountForReaction(reaction.value)}</span>}
-                        size="sm"
-                        variant="contained"
-                        className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
-                        style={{ position: 'relative', zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
-                    />
-                ))}
+                {REACTION_EMOJIS.map((reaction, index) => {
+                    const badgeValue = getCountForReaction(reaction.value);
+                    return (
+                        <Button
+                            key={index}
+                            title={reaction.label}
+                            value={reaction.value}
+                            onClick={() => onReactionSubmit(reaction)}
+                            label={reaction.emoji}
+                            rightIcon={badgeValue ? <span className={styles.counterBadge}>{badgeValue}</span> : null}
+                            color="primary"
+                            size="sm"
+                            variant="contained"
+                            className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
+                            style={{ position: 'relative', zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
+                        />
+                    );
+                })}
             </div>
             <Button
                 onClick={() => setIsAllReactionsModalOpen(true)}
@@ -251,6 +256,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 size="sm"
                 variant="borderless"
                 color="primary"
+                disabled={totalReactions === 0}
                 style={{ position: 'relative', left: (REACTION_EMOJIS.length - 1) * -8 + 'px' }}
             ></Button>
 
