@@ -172,10 +172,24 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                             reactionCount: counter.reactionCount + 1,
                             classrooms: [...(counter.classrooms || []), classroom],
                         };
+                    } else if (!removingReaction && counter.reactionValue === currentStoredReaction?.value) {
+                        // Removing previous reaction
+                        if (isPelico) {
+                            return {
+                                ...counter,
+                                reactionCount: Math.max(0, counter.reactionCount - 1),
+                                users: counter.users?.filter((u) => u.id !== user.id),
+                            };
+                        }
+                        return {
+                            ...counter,
+                            reactionCount: Math.max(0, counter.reactionCount - 1),
+                            classrooms: counter.classrooms?.filter((c) => c.id !== classroom?.id),
+                        };
                     }
                     return counter;
                 })
-                .filter((counter) => counter.reactionCount > 0);
+                .filter((counter) => counter.reactionCount > 0); // TODO: remove this filter() ?
         };
 
         // Optimistic update: immediately show the change in the UI
@@ -185,7 +199,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             await mutate(optimisticData, false);
             setCurrentReaction(null);
             setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
-            setAllPeopleReactions(getAllPeopleReactions());
+            // setAllPeopleReactions(getAllPeopleReactions());
 
             // Server request in background
             const result = await deleteReaction(activity.id, classroom?.id, user.id);
@@ -203,7 +217,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             if (!currentStoredReaction) {
                 setNbReactions((prev) => prev + 1);
             }
-            setAllPeopleReactions(getAllPeopleReactions());
+            // setAllPeopleReactions(getAllPeopleReactions());
 
             // Server request in background
             const result = await postReaction({
