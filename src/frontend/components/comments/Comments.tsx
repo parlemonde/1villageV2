@@ -3,14 +3,12 @@
 import type { UserComment } from '@app/api/comments/route';
 import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
-import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { deleteComment } from '@server-actions/comments/delete-comment';
-import { postComment } from '@server-actions/comments/post-comment';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -51,37 +49,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
-        await mutate(
-            async (current = []) => {
-                const { error, data } = await postComment({
-                    activityId,
-                    content,
-                });
-
-                if (error) {
-                    sendToast({
-                        type: 'error',
-                        message: error.message,
-                    });
-                } else {
-                    setContent(defaultContent);
-                }
-
-                const newComment: UserComment = {
-                    comment: data!,
-                    classroom: classroom,
-                    user: user,
-                };
-
-                return [newComment, ...current.filter((c) => c.comment.id !== tempId)];
-            },
-            {
-                optimisticData: (current = []) => [optimisticComment, ...current],
-                rollbackOnError: true,
-                revalidate: false,
-                populateCache: true,
-            },
-        );
+        await mutate(comments ? [...comments, optimisticComment] : [optimisticComment]);
     };
 
     const onDeleteComment = async () => {

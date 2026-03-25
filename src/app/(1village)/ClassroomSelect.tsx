@@ -9,7 +9,7 @@ import { VillageContext } from '@frontend/contexts/villageContext';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { Village } from '@server/database/schemas/villages';
-import { setCookie } from '@server-actions/cookies/set-cookie';
+import { selectClassroom } from '@server-actions/classrooms/select-classroom';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -41,7 +41,7 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
         if (classroom) {
             const village = classroom?.villageId ? await fetchVillage(classroom.villageId) : undefined;
 
-            await setCookie('classroomId', classroomId);
+            await selectClassroom(classroom.id);
             setClassroom(classroom);
             setVillage(village);
         }
