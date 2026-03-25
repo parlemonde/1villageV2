@@ -1,14 +1,10 @@
 'use client';
 
-import { sendToast } from '@frontend/components/Toasts';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
 import type { MarginProps, PaddingProps } from '@frontend/components/ui/css-styles';
 import { UserContext } from '@frontend/contexts/userContext';
-import { VillageContext } from '@frontend/contexts/villageContext';
-import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import type { Village } from '@server/database/schemas/villages';
 import { selectClassroom } from '@server-actions/classrooms/select-classroom';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
@@ -22,10 +18,8 @@ interface ClassroomSelectProps extends MarginProps, PaddingProps {
 export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSelectProps) => {
     const router = useRouter();
     const t = useExtracted('app.(1village)');
-    const tCommon = useExtracted('common');
 
     const { classroom, setClassroom } = useContext(UserContext);
-    const { setVillage } = useContext(VillageContext);
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,26 +33,11 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
         setIsLoading(true);
         const classroom = classrooms.find((classroom) => classroom.id.toString() === classroomId);
         if (classroom) {
-            const village = classroom?.villageId ? await fetchVillage(classroom.villageId) : undefined;
-
             await selectClassroom(classroom.id);
             setClassroom(classroom);
-            setVillage(village);
         }
         router.push('/');
         setIsLoading(false);
-    };
-
-    const fetchVillage = async (villageId: number): Promise<Village> => {
-        const villageResponse = await fetch(`/api/villages${serializeToQueryUrl({ villageId: villageId })}`);
-        if (!villageResponse.ok) {
-            sendToast({
-                message: tCommon('Une erreur est survenue'),
-                type: 'error',
-            });
-        }
-        const [village]: Village[] = await villageResponse.json();
-        return village;
     };
 
     return (

@@ -9,6 +9,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { deleteComment } from '@server-actions/comments/delete-comment';
+import { postComment } from '@server-actions/comments/post-comment';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -49,6 +50,15 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
+        const { error } = await postComment({ activityId, content });
+        if (error) {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+            return;
+        }
+        setContent('');
         await mutate(comments ? [...comments, optimisticComment] : [optimisticComment]);
     };
 
