@@ -5,30 +5,30 @@
     gap: 4px;
 }
 
-.reactionsContainer .addReactionButton {
+.reactionsContainer button.addReactionButton {
     color: var(--primary-600);
     background-color: white;
 }
 
-.reactionsContainer .addReactionButton:hover {
+.reactionsContainer button.addReactionButton:hover {
     background-color: var(--primary-300);
 }
 
-.reactionsContainer .reactionButton {
+.reactionsContainer button.reactionButton {
     background-color: var(--primary-300);
 }
 
-.reactionsContainer .reactionButton.active,
-.reactionsContainer .reactionButton:hover {
+.reactionsContainer button.reactionButton.active,
+.reactionsContainer button.reactionButton:hover {
     background-color: var(--primary-500);
 }
 
-.reactionsContainer .reactionButton:disabled,
-.reactionsContainer .reactionButton:disabled:hover {
+.reactionsContainer button.reactionButton:disabled,
+.reactionsContainer button.reactionButton:disabled:hover {
     background-color: var(--grey-300);
 }
 
-.reactionsContainer .reactionButton:disabled.active {
+.reactionsContainer button.reactionButton:disabled.active {
     background-color: var(--grey-400);
 }
 
@@ -54,12 +54,12 @@
     margin: 4px 0;
 }
 
-.setReactionModal .reactionButton {
+.setReactionModal button.reactionButton {
     background-color: var(--primary-300);
 }
 
-.setReactionModal .reactionButton.active,
-.setReactionModal .reactionButton:hover {
+.setReactionModal button.reactionButton.active,
+.setReactionModal button.reactionButton:hover {
     background-color: var(--primary-500);
 }
 
