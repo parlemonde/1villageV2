@@ -65,7 +65,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const { user, classroom } = useContext(UserContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
 
-    const { data: nbClassroomsPerReactions = [], mutate } = useSWR<ReactionCounter[]>(
+    const { data: nbPeoplePerReactions = [], mutate } = useSWR<ReactionCounter[]>(
         activity
             ? `/api/reactions${serializeToQueryUrl({
                   activityId: activity.id,
@@ -75,7 +75,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     );
 
     let currentStoredReaction: ReactionRaw | null = null;
-    let allPeopleReactions: PeopleReaction[] | null;
+    let allReactions: PeopleReaction[] | null;
     let totalReactions: number;
 
     // Pelico does not have any classroom
@@ -86,38 +86,39 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if (classroom) {
             currentStoredReaction = getCurrentClassroomReaction(classroom);
         }
-        allPeopleReactions = getAllPeopleReactions();
-        totalReactions = allPeopleReactions?.length ?? 0;
+        allReactions = getAllPeopleReactions();
+        totalReactions = allReactions?.length ?? 0;
     } else {
-        allPeopleReactions = null;
+        allReactions = null;
         totalReactions = 0;
     }
 
     const [currentReaction, setCurrentReaction] = useState<ReactionRaw | null>(currentStoredReaction);
-    const [nbReactions, setNbReactions] = useState<number>(totalReactions);
+    const [nbTotalReactions, setNbReactions] = useState<number>(totalReactions);
+    const [allPeopleReactions, setAllPeopleReactions] = useState<PeopleReaction[] | null>(allReactions);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
 
     function getCountForReaction(value: string) {
-        const column = nbClassroomsPerReactions?.find((col) => col.reactionValue === value);
+        const column = nbPeoplePerReactions?.find((col) => col.reactionValue === value);
         return column?.reactionCount || 0;
     }
 
     function getCurrentPelicoReaction(curUser: User) {
-        const curReaction = nbClassroomsPerReactions?.find((col) => col.users?.find((u) => u.id === curUser.id));
+        const curReaction = nbPeoplePerReactions?.find((col) => col.users?.find((u) => u.id === curUser.id));
         return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
     function getCurrentClassroomReaction(curClassroom: Classroom) {
-        const curReaction = nbClassroomsPerReactions?.find((col) => col.classrooms?.find((c) => c.id === curClassroom.id));
+        const curReaction = nbPeoplePerReactions?.find((col) => col.classrooms?.find((c) => c.id === curClassroom.id));
         return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
     function getAllPeopleReactions() {
-        const allreactions = nbClassroomsPerReactions?.reduce((acc: PeopleReaction[], item) => {
-            const result = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
+        const allreactions = nbPeoplePerReactions?.reduce((acc: PeopleReaction[], item) => {
+            const classroomsReactions = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
             const pelicoReaction = item.users?.map((u) => Object.assign({}, { user: u, reaction: item.reactionValue })) ?? [];
-            return [...acc, ...result, ...pelicoReaction];
+            return [...acc, ...classroomsReactions, ...pelicoReaction];
         }, []);
         return allreactions || null;
     }
@@ -136,44 +137,45 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     async function onReactionSubmit(selectedReaction: ReactionRaw | null) {
         if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
 
-        const previousData = nbClassroomsPerReactions;
+        const previousData = nbPeoplePerReactions;
         const isToggleOff = currentStoredReaction?.value === selectedReaction.value;
 
         // Helper to update reactions data optimistically
         const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: string | null, removingReaction: boolean) => {
-            return data.map((counter) => {
-                if (removingReaction && counter.reactionValue === currentStoredReaction?.value) {
-                    // Removing current reaction
-                    if (isPelico) {
+            return data
+                .map((counter) => {
+                    if (removingReaction && counter.reactionValue === currentStoredReaction?.value) {
+                        // Removing current reaction
+                        if (isPelico) {
+                            return {
+                                ...counter,
+                                reactionCount: Math.max(0, counter.reactionCount - 1),
+                                users: counter.users?.filter((u) => u.id !== user.id),
+                            };
+                        }
                         return {
                             ...counter,
                             reactionCount: Math.max(0, counter.reactionCount - 1),
-                            users: counter.users!.filter((c) => c.id !== user.id),
+                            classrooms: counter.classrooms?.filter((c) => c.id !== classroom?.id),
                         };
-                    }
-                    return {
-                        ...counter,
-                        reactionCount: Math.max(0, counter.reactionCount - 1),
-                        classrooms: counter.classrooms!.filter((c) => c.id !== classroom.id),
-                    };
-                } else if (!removingReaction && counter.reactionValue === newReaction) {
-                    // Adding new reaction
-                    if (isPelico) {
+                    } else if (!removingReaction && counter.reactionValue === newReaction) {
+                        // Adding new reaction
+                        if (isPelico) {
+                            return {
+                                ...counter,
+                                reactionCount: counter.reactionCount + 1,
+                                users: [...(counter.users || []), user],
+                            };
+                        }
                         return {
                             ...counter,
                             reactionCount: counter.reactionCount + 1,
-                            users: [...counter.users!, user],
+                            classrooms: [...(counter.classrooms || []), classroom],
                         };
                     }
-                    return {
-                        ...counter,
-                        reactionCount: counter.reactionCount + 1,
-                        classrooms: [...counter.classrooms!, classroom],
-                    };
-                }
-                return counter;
-            });
-            // .filter((counter) => counter.reactionCount > 0); // SHOULD keep if we won't display all emoji (?)
+                    return counter;
+                })
+                .filter((counter) => counter.reactionCount > 0);
         };
 
         // Optimistic update: immediately show the change in the UI
@@ -183,6 +185,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             await mutate(optimisticData, false);
             setCurrentReaction(null);
             setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
+            setAllPeopleReactions(getAllPeopleReactions());
 
             // Server request in background
             const result = await deleteReaction(activity.id, classroom?.id, user.id);
@@ -200,6 +203,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             if (!currentStoredReaction) {
                 setNbReactions((prev) => prev + 1);
             }
+            setAllPeopleReactions(getAllPeopleReactions());
 
             // Server request in background
             const result = await postReaction({
@@ -252,11 +256,11 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
             </div>
             <Button
                 onClick={() => setIsAllReactionsModalOpen(true)}
-                label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbReactions })}
+                label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', { count: nbTotalReactions })}
                 size="sm"
                 variant="borderless"
                 color="primary"
-                disabled={totalReactions === 0}
+                disabled={nbTotalReactions === 0}
                 style={{ position: 'relative', left: (REACTION_EMOJIS.length - 1) * -8 + 'px' }}
             ></Button>
 
@@ -271,7 +275,10 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     {allPeopleReactions?.map((pr) => {
                         if (pr && 'user' in pr) {
                             return (
-                                <div key={pr.user.id} className={styles.line}>
+                                <div
+                                    key={pr.user.id}
+                                    className={classNames(styles.line, { [styles.active]: currentReaction?.value === pr.reaction })}
+                                >
                                     <span className={styles.left}>
                                         <Avatar user={pr.user} isPelico={true} size="sm" />
                                         <strong>{pr.user.name}</strong>
@@ -281,7 +288,10 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                             );
                         }
                         return (
-                            <div key={pr.classroom.id} className={styles.line}>
+                            <div
+                                key={pr.classroom.id}
+                                className={classNames(styles.line, { [styles.active]: currentReaction?.value === pr.reaction })}
+                            >
                                 <span className={styles.left}>
                                     <Avatar classroom={pr.classroom} isPelico={false} size="sm" />
                                     <strong>{pr.classroom.name}</strong>

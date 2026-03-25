@@ -64,12 +64,21 @@
 }
 
 .allReactionModal {
+    > div {
+        padding: 16px !important;
+    }
+
     .line {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
+        padding: 8px 4px;
     }
+
+    .active {
+        background-color: var(--primary-100);
+    }
+
     .left {
         display: inline-flex;
         justify-content: flex-start;
