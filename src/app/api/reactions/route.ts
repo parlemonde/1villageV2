@@ -2,7 +2,7 @@ import { db } from '@server/database';
 import { activityReactions } from '@server/database/schemas/activity-reactions';
 import { classrooms, type Classroom } from '@server/database/schemas/classrooms';
 import { users, type User } from '@server/database/schemas/users';
-import { eq, count, sql } from 'drizzle-orm';
+import { eq, and, count, sql, ne } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -28,7 +28,7 @@ export const GET = async ({ nextUrl }: NextRequest): Promise<NextResponse> => {
         })
         .from(activityReactions)
         .leftJoin(classrooms, eq(activityReactions.classroomId, classrooms.id))
-        .leftJoin(users, eq(activityReactions.userId, users.id))
+        .leftJoin(users, and(eq(activityReactions.userId, users.id), ne(classrooms.teacherId, users.id)))
         .where(eq(activityReactions.activityId, activityId))
         .groupBy(activityReactions.reaction);
 
