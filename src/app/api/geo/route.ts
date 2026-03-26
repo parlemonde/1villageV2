@@ -53,6 +53,9 @@ export async function getPosition(query: NominatimQuery): Promise<NominatimPlace
             })}`,
             {
                 method: 'GET',
+                headers: {
+                    'User-Agent': '1Village/1.0 (https://www.parlemonde.org)',
+                },
             },
         );
 
