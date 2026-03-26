@@ -96,7 +96,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const [currentReaction, setCurrentReaction] = useState<ReactionRaw | null>(currentStoredReaction);
     const [nbTotalReactions, setNbReactions] = useState<number>(totalReactions);
     const [allPeopleReactions, setAllPeopleReactions] = useState<PeopleReaction[] | null>(allReactions);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isChangeReactionModalOpen, setIsChangeReactionModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
 
     function getCountForReaction(value: string) {
@@ -233,15 +233,14 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 mutate();
             }
         }
-
-        setIsModalOpen(false);
+        setIsChangeReactionModalOpen(false);
     }
 
     return (
         <div className={styles.reactionsContainer}>
             <Button
                 title={t('Réagir')}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setIsChangeReactionModalOpen(true)}
                 label={<AddReactionIcon className={styles.addReactionIcon} />}
                 color="primary"
                 size="sm"
@@ -318,11 +317,15 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 </Modal>
             )}
 
-            {isModalOpen && (
+            {isChangeReactionModalOpen && (
                 <Modal
                     title={t('La Réaction de votre classe')}
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    isOpen={isChangeReactionModalOpen}
+                    onClose={() => setIsChangeReactionModalOpen(false)}
+                    onCancel={() => {
+                        setCurrentReaction(currentStoredReaction);
+                        setIsChangeReactionModalOpen(false);
+                    }}
                     onConfirm={() => onReactionSubmit(currentReaction)}
                     isConfirmDisabled={() => currentReaction === null}
                     width="sm"
