@@ -24,7 +24,7 @@ export const ClassroomCard = ({ classroomId, ...props }: ClassroomCardProps) => 
 
     return (
         <div className={styles.container} style={getMarginAndPaddingStyle(props)}>
-            <WorldMap2D coordinates={classroom.coordinates} width="300px" style={{ borderRadius: '10px' }} />
+            <WorldMap2D coordinates={classroom.coordinates} className={styles.map} />
             <div className={styles.info}>
                 <Title variant="h3" marginBottom="md">
                     {classroom?.alias ?? `Les ${classroom.level} de ${classroom.name}`}
@@ -42,7 +42,8 @@ export const ClassroomCard = ({ classroomId, ...props }: ClassroomCardProps) => 
                     {t('Adresse Mail')} : {classroom.email}
                 </p>
                 <p>
-                    {t('Dernière connexion')} : {classroom.lastSeen ? classroom.lastSeen.toString() : t("Ne s'est jamais connecté")}
+                    {t('Dernière connexion')} :{' '}
+                    {classroom.lastSeen ? new Date(classroom.lastSeen).toLocaleDateString() : t("Ne s'est jamais connecté")}
                 </p>
                 <p>
                     {t('Professeur')} : {classroom.teacherName}

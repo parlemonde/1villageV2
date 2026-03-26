@@ -17,13 +17,13 @@ type MapProps = {
     setCoordinates?: (coordinates: Coordinates) => void;
     width?: string;
     height?: string;
-    style?: React.CSSProperties;
+    className?: string;
 } & MarginProps &
     PaddingProps;
 
 export const DEFAULT_COORDINATES: Coordinates = { lat: 48.858, lng: 2.294 };
 
-const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, width = '100%', height = '300px', style }: MapProps) => {
+const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, width = '100%', height = '300px', className }: MapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
@@ -57,8 +57,8 @@ const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, width = '100
     }, [map, coordinates]);
 
     return (
-        <div ref={containerRef} style={{ position: 'relative', height, width, ...style }}>
-            <div ref={canvasRef} style={{ width: '100%', height: '100%', ...style }}></div>
+        <div ref={containerRef} style={{ position: 'relative', height, width }} className={className}>
+            <div ref={canvasRef} style={{ width: '100%', height: '100%' }} className={className}></div>
             <div style={{ position: 'absolute', left: 8, top: 8, display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {map && (
                     <>
