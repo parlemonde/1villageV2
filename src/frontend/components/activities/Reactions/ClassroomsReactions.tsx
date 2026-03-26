@@ -86,7 +86,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if (classroom) {
             currentStoredReaction = getCurrentClassroomReaction(classroom);
         }
-        allReactions = getAllPeopleReactions(undefined);
+        allReactions = getAllPeopleReactions(nbPeoplePerReactions);
         totalReactions = allReactions?.length ?? 0;
     } else {
         allReactions = null;
@@ -114,8 +114,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         return REACTION_EMOJIS.find((item) => item.value === curReaction?.reactionValue) ?? null;
     }
 
-    function getAllPeopleReactions(optimisticData: ReactionCounter[] | undefined) {
-        const data = optimisticData || nbPeoplePerReactions;
+    function getAllPeopleReactions(data: ReactionCounter[]) {
         const allreactions = data?.reduce((acc: PeopleReaction[], item) => {
             const classroomsReactions = item.classrooms?.map((c) => Object.assign({}, { classroom: c, reaction: item.reactionValue })) ?? [];
             const pelicoReaction = item.users?.map((u) => Object.assign({}, { user: u, reaction: item.reactionValue })) ?? [];
@@ -139,7 +138,8 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
 
         const previousData = nbPeoplePerReactions;
-        const isToggleOff = currentStoredReaction?.value === selectedReaction.value;
+        // const isBrandNew = currentStoredReaction === null; // Just an insert to do
+        const isToggleOff = currentStoredReaction?.value === selectedReaction.value; // Just a delete to do
 
         // Helper to update reactions data optimistically
         const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: string | null, removingReaction: boolean) => {
@@ -171,7 +171,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         return {
                             ...counter,
                             reactionCount: counter.reactionCount + 1,
-                            classrooms: [...(counter.classrooms || []), classroom],
+                            classrooms: [...(counter.classrooms || []), classroom as Classroom],
                         };
                     } else if (!removingReaction && counter.reactionValue === currentStoredReaction?.value) {
                         // Removing previous reaction
