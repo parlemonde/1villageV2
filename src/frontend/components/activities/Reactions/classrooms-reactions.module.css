@@ -14,6 +14,11 @@
     background-color: var(--primary-300);
 }
 
+.reactionsContainer button.addReactionButton:disabled,
+.reactionsContainer button.addReactionButton:disabled:hover {
+    background-color: var(--grey-300);
+}
+
 .reactionsContainer button.reactionButton {
     background-color: var(--primary-300);
 }
