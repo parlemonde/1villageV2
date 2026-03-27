@@ -77,6 +77,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     let currentStoredReaction: ReactionRaw | null = null;
     let allReactions: PeopleReaction[] | null;
     let totalReactions: number;
+    let enabledReactions: boolean;
 
     // Pelico does not have any classroom
     if (classroom || isPelico) {
@@ -88,11 +89,14 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         }
         allReactions = getAllPeopleReactions(nbPeoplePerReactions);
         totalReactions = allReactions?.length ?? 0;
+        enabledReactions = true;
     } else {
         allReactions = null;
         totalReactions = 0;
+        enabledReactions = false;
     }
 
+    const [disabledReactions] = useState<boolean>(!enabledReactions);
     const [currentReaction, setCurrentReaction] = useState<ReactionRaw | null>(currentStoredReaction);
     const [nbTotalReactions, setNbReactions] = useState<number>(totalReactions);
     const [allPeopleReactions, setAllPeopleReactions] = useState<PeopleReaction[] | null>(allReactions);
@@ -245,6 +249,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 color="primary"
                 size="sm"
                 variant="contained"
+                disabled={disabledReactions}
                 className={styles.addReactionButton}
             ></Button>
             <div className={styles.reactionsListWrapper}>
@@ -262,6 +267,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                             color="primary"
                             size="sm"
                             variant="contained"
+                            disabled={disabledReactions}
                             className={classNames(styles.reactionButton, { [styles.active]: currentReaction?.value === reaction.value })}
                             style={{ position: 'relative', zIndex: REACTION_EMOJIS.length - index, right: 8 * index + 'px' }}
                         />
