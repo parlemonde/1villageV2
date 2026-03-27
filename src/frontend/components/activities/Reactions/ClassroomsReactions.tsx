@@ -98,7 +98,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
     const [disabledReactions] = useState<boolean>(!enabledReactions);
     const [currentReaction, setCurrentReaction] = useState<ReactionRaw | null>(currentStoredReaction);
-    const [nbTotalReactions, setNbReactions] = useState<number>(totalReactions);
+    const [nbTotalReactions, setNbTotalReactions] = useState<number>(totalReactions);
     const [allPeopleReactions, setAllPeopleReactions] = useState<PeopleReaction[] | null>(allReactions);
     const [isChangeReactionModalOpen, setIsChangeReactionModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
@@ -203,12 +203,12 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
         if (isToggleOff) {
             setCurrentReaction(null);
-            setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
+            setNbTotalReactions((prev) => (prev > 0 ? prev - 1 : 0));
             result = await deleteReaction(activity.id, classroom?.id, user.id);
         } else {
             setCurrentReaction(selectedReaction);
             if (!currentStoredReaction) {
-                setNbReactions((prev) => prev + 1);
+                setNbTotalReactions((prev) => prev + 1);
             }
             result = await postReaction({
                 activityId: activity.id,
