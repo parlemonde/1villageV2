@@ -180,6 +180,8 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         return deleteFunc(counter);
                     } else if (shouldInsertReaction && counter.reactionValue === newReaction?.value) {
                         return insertFunc(counter);
+                    } else {
+                        return counter;
                     }
                 }) || [];
             if (newReaction && !newData?.find((counter) => counter?.reactionValue === newReaction?.value)) {
