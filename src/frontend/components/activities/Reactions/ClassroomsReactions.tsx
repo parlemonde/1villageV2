@@ -142,100 +142,83 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
 
         const previousData = nbPeoplePerReactions;
-        // const isBrandNew = currentStoredReaction === null; // Just an insert to do
-        const isToggleOff = currentStoredReaction?.value === selectedReaction.value; // Just a delete to do
+        const isToggleOff = currentStoredReaction?.value === selectedReaction.value;
+        const shouldRemoveReaction = currentStoredReaction !== null;
+        const shouldInsertReaction = currentStoredReaction && currentStoredReaction.value !== selectedReaction.value;
+        const arrName = isPelico ? 'users' : 'classrooms';
+        const usersFilterFunc = (u: User) => {
+            return u.id !== user.id;
+        };
+        const classroomsFilterFunc = (c: Classroom) => {
+            return c.id !== classroom?.id;
+        };
+        const deleteFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || [])].filter((item) => {
+                const result = isPelico ? usersFilterFunc(item as User) : classroomsFilterFunc(item as Classroom);
+                return result;
+            });
+            return {
+                ...counter,
+                reactionCount: Math.max(0, counter.reactionCount - 1),
+                ...newValue,
+            };
+        };
+        const insertFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || []), isPelico ? user : classroom];
+            return {
+                ...counter,
+                reactionCount: counter.reactionCount + 1,
+                [arrName]: newValue,
+            };
+        };
 
         // Helper to update reactions data optimistically
-        const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: string | null, removingReaction: boolean) => {
-            return data
-                .map((counter) => {
-                    if (removingReaction && counter.reactionValue === currentStoredReaction?.value) {
-                        // Removing current reaction
-                        if (isPelico) {
-                            return {
-                                ...counter,
-                                reactionCount: Math.max(0, counter.reactionCount - 1),
-                                users: counter.users?.filter((u) => u.id !== user.id),
-                            };
-                        }
-                        return {
-                            ...counter,
-                            reactionCount: Math.max(0, counter.reactionCount - 1),
-                            classrooms: counter.classrooms?.filter((c) => c.id !== classroom?.id),
-                        };
-                    } else if (!removingReaction && counter.reactionValue === newReaction) {
-                        // Adding new reaction
-                        if (isPelico) {
-                            return {
-                                ...counter,
-                                reactionCount: counter.reactionCount + 1,
-                                users: [...(counter.users || []), user],
-                            };
-                        }
-                        return {
-                            ...counter,
-                            reactionCount: counter.reactionCount + 1,
-                            classrooms: [...(counter.classrooms || []), classroom as Classroom],
-                        };
-                    } else if (!removingReaction && counter.reactionValue === currentStoredReaction?.value) {
-                        // Removing previous reaction
-                        if (isPelico) {
-                            return {
-                                ...counter,
-                                reactionCount: Math.max(0, counter.reactionCount - 1),
-                                users: counter.users?.filter((u) => u.id !== user.id),
-                            };
-                        }
-                        return {
-                            ...counter,
-                            reactionCount: Math.max(0, counter.reactionCount - 1),
-                            classrooms: counter.classrooms?.filter((c) => c.id !== classroom?.id),
-                        };
+        const updateReactionsOptimistically = (data: ReactionCounter[], newReaction: ReactionRaw | null) => {
+            let newData =
+                data?.map((counter) => {
+                    if (shouldRemoveReaction && counter.reactionValue === currentStoredReaction?.value) {
+                        return deleteFunc(counter);
+                    } else if (shouldInsertReaction && counter.reactionValue === newReaction?.value) {
+                        return insertFunc(counter);
                     }
-                    return counter;
-                })
-                .filter((counter) => counter.reactionCount > 0); // TODO: remove this filter() ?
+                }) || [];
+            if (newReaction && !newData?.find((counter) => counter?.reactionValue === newReaction?.value)) {
+                newData = [
+                    ...(newData || []),
+                    insertFunc({
+                        reactionValue: newReaction.value,
+                        reactionCount: 0,
+                    }),
+                ];
+            }
+            return newData.filter((counter) => counter && counter.reactionCount > 0);
         };
 
         // Optimistic update: immediately show the change in the UI
+        let result;
+        const optimisticData = updateReactionsOptimistically(previousData, selectedReaction);
+        await mutate(optimisticData, { revalidate: false });
+
         if (isToggleOff) {
-            // Removing reaction
-            const optimisticData = updateReactionsOptimistically(previousData, null, true);
-            await mutate(optimisticData, { revalidate: false });
             setCurrentReaction(null);
             setNbReactions((prev) => (prev > 0 ? prev - 1 : 0));
-            setAllPeopleReactions(getAllPeopleReactions(optimisticData));
-
-            // Server request in background
-            const result = await deleteReaction(activity.id, classroom?.id, user.id);
-
-            // Revalidate if there was an error
-            if (result?.error) {
-                mutate();
-            }
+            result = await deleteReaction(activity.id, classroom?.id, user.id);
         } else {
-            // Adding/updating reaction
-            const optimisticData = updateReactionsOptimistically(previousData, selectedReaction.value, false);
-
-            await mutate(optimisticData, { revalidate: false });
             setCurrentReaction(selectedReaction);
             if (!currentStoredReaction) {
                 setNbReactions((prev) => prev + 1);
             }
-            setAllPeopleReactions(getAllPeopleReactions(optimisticData));
-
-            // Server request in background
-            const result = await postReaction({
+            result = await postReaction({
                 activityId: activity.id,
                 classroomId: classroom?.id,
                 userId: user.id,
                 reaction: selectedReaction.value,
             });
-
-            // Revalidate if there was an error
-            if (result?.error) {
-                mutate();
-            }
+        }
+        setAllPeopleReactions(getAllPeopleReactions(optimisticData));
+        // Revalidate if there was an error
+        if (result?.error) {
+            mutate();
         }
         setIsChangeReactionModalOpen(false);
     }
