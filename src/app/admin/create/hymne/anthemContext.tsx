@@ -12,33 +12,33 @@ const DEFAULT_ANTHEM_ACTIVITY: AnthemActivity = {
     data: {
         vocalTrack: {
             name: 'Piste vocale La La',
-            iconUrl: '/static/anthem/accordion.svg',
+            iconUrl: '/static/anthem/microphone.png',
         },
         verseTracks: [
             {
                 name: 'Piste harmonique 1',
-                iconUrl: '/static/anthem/saxophone.svg',
+                iconUrl: '/static/anthem/saxophone.png',
             },
             {
                 name: 'Piste mélodique 1',
-                iconUrl: '/static/anthem/electric_guitar.svg',
+                iconUrl: '/static/anthem/electric_guitar.png',
             },
             {
                 name: 'Piste mélodique 2',
-                iconUrl: '/static/anthem/piano.svg',
+                iconUrl: '/static/anthem/piano.png',
             },
             {
                 name: 'Piste rythmique 1',
-                iconUrl: '/static/anthem/jazz_set.svg',
+                iconUrl: '/static/anthem/drum_set.png',
             },
         ],
         introTrack: {
             name: 'Intro + Refrain chanté',
-            iconUrl: '/static/anthem/accordion.svg',
+            iconUrl: '/static/anthem/microphone.png',
         },
         outroTrack: {
             name: 'Outro',
-            iconUrl: '/static/anthem/accordion.svg',
+            iconUrl: '/static/anthem/microphone.png',
         },
         chorusSyllables: [
             ['LA', 'LA'],
