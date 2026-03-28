@@ -15,13 +15,14 @@ export const sendEmail = async <T extends EmailType>(
 ): Promise<ServerActionResponse> => {
     const t = await getExtracted('common');
     try {
-        const user = getEnvVariable('NODEMAILER_USER');
+        const domain = getEnvVariable('HOST_DOMAIN');
+        const user = domain ? `ne-pas-repondre@${domain}` : getEnvVariable('NODEMAILER_USER');
         const transporter = await getTransporter();
 
         const { html, text } = await getTemplate(emailType, props);
 
         await transporter.sendMail({
-            from: `"Par le Monde" <${user}>`,
+            from: `"1Village - Par Le Monde" <${user}>`,
             to,
             subject,
             html,

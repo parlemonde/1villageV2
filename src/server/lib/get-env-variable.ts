@@ -18,6 +18,7 @@ const DEFAULT_ENV_VARIABLES = {
     DYNAMODB_TABLE_NAME: '1village',
     DYNAMODB_ENDPOINT: 'http://localhost:8000',
     S3_BUCKET_NAME: '',
+    HOST_DOMAIN: '',
     NODEMAILER_HOST: 'smtp.ethereal.email',
     NODEMAILER_PORT: '587',
     NODEMAILER_USER: '',
