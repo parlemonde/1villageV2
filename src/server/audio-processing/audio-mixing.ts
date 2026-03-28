@@ -1,57 +1,59 @@
 import { CancelablePromise } from '@lib/cancelablePromise';
 import { getFileData, uploadFile } from '@server/files/file-upload';
-import mime from 'mime-types';
+import { registerService } from '@server/lib/register-service';
 import { createReadStream } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { v4 } from 'uuid';
 
 import { resolveTrackSourcesToFiles } from './resolve-tracks';
 import { runFfmpegMix } from './run-ffmpeg';
 import type { AudioMixJob, AudioMixTrack } from './types';
 import { validateAudioMixTrack } from './validate-track';
 
-let pendingJobs: AudioMixJob[] = [];
-let currentJob: AudioMixJob | null = null;
-let isProcessingQueue = false;
+interface ProcessJobSingleton {
+    pendingJobs: AudioMixJob[];
+    currentJob: AudioMixJob | null;
+    isProcessingQueue: boolean;
+}
+const processJobSingleton = registerService<ProcessJobSingleton>('processJobSingleton', () => ({
+    pendingJobs: [],
+    currentJob: null,
+    isProcessingQueue: false,
+}));
 
-const validateMixRequest = (tracks: AudioMixTrack[], outputKey: string) => {
+const validateMixRequest = (tracks: AudioMixTrack[]) => {
     if (tracks.length === 0) {
         throw new Error('At least one audio track is required');
-    }
-    if (!outputKey.startsWith('media/')) {
-        throw new Error('Audio mix output key must start with "media/"');
-    }
-    if (path.extname(outputKey) === '') {
-        throw new Error('Audio mix key must include a file extension');
     }
     tracks.forEach((track, index) => validateAudioMixTrack(track, index));
 };
 
-const cancelQueuedJobsForKey = (outputKey: string) => {
-    pendingJobs = pendingJobs.filter((job) => {
-        if (job.outputKey !== outputKey) {
+const cancelQueuedJobs = (name: string, userId: string) => {
+    processJobSingleton.pendingJobs = processJobSingleton.pendingJobs.filter((job) => {
+        if (job.name !== name || job.userId !== userId) {
             return true;
         }
         job.abortController.abort();
         return false;
     });
 };
-const cancelRunningJobForKey = (outputKey: string) => {
-    if (currentJob === null || currentJob.outputKey !== outputKey) {
+const cancelRunningJob = (name: string, userId: string) => {
+    if (processJobSingleton.currentJob === null || processJobSingleton.currentJob.name !== name || processJobSingleton.currentJob.userId !== userId) {
         return;
     }
-    currentJob.abortController.abort();
+    processJobSingleton.currentJob.abortController.abort();
 };
 
 const processJob = async (job: AudioMixJob) => {
     const workdir = await CancelablePromise.from(() => mkdtemp(path.join(tmpdir(), 'audio-mix-')), job.abortController);
     try {
         const inputFiles = await resolveTrackSourcesToFiles(job, workdir);
-        const outputFilePath = path.join(workdir, `output${path.extname(job.outputKey)}`);
+        const outputFilePath = path.join(workdir, 'output.mp3');
         await runFfmpegMix(job, inputFiles, outputFilePath);
-        const contentType = mime.lookup(job.outputKey);
-        await uploadFile(job.outputKey, createReadStream(outputFilePath), contentType === false ? undefined : contentType, job.abortController);
+        const outputKey = path.join('media/audios/users', job.userId, job.uuid, `${job.name}.mp3`);
+        await uploadFile(outputKey, createReadStream(outputFilePath), 'audio/mp3', job.abortController);
     } finally {
         await rm(workdir, {
             recursive: true,
@@ -61,50 +63,70 @@ const processJob = async (job: AudioMixJob) => {
 };
 
 const processQueue = async () => {
-    if (isProcessingQueue) {
+    if (processJobSingleton.isProcessingQueue) {
         return;
     }
-    isProcessingQueue = true;
+    processJobSingleton.isProcessingQueue = true;
 
     try {
-        while (pendingJobs.length > 0) {
-            const job = pendingJobs.shift();
+        while (processJobSingleton.pendingJobs.length > 0) {
+            const job = processJobSingleton.pendingJobs.shift();
             if (job === undefined || job.abortController.signal.aborted) {
                 continue;
             }
-            currentJob = job;
+            processJobSingleton.currentJob = job;
             try {
                 await processJob(job);
             } finally {
-                currentJob = null;
+                processJobSingleton.currentJob = null;
             }
         }
     } finally {
-        isProcessingQueue = false;
+        processJobSingleton.isProcessingQueue = false;
     }
 };
 
-export const processAudioMix = async (tracks: AudioMixTrack[], outputKey: string): Promise<void> => {
-    validateMixRequest(tracks, outputKey);
-    cancelQueuedJobsForKey(outputKey);
-    cancelRunningJobForKey(outputKey);
+export const processAudioMix = async (tracks: AudioMixTrack[], name: string, userId: string): Promise<string> => {
+    validateMixRequest(tracks);
+    cancelQueuedJobs(name, userId);
+    cancelRunningJob(name, userId);
+    const sanitizedName = name.replace(/[^a-zA-Z0-9_-]/g, '_');
     const job: AudioMixJob = {
-        outputKey,
+        uuid: v4(),
+        userId,
+        name: sanitizedName,
         tracks,
         abortController: new AbortController(),
     };
-    pendingJobs.push(job);
+    processJobSingleton.pendingJobs.push(job);
     void processQueue();
+    return `/media/audios/users/${userId}/${job.uuid}/${sanitizedName}.mp3`;
 };
 
-export const getAudioMixStatus = async (outputKey: string): Promise<'queued' | 'processing' | 'completed' | 'not-found'> => {
-    if (currentJob && !currentJob.abortController.signal.aborted && currentJob.outputKey === outputKey) {
+export const getAudioMixStatus = async (src: string): Promise<'queued' | 'processing' | 'completed' | 'not-found'> => {
+    if (!src.startsWith('/media/audios/users/')) {
+        return 'not-found';
+    }
+
+    const parsed = src.slice('/media/audios/users/'.length).split('/');
+    if (parsed.length !== 3) {
+        return 'not-found';
+    }
+
+    const [userId, _uuid, fullName] = parsed;
+    const name = fullName.slice(0, -4);
+    if (
+        processJobSingleton.currentJob &&
+        !processJobSingleton.currentJob.abortController.signal.aborted &&
+        processJobSingleton.currentJob.name === name &&
+        processJobSingleton.currentJob.userId === userId
+    ) {
         return 'processing';
     }
-    if (pendingJobs.some((job) => job.outputKey === outputKey)) {
+    if (processJobSingleton.pendingJobs.some((job) => job.name === name && job.userId === userId)) {
         return 'queued';
     }
-    if ((await getFileData(outputKey)) !== null) {
+    if ((await getFileData(src)) !== null) {
         return 'completed';
     }
     return 'not-found';

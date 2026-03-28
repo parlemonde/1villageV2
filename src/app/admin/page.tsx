@@ -9,6 +9,7 @@ export default function AdminHomePage() {
                 des villages-mondes et accéder à la liste complète des utilisateurs.
             </p>
             <AdminLink href="/admin/create/h5p" label="Créer une activité H5P" />
+            <AdminLink href="/admin/create/hymne/1" label="Paramétrer l'hymne" />
         </PageContainer>
     );
 }

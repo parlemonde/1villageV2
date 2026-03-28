@@ -31,6 +31,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     defi: ChallengeView,
     question: QuestionView,
     'presentation-pelico': FreeContentView,
+    hymne: () => null,
 };
 
 interface ActivityViewProps {

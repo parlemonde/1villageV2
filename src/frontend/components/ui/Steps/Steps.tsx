@@ -16,9 +16,10 @@ interface Step {
 interface StepsProps extends MarginProps {
     steps: Step[];
     activeStep: number;
+    onNavigateToLink?: (event: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
 }
 
-export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
+export const Steps = ({ steps, activeStep, onNavigateToLink, ...marginProps }: StepsProps) => {
     const marginAndPaddingStyle = getMarginAndPaddingStyle(marginProps);
     return (
         <div className={styles.steps} style={marginAndPaddingStyle}>
@@ -26,6 +27,7 @@ export const Steps = ({ steps, activeStep, ...marginProps }: StepsProps) => {
                 <Link
                     key={index}
                     href={step.href}
+                    onClick={onNavigateToLink ? (event) => onNavigateToLink(event, step.href) : undefined}
                     className={classNames(styles.step, {
                         [styles.stepSuccess]: step.status === 'success',
                         [styles.stepWarning]: step.status === 'warning',

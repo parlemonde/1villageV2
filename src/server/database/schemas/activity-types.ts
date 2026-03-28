@@ -131,6 +131,29 @@ export type ReportActivity = {
     } | null;
 };
 
+export type AnthemTrack = {
+    name: string;
+    iconUrl?: string;
+    url?: string;
+};
+export type AnthemActivity = {
+    type: 'hymne';
+    data: {
+        vocalTrack?: AnthemTrack;
+        vocalDurationMs?: number;
+        verseTracks?: AnthemTrack[];
+        verseDurationMs?: number; // should be max of all verse tracks durations
+        introTrack?: AnthemTrack;
+        introDurationMs?: number;
+        outroTrack?: AnthemTrack;
+        outroDurationMs?: number;
+        chorusSyllables?: string[][];
+        verseSyllables?: string[][];
+        anthemFullAudioUrl?: string;
+        anthemVerseAudioUrl?: string;
+    };
+};
+
 export type MascotActivity = {
     type: 'mascotte';
     data: {
@@ -226,7 +249,8 @@ export type Activities =
     | MascotActivity
     | ChallengeActivity
     | QuestionActivity
-    | PelicoPresentation;
+    | PelicoPresentation
+    | AnthemActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
@@ -243,6 +267,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     question: true,
     defi: true,
     'presentation-pelico': true,
+    hymne: true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 

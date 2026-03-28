@@ -7,7 +7,9 @@ export interface AudioMixTrack {
 }
 
 export interface AudioMixJob {
-    outputKey: string;
+    uuid: string;
+    userId: string;
+    name: string;
     tracks: AudioMixTrack[];
     abortController: AbortController;
 }

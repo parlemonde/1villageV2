@@ -1,6 +1,5 @@
 'use server';
 
-import { ADMIN_AUDIO_MIX_KEY, ADMIN_AUDIO_MIX_URL } from '@server/audio-processing/admin-audio-mix';
 import { processAudioMix } from '@server/audio-processing/audio-mixing';
 import type { AudioMixTrack } from '@server/audio-processing/types';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -8,6 +7,7 @@ import type { ServerActionResponse } from '@server-actions/common/server-action-
 
 export const startAudioMix = async (
     tracks: AudioMixTrack[],
+    name: string,
 ): Promise<
     ServerActionResponse<{
         outputUrl: string;
@@ -15,7 +15,6 @@ export const startAudioMix = async (
 > => {
     try {
         const user = await getCurrentUser();
-
         if (!user) {
             return {
                 error: {
@@ -23,20 +22,11 @@ export const startAudioMix = async (
                 },
             };
         }
-
-        if (user.role !== 'admin') {
-            return {
-                error: {
-                    message: 'Forbidden',
-                },
-            };
-        }
-
-        await processAudioMix(tracks, ADMIN_AUDIO_MIX_KEY);
-
+        const userId = user.role === 'admin' || user.role === 'mediator' ? 'pelico' : user.id;
+        const outputUrl = await processAudioMix(tracks, name, userId);
         return {
             data: {
-                outputUrl: ADMIN_AUDIO_MIX_URL,
+                outputUrl,
             },
         };
     } catch (error) {
