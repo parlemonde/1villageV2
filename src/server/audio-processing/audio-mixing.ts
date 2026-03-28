@@ -126,7 +126,8 @@ export const getAudioMixStatus = async (src: string): Promise<'queued' | 'proces
     if (processJobSingleton.pendingJobs.some((job) => job.name === name && job.userId === userId)) {
         return 'queued';
     }
-    if ((await getFileData(src)) !== null) {
+    // remove the leading slash in src
+    if ((await getFileData(src.slice(1))) !== null) {
         return 'completed';
     }
     return 'not-found';
