@@ -1,6 +1,6 @@
 'use client';
 
-import { AddSyllableCard } from '@app/admin/create/hymne/AddSyllableCard/AddSyllabelCard';
+import { AddSyllableCard } from '@app/admin/create/hymne/AddSyllableCard/AddSyllableCard';
 import { Syllable, SyllableReturn } from '@app/admin/create/hymne/Syllable/Syllable';
 import { AnthemContext } from '@app/admin/create/hymne/anthemContext';
 import { Button } from '@frontend/components/ui/Button';
