@@ -10,7 +10,7 @@ interface UserViewsProps {
     activity: Partial<Activity>;
 }
 
-export const UserViews: React.FC<UserViewsProps> = ({ activity }) => {
+export const UserViews = ({ activity }: UserViewsProps) => {
     const t = useExtracted('UserViews');
     const pathname = usePathname();
     const isOnActivityPage = pathname.startsWith('/activities/');

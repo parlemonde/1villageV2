@@ -79,7 +79,7 @@ export const ActivityPhasesTable = ({ phases }: ActivityPhasesTableProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {ACTIVITY_TYPES_ENUM.map((activityType) => (
+                    {ACTIVITY_TYPES_ENUM.filter((activityType) => activityType !== 'hymne').map((activityType) => (
                         <tr className={styles.row} key={activityType}>
                             <td className={styles.cell}>{getActivityName(activityType)}</td>
                             <td className={styles.cell}>

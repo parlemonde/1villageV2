@@ -34,6 +34,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     defi: ChallengeCard,
     question: QuestionCard,
     'presentation-pelico': EmptyContentCard,
+    hymne: EmptyContentCard,
 };
 
 interface ActivityCardProps {
