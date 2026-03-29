@@ -1,5 +1,3 @@
-import { beforeEach, jest } from '@jest/globals';
-
 export const mockNProgressConfigure = jest.fn();
 export const mockNProgressStart = jest.fn();
 export const mockNProgressDone = jest.fn();

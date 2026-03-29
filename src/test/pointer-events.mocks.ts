@@ -1,5 +1,3 @@
-import { jest } from '@jest/globals';
-
 /**
  * JSDOM doesn't implement PointerEvent so we need to mock our own implementation
  * Default to mouse left click interaction

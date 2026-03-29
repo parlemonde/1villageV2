@@ -1,7 +1,5 @@
-import { beforeEach, jest } from '@jest/globals';
-
-export const mockUsePathname = jest.fn<() => string>(() => '/');
-export const mockUseSearchParams = jest.fn<() => URLSearchParams>(() => new URLSearchParams());
+export const mockUsePathname = jest.fn(() => '/');
+export const mockUseSearchParams = jest.fn(() => new URLSearchParams());
 
 jest.mock('next/navigation', () => ({
     usePathname: mockUsePathname,

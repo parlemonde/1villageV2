@@ -203,9 +203,6 @@ importers:
       '@eslint/json':
         specifier: ^1.2.0
         version: 1.2.0
-      '@jest/globals':
-        specifier: ^30.3.0
-        version: 30.3.0
       '@next/eslint-plugin-next':
         specifier: 16.2.1
         version: 16.2.1
@@ -215,6 +212,12 @@ importers:
       '@svgr/webpack':
         specifier: 8.1.0
         version: 8.1.0(typescript@5.9.3)
+      '@swc/core':
+        specifier: ^1.15.21
+        version: 1.15.21
+      '@swc/jest':
+        specifier: ^0.2.39
+        version: 0.2.39(@swc/core@1.15.21)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -239,6 +242,9 @@ importers:
       '@types/fuzzyset.js':
         specifier: 0.0.5
         version: 0.0.5
+      '@types/jest':
+        specifier: ^30.0.0
+        version: 30.0.0
       '@types/mime-types':
         specifier: 3.0.1
         version: 3.0.1
@@ -298,7 +304,7 @@ importers:
         version: 3.8.1
       raw-loader:
         specifier: 4.0.2
-        version: 4.0.2(webpack@5.104.1)
+        version: 4.0.2(webpack@5.104.1(@swc/core@1.15.21))
       react-email:
         specifier: 5.2.10
         version: 5.2.10
@@ -2167,6 +2173,10 @@ packages:
       node-notifier:
         optional: true
 
+  '@jest/create-cache-key-function@30.3.0':
+    resolution: {integrity: sha512-hTupmOWylzeyqbMNeSNi7ZDprpjrcroAOOG+qCEW66st3+Z5RnYHVYkUt+zjIcLmrTUi2lPY79hJz8mB3L2oXQ==}
+    engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
+
   '@jest/diff-sequences@30.3.0':
     resolution: {integrity: sha512-cG51MVnLq1ecVUaQ3fr6YuuAOitHK1S4WUJHnsPFE/quQr33ADUx1FfrTCpMCRxvy0Yr9BThKpDjSlcTi91tMA==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
@@ -4008,6 +4018,12 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
+  '@swc/jest@0.2.39':
+    resolution: {integrity: sha512-eyokjOwYd0Q8RnMHri+8/FS1HIrIUKK/sRrFp8c1dThUOfNeCWbLmBP1P5VsKdvmkd25JaH+OKYwEYiAYg9YAA==}
+    engines: {npm: '>= 7.0.0'}
+    peerDependencies:
+      '@swc/core': '*'
+
   '@swc/types@0.1.26':
     resolution: {integrity: sha512-lyMwd7WGgG79RS7EERZV3T8wMdmPq3xwyg+1nmAM64kIhx5yl+juO2PYIHb7vTiPgPCj8LYjsNV2T5wiQHUEaw==}
 
@@ -4139,6 +4155,9 @@ packages:
 
   '@types/istanbul-reports@3.0.4':
     resolution: {integrity: sha512-pk2B1NWalF9toCRu6gjBzR69syFjP4Od8WRAX+0mmf9lAjCRicLOWc+ZrxZHx/0XRjotgkF9t6iaMJ+aXcOdZQ==}
+
+  '@types/jest@30.0.0':
+    resolution: {integrity: sha512-XTYugzhuwqWjws0CVz8QpM36+T+Dz5mTEBKhNs/esGLnCIlGdRy+Dq78NRjd7ls7r8BC8ZRMOrKlkO1hU0JOwA==}
 
   '@types/jsdom@21.1.7':
     resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
@@ -6406,6 +6425,9 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
+
+  jsonc-parser@3.3.1:
+    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
 
   jsonfile@6.2.0:
     resolution: {integrity: sha512-FGuPw30AdOIUTRMC2OMRtQV+jkVj2cfPqSeWXv1NEAJ1qZ5zb1X6z1mFhbfOB/iy3ssJCD+3KuZ8r8C3uVFlAg==}
@@ -10154,6 +10176,10 @@ snapshots:
       - supports-color
       - ts-node
 
+  '@jest/create-cache-key-function@30.3.0':
+    dependencies:
+      '@jest/types': 30.3.0
+
   '@jest/diff-sequences@30.3.0': {}
 
   '@jest/environment-jsdom-abstract@30.3.0(jsdom@26.1.0)':
@@ -12104,6 +12130,13 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@swc/jest@0.2.39(@swc/core@1.15.21)':
+    dependencies:
+      '@jest/create-cache-key-function': 30.3.0
+      '@swc/core': 1.15.21
+      '@swc/counter': 0.1.3
+      jsonc-parser: 3.3.1
+
   '@swc/types@0.1.26':
     dependencies:
       '@swc/counter': 0.1.3
@@ -12262,6 +12295,11 @@ snapshots:
   '@types/istanbul-reports@3.0.4':
     dependencies:
       '@types/istanbul-lib-report': 3.0.3
+
+  '@types/jest@30.0.0':
+    dependencies:
+      expect: 30.3.0
+      pretty-format: 30.3.0
 
   '@types/jsdom@21.1.7':
     dependencies:
@@ -14925,6 +14963,8 @@ snapshots:
 
   json5@2.2.3: {}
 
+  jsonc-parser@3.3.1: {}
+
   jsonfile@6.2.0:
     dependencies:
       universalify: 2.0.1
@@ -15726,11 +15766,11 @@ snapshots:
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
 
-  raw-loader@4.0.2(webpack@5.104.1):
+  raw-loader@4.0.2(webpack@5.104.1(@swc/core@1.15.21)):
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.104.1
+      webpack: 5.104.1(@swc/core@1.15.21)
 
   react-dom@19.2.4(react@19.2.4):
     dependencies:
@@ -16387,13 +16427,15 @@ snapshots:
 
   tapable@2.3.2: {}
 
-  terser-webpack-plugin@5.4.0(webpack@5.104.1):
+  terser-webpack-plugin@5.4.0(@swc/core@1.15.21)(webpack@5.104.1(@swc/core@1.15.21)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       terser: 5.46.1
-      webpack: 5.104.1
+      webpack: 5.104.1(@swc/core@1.15.21)
+    optionalDependencies:
+      '@swc/core': 1.15.21
 
   terser@5.46.1:
     dependencies:
@@ -16748,7 +16790,7 @@ snapshots:
 
   webpack-sources@3.3.4: {}
 
-  webpack@5.104.1:
+  webpack@5.104.1(@swc/core@1.15.21):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -16772,7 +16814,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.2
-      terser-webpack-plugin: 5.4.0(webpack@5.104.1)
+      terser-webpack-plugin: 5.4.0(@swc/core@1.15.21)(webpack@5.104.1(@swc/core@1.15.21))
       watchpack: 2.5.1
       webpack-sources: 3.3.4
     transitivePeerDependencies:

@@ -1,24 +1,21 @@
-import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
+import useSWR from 'swr';
+import videoJs from 'video.js';
 
-const mockUseSWR = jest.fn();
-const mockVideojs = jest.fn();
+import { VideoPlayer } from './VideoPlayer';
 
+const mockUseSWR = useSWR as jest.Mock;
+const mockVideojs = videoJs as unknown as jest.Mock;
 jest.mock('swr', () => ({
     __esModule: true,
-    default: mockUseSWR,
+    default: jest.fn(),
 }));
 jest.mock('video.js', () => ({
     __esModule: true,
-    default: mockVideojs,
+    default: jest.fn(),
 }));
 jest.mock('videojs-hls-quality-selector', () => ({}));
 jest.mock('videojs-youtube', () => ({}));
-
-let VideoPlayer: typeof import('./VideoPlayer').VideoPlayer;
-beforeAll(async () => {
-    ({ VideoPlayer } = await import('./VideoPlayer'));
-});
 
 describe('VideoPlayer', () => {
     beforeEach(() => {
