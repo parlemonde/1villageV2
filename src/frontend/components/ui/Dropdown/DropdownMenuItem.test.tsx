@@ -3,10 +3,6 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DropdownMenu } from 'radix-ui';
 
-jest.mock('@frontend/components/ui/Link', () => ({
-    Link: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
-}));
-
 import { DropdownMenuItem } from './DropdownMenuItem';
 
 const TestIcon = ({ className }: { className?: string }) => <svg data-testid="menu-item-icon" className={className} />;

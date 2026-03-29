@@ -1,9 +1,5 @@
-import { describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-
-jest.mock('@frontend/components/ui/Link', () => ({
-    Link: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
-}));
 
 import { Breadcrumbs } from './Breadcrumbs';
 

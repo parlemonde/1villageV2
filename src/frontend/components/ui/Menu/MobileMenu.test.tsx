@@ -2,10 +2,6 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-jest.mock('@frontend/components/ui/Link', () => ({
-    Link: ({ children, ...props }: React.ComponentProps<'a'>) => <a {...props}>{children}</a>,
-}));
-
 import { MobileMenu } from './MobileMenu';
 
 describe('MobileMenu', () => {

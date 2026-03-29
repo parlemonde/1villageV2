@@ -17,15 +17,19 @@ beforeAll(async () => {
         default: mockVideojs,
     }));
 
-    jest.doMock('@frontend/components/ui/CircularProgress', () => ({
-        CircularProgress: ({ size }: { size?: number }) => <div role="progressbar" data-size={size} />,
-    }));
-
     jest.doMock('videojs-hls-quality-selector', () => ({}));
     jest.doMock('videojs-youtube', () => ({}));
     jest.doMock('radix-ui', () => ({
         AspectRatio: {
             Root: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
+        },
+        Progress: {
+            Root: ({ children, ...props }: React.PropsWithChildren<React.ComponentProps<'div'>>) => (
+                <div role="progressbar" {...props}>
+                    {children}
+                </div>
+            ),
+            Indicator: ({ children, ...props }: React.PropsWithChildren<React.ComponentProps<'div'>>) => <div {...props}>{children}</div>,
         },
     }));
 

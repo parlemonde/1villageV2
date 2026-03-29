@@ -4,20 +4,6 @@ import userEvent from '@testing-library/user-event';
 
 import { Button } from './Button';
 
-jest.mock('@frontend/components/ui/Link', () => {
-    const React = jest.requireActual('react') as typeof import('react');
-    const MockLink = React.forwardRef<HTMLAnchorElement, React.ComponentProps<'a'>>(({ children, ...props }, ref) => (
-        <a ref={ref} {...props}>
-            {children}
-        </a>
-    ));
-    MockLink.displayName = 'MockLink';
-
-    return {
-        Link: MockLink,
-    };
-});
-
 describe('Button', () => {
     it('renders as a native button by default and calls onClick', async () => {
         const user = userEvent.setup();

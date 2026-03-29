@@ -12,15 +12,6 @@ beforeAll(async () => {
         default: ({ alt, ...props }: React.ComponentProps<'img'>) => <img alt={alt} {...props} />,
     }));
 
-    jest.doMock('@frontend/components/ui/Modal', () => ({
-        Modal: ({ title, children }: React.PropsWithChildren<{ title?: string }>) => (
-            <div data-testid="modal">
-                <span>{title}</span>
-                {children}
-            </div>
-        ),
-    }));
-
     ({ ImageViewer } = await import('./ImageViewer'));
 });
 
@@ -32,7 +23,7 @@ describe('ImageViewer', () => {
 
         await user.click(screen.getByAltText('Village map'));
 
-        expect(screen.getByTestId('modal')).toBeInTheDocument();
+        expect(screen.getByText('Village map')).toBeInTheDocument();
         expect(screen.getAllByAltText('Village map')).toHaveLength(2);
     });
 });
