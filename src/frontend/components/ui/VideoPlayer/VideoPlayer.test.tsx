@@ -4,35 +4,19 @@ import { render, screen, waitFor } from '@testing-library/react';
 const mockUseSWR = jest.fn();
 const mockVideojs = jest.fn();
 
+jest.mock('swr', () => ({
+    __esModule: true,
+    default: mockUseSWR,
+}));
+jest.mock('video.js', () => ({
+    __esModule: true,
+    default: mockVideojs,
+}));
+jest.mock('videojs-hls-quality-selector', () => ({}));
+jest.mock('videojs-youtube', () => ({}));
+
 let VideoPlayer: typeof import('./VideoPlayer').VideoPlayer;
-
 beforeAll(async () => {
-    jest.doMock('swr', () => ({
-        __esModule: true,
-        default: mockUseSWR,
-    }));
-
-    jest.doMock('video.js', () => ({
-        __esModule: true,
-        default: mockVideojs,
-    }));
-
-    jest.doMock('videojs-hls-quality-selector', () => ({}));
-    jest.doMock('videojs-youtube', () => ({}));
-    jest.doMock('radix-ui', () => ({
-        AspectRatio: {
-            Root: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
-        },
-        Progress: {
-            Root: ({ children, ...props }: React.PropsWithChildren<React.ComponentProps<'div'>>) => (
-                <div role="progressbar" {...props}>
-                    {children}
-                </div>
-            ),
-            Indicator: ({ children, ...props }: React.PropsWithChildren<React.ComponentProps<'div'>>) => <div {...props}>{children}</div>,
-        },
-    }));
-
     ({ VideoPlayer } = await import('./VideoPlayer'));
 });
 

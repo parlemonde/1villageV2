@@ -1,22 +1,21 @@
 import { describe, expect, it, jest } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { DropdownMenu } from 'radix-ui';
 
+import { Dropdown } from './Dropdown';
 import { DropdownMenuItem } from './DropdownMenuItem';
 
 const TestIcon = ({ className }: { className?: string }) => <svg data-testid="menu-item-icon" className={className} />;
 
-const renderInDropdown = (children: React.ReactNode) =>
-    render(
-        <DropdownMenu.Root open>
-            <DropdownMenu.Content>{children}</DropdownMenu.Content>
-        </DropdownMenu.Root>,
-    );
+const renderInDropdown = (children: React.ReactNode) => render(<Dropdown trigger={<button type="button">Open</button>}>{children}</Dropdown>);
 
 describe('DropdownMenuItem', () => {
-    it('renders the linked variant with its icon', () => {
+    it('renders the linked variant with its icon', async () => {
+        const user = userEvent.setup();
+
         renderInDropdown(<DropdownMenuItem label="Open profile" href="/profile" icon={TestIcon} />);
+
+        await user.click(screen.getByRole('button', { name: 'Open' }));
 
         expect(screen.getByRole('menuitem', { name: 'Open profile' })).toHaveAttribute('href', '/profile');
         expect(screen.getByTestId('menu-item-icon')).toBeInTheDocument();
@@ -28,6 +27,7 @@ describe('DropdownMenuItem', () => {
 
         renderInDropdown(<DropdownMenuItem label="Delete" onClick={onClick} />);
 
+        await user.click(screen.getByRole('button', { name: 'Open' }));
         await user.click(screen.getByRole('menuitem', { name: 'Delete' }));
 
         expect(onClick).toHaveBeenCalledTimes(1);

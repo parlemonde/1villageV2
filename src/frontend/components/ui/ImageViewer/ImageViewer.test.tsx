@@ -1,19 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
-
-import { beforeAll, describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-let ImageViewer: typeof import('./ImageViewer').ImageViewer;
-
-beforeAll(async () => {
-    jest.doMock('next/image', () => ({
-        __esModule: true,
-        default: ({ alt, ...props }: React.ComponentProps<'img'>) => <img alt={alt} {...props} />,
-    }));
-
-    ({ ImageViewer } = await import('./ImageViewer'));
-});
+import { ImageViewer } from './ImageViewer';
 
 describe('ImageViewer', () => {
     it('renders the image and opens the fullscreen modal on click', async () => {

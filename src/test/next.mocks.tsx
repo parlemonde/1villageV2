@@ -38,6 +38,14 @@ jest.mock('next/link', () => {
     };
 });
 
+jest.mock('next/image', () => ({
+    __esModule: true,
+    default: ({ alt, ...props }: React.ComponentProps<'img'>) => {
+        const React = jest.requireActual('react') as typeof import('react');
+        return React.createElement('img', { alt, ...props });
+    },
+}));
+
 beforeEach(() => {
     mockUsePathname.mockReset();
     mockUseSearchParams.mockReset();

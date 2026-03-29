@@ -287,9 +287,6 @@ importers:
       eslint-plugin-react-hooks:
         specifier: 7.0.1
         version: 7.0.1(eslint@9.39.4(jiti@2.4.2))
-      identity-obj-proxy:
-        specifier: ^3.0.0
-        version: 3.0.0
       jest:
         specifier: ^30.3.0
         version: 30.3.0(@types/node@25.5.0)(babel-plugin-macros@3.1.0)
@@ -5889,9 +5886,6 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  harmony-reflect@1.6.2:
-    resolution: {integrity: sha512-HIp/n38R9kQjDEziXyDTuW3vvoxxyxjxFzXLrBr18uB47GnSt+G9D29fqrpM5ZkspMcPICud3XsBJQ4Y2URg8g==}
-
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -5964,10 +5958,6 @@ packages:
 
   icu-minify@4.8.3:
     resolution: {integrity: sha512-65Av7FLosNk7bPbmQx5z5XG2Y3T2GFppcjiXh4z1idHeVgQxlDpAmkGoYI0eFzAvrOnjpWTL5FmPDhsdfRMPEA==}
-
-  identity-obj-proxy@3.0.0:
-    resolution: {integrity: sha512-00n6YnVHKrinT9t0d9+5yZC6UBNJANpYEQvL2LlX6Ab9lnmxzIRcEmTPuyGScvl1+jKuCICX1Z0Ab1pPKKdikA==}
-    engines: {node: '>=4'}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -14215,8 +14205,6 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  harmony-reflect@1.6.2: {}
-
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -14300,10 +14288,6 @@ snapshots:
   icu-minify@4.8.3:
     dependencies:
       '@formatjs/icu-messageformat-parser': 3.5.3
-
-  identity-obj-proxy@3.0.0:
-    dependencies:
-      harmony-reflect: 1.6.2
 
   ignore@5.3.2: {}
 
