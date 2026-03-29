@@ -5,13 +5,11 @@ import { Title } from './Title';
 
 describe('Title', () => {
     it('renders the requested heading level with its content and id', () => {
-        const { debug } = render(
+        render(
             <Title id="main-title" variant="h2">
                 Village title
             </Title>,
         );
-
-        debug();
 
         const heading = screen.getByRole('heading', { level: 2, name: 'Village title' });
 
