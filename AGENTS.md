@@ -316,6 +316,13 @@ Useful manual smoke tests:
 - verify uploads when touching media code
 - verify translations when touching i18n keys
 
+## Testing Notes
+
+- For now, prioritize adding tests for UI client components under `@frontend/*`, especially `src/frontend/components/ui`
+- Prefer unit tests for client components before expanding test coverage to server components
+- Avoid mocking sibling components when testing UI components; prefer rendering the real component tree and only mock external frameworks or browser APIs when necessary
+- Reuse the shared Jest mocks under `src/test/*` before adding local test-specific mocks
+
 ## Good First Places To Read
 
 If you are new to the codebase, start here:
