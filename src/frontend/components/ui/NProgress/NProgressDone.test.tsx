@@ -1,33 +1,11 @@
-import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 import { render, waitFor } from '@testing-library/react';
 
-const mockUsePathname = jest.fn();
-const mockUseSearchParams = jest.fn();
-const mockDone = jest.fn();
-
-let NProgressDone: typeof import('./NProgressDone').NProgressDone;
-
-beforeAll(async () => {
-    jest.doMock('next/navigation', () => ({
-        usePathname: mockUsePathname,
-        useSearchParams: mockUseSearchParams,
-    }));
-
-    jest.doMock('nprogress', () => ({
-        __esModule: true,
-        default: {
-            done: mockDone,
-        },
-    }));
-
-    ({ NProgressDone } = await import('./NProgressDone'));
-});
+import { NProgressDone } from './NProgressDone';
+import { mockUsePathname, mockUseSearchParams } from '../../../../test/next.mocks';
+import { mockNProgressDone } from '../../../../test/nprogress.mocks';
 
 describe('NProgressDone', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     it('calls NProgress.done on mount and when navigation values change', async () => {
         mockUsePathname.mockReturnValue('/home');
         mockUseSearchParams.mockReturnValue(new URLSearchParams('a=1'));
@@ -35,7 +13,7 @@ describe('NProgressDone', () => {
         const { rerender } = render(<NProgressDone />);
 
         await waitFor(() => {
-            expect(mockDone).toHaveBeenCalledTimes(1);
+            expect(mockNProgressDone).toHaveBeenCalledTimes(1);
         });
 
         mockUsePathname.mockReturnValue('/village');
@@ -44,7 +22,7 @@ describe('NProgressDone', () => {
         rerender(<NProgressDone />);
 
         await waitFor(() => {
-            expect(mockDone).toHaveBeenCalledTimes(2);
+            expect(mockNProgressDone).toHaveBeenCalledTimes(2);
         });
     });
 });
