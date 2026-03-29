@@ -7,7 +7,7 @@ describe('Modal', () => {
     it('renders title, content and footer actions', async () => {
         const user = userEvent.setup();
         const onClose = jest.fn();
-        const onConfirm = jest.fn<() => void>();
+        const onConfirm = jest.fn<void, []>();
 
         render(
             <Modal isOpen onClose={onClose} onConfirm={onConfirm} title="Confirm action">

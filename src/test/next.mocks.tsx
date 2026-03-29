@@ -38,7 +38,7 @@ jest.mock('next/link', () => {
 
 jest.mock('next/image', () => ({
     __esModule: true,
-    default: ({ alt, ...props }: React.ComponentProps<'img'>) => {
+    default: ({ alt, fill: _fill, ...props }: React.ComponentProps<'img'> & { fill?: boolean }) => {
         const React = jest.requireActual('react') as typeof import('react');
         return React.createElement('img', { alt, ...props });
     },
