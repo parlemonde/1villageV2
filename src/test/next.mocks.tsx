@@ -23,6 +23,7 @@ jest.mock('next/link', () => {
             onClick={(event) => {
                 event.preventDefault();
                 onNavigate?.(new Event('navigate'));
+                props.onClick?.(event);
             }}
         >
             {children}

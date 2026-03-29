@@ -15,7 +15,7 @@ const config: Config = {
         '^@server-actions/(.*)$': '<rootDir>/src/server-actions/$1',
         '^.+\\.module\\.css$': 'identity-obj-proxy',
         '^.+\\.css$': 'identity-obj-proxy',
-        '^.+\\.svg$': '<rootDir>/src/test/svgMock.js',
+        '^.+\\.svg$': '<rootDir>/src/test/svg.mocks.js',
     },
     modulePathIgnorePatterns: ['<rootDir>/.next/'],
     setupFilesAfterEnv: ['<rootDir>/src/test/jest.setup.ts'],
