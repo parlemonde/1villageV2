@@ -273,10 +273,9 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 />
             )}
             <div className={styles.reactionsListWrapper}>
-                {/* render all activities reactions for activityId grouped by reaction type */}
-                {REACTION_EMOJIS.map((reaction) => {
+                {/* render already voted reactions (found in reactionMap) */}
+                {REACTION_EMOJIS.filter((reaction) => reactionMap.has(reaction.value)).map((reaction, index) => {
                     const badgeValue = getCountForReaction(reaction.value);
-                    const index = REACTION_EMOJIS.indexOf(reaction);
                     return (
                         <Button
                             key={reaction.value}
@@ -311,7 +310,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     variant="borderless"
                     color="primary"
                     disabled={nbTotalReactions === 0}
-                    style={{ position: 'relative', left: `${(REACTION_EMOJIS.length - 1) * -8}px` }}
+                    style={{ position: 'relative', left: `${(reactionMap.keys.length - 1) * -8}px` }}
                 />
             )}
 
