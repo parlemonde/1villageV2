@@ -62,7 +62,7 @@ export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, hasA
                         shouldDisableButtons={shouldDisableButtons}
                     >
                         <UserViews activity={activity} />
-                        <ClassroomsReactions activity={activity} />
+                        <ClassroomsReactions activity={activity} disabledVersion={true} />
                     </ContentCard>
                 </div>
             )}

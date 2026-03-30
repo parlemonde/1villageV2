@@ -48,17 +48,21 @@ const useReactionEmoji = () => {
     const t = useExtracted('ClassroomsReactions');
 
     return [
-        { value: 'wow', label: t('wow'), emoji: '😮' },
-        { value: 'like', label: t('like'), emoji: '👍' },
-        { value: 'love', label: t('love'), emoji: '❤️' },
+        { value: 'wahou', label: t('wahou'), emoji: '🤩' },
+        { value: 'love', label: t('love'), emoji: '🫶' },
+        { value: 'miam', label: t('miam'), emoji: '🧑‍🍳' },
+        { value: 'intéressant', label: t('intéressant'), emoji: '​💡' },
+        { value: 'festif', label: t('festif'), emoji: '🎉' },
+        { value: 'bravo', label: t('bravo'), emoji: '​👏' },
     ] as const;
 };
 
 interface ClassroomsReactionsProps {
     activity: Partial<Activity>;
+    disabledVersion?: boolean;
 }
 
-export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity }) => {
+export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, disabledVersion = false }) => {
     const t = useExtracted('ClassroomsReactions');
     const REACTION_EMOJIS = useReactionEmoji();
     const { user, classroom } = useContext(UserContext);
@@ -73,7 +77,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         jsonFetcher,
     );
 
-    const [_disabledReactions] = useState<boolean>(!(classroom || isPelico));
+    const [_disabledReactions] = useState<boolean>(disabledVersion || !(classroom || isPelico));
     const [isChangeReactionModalOpen, setIsChangeReactionModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
     const [selectedReactionInModal, setSelectedReactionInModal] = useState<ReactionRaw | null>(null);
@@ -253,19 +257,21 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
     return (
         <div className={styles.reactionsContainer}>
-            <Button
-                title={t('Réagir')}
-                onClick={() => {
-                    setSelectedReactionInModal(currentReaction);
-                    setIsChangeReactionModalOpen(true);
-                }}
-                label={<AddReactionIcon className={styles.addReactionIcon} />}
-                color="primary"
-                size="sm"
-                variant="contained"
-                disabled={_disabledReactions}
-                className={styles.addReactionButton}
-            />
+            {disabledVersion ? null : (
+                <Button
+                    title={t('Réagir')}
+                    onClick={() => {
+                        setSelectedReactionInModal(currentReaction);
+                        setIsChangeReactionModalOpen(true);
+                    }}
+                    label={<AddReactionIcon className={styles.addReactionIcon} />}
+                    color="primary"
+                    size="sm"
+                    variant="contained"
+                    disabled={_disabledReactions}
+                    className={styles.addReactionButton}
+                />
+            )}
             <div className={styles.reactionsListWrapper}>
                 {/* render all activities reactions for activityId grouped by reaction type */}
                 {REACTION_EMOJIS.map((reaction) => {
@@ -295,17 +301,19 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     );
                 })}
             </div>
-            <Button
-                onClick={() => setIsAllReactionsModalOpen(true)}
-                label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', {
-                    count: nbTotalReactions,
-                })}
-                size="sm"
-                variant="borderless"
-                color="primary"
-                disabled={nbTotalReactions === 0}
-                style={{ position: 'relative', left: `${(REACTION_EMOJIS.length - 1) * -8}px` }}
-            />
+            {disabledVersion ? null : (
+                <Button
+                    onClick={() => setIsAllReactionsModalOpen(true)}
+                    label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', {
+                        count: nbTotalReactions,
+                    })}
+                    size="sm"
+                    variant="borderless"
+                    color="primary"
+                    disabled={nbTotalReactions === 0}
+                    style={{ position: 'relative', left: `${(REACTION_EMOJIS.length - 1) * -8}px` }}
+                />
+            )}
 
             {isAllReactionsModalOpen && (
                 <Modal
