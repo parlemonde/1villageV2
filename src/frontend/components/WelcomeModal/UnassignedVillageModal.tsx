@@ -8,8 +8,6 @@ import { logout } from '@server-actions/authentication/logout';
 import { useExtracted } from 'next-intl';
 import { useRef } from 'react';
 
-import styles from './unassigned-village-modal.module.css';
-
 export const UnassignedVillageModal = () => {
     const t = useExtracted('UnassignedVillageModal');
     const tCommon = useExtracted('common');
@@ -32,7 +30,7 @@ export const UnassignedVillageModal = () => {
             hasCancelButton={true}
             onCancel={() => logout()}
             width="md"
-            className={styles.modal}
+            hasVisibleOverflow={true}
         >
             {/* position: relative sur ce div pour que Pelico soit positionné par rapport à lui.
                 Le padding-left laisse de la place au contenu centré sans être masqué par Pelico.

@@ -31,6 +31,7 @@ type ModalProps = {
     isFullWidth?: boolean;
     isLoading?: boolean;
     onOpenAutoFocus?: boolean;
+    hasVisibleOverflow?: boolean;
     className?: string;
 };
 export const Modal = ({
@@ -56,6 +57,7 @@ export const Modal = ({
     isFullWidth,
     isLoading,
     onOpenAutoFocus = true,
+    hasVisibleOverflow = false,
     className,
     children,
 }: React.PropsWithChildren<ModalProps>) => {
@@ -76,6 +78,7 @@ export const Modal = ({
                         {
                             [styles[`width-${width}`]]: width,
                             [styles.isFullWidth]: isFullWidth,
+                            [styles.hasVisibleOverflow]: hasVisibleOverflow,
                         },
                         className,
                     )}
@@ -101,7 +104,7 @@ export const Modal = ({
                             </Dialog.Close>
                         )}
                     </Dialog.Title>
-                    <div className={classNames(styles.content, { [styles.hasPadding]: hasPadding })}>{children}</div>
+                    <div className={classNames(styles.content, { [styles.hasPadding]: hasPadding, [styles.hasVisibleOverflow]: hasVisibleOverflow })}>{children}</div>
                     {hasFooter && (
                         <div className={classNames(styles.footer, { [styles.hasBottomSeparator]: hasBottomSeparator })}>
                             {hasCancelButton && (

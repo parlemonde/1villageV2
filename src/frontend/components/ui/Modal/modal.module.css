@@ -78,6 +78,9 @@
     justify-content: flex-end;
     flex: 0 0 auto;
 }
+.hasVisibleOverflow {
+    overflow: visible;
+}
 .loader {
     position: absolute;
     width: 100%;
