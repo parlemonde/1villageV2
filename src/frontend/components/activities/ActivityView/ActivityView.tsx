@@ -57,7 +57,7 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                     <strong>{t('Réaction des pélicopains')}</strong>
                 </div>
             )}
-            {showDetails && <UserViews activity={activity} />}
+            {showDetails && <UserViews activity={activity} marginBottom={'md'} />}
             {showDetails && <ClassroomsReactions activity={activity} />}
             {showDetails && <Comments activityId={activity.id} />}
         </>
