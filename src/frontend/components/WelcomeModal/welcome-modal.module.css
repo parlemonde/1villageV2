@@ -1,0 +1,333 @@
+.modal {
+    max-height: calc(100% - 64px);
+    max-width: 1200px;
+    width: calc(100% - 64px);
+}
+
+.stepContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+}
+
+@media (min-width: 900px) {
+    .stepContainer {
+        height: 75vh;
+    }
+}
+
+.stepCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.stepText {
+    font-size: 1.1rem;
+    color: var(--font-color);
+}
+
+.villageName {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: var(--primary-color);
+}
+
+.countryName {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reportButton {
+    margin-top: 2rem;
+}
+
+/* CGU step */
+.cguScrollArea {
+    height: 19rem;
+    overflow-y: auto;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid var(--grey-200);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cguCheckboxArea {
+    max-width: 800px;
+    width: 100%;
+    margin: 1rem auto 0;
+    text-align: right;
+}
+
+/* Stepper navigation */
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-top: 1px solid var(--grey-200);
+    margin-top: auto;
+}
+
+.stepperButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--font-color);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.15s;
+}
+
+.stepperButton:hover:not(:disabled) {
+    background-color: var(--grey-100);
+}
+
+.stepperButton:disabled {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.stepperDots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.stepperDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--grey-300);
+    transition: background-color 0.2s;
+}
+
+.stepperDotActive {
+    background-color: var(--primary-color);
+}
+
+/* Profile step - two-column layout (form left, preview right) */
+.stepProfileContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+@media (min-width: 900px) {
+    .stepProfileContainer {
+        flex-direction: row;
+        gap: 2rem;
+    }
+}
+
+.stepProfileForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.stepProfilePreview {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: var(--grey-100);
+    padding: 0.5rem 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+.stepProfilePreviewTitle {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* V1-style PresentationCard preview */
+.previewCard {
+    background-color: white;
+    border: 1px solid var(--grey-300);
+    border-radius: 4px;
+    margin-top: 0.25rem;
+}
+
+.previewCardHeader {
+    padding: 4px;
+}
+
+.previewCardBody {
+    padding: 0.25rem 0.5rem 0.5rem;
+}
+
+.previewCardTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+}
+
+.previewCardText {
+    font-size: 0.9rem;
+    color: var(--grey-500);
+    margin: 0;
+    text-align: justify;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stepProfileSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.stepProfileTitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin: 0 0.5rem 0.5rem;
+}
+
+/* V1-like panel input: horizontal layout (label left, input right) */
+.panelField {
+    display: inline-flex;
+    align-items: flex-start;
+    flex-direction: row;
+    margin: 0.5rem;
+    gap: 0;
+}
+
+.panelField label {
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    white-space: nowrap;
+}
+
+/* V1-like underline input wrapper (MUI standard variant replica) */
+.panelInputWrapper {
+    position: relative;
+    width: 450px;
+    max-width: 100%;
+    margin-left: 0.5rem;
+}
+
+/* Static underline (MUI ::before) */
+.panelInputWrapper::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+    transition: border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.panelInputWrapper:hover::before {
+    border-bottom: 2px solid var(--font-color);
+}
+
+/* Animated underline (MUI ::after) — expands from center on focus */
+.panelInputWrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: 2px solid var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.panelInputWrapper:focus-within::after {
+    transform: scaleX(1);
+}
+
+/* Error state underlines */
+.panelInputWrapper.panelInputError::before {
+    border-bottom-color: var(--error-color);
+}
+
+.panelInputWrapper.panelInputError::after {
+    border-bottom-color: var(--error-color);
+}
+
+/* Disabled state */
+.panelInputWrapper.panelInputDisabled::before {
+    border-bottom-style: dotted;
+    border-bottom-color: rgba(0, 0, 0, 0.42);
+}
+
+.panelInputWrapper.panelInputDisabled::after {
+    display: none;
+}
+
+/* The actual input element */
+.panelInput {
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    padding: 4px 0 5px;
+    font-size: 1rem;
+    line-height: 1.45em;
+    background: transparent;
+    color: var(--font-color);
+}
+
+.panelInput:focus {
+    outline: none;
+}
+
+.panelInput:focus-visible {
+    outline: none;
+}
+
+.panelInput:disabled {
+    color: var(--grey-500);
+    pointer-events: none;
+}
+
+/* Phase transition modals (SecondPhase / ThirdPhase) */
+.phaseContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 15rem;
+    gap: 1rem;
+}
+
+.phaseLink {
+    text-decoration: underline;
+    color: var(--primary-color);
+}
+
+.phaseActions {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.phaseOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}

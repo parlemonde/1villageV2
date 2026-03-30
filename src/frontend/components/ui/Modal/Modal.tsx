@@ -23,6 +23,7 @@ type ModalProps = {
     hasFooter?: boolean;
     cancelLabel?: string;
     cancelLevel?: 'primary' | 'secondary' | 'error';
+    cancelIsUpperCase?: boolean;
     confirmLabel?: string;
     confirmLevel?: 'primary' | 'secondary' | 'error';
     isConfirmDisabled?: boolean;
@@ -30,6 +31,7 @@ type ModalProps = {
     isFullWidth?: boolean;
     isLoading?: boolean;
     onOpenAutoFocus?: boolean;
+    className?: string;
 };
 export const Modal = ({
     isOpen,
@@ -46,6 +48,7 @@ export const Modal = ({
     hasCancelButton = true,
     cancelLabel = 'Annuler',
     cancelLevel = 'secondary',
+    cancelIsUpperCase = true,
     confirmLabel = 'Valider',
     confirmLevel = 'secondary',
     isConfirmDisabled = false,
@@ -53,6 +56,7 @@ export const Modal = ({
     isFullWidth,
     isLoading,
     onOpenAutoFocus = true,
+    className,
     children,
 }: React.PropsWithChildren<ModalProps>) => {
     return (
@@ -67,10 +71,14 @@ export const Modal = ({
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content
-                    className={classNames(styles.modalContent, {
-                        [styles[`width-${width}`]]: width,
-                        [styles.isFullWidth]: isFullWidth,
-                    })}
+                    className={classNames(
+                        styles.modalContent,
+                        {
+                            [styles[`width-${width}`]]: width,
+                            [styles.isFullWidth]: isFullWidth,
+                        },
+                        className,
+                    )}
                     onOpenAutoFocus={
                         onOpenAutoFocus
                             ? undefined
@@ -104,6 +112,7 @@ export const Modal = ({
                                     }}
                                     color={cancelLevel}
                                     variant="outlined"
+                                    isUpperCase={cancelIsUpperCase}
                                 ></Button>
                             )}
                             {onConfirm && (
