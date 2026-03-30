@@ -29,3 +29,9 @@
 .activityTimer.unavailable {
     color: var(--error-color);
 }
+
+.activityIcon,
+.activityTypeIcon g,
+.activityTypeIcon path {
+    fill: var(--primary-color);
+}

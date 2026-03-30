@@ -27,9 +27,9 @@ export const CGU = () => {
             <br />
             <h3 className={styles.textOrangeBackground}>2. Acceptation des mentions légales du site https://www.parlemonde.org</h3>
             <p>
-                Je prends connaissance et j’accepte les mentions légales telles que précisées à l’adresse suivante :
-                <a href="https://www.parlemonde.org/mentions-legales/" target="_blank" rel="noreferrer">
-                    https://www.parlemonde.org/mentions-legales/
+                Je prends connaissance et j’accepte les mentions légales telles que précisées à l’adresse suivante :{' '}
+                <a href="https://www.parlemonde.org/politique-de-confidentialite/" target="_blank" rel="noreferrer">
+                    https://www.parlemonde.org/politique-de-confidentialite/
                 </a>
             </p>
 
