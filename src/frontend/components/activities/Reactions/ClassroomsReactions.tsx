@@ -310,7 +310,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     variant="borderless"
                     color="primary"
                     disabled={nbTotalReactions === 0}
-                    style={{ position: 'relative', left: `${(reactionMap.keys.length - 1) * -8}px` }}
+                    style={{ position: 'relative', left: `${(reactionMap.size - 1) * -8}px` }}
                 />
             )}
 
