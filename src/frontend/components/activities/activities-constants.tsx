@@ -1,5 +1,6 @@
 'use client';
 
+import AnthemIcon from '@frontend/svg/activities/anthem.svg';
 import ChallengeIcon from '@frontend/svg/activities/challenge.svg';
 import EnigmeIcon from '@frontend/svg/activities/enigme.svg';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
@@ -37,6 +38,10 @@ export const useActivityName = () => {
                     return t('Défi');
                 case 'question':
                     return t('Question');
+                case 'presentation-pelico':
+                    return t('Présentation Pélico');
+                case 'hymne':
+                    return t('Hymne');
             }
         },
         [t],
@@ -62,6 +67,10 @@ export const useActivityName = () => {
                     return t('Lancer un defi');
                 case 'question':
                     return t('Poser une question');
+                case 'presentation-pelico':
+                    return t('Présentation Pelico');
+                case 'hymne':
+                    return t('Créer un hymne');
             }
         },
         [t],
@@ -83,6 +92,8 @@ export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
     histoire: 'inventé une histoire',
     defi: 'lancé un defi',
     question: 'posé une question',
+    'presentation-pelico': 'se présente',
+    hymne: 'créé un hymne',
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {
@@ -95,6 +106,8 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     histoire: StoryIcon,
     defi: ChallengeIcon,
     question: QuestionIcon,
+    'presentation-pelico': null,
+    hymne: AnthemIcon,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -107,6 +120,8 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     histoire: '/creer-une-histoire',
     defi: '/lancer-un-defi',
     question: '/poser-une-question',
+    'presentation-pelico': '/pelico',
+    hymne: '/admin/create/hymne',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);
@@ -129,6 +144,8 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     histoire: '/creer-une-histoire/3',
     defi: '/lancer-un-defi/3',
     question: '/poser-une-question/3',
+    'presentation-pelico': '/pelico',
+    hymne: '/admin/create/hymne/5',
 };
 
 // null means all roles
@@ -142,6 +159,8 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     defi: null,
     histoire: null,
     question: null,
+    'presentation-pelico': ['admin', 'mediator'],
+    hymne: ['admin', 'mediator'],
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

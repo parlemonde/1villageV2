@@ -13,8 +13,8 @@ interface UploadSoundModalProps {
     initialSoundUrl?: string | null;
     isPelicoSound?: boolean;
     onClose: () => void;
-    onNewSound?: (soundUrl: string) => void;
-    getActivityId: () => Promise<number | null>;
+    onNewSound?: (soundUrl: string, soundDurationMs: number) => void;
+    getActivityId?: () => Promise<number | null>;
 }
 
 const isValidSoundUrl = (url: string) => {
@@ -55,12 +55,12 @@ export const UploadSoundModal = ({
             return;
         }
         if (typeof soundUrlOrFile === 'string') {
-            onNewSound?.(soundUrlOrFile);
+            onNewSound?.(soundUrlOrFile, Math.round(duration * 1000));
         } else {
             setIsSubmitting(true);
-            const activityId = await getActivityId();
+            const activityId = getActivityId ? await getActivityId() : null;
             const uploadedSoundUrl = await uploadSound(soundUrlOrFile, isPelicoSound, duration, activityId);
-            onNewSound?.(uploadedSoundUrl);
+            onNewSound?.(uploadedSoundUrl, Math.round(duration * 1000));
             setIsSubmitting(false);
         }
     };

@@ -1,3 +1,4 @@
+import { CancelablePromise } from '@lib/cancelablePromise';
 import { deleteS3File, getS3File, getS3FileData, listS3Files, listS3Folders, uploadS3File } from '@server/aws/s3';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import type { Readable, Stream } from 'node:stream';
@@ -7,14 +8,19 @@ import { deleteLocalFile, getLocalFile, getLocalFileData, listLocalFiles, listLo
 
 export const USE_S3 = getEnvVariable('S3_BUCKET_NAME') !== '';
 
-export async function uploadFile(fileName: string, fileData: Buffer | Readable | Stream, contentType?: string): Promise<void> {
+export function uploadFile(
+    fileName: string,
+    fileData: Buffer | Readable | Stream,
+    contentType?: string,
+    abortController?: AbortController,
+): CancelablePromise<void> {
     if (!fileName) {
-        return;
+        return CancelablePromise.from(() => undefined, abortController);
     }
     if (USE_S3) {
-        await uploadS3File(fileName, fileData, contentType);
+        return uploadS3File(fileName, fileData, contentType, abortController);
     } else {
-        await uploadLocalFile(fileName, fileData);
+        return uploadLocalFile(fileName, fileData, abortController);
     }
 }
 
@@ -29,14 +35,14 @@ export async function getFileData(fileName: string): Promise<FileData | null> {
     }
 }
 
-export async function getFile(fileName: string, range?: string): Promise<Readable | null> {
+export function getFile(fileName: string, range?: string, abortController?: AbortController): CancelablePromise<Readable | null> {
     if (!fileName) {
-        return null;
+        return CancelablePromise.from(() => null, abortController);
     }
     if (USE_S3) {
-        return getS3File(fileName, range);
+        return getS3File(fileName, range, abortController);
     } else {
-        return getLocalFile(fileName, range);
+        return getLocalFile(fileName, range, abortController);
     }
 }
 

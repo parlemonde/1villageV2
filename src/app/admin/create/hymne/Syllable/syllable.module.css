@@ -1,0 +1,72 @@
+.Syllable {
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    align-items: center;
+    border: 1px dashed var(--primary-500);
+    border-radius: 4px;
+    padding-left: 4px;
+    position: relative;
+    cursor: default;
+}
+.SyllableEditableWithRightPadding {
+    padding-right: 4px;
+}
+.SyllableEditable:hover {
+    border-color: var(--primary-600);
+    cursor: text;
+}
+.SyllableEditing {
+    border: 1px solid var(--primary-color);
+}
+
+.SyllableInputContainer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.SyllableText {
+    grid-area: 1/1/2/2;
+    padding: 2px;
+    font-size: 15px;
+    color: var(--primary-600);
+    line-height: 20px;
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-weight: 400;
+    white-space: pre-wrap;
+}
+.SyllableTextHidden {
+    visibility: hidden;
+}
+
+.SyllableInput {
+    grid-area: 1/1/2/2;
+    min-width: 0;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 2px;
+    font-size: 15px;
+    color: var(--primary-600);
+    line-height: 20px;
+    font-family: var(--font-roboto), Arial, sans-serif;
+    font-weight: 400;
+    white-space: pre-wrap;
+}
+
+.SyllableDeleteButton {
+    flex-shrink: 0;
+    margin: 2px;
+}
+
+.SyllableReturn {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background-color: var(--grey-200);
+    border-radius: 4px;
+}

@@ -1,6 +1,19 @@
 name: Test
 on: [push]
 jobs:
+    unit-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: 'pnpm'
+            - run: pnpm install
+            - run: pnpm test:unit --runInBand
     typescript:
         runs-on: ubuntu-latest
         steps:

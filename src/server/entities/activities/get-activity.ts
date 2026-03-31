@@ -3,36 +3,24 @@
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
-import type { FreeActivity, GameActivity, PuzzleActivity } from '@server/database/schemas/activity-types';
+import type { ActivityType } from '@server/database/schemas/activity-types';
+import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { eq } from 'drizzle-orm';
 
 type DbActivity = typeof activities.$inferSelect;
 
-function mapToActivity(dbActivity: DbActivity): Activity | null {
-    if (!dbActivity) return null;
+function isValidActivityType(type: string): type is ActivityType {
+    return ACTIVITY_TYPES_ENUM.includes(type as ActivityType);
+}
 
-    switch (dbActivity.type) {
-        case 'libre':
-            return {
-                ...dbActivity,
-                type: 'libre',
-                data: dbActivity.data as FreeActivity['data'],
-            };
-        case 'jeu':
-            return {
-                ...dbActivity,
-                type: 'jeu',
-                data: dbActivity.data as GameActivity['data'],
-            };
-        case 'enigme':
-            return {
-                ...dbActivity,
-                type: 'enigme',
-                data: dbActivity.data as PuzzleActivity['data'],
-            };
-        default:
-            throw new Error(`Unknown activity type: ${dbActivity.type}`);
+function mapToActivity(dbActivity: DbActivity): Activity {
+    if (!isValidActivityType(dbActivity.type)) {
+        throw new Error(`Unknown activity type: ${dbActivity.type}`);
     }
+    // The cast is unavoidable: Drizzle infers `data` as `unknown` (jsonb column)
+    // while Activity expects a typed discriminated union. The type guard above
+    // ensures `type` is valid; `data` shape is trusted from the DB.
+    return dbActivity as unknown as Activity;
 }
 
 export async function getActivity(activityId: number): Promise<Activity | null> {
