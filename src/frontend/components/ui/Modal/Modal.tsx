@@ -104,7 +104,9 @@ export const Modal = ({
                             </Dialog.Close>
                         )}
                     </Dialog.Title>
-                    <div className={classNames(styles.content, { [styles.hasPadding]: hasPadding, [styles.hasVisibleOverflow]: hasVisibleOverflow })}>{children}</div>
+                    <div className={classNames(styles.content, { [styles.hasPadding]: hasPadding, [styles.hasVisibleOverflow]: hasVisibleOverflow })}>
+                        {children}
+                    </div>
                     {hasFooter && (
                         <div className={classNames(styles.footer, { [styles.hasBottomSeparator]: hasBottomSeparator })}>
                             {hasCancelButton && (
