@@ -2,12 +2,13 @@
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
 import { CountrySelect } from '@frontend/components/ui/Form/CountrySelect';
+import { Field } from '@frontend/components/ui/Form/Field';
+import { Input } from '@frontend/components/ui/Form/Input';
 import Map2D from '@frontend/components/worldMaps/WorldMap2D/WorldMap2D';
 import type { Coordinates } from '@frontend/components/worldMaps/world-map.types';
 import PelicoSearch from '@frontend/svg/pelico/pelico-search.svg';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
-import classNames from 'clsx';
 import { useExtracted } from 'next-intl';
 
 import styles from './welcome-modal.module.css';
@@ -40,27 +41,21 @@ interface PanelInputProps {
 }
 
 const PanelInput = ({ label, value, onChange, placeholder, isRequired = false, hasError = false, disabled = false }: PanelInputProps) => (
-    <div className={styles.panelField}>
-        <label>
-            {label}
-            {isRequired && <span style={{ color: 'red' }}>*</span>}
-        </label>
-        <div
-            className={classNames(styles.panelInputWrapper, {
-                [styles.panelInputError]: hasError,
-                [styles.panelInputDisabled]: disabled,
-            })}
-        >
-            <input
+    <Field
+        label={label}
+        isRequired={isRequired}
+        input={
+            <Input
                 type="text"
-                className={styles.panelInput}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
                 disabled={disabled}
+                hasError={hasError}
+                isFullWidth
             />
-        </div>
-    </div>
+        }
+    />
 );
 
 export const StepProfile = ({ profileData, onProfileDataChange, countryCode, user, classroom }: StepProfileProps) => {
@@ -124,12 +119,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         isRequired
                         hasError={!profileData.schoolAddress.trim()}
                     />
-                    <div className={styles.panelField} style={{ pointerEvents: 'none' }}>
-                        <label>{t('Pays :')}</label>
-                        <div style={{ marginLeft: '0.5rem', width: '450px', maxWidth: '100%' }}>
-                            <CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />
-                        </div>
-                    </div>
+                    <Field label={t('Pays :')} input={<CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />} />
                     <PanelInput
                         label={t('Alias :')}
                         value={profileData.classAlias}
