@@ -17,7 +17,7 @@ export const UserViews = ({ activity, ...props }: UserViewsProps) => {
     const isOnActivityPage = pathname.startsWith('/activities/');
     const nbVues = activity.views?.length || 0;
     const { marginAndPaddingProps } = getMarginAndPaddingProps(props);
-    const marginAndPaddingStyle = { ...{ marginTop: '32px', marginBottom: '32px' }, ...getMarginAndPaddingStyle(marginAndPaddingProps) };
+    const marginAndPaddingStyle = getMarginAndPaddingStyle(marginAndPaddingProps);
 
     return (
         <div className={styles.userViews} style={marginAndPaddingStyle}>
