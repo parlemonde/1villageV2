@@ -8,6 +8,8 @@
 .reactionsContainer button.addReactionButton {
     color: var(--primary-600);
     background-color: white;
+    font-size: 16px;
+    padding: 6px;
 }
 
 .reactionsContainer button.addReactionButton:hover {
@@ -21,6 +23,8 @@
 
 .reactionsContainer button.reactionButton {
     background-color: var(--primary-300);
+    font-size: 16px;
+    padding: 6px;
 }
 
 .reactionsContainer button.reactionButton.active,
@@ -59,12 +63,12 @@ button:disabled .counterBadge {
 .reactionButtonWrapper {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin: 4px 0;
 }
 
 .setReactionModal button.reactionButton {
     background-color: var(--primary-300);
+    font-size: 24px;
+    padding: 8px;
 }
 
 .setReactionModal button.reactionButton.active,
@@ -93,5 +97,9 @@ button:disabled .counterBadge {
         justify-content: flex-start;
         align-items: center;
         gap: 12px;
+    }
+
+    .right {
+        font-size: 24px;
     }
 }

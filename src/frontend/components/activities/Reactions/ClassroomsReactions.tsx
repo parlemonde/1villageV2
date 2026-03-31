@@ -336,7 +336,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                                             <Avatar user={pr.user} isPelico={true} size="sm" />
                                             <strong>{pr.user.name}</strong>
                                         </span>
-                                        <span>{getEmojiFromValue(pr.reaction)}</span>
+                                        <span className={styles.right}>{getEmojiFromValue(pr.reaction)}</span>
                                     </div>
                                 );
                             }
@@ -351,7 +351,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                                         <Avatar classroom={pr.classroom} isPelico={false} size="sm" />
                                         <strong>{pr.classroom.name}</strong>
                                     </span>
-                                    <span>{getEmojiFromValue(pr.reaction)}</span>
+                                    <span className={styles.right}>{getEmojiFromValue(pr.reaction)}</span>
                                 </div>
                             );
                         })
@@ -378,22 +378,22 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     width="sm"
                     contentClassName={styles.setReactionModal}
                 >
-                    {REACTION_EMOJIS.map((reaction) => (
-                        <div key={reaction.value} className={styles.reactionButtonWrapper}>
-                            <span>{reaction.label}</span>
+                    <div className={styles.reactionButtonWrapper}>
+                        {REACTION_EMOJIS.map((reaction) => (
                             <Button
+                                key={reaction.value}
                                 title={reaction.label}
                                 value={reaction.value}
                                 onClick={(e) => onReactionButtonClick(e)}
                                 label={reaction.emoji}
-                                size="sm"
+                                size="lg"
                                 variant="contained"
                                 className={classNames(styles.reactionButton, {
                                     [styles.active]: selectedReactionInModal?.value === reaction.value,
                                 })}
                             />
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </Modal>
             )}
         </div>
