@@ -30,11 +30,11 @@
 
 .reactionsContainer button.reactionButton:disabled,
 .reactionsContainer button.reactionButton:disabled:hover {
-    background-color: var(--grey-300);
+    background-color: var(--grey-100);
 }
 
 .reactionsContainer button.reactionButton:disabled.active {
-    background-color: var(--grey-400);
+    background-color: var(--grey-300);
 }
 
 .counterBadge {
