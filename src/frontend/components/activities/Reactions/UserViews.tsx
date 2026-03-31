@@ -4,7 +4,6 @@ import { EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
 import { usePathname } from 'next/navigation';
 import { useExtracted } from 'next-intl';
-import React from 'react';
 
 import styles from './user-views.module.css';
 
@@ -12,7 +11,7 @@ interface UserViewsProps extends MarginProps, PaddingProps {
     activity: Partial<Activity>;
 }
 
-export const UserViews: React.FC<UserViewsProps> = ({ activity, ...props }) => {
+export const UserViews = ({ activity, ...props }: UserViewsProps) => {
     const t = useExtracted('UserViews');
     const pathname = usePathname();
     const isOnActivityPage = pathname.startsWith('/activities/');
