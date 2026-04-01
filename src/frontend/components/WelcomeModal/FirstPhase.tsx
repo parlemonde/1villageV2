@@ -117,8 +117,8 @@ export const FirstPhase = () => {
             );
 
             const firstError = updatedClassroomsResults.find((r) => r.error);
-            if (firstError?.error) {
-                sendToast({ message: firstError.error.message, type: 'error' });
+            if (firstError) {
+                sendToast({ message: firstError.error.message ?? t('Une erreur est survenue'), type: 'error' });
                 setIsLoading(false);
                 return;
             }
