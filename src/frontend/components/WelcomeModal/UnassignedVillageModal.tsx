@@ -14,6 +14,7 @@ export const UnassignedVillageModal = () => {
     const alreadyAsked = useRef(false);
 
     const onAskVillage = () => {
+        if (alreadyAsked.current) return;
         sendToast({ message: t("Votre demande d'assignation à un village a bien été envoyée à un administrateur !"), type: 'success' });
         alreadyAsked.current = true;
     };
