@@ -39,8 +39,7 @@ export const SecondPhase = () => {
             setUser({ ...user, firstLogin: 2 });
             setPhase(2);
             setIsOpen(false);
-        } catch (e) {
-            console.error(e);
+        } catch {
             sendToast({ message: t('Une erreur est survenue'), type: 'error' });
         }
     };
