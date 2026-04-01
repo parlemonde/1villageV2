@@ -36,9 +36,6 @@ export const UserProvider = ({ initialUser, initialClassroom, initialClassrooms 
     const [user, setUser] = React.useState<User>(initialUser);
     const [classroom, setClassroom] = React.useState<Classroom | undefined>(initialClassroom);
     const [classrooms, setClassrooms] = React.useState<Classroom[]>(initialClassrooms);
-    const value = React.useMemo(
-        () => ({ user, setUser, classroom, setClassroom, classrooms, setClassrooms }),
-        [user, setUser, classroom, setClassroom, classrooms, setClassrooms],
-    );
+    const value = React.useMemo(() => ({ user, setUser, classroom, setClassroom, classrooms, setClassrooms }), [user, classroom, classrooms]);
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
