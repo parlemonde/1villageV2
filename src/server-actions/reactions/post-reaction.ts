@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import type { ActivityReaction } from '@server/database/schemas/activity-reactions';
 import { activityReactions } from '@server/database/schemas/activity-reactions';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
@@ -23,8 +24,13 @@ export const postReaction = async ({
 
     try {
         const user = await getCurrentUser();
-        if (!user) {
-            throw new Error('Unauthorized');
+        if (!user || user.id !== userId) {
+            throw new Error('Unauthorized post reaction for this user');
+        }
+
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+        if (classroom && classroom.id !== classroomId) {
+            throw new Error('Unauthorized post reaction for this classroom');
         }
 
         if (!classroomId && !userId) {
