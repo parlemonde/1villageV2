@@ -113,8 +113,8 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
     return (
         <div className={styles.stepProfileContainer}>
             <div className={styles.stepProfileForm}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2rem' }}>
-                    <PelicoSearch style={{ width: '4rem', height: 'auto', marginRight: '1rem' }} />
+                <div className={styles.stepProfileHeader}>
+                    <PelicoSearch className={styles.stepProfilePelico} />
                     {isMultiClass && classIndex !== undefined && (
                         <p className={styles.classIndexLabel}>
                             {t('Les informations de votre ')}
@@ -192,7 +192,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                 {showMap && (
                     <div style={{ marginTop: '1rem' }}>
                         <span className={styles.stepProfilePreviewTitle}>{t('Est-ce que votre école est bien placée ?')}</span>
-                        <p style={{ fontSize: '0.85rem', color: 'var(--grey-500)', marginBottom: '0.5rem' }}>
+                        <p className={styles.stepProfileMapHint}>
                             {t('Vérifiez que le marqueur est bien positionné sur votre école. Vous pouvez le déplacer si nécessaire.')}
                         </p>
                         <Map2D
