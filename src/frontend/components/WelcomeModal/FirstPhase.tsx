@@ -116,9 +116,9 @@ export const FirstPhase = () => {
                 }),
             );
 
-            const firstError = updatedClassroomsResults.find((r) => r.error);
+            const firstError = updatedClassroomsResults.find((r) => r.error)?.error;
             if (firstError) {
-                sendToast({ message: firstError.error.message ?? t('Une erreur est survenue'), type: 'error' });
+                sendToast({ message: firstError.message ?? t('Une erreur est survenue'), type: 'error' });
                 setIsLoading(false);
                 return;
             }
