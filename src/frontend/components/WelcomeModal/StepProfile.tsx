@@ -83,6 +83,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
         if (!profileData.schoolAddress.trim()) return;
         try {
             const response = await fetch(`/api/geo${serializeToQueryUrl({ query: profileData.schoolAddress })}`);
+            if (!response.ok) return;
             const [data] = (await response.json()) as NominatimPlace[];
             if (data) {
                 onProfileDataChange({
