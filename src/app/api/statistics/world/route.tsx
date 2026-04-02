@@ -25,15 +25,15 @@ export const GET = async () => {
             COUNT(DISTINCT "activities"."classroomId") FILTER (WHERE "activities"."publishDate" >= NOW() - INTERVAL '21 days') AS hasPostedRecently,
             COUNT("users"."id") FILTER (WHERE "auth_sessions"."updated_at" < NOW() - INTERVAL '21 days') AS ghost
         FROM "activities"
-        INNER JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
-        INNER JOIN "users" ON "activities"."userId" = "users"."id"
+        RIGHT JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
+        INNER JOIN "users" ON "classrooms"."teacherId" = "users"."id"
         LEFT JOIN "auth_sessions" ON "users"."id" = "auth_sessions"."user_id"
         GROUP BY "classrooms"."countryCode"
     )
     SELECT "country", 
     CASE
-        WHEN ghost >= total * 0.5 THEN 'ghost'
         WHEN hasPostedRecently >= total * 0.5 THEN 'active'
+        WHEN ghost >= total * 0.5 THEN 'ghost'
         ELSE 'observer'
     END AS status
     FROM stats;`);

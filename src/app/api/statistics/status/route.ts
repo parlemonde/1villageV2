@@ -1,6 +1,6 @@
 import { db } from '@server/database';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { sql } from 'drizzle-orm';
+import { and, sql } from 'drizzle-orm';
 import { NextResponse, type NextRequest } from 'next/server';
 import { createLoader, parseAsInteger, parseAsString } from 'nuqs/server';
 
@@ -44,8 +44,8 @@ const getClassroomStatus = async (classroomId: number) => {
                 ELSE 'observer'
             END AS status
         FROM "activities"
-        INNER JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
-        INNER JOIN "users" ON "activities"."userId" = "users"."id"
+        RIGHT JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
+        INNER JOIN "users" ON "classrooms"."teacherId" = "users"."id"
         LEFT JOIN "auth_sessions" ON "users"."id" = "auth_sessions"."user_id"
         WHERE "classrooms"."id" = ${classroomId}
     `);
@@ -54,19 +54,33 @@ const getClassroomStatus = async (classroomId: number) => {
 };
 
 const getVillageOrCountryStatus = async (villageId: number | null, countryCode: string | null) => {
-    const filter = villageId ? sql`"classrooms"."villageId" = ${villageId}` : sql`"classrooms"."countryCode" = ${countryCode}`;
+    const villageFilter = villageId ? sql`"classrooms"."villageId" = ${villageId}` : null;
+    const countryFilter = countryCode ? sql`"classrooms"."countryCode" = ${countryCode}` : null;
 
-    const result = await db.execute<{ status: 'active' | 'ghost' | 'observer' | 'none' }>(sql`
+    let filters;
+    if (villageFilter && countryFilter) {
+        filters = and(villageFilter, countryFilter);
+    } else if (villageFilter) {
+        filters = villageFilter;
+    } else if (countryFilter) {
+        filters = countryFilter;
+    }
+
+    if (!filters) {
+        return null;
+    }
+
+    const result = await db.execute<{ status: 'active' | 'ghost' | 'observer' | null }>(sql`
         WITH stats AS (
             SELECT
                 COUNT(DISTINCT "classrooms"."id") AS total,
                 COUNT(DISTINCT "activities"."classroomId") FILTER (WHERE "activities"."publishDate" >= NOW() - INTERVAL '21 days') AS hasPostedRecently,
                 COUNT(DISTINCT "users"."id") FILTER (WHERE "auth_sessions"."updated_at" < NOW() - INTERVAL '21 days' OR "auth_sessions"."updated_at" IS NULL) AS ghost
             FROM "activities"
-            INNER JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
-            INNER JOIN "users" ON "activities"."userId" = "users"."id"
+            RIGHT JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
+            INNER JOIN "users" ON "classrooms"."teacherId" = "users"."id"
             LEFT JOIN "auth_sessions" ON "users"."id" = "auth_sessions"."user_id"
-            WHERE ${filter}
+            WHERE ${filters}
         )
         SELECT CASE
             WHEN total = 0 THEN NULL
