@@ -17,6 +17,9 @@ const useStatusText = ({ countryCode, villageId, classroomId }: StatusComponentP
     if (classroomId) {
         return t('Statut de la classe');
     }
+    if (villageId && countryCode) {
+        return t('Statut du pays dans le village-monde');
+    }
     if (villageId) {
         return t('Statut du village-monde');
     }
