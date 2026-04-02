@@ -21,11 +21,11 @@ export default function AdminAnalyzePage() {
     const tabs = [
         {
             id: 'classroom',
-            title: t('En classe'),
+            title: t('EN CLASSE'),
         },
         {
             id: 'family',
-            title: t('En famille'),
+            title: t('EN FAMILLE'),
         },
     ];
 
