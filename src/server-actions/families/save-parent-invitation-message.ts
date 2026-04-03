@@ -7,7 +7,7 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { eq } from 'drizzle-orm';
 
-export const saveParentInvitationMessage = async (parentInvitationMessage: Partial<ParentInvitationMessageForm>) => {
+export const saveParentInvitationMessage = async ({ parentInvitationMessage }: Partial<ParentInvitationMessageForm>) => {
     const user = await getCurrentUser();
     if (!user) {
         throw new Error('Unauthorized');
@@ -21,7 +21,7 @@ export const saveParentInvitationMessage = async (parentInvitationMessage: Parti
     await db
         .update(classrooms)
         .set({
-            parentInvitationMessage,
+            parentInvitationMessage
         })
         .where(eq(classrooms.id, classroom.id));
 };
