@@ -1,15 +1,14 @@
 'use server';
 
 import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
-import { schema, viewSchema } from '@lib/html-schema';
+import { prosemirrorToHTML } from '@lib/prosemirror-to-html';
 import { db } from '@server/database';
 import type { Student } from '@server/database/schemas/students';
 import { students } from '@server/database/schemas/students';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
+import { ParentInvitationMessageWrapper } from '@server/pdf/ParentInvitationMessageWrapper';
 import { and, eq, inArray } from 'drizzle-orm';
-import { JSDOM } from 'jsdom';
-import { DOMSerializer, Node } from 'prosemirror-model';
 import puppeteer from 'puppeteer';
 
 const separator = {
@@ -49,38 +48,12 @@ const generateStudentName = (studentName: string) => {
     };
 };
 
-const createVirtualDom = () => {
-    const styles: Record<string, React.CSSProperties> = {
-        '*': { margin: '0' },
-        br: { lineHeight: 0.5 },
-    };
-    const domString = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-            ${Object.entries(styles)
-                .map(
-                    ([selector, style]) =>
-                        `${selector} { ${Object.entries(style)
-                            .map(([key, value]) => `${key}: ${value};`)
-                            .join(' ')} }`,
-                )
-                .join('')}
-            </style></head><body></body></html>`;
-
-    return new JSDOM(domString);
-};
-
-const toHtml = (content: HtmlEditorContent) => {
+const toHtml = async (content: HtmlEditorContent) => {
     try {
-        const dom = createVirtualDom();
-        const { document } = dom.window;
-
-        const serializer = DOMSerializer.fromSchema(viewSchema);
-
-        const doc = Node.fromJSON(schema, content);
-        const element = serializer.serializeFragment(doc.content, { document });
-        const divElement = document.createElement('div');
-        divElement.appendChild(element);
-        document.body.appendChild(divElement);
-        return dom.serialize();
+        const { renderToStaticMarkup } = await import('react-dom/server');
+        const message = prosemirrorToHTML(content);
+        const wrapper = ParentInvitationMessageWrapper(message);
+        return renderToStaticMarkup(wrapper);
     } catch (e) {
         // ignore
         console.error(e);
@@ -136,7 +109,7 @@ export const generateInvitationsPdf = async (instructions: HtmlEditorContent, st
             type: 'doc',
             content: card,
         };
-        const htmlCard = toHtml(cardDoc);
+        const htmlCard = await toHtml(cardDoc);
         const wrapper = `<div style="page-break-inside: avoid;">${htmlCard}</div>`;
         stringPdf += wrapper;
     }
