@@ -7,12 +7,15 @@ import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
 
-export const sendEmail = async <T extends EmailType>(
-    to: string,
-    subject: string,
-    emailType: T,
-    props: EmailTemplateProps[T],
-): Promise<ServerActionResponse> => {
+export type SendEmailOptions<T extends EmailType = EmailType> = {
+    to: string;
+    subject: string;
+    emailType: T;
+    props: EmailTemplateProps[T];
+};
+
+export const sendEmail = async <T extends EmailType>(options: SendEmailOptions<T>): Promise<ServerActionResponse> => {
+    const { to, subject, emailType, props } = options;
     const t = await getExtracted('common');
     try {
         const domain = getEnvVariable('HOST_DOMAIN');
