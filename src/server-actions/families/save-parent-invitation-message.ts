@@ -21,7 +21,7 @@ export const saveParentInvitationMessage = async ({ parentInvitationMessage }: P
     await db
         .update(classrooms)
         .set({
-            parentInvitationMessage
+            parentInvitationMessage,
         })
         .where(eq(classrooms.id, classroom.id));
 };
