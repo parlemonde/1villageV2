@@ -50,7 +50,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     }
 
     const result = await db
-        .select()
+        .select({
+            activity: activities,
+        })
         .from(activities)
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
@@ -72,5 +74,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
-    return NextResponse.json(result);
+
+    const allActivities = result.map(({ activity }) => activity);
+    return NextResponse.json(allActivities);
 };
