@@ -1,0 +1,56 @@
+'use client';
+
+import { Button } from '@frontend/components/ui/Button';
+import { IconButton } from '@frontend/components/ui/Button/IconButton';
+import { Field, Input } from '@frontend/components/ui/Form';
+import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+import { resetPassword } from '@server-actions/authentication/reset-password';
+import { useExtracted } from 'next-intl';
+import { useActionState, useState } from 'react';
+
+import styles from './reset-password-form.module.css';
+
+type ResetPasswordFormProps = {
+    token: string;
+};
+
+export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
+    const t = useExtracted('app.login.famille.reset-password');
+    const [showPassword, setShowPassword] = useState(false);
+    const [message, resetPasswordAction, isPending] = useActionState(resetPassword, '');
+
+    return (
+        <form action={resetPasswordAction} className={styles.resetForm}>
+            {isPending && <p style={{ color: 'var(--success-color)', textAlign: 'center' }}>{t('Veuillez patienter...')}</p>}
+            {message && <p style={{ color: 'var(--error-color)', textAlign: 'center' }}>{message}</p>}
+            <Field
+                name="password"
+                label="Mot de passe"
+                input={
+                    <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        isFullWidth
+                        required
+                        placeholder="Entrez votre mot de passe"
+                        iconAdornment={
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                    setShowPassword(!showPassword);
+                                }}
+                                variant="borderless"
+                                icon={showPassword ? EyeNoneIcon : EyeOpenIcon}
+                                iconProps={{ style: { color: 'rgba(0, 0, 0, 0.54)', height: 24, width: 24 } }}
+                            ></IconButton>
+                        }
+                        iconAdornmentProps={{ position: 'right' }}
+                    />
+                }
+            />
+            <Input type="hidden" name="token" value={token} />
+            <Button label="Se connecter" type="submit" color="primary" />
+        </form>
+    );
+};
