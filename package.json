@@ -133,10 +133,9 @@
       "@aws-sdk/client-dynamodb": "3.967.0"
     },
     "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@swc/core",
       "esbuild",
       "maplibre-gl",
+      "protobufjs",
       "sharp",
       "unrs-resolver"
     ]
