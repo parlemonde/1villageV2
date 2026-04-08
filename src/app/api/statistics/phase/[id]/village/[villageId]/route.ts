@@ -3,8 +3,9 @@ import type { PhaseActivitiesResponse } from '@app/api/statistics/phase/[id]/typ
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
+import { medias } from '@server/database/schemas/medias';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, count, eq } from 'drizzle-orm';
+import { and, count, eq, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -18,7 +19,7 @@ const loadSearchParams = createLoader(phaseActivitiesSearchParams);
 
 export const GET = async (
     { nextUrl }: NextRequest,
-    { params }: { params: Promise<{ id: string; villageId: string }> },
+    { params }: { params: Promise<{ id: number; villageId: number }> },
 ): Promise<NextResponse<PhaseActivitiesResponse>> => {
     const user = await getCurrentUser();
     if (!user) {
@@ -43,15 +44,31 @@ export const GET = async (
             count: count(activities.id),
             type: activities.type,
             name: classrooms.countryCode,
+            id: classrooms.countryCode,
         })
         .from(activities)
         .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, Number(id)), eq(activities.villageId, Number(villageId))))
+        .where(and(eq(activities.phase, id), eq(activities.villageId, Number(villageId))))
         .groupBy((a) => [a.name, a.type])
         .offset((page - 1) * itemsPerPage)
         .limit(itemsPerPage);
 
-    const result = aggregateActivities(sqlResult);
+    const draftCount = await db
+        .select({ count: count(activities.id), id: classrooms.countryCode })
+        .from(activities)
+        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
+        .where(and(eq(activities.phase, id), eq(activities.villageId, Number(villageId)), isNull(activities.publishDate)))
+        .groupBy(classrooms.countryCode);
+
+    const videoCount = await db
+        .select({ count: count(medias.id), id: classrooms.countryCode })
+        .from(medias)
+        .innerJoin(activities, eq(medias.activityId, activities.id))
+        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
+        .where(and(eq(activities.phase, id), eq(activities.villageId, Number(villageId)), eq(medias.type, 'video')))
+        .groupBy(classrooms.countryCode);
+
+    const result = aggregateActivities(sqlResult, draftCount, videoCount);
 
     return NextResponse.json({ ...result, totalElements: result.rows.length });
 };

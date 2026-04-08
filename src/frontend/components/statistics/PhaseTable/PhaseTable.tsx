@@ -5,7 +5,6 @@ import { IconButton } from '@frontend/components/ui/Button';
 import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Title } from '@frontend/components/ui/Title';
-import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowDownIcon, DoubleArrowUpIcon } from '@radix-ui/react-icons';
@@ -95,6 +94,8 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
                                     {columns?.map((column) => (
                                         <th key={column}>{column}</th>
                                     ))}
+                                    <th>{t('Vidéos')}</th>
+                                    <th>{t('Brouillons')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,15 +105,19 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
                                         {columns?.map((column) => (
                                             <td key={column}>{data.totals?.[column] ?? '-'}</td>
                                         ))}
+                                        <td>{data.totals.video || '-'}</td>
+                                        <td>{data.totals.draft || '-'}</td>
                                     </tr>
                                 )}
 
                                 {data?.rows.map((row, index) => (
                                     <tr key={index}>
-                                        <td>{countryCode || villageId ? COUNTRIES[row.name] : row.name}</td>
+                                        <td>{row.name}</td>
                                         {columns?.map((column) => (
                                             <td key={column}>{row.activities[column] ?? '-'}</td>
                                         ))}
+                                        <td>{row.activities.video || '-'}</td>
+                                        <td>{row.activities.draft || '-'}</td>
                                     </tr>
                                 ))}
                             </tbody>
