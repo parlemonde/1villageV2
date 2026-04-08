@@ -4,15 +4,19 @@ export interface PhaseActivitiesQueryResult {
     count: number;
     type: string;
     name: string;
+    id: number | string;
 }
 
+export type PhaseTableColumn = ActivityType | 'draft' | 'video';
+
 export type PhaseActivitiesRow = {
+    id: number | string;
     name: string;
-    activities: Partial<Record<ActivityType, number>>;
+    activities: Partial<Record<PhaseTableColumn, number>>;
 };
 
 export interface PhaseActivitiesResponse {
     rows: PhaseActivitiesRow[];
-    totals?: Partial<Record<ActivityType, number>>;
+    totals?: Partial<Record<PhaseTableColumn, number>>;
     totalElements: number;
 }

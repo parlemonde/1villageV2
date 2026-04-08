@@ -1,8 +1,9 @@
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
+import { medias } from '@server/database/schemas/medias';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, count, countDistinct, desc, eq, inArray } from 'drizzle-orm';
+import { and, count, countDistinct, desc, eq, inArray, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -19,7 +20,7 @@ const loadSearchParams = createLoader(phaseActivitiesSearchParams);
 
 export const GET = async (
     { nextUrl }: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
+    { params }: { params: Promise<{ id: number }> },
 ): Promise<NextResponse<PhaseActivitiesResponse>> => {
     const user = await getCurrentUser();
     if (!user) {
@@ -30,9 +31,6 @@ export const GET = async (
     }
 
     const { id } = await params;
-    if (Number.isNaN(id)) {
-        return new NextResponse('Invalid Phase Id', { status: 400 });
-    }
 
     const { page, itemsPerPage } = loadSearchParams(nextUrl.searchParams);
 
@@ -40,7 +38,7 @@ export const GET = async (
         .selectDistinct({ id: villages.id, publishDate: activities.publishDate })
         .from(activities)
         .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(eq(activities.phase, Number(id)))
+        .where(eq(activities.phase, id))
         .orderBy(desc(activities.publishDate))
         .limit(itemsPerPage)
         .offset((page - 1) * itemsPerPage);
@@ -48,18 +46,33 @@ export const GET = async (
     const villagesIds = paginatedVillages.map((village) => village.id);
 
     const activityResult = await db
-        .select({ count: count(activities.id), type: activities.type, name: villages.name })
+        .select({ count: count(activities.id), type: activities.type, name: villages.name, id: villages.id })
         .from(activities)
         .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(and(eq(activities.phase, Number(id)), inArray(activities.villageId, villagesIds)))
-        .groupBy(villages.name, activities.type);
+        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds)))
+        .groupBy(activities.type, villages.id, villages.name);
+
+    const draftsCountResult = await db
+        .select({ count: count(), id: villages.id })
+        .from(activities)
+        .innerJoin(villages, eq(activities.villageId, villages.id))
+        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds), isNull(activities.publishDate)))
+        .groupBy(villages.id);
+
+    const videosCountResult = await db
+        .select({ count: count(), id: villages.id })
+        .from(medias)
+        .innerJoin(activities, eq(medias.activityId, activities.id))
+        .innerJoin(villages, eq(activities.villageId, villages.id))
+        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds), eq(medias.type, 'video')))
+        .groupBy(villages.id);
 
     const totalElements = await db
         .select({ count: countDistinct(villages.id) })
         .from(activities)
         .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(eq(activities.phase, Number(id)));
+        .where(eq(activities.phase, id));
 
-    const result = aggregateActivities(activityResult);
+    const result = aggregateActivities(activityResult, draftsCountResult, videosCountResult);
     return NextResponse.json({ ...result, totalElements: totalElements[0].count });
 };
