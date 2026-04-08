@@ -14,6 +14,11 @@ type RequestNewPasswordFormProps = {
     error?: string;
 };
 
+const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email.length > 0 && emailRegex.test(email);
+};
+
 export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) => {
     const t = useExtracted('app.login.famille.reset-password');
     const [email, setEmail] = useState('');
@@ -36,14 +41,15 @@ export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) =
                         <Input
                             id="email"
                             name="email"
+                            value={email}
                             isFullWidth
                             required
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value.trim())}
                             placeholder={t('Entrez votre adresse email')}
                         />
                     }
                 />
-                <Button label={t('Envoyer')} type="submit" color="primary" disabled={email === ''} />
+                <Button label={t('Envoyer')} type="submit" color="primary" disabled={!isValidEmail(email)} />
             </form>
             <span style={{ fontSize: '14px', marginTop: '16px' }}>
                 <Link href="/login/famille" style={{ color: 'var(--primary-color)', textDecoration: 'underline' }}>
