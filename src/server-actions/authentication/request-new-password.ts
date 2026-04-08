@@ -3,10 +3,12 @@
 import { auth } from '@server/lib/auth';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { getStringValue } from '@server/lib/get-string-value';
+import { getExtracted } from 'next-intl/server';
 
 import { checkSSO } from './check-sso';
 
 export async function requestNewPassword(_previousState: string, formData: FormData): Promise<string> {
+    const t = await getExtracted('common');
     const email = getStringValue(formData.get('email'));
     const result = await checkSSO(email);
     const APP_URL = getEnvVariable('HOST_URL');
@@ -22,8 +24,8 @@ export async function requestNewPassword(_previousState: string, formData: FormD
                 redirectTo: `${APP_URL}/login/famille/reset-password`,
             },
         });
-        return `BetterAuth API requestPasswordReset: ${data.message} (${data.status})`;
+        return !data.status ? `error: ${data.message}` : '';
     } catch {
-        return 'Identifiants invalides.';
+        return t('Identifiants invalides');
     }
 }
