@@ -4,6 +4,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { and, eq, ilike, inArray, isNotNull, isNull, or, sql, desc } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
@@ -24,6 +25,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     const user = await getCurrentUser();
     if (!user) {
         return new NextResponse(null, { status: 401 });
+    }
+
+    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+    if (!classroom) {
+        return new NextResponse(null, { status: 400 });
     }
 
     const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
@@ -51,6 +57,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
+                classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
@@ -67,6 +74,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
+
     const allActivities = result.map(({ activity }) => activity);
     return NextResponse.json(allActivities);
 };

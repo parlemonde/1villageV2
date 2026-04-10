@@ -1,4 +1,4 @@
-import { schema } from '@frontend/components/html/HtmlEditor/schema';
+import { schema } from '@lib/html-schema';
 import { chainCommands, toggleMark } from 'prosemirror-commands';
 import type { Mark } from 'prosemirror-model';
 import type { Command, EditorState } from 'prosemirror-state';

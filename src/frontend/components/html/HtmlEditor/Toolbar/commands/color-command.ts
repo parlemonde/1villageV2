@@ -1,4 +1,4 @@
-import { schema } from '@frontend/components/html/HtmlEditor/schema';
+import { schema } from '@lib/html-schema';
 import type { Mark, Node } from 'prosemirror-model';
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';

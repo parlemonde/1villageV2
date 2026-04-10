@@ -1,6 +1,6 @@
 {
-  "id": "add5d1a1-d2f7-4f1f-82d4-0bd0ebe18fe3",
-  "prevId": "c11d9dde-9aaa-4c0c-a8ee-97e0220eec06",
+  "id": "d9ee6943-9cc5-451c-b07b-aac81380e87a",
+  "prevId": "a0598b7b-3d15-466a-bb07-4b2cc5b2a1dd",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -106,6 +106,13 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "views": {
+          "name": "views",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::integer[]"
         }
       },
       "indexes": {},
@@ -470,72 +477,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.classroom_preferences": {
-      "name": "classroom_preferences",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "classroom_id": {
-          "name": "classroom_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "parent_invitation_message": {
-          "name": "parent_invitation_message",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "classroom_preferences_user_id_users_id_fk": {
-          "name": "classroom_preferences_user_id_users_id_fk",
-          "tableFrom": "classroom_preferences",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "classroom_preferences_classroom_id_classrooms_id_fk": {
-          "name": "classroom_preferences_classroom_id_classrooms_id_fk",
-          "tableFrom": "classroom_preferences",
-          "tableTo": "classrooms",
-          "columnsFrom": [
-            "classroom_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "classroom_preferences_user_id_classroom_id_pk": {
-          "name": "classroom_preferences_user_id_classroom_id_pk",
-          "columns": [
-            "user_id",
-            "classroom_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.classrooms": {
       "name": "classrooms",
       "schema": "",
@@ -605,6 +546,19 @@
           "type": "varchar(2)",
           "primaryKey": false,
           "notNull": true
+        },
+        "showOnlyClassroomActivities": {
+          "name": "showOnlyClassroomActivities",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "parentInvitationMessage": {
+          "name": "parentInvitationMessage",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
