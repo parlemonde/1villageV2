@@ -29,11 +29,9 @@ const getUrl = (phase: number, classroomId: string, villageId: string, countryCo
     let url = `/api/statistics/phase/${phase}`;
     if (classroomId) {
         url = `/api/statistics/phase/${phase}/classroom/${classroomId}`;
-    }
-    if (villageId) {
+    } else if (villageId) {
         url = `/api/statistics/phase/${phase}/village/${villageId}`;
-    }
-    if (countryCode) {
+    } else if (countryCode) {
         url = `/api/statistics/phase/${phase}/country/${countryCode}`;
     }
 
