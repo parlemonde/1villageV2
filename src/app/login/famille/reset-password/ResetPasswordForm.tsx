@@ -30,7 +30,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
                 {message && <p style={{ color: 'var(--error-color)', textAlign: 'center' }}>{message}</p>}
                 <Field
                     name="password"
-                    label="Mot de passe"
+                    label={t('Mot de passe')}
                     input={
                         <Input
                             id="password"
@@ -38,10 +38,11 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
                             type={showPassword ? 'text' : 'password'}
                             isFullWidth
                             required
-                            placeholder="Entrez votre mot de passe"
+                            placeholder={t('Entrez votre mot de passe')}
                             iconAdornment={
                                 <IconButton
-                                    aria-label="toggle password visibility"
+                                    aria-label={t('Afficher/masquer le mot de passe')}
+                                    title={t('Afficher/masquer le mot de passe')}
                                     onClick={() => {
                                         setShowPassword(!showPassword);
                                     }}
@@ -55,7 +56,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
                     }
                 />
                 <Input type="hidden" name="token" value={token} />
-                <Button label="Se connecter" type="submit" color="primary" />
+                <Button label={t('Changer mon mot de passe')} type="submit" color="primary" />
             </form>
         </div>
     );
