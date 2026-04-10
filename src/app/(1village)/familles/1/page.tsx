@@ -22,10 +22,10 @@ export default function FamillesStep1() {
     const { form } = useContext(FamilyContext);
     const { classroom } = useContext(UserContext);
 
-    const toggleGlobalVisibility = async (value: boolean) => {
+    const toggleGlobalVisibility = async (_value: boolean) => {
         await updateClassroom({
             id: classroom?.id,
-            showOnlyClassroomActivities: value,
+            // TODO migration showOnlyClassroomActivities: value,
         });
     };
 
