@@ -109,6 +109,7 @@ export const GET = async (
             videoCount: countDistinct(sql`CASE WHEN ${medias.id} IS NOT NULL THEN ${medias.id} END`),
         })
         .from(activities)
+        .innerJoin(classrooms, and(eq(activities.classroomId, classrooms.id), eq(classrooms.villageId, villageId)))
         .leftJoin(medias, and(eq(medias.activityId, activities.id), eq(medias.type, 'video')))
         .where(and(eq(activities.phase, id), isNotNull(activities.classroomId), isNull(activities.deleteDate), eq(activities.villageId, villageId)))
         .groupBy(activities.type);
