@@ -7,7 +7,7 @@ import { classrooms } from '@server/database/schemas/classrooms';
 import { medias } from '@server/database/schemas/medias';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, count, eq, isNotNull, isNull } from 'drizzle-orm';
+import { and, count, countDistinct, eq, isNotNull, isNull, sql } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -43,28 +43,21 @@ export const GET = async (
 
     const countriesInVillage = await db.select({ countries: villages.countries }).from(villages).where(eq(villages.id, villageId));
 
-    const sqlResult = await db
+    const activityResult = await db
         .select({
             count: count(activities.id),
             type: activities.type,
             id: classrooms.countryCode,
             name: classrooms.countryCode,
         })
-        .from(activities)
-        .rightJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(
-            and(
-                eq(activities.phase, id),
-                eq(activities.villageId, Number(villageId)),
-                isNotNull(activities.publishDate),
-                isNull(activities.deleteDate),
-            ),
-        )
+        .from(classrooms)
+        .innerJoin(activities, eq(activities.classroomId, classrooms.id))
+        .where(and(eq(activities.phase, id), eq(activities.villageId, villageId), isNotNull(activities.publishDate), isNull(activities.deleteDate)))
         .groupBy((a) => [a.type, a.id])
         .offset((page - 1) * itemsPerPage)
         .limit(itemsPerPage);
 
-    sqlResult.forEach((r) => {
+    activityResult.forEach((r) => {
         const countryLabel = COUNTRIES[r.name];
         if (countryLabel) {
             r.name = countryLabel;
@@ -75,7 +68,7 @@ export const GET = async (
         .select({ count: count(activities.id), id: classrooms.countryCode })
         .from(activities)
         .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(activities.villageId, Number(villageId)), isNull(activities.publishDate)))
+        .where(and(eq(activities.phase, id), eq(activities.villageId, villageId), isNull(activities.publishDate)))
         .groupBy(classrooms.countryCode);
 
     const videoCount = await db
@@ -86,7 +79,7 @@ export const GET = async (
         .where(
             and(
                 eq(activities.phase, id),
-                eq(activities.villageId, Number(villageId)),
+                eq(activities.villageId, villageId),
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 eq(medias.type, 'video'),
@@ -94,7 +87,19 @@ export const GET = async (
         )
         .groupBy(classrooms.countryCode);
 
-    const result = aggregateActivities(sqlResult, draftCount, videoCount, countriesInVillage[0]?.countries);
+    const totals = await db
+        .select({
+            type: activities.type,
+            count: count(sql`CASE WHEN ${activities.publishDate} IS NOT NULL THEN 1 END`),
+            draftCount: count(sql`CASE WHEN ${activities.publishDate} IS NULL THEN 1 END`),
+            videoCount: countDistinct(sql`CASE WHEN ${medias.id} IS NOT NULL THEN ${medias.id} END`),
+        })
+        .from(activities)
+        .leftJoin(medias, and(eq(medias.activityId, activities.id), eq(medias.type, 'video')))
+        .where(and(eq(activities.phase, id), isNotNull(activities.classroomId), isNull(activities.deleteDate), eq(activities.villageId, villageId)))
+        .groupBy(activities.type);
+
+    const result = aggregateActivities(activityResult, draftCount, videoCount, totals, countriesInVillage[0]?.countries);
 
     return NextResponse.json({ ...result, totalElements: result.rows.length });
 };

@@ -7,6 +7,7 @@ export const aggregateActivities = (
     activities: PhaseActivitiesQueryResult[],
     draftsCount: { id: number | string; count: number }[],
     videosCount: { id: number | string; count: number }[],
+    totalsQueryResult: { type: string; count: number; draftCount: number; videoCount: number }[] = [],
     villageCountries: string[] = [],
 ): { rows: PhaseActivitiesResponse['rows']; totals?: PhaseActivitiesResponse['totals'] } => {
     const totals: Partial<Record<PhaseTableColumn, number>> = {};
@@ -29,12 +30,14 @@ export const aggregateActivities = (
         activitiesByEntity.activities[activity.type as ActivityType] = activity.count;
         activitiesByEntity.activities.draft = draftsMap.get(activity.id);
         activitiesByEntity.activities.video = videosMap.get(activity.id);
-
-        totals[activity.type as ActivityType] = (totals[activity.type as ActivityType] || 0) + activity.count;
     });
 
-    totals.draft = draftsMap.entries().reduce((acc, [_, count]) => acc + count, 0);
-    totals.video = videosMap.entries().reduce((acc, [_, count]) => acc + count, 0);
+    totalsQueryResult.forEach((total) => {
+        totals[total.type as PhaseTableColumn] = total.count;
+        totals.draft = (totals.draft ?? 0) + total.draftCount;
+        totals.video = (totals.video ?? 0) + total.videoCount;
+    });
+
     const rows = Array.from(map, ([id, { name, activities }]) => ({ id, name, activities }));
     return { rows, totals };
 };
