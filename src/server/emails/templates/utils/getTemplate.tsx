@@ -6,7 +6,11 @@ import RequestNewPasswordTemplate, { getRequestNewPasswordTranslations } from '@
 import type { EmailTemplateProps } from './types';
 import { EmailType } from './types';
 
-const templates: Record<EmailType, (props: EmailTemplateProps[EmailType]) => Promise<React.JSX.Element>> = {
+type TemplateMap = {
+    [K in EmailType]: (props: EmailTemplateProps[K]) => Promise<React.JSX.Element>;
+};
+
+const templates: TemplateMap = {
     [EmailType.CONFIRM_ACCOUNT]: async (props: EmailTemplateProps[EmailType.CONFIRM_ACCOUNT]) => {
         const baseTranslations = await getBaseTranslations();
         const translations = await getConfirmAccountTranslations();
