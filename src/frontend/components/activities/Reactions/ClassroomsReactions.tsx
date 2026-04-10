@@ -12,7 +12,7 @@ import { deleteReaction } from '@server-actions/reactions/delete-reaction';
 import { postReaction } from '@server-actions/reactions/post-reaction';
 import classNames from 'clsx';
 import { useExtracted } from 'next-intl';
-import React, { useState, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import useSWR from 'swr';
 
 import styles from './classrooms-reactions.module.css';
@@ -92,7 +92,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     }, [nbPeoplePerReactions]);
 
     // Calculate derived state directly from SWR data (no local state needed)
-    const getAllPeopleReactions = useCallback((data: ReactionCounter[]): PeopleReaction[] | null => {
+    const getAllPeopleReactions = (data: ReactionCounter[]): PeopleReaction[] | null => {
         if (!data || data.length === 0) return null;
 
         return data.reduce((acc: PeopleReaction[], item) => {
@@ -108,31 +108,25 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                 })) ?? [];
             return [...acc, ...classroomsReactions, ...pelicoReaction];
         }, []);
-    }, []);
+    };
 
-    const getCurrentPelicoReaction = useCallback(
-        (curUser: User, reactions: Map<string, ReactionCounter>) => {
-            for (const [reactionValue, counter] of reactions) {
-                if (counter.users?.some((u) => u.id === curUser.id)) {
-                    return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
-                }
+    const getCurrentPelicoReaction = (curUser: User, reactions: Map<string, ReactionCounter>) => {
+        for (const [reactionValue, counter] of reactions) {
+            if (counter.users?.some((u) => u.id === curUser.id)) {
+                return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
             }
-            return null;
-        },
-        [REACTION_EMOJIS],
-    );
+        }
+        return null;
+    };
 
-    const getCurrentClassroomReaction = useCallback(
-        (curClassroom: Classroom, reactions: Map<string, ReactionCounter>) => {
-            for (const [reactionValue, counter] of reactions) {
-                if (counter.classrooms?.some((c) => c.id === curClassroom.id)) {
-                    return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
-                }
+    const getCurrentClassroomReaction = (curClassroom: Classroom, reactions: Map<string, ReactionCounter>) => {
+        for (const [reactionValue, counter] of reactions) {
+            if (counter.classrooms?.some((c) => c.id === curClassroom.id)) {
+                return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
             }
-            return null;
-        },
-        [REACTION_EMOJIS],
-    );
+        }
+        return null;
+    };
 
     // Derived state from SWR data (not component state)
     const currentReaction = classroom
@@ -144,116 +138,104 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const allPeopleReactions = getAllPeopleReactions(nbPeoplePerReactions);
     const nbTotalReactions = allPeopleReactions?.length ?? 0;
 
-    // Memoized helper functions to avoid recreation on every render
-    const getCountForReaction = useCallback(
-        (value: string) => {
-            return reactionMap.get(value)?.reactionCount || 0;
-        },
-        [reactionMap],
-    );
+    const getCountForReaction = (value: string) => {
+        return reactionMap.get(value)?.reactionCount || 0;
+    };
 
-    const getEmojiFromValue = useCallback(
-        (value?: ReactionValue) => {
-            return REACTION_EMOJIS.find((item) => item.value === value)?.emoji ?? undefined;
-        },
-        [REACTION_EMOJIS],
-    );
+    const getEmojiFromValue = (value?: ReactionValue) => {
+        return REACTION_EMOJIS.find((item) => item.value === value)?.emoji ?? undefined;
+    };
 
-    const onReactionButtonClick = useCallback(
-        (e: React.MouseEvent<HTMLElement>) => {
-            const buttonEl = e.currentTarget as HTMLButtonElement;
-            const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === buttonEl.value) || null;
-            setSelectedReactionInModal(reacted);
-        },
-        [REACTION_EMOJIS],
-    );
+    const onReactionButtonClick = (e: React.MouseEvent<HTMLElement>) => {
+        const buttonEl = e.currentTarget as HTMLButtonElement;
+        const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === buttonEl.value) || null;
+        setSelectedReactionInModal(reacted);
+    };
 
-    const updateReactionsOptimistically = useCallback(
-        (data: ReactionCounter[], newReaction: ReactionRaw | null, currentStoredReaction: ReactionRaw | null): ReactionCounter[] => {
-            const shouldRemoveReaction = currentStoredReaction !== null;
-            const shouldInsertReaction = currentStoredReaction && currentStoredReaction.value !== newReaction?.value;
-            const arrName = isPelico ? 'users' : 'classrooms';
+    const updateReactionsOptimistically = (
+        data: ReactionCounter[],
+        newReaction: ReactionRaw | null,
+        currentStoredReaction: ReactionRaw | null,
+    ): ReactionCounter[] => {
+        const shouldRemoveReaction = currentStoredReaction !== null;
+        const shouldInsertReaction = currentStoredReaction && currentStoredReaction.value !== newReaction?.value;
+        const arrName = isPelico ? 'users' : 'classrooms';
 
-            const usersFilterFunc = (u: User) => u.id !== user.id;
-            const classroomsFilterFunc = (c: Classroom) => c.id !== classroom?.id;
+        const usersFilterFunc = (u: User) => u.id !== user.id;
+        const classroomsFilterFunc = (c: Classroom) => c.id !== classroom?.id;
 
-            const deleteFunc = (counter: ReactionCounter) => {
-                const newValue = [...(counter[arrName] || [])].filter((item) =>
-                    isPelico ? usersFilterFunc(item as User) : classroomsFilterFunc(item as Classroom),
-                );
-                return {
-                    ...counter,
-                    reactionCount: Math.max(0, counter.reactionCount - 1),
-                    [arrName]: newValue,
-                };
+        const deleteFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || [])].filter((item) =>
+                isPelico ? usersFilterFunc(item as User) : classroomsFilterFunc(item as Classroom),
+            );
+            return {
+                ...counter,
+                reactionCount: Math.max(0, counter.reactionCount - 1),
+                [arrName]: newValue,
             };
+        };
 
-            const insertFunc = (counter: ReactionCounter) => {
-                const newValue = [...(counter[arrName] || []), isPelico ? user : classroom];
-                return {
-                    ...counter,
-                    reactionCount: counter.reactionCount + 1,
-                    [arrName]: newValue,
-                };
+        const insertFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || []), isPelico ? user : classroom];
+            return {
+                ...counter,
+                reactionCount: counter.reactionCount + 1,
+                [arrName]: newValue,
             };
+        };
 
-            let newData =
-                data?.map((counter) => {
-                    if (shouldRemoveReaction && counter.reactionValue === currentStoredReaction?.value) {
-                        return deleteFunc(counter);
-                    }
-                    if (shouldInsertReaction && counter.reactionValue === newReaction?.value) {
-                        return insertFunc(counter);
-                    }
-                    return counter;
-                }) || [];
+        let newData =
+            data?.map((counter) => {
+                if (shouldRemoveReaction && counter.reactionValue === currentStoredReaction?.value) {
+                    return deleteFunc(counter);
+                }
+                if (shouldInsertReaction && counter.reactionValue === newReaction?.value) {
+                    return insertFunc(counter);
+                }
+                return counter;
+            }) || [];
 
-            if (newReaction && !newData?.find((counter) => counter?.reactionValue === newReaction?.value)) {
-                newData = [
-                    ...newData,
-                    insertFunc({
-                        reactionValue: newReaction.value,
-                        reactionCount: 0,
-                        [arrName]: [],
-                    }),
-                ];
-            }
+        if (newReaction && !newData?.find((counter) => counter?.reactionValue === newReaction?.value)) {
+            newData = [
+                ...newData,
+                insertFunc({
+                    reactionValue: newReaction.value,
+                    reactionCount: 0,
+                    [arrName]: [],
+                }),
+            ];
+        }
 
-            return newData.filter((counter) => counter && counter.reactionCount > 0);
-        },
-        [isPelico, user, classroom],
-    );
+        return newData.filter((counter) => counter && counter.reactionCount > 0);
+    };
 
-    const onReactionSubmit = useCallback(
-        async (selectedReaction: ReactionRaw | null) => {
-            if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
+    const onReactionSubmit = async (selectedReaction: ReactionRaw | null) => {
+        if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
 
-            const _isToggleOff = currentReaction?.value === selectedReaction.value;
-            const optimisticData = updateReactionsOptimistically(nbPeoplePerReactions, selectedReaction, currentReaction);
+        const _isToggleOff = currentReaction?.value === selectedReaction.value;
+        const optimisticData = updateReactionsOptimistically(nbPeoplePerReactions, selectedReaction, currentReaction);
 
-            // Optimistic update: immediately show the change in the UI
-            await mutate(optimisticData, { revalidate: false });
+        // Optimistic update: immediately show the change in the UI
+        await mutate(optimisticData, { revalidate: false });
 
-            let result;
-            if (_isToggleOff) {
-                result = await deleteReaction(activity.id, classroom?.id, user.id);
-            } else {
-                result = await postReaction({
-                    activityId: activity.id,
-                    classroomId: classroom?.id,
-                    userId: user.id,
-                    reaction: selectedReaction.value,
-                });
-            }
+        let result;
+        if (_isToggleOff) {
+            result = await deleteReaction(activity.id, classroom?.id, user.id);
+        } else {
+            result = await postReaction({
+                activityId: activity.id,
+                classroomId: classroom?.id,
+                userId: user.id,
+                reaction: selectedReaction.value,
+            });
+        }
 
-            // Revalidate if there was an error
-            if (result?.error) {
-                mutate();
-            }
-            setIsChangeReactionModalOpen(false);
-        },
-        [isPelico, classroom, activity.id, currentReaction, updateReactionsOptimistically, nbPeoplePerReactions, user.id, mutate],
-    );
+        // Revalidate if there was an error
+        if (result?.error) {
+            mutate();
+        }
+        setIsChangeReactionModalOpen(false);
+    };
 
     return (
         <div className={styles.reactionsContainer}>
