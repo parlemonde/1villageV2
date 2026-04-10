@@ -1,3 +1,4 @@
+import { COUNTRIES } from '@lib/iso-3166-countries-french';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 
 import type { PhaseActivitiesQueryResult, PhaseActivitiesResponse, PhaseTableColumn } from './types';
@@ -6,6 +7,7 @@ export const aggregateActivities = (
     activities: PhaseActivitiesQueryResult[],
     draftsCount: { id: number | string; count: number }[],
     videosCount: { id: number | string; count: number }[],
+    villageCountries: string[] = [],
 ): { rows: PhaseActivitiesResponse['rows']; totals?: PhaseActivitiesResponse['totals'] } => {
     const totals: Partial<Record<PhaseTableColumn, number>> = {};
     const map = new Map<string | number, { name: string; activities: Partial<Record<PhaseTableColumn, number>> }>();
@@ -15,6 +17,8 @@ export const aggregateActivities = (
 
     const videosMap = new Map<number | string, number>();
     videosCount.forEach((video) => videosMap.set(video.id, video.count));
+
+    villageCountries.forEach((country) => map.set(country, { name: COUNTRIES[country] ?? country, activities: {} }));
 
     activities.forEach((activity) => {
         if (!map.has(activity.id)) {

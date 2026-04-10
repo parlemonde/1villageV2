@@ -2,7 +2,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 
 export interface PhaseActivitiesQueryResult {
     count: number;
-    type: string;
+    type: string | null;
     name: string;
     id: number | string;
 }
