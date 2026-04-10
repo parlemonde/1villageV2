@@ -311,7 +311,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                                     <div
                                         key={pr.user.id}
                                         className={classNames(styles.line, {
-                                            [styles.active]: currentReaction?.value === pr.reaction,
+                                            [styles.active]: pr.user.id === user.id,
                                         })}
                                     >
                                         <span className={styles.left}>
@@ -326,7 +326,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                                 <div
                                     key={pr.classroom.id}
                                     className={classNames(styles.line, {
-                                        [styles.active]: currentReaction?.value === pr.reaction,
+                                        [styles.active]: pr.classroom.id === classroom?.id,
                                     })}
                                 >
                                     <span className={styles.left}>
