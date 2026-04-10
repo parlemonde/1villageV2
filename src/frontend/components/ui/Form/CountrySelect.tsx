@@ -1,4 +1,5 @@
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
+import { useExtracted } from 'next-intl';
 
 import { CountryOption } from './CountryOption';
 import type { SelectProps } from './Select';
@@ -10,6 +11,8 @@ interface CountrySelectProps extends Omit<SelectProps, 'options'> {
 }
 
 export function CountrySelect(props: CountrySelectProps) {
+    const t = useExtracted('CountrySelect');
+
     const {
         id,
         value,
@@ -37,7 +40,7 @@ export function CountrySelect(props: CountrySelectProps) {
             onChange={(country) => onChange(country)}
             color={color}
             isFullWidth={isFullWidth}
-            options={countryOptions}
+            options={countryOptions.length > 0 ? countryOptions : [{ label: t('Aucun pays'), value: 'none' }]}
             placeholder={placeholder}
             id={id}
             name={name}
