@@ -67,6 +67,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const REACTION_EMOJIS = useReactionEmoji();
     const { user, classroom } = useContext(UserContext);
     const isPelico = user.role === 'admin' || user.role === 'mediator';
+    const disabledReactions = disabledVersion || !(classroom || isPelico);
 
     const { data: nbPeoplePerReactions = [], mutate } = useSWR<ReactionCounter[]>(
         activity
@@ -77,7 +78,6 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         jsonFetcher,
     );
 
-    const [_disabledReactions] = useState<boolean>(disabledVersion || !(classroom || isPelico));
     const [isChangeReactionModalOpen, setIsChangeReactionModalOpen] = useState(false);
     const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
     const [selectedReactionInModal, setSelectedReactionInModal] = useState<ReactionRaw | null>(null);
@@ -268,7 +268,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                     color="primary"
                     size="sm"
                     variant="contained"
-                    disabled={_disabledReactions}
+                    disabled={disabledReactions}
                     className={styles.addReactionButton}
                 />
             )}
@@ -287,7 +287,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                             color="primary"
                             size="sm"
                             variant="contained"
-                            disabled={_disabledReactions}
+                            disabled={disabledReactions}
                             className={classNames(styles.reactionButton, {
                                 [styles.active]: currentReaction?.value === reaction.value,
                             })}
