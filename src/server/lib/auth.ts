@@ -43,8 +43,7 @@ export const auth = registerService('auth', () =>
                     },
                 });
             },
-            onPasswordReset: async ({ user }, request) => {
-                // your logic here
+            onPasswordReset: async ({ user }) => {
                 logger.info(`Password for user ${user.email} has been reset.`);
             },
         },
