@@ -61,6 +61,7 @@ th::first-letter {
 .totalRow td {
     border-top: 1px solid var(--primary-color);
     border-bottom: 2px solid black;
+    font-weight: bold;
 }
 
 .separator {

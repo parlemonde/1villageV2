@@ -3,7 +3,7 @@ import { activities } from '@server/database/schemas/activities';
 import { medias } from '@server/database/schemas/medias';
 import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, count, countDistinct, desc, eq, inArray, isNull } from 'drizzle-orm';
+import { and, asc, count, countDistinct, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -35,11 +35,9 @@ export const GET = async (
     const { page, itemsPerPage } = loadSearchParams(nextUrl.searchParams);
 
     const paginatedVillages = await db
-        .selectDistinct({ id: villages.id, publishDate: activities.publishDate })
-        .from(activities)
-        .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(eq(activities.phase, id))
-        .orderBy(desc(activities.publishDate))
+        .select({ id: villages.id })
+        .from(villages)
+        .orderBy(asc(villages.name))
         .limit(itemsPerPage)
         .offset((page - 1) * itemsPerPage);
 
@@ -47,31 +45,30 @@ export const GET = async (
 
     const activityResult = await db
         .select({ count: count(activities.id), type: activities.type, name: villages.name, id: villages.id })
-        .from(activities)
-        .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds)))
+        .from(villages)
+        .leftJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id), isNotNull(activities.classroomId)))
+        .where(and(inArray(villages.id, villagesIds), isNotNull(activities.publishDate), isNull(activities.deleteDate)))
         .groupBy(activities.type, villages.id, villages.name);
 
     const draftsCountResult = await db
         .select({ count: count(), id: villages.id })
-        .from(activities)
-        .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds), isNull(activities.publishDate)))
+        .from(villages)
+        .innerJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id), isNotNull(activities.classroomId)))
+        .where(and(inArray(villages.id, villagesIds), isNull(activities.publishDate)))
         .groupBy(villages.id);
 
     const videosCountResult = await db
         .select({ count: count(), id: villages.id })
-        .from(medias)
-        .innerJoin(activities, eq(medias.activityId, activities.id))
-        .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(and(eq(activities.phase, id), inArray(activities.villageId, villagesIds), eq(medias.type, 'video')))
+        .from(villages)
+        .innerJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id), isNotNull(activities.classroomId)))
+        .innerJoin(medias, eq(medias.activityId, activities.id))
+        .where(and(inArray(villages.id, villagesIds), isNotNull(activities.publishDate), isNull(activities.deleteDate), eq(medias.type, 'video')))
         .groupBy(villages.id);
 
     const totalElements = await db
         .select({ count: countDistinct(villages.id) })
-        .from(activities)
-        .innerJoin(villages, eq(activities.villageId, villages.id))
-        .where(eq(activities.phase, id));
+        .from(villages)
+        .leftJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id), isNotNull(activities.classroomId)));
 
     const result = aggregateActivities(activityResult, draftsCountResult, videosCountResult);
     return NextResponse.json({ ...result, totalElements: totalElements[0].count });

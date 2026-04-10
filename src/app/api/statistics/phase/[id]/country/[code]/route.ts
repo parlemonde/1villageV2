@@ -6,7 +6,7 @@ import type { ActivityType } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { medias } from '@server/database/schemas/medias';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { and, count, eq, isNull } from 'drizzle-orm';
+import { and, count, eq, isNotNull, isNull } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -28,7 +28,7 @@ export const GET = async (
         .select({ count: count(activities.id), type: activities.type })
         .from(activities)
         .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(classrooms.countryCode, code)))
+        .where(and(eq(activities.phase, id), eq(classrooms.countryCode, code), isNotNull(activities.publishDate), isNull(activities.deleteDate)))
         .groupBy((a) => [a.type]);
 
     const draftCount = await db
@@ -42,7 +42,15 @@ export const GET = async (
         .from(medias)
         .innerJoin(activities, eq(medias.activityId, activities.id))
         .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(classrooms.countryCode, code), eq(medias.type, 'video')));
+        .where(
+            and(
+                eq(activities.phase, id),
+                eq(classrooms.countryCode, code),
+                isNotNull(activities.publishDate),
+                isNull(activities.deleteDate),
+                eq(medias.type, 'video'),
+            ),
+        );
 
     const rows: PhaseActivitiesRow[] = [{ id: code, name: COUNTRIES[code] ?? '', activities: {} }];
     sqlResult.forEach((activity) => {

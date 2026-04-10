@@ -1,7 +1,7 @@
-import type { PhaseActivitiesResponse, PhaseActivitiesRow } from '@app/api/statistics/phase/[id]/types';
+import { aggregateActivities } from '@app/api/statistics/phase/[id]/helpers';
+import type { PhaseActivitiesResponse } from '@app/api/statistics/phase/[id]/types';
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
-import type { ActivityType } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { medias } from '@server/database/schemas/medias';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -26,7 +26,14 @@ export const GET = async (
 
     const { id, classroomId } = await params;
 
-    const result = await db
+    const villageIdResponse = await db.select({ villageId: classrooms.villageId }).from(classrooms).where(eq(classrooms.id, classroomId));
+    const villageId = villageIdResponse[0]?.villageId;
+
+    if (!villageId) {
+        return new NextResponse(null, { status: 422 });
+    }
+
+    const sqlResult = await db
         .select({
             count: count(activities.id),
             type: activities.type,
@@ -35,41 +42,34 @@ export const GET = async (
             name: classrooms.name,
             id: classrooms.id,
         })
-        .from(activities)
-        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(activities.classroomId, classroomId)))
+        .from(classrooms)
+        .leftJoin(activities, and(eq(activities.classroomId, classrooms.id), eq(activities.phase, id)))
+        .where(eq(classrooms.villageId, villageId))
         .groupBy((a) => [a.alias, a.level, a.name, a.id, a.type]);
 
-    if (result.length === 0) {
-        return NextResponse.json({ rows: [], totalElements: 0 });
-    }
-
     const draftCount = await db
-        .select({ count: count(activities.id) })
-        .from(activities)
-        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(activities.classroomId, classroomId), isNull(activities.publishDate)));
+        .select({ count: count(activities.id), id: classrooms.id })
+        .from(classrooms)
+        .innerJoin(activities, eq(classrooms.id, activities.classroomId))
+        .where(and(eq(activities.villageId, villageId), eq(activities.phase, id), isNull(activities.publishDate)))
+        .groupBy(classrooms.id);
 
     const videoCount = await db
-        .select({ count: count(medias.id) })
+        .select({ count: count(medias.id), id: classrooms.id })
         .from(medias)
         .innerJoin(activities, eq(medias.activityId, activities.id))
-        .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), eq(activities.classroomId, classroomId), eq(medias.type, 'video')));
+        .innerJoin(classrooms, eq(classrooms.id, activities.classroomId))
+        .where(and(eq(activities.villageId, villageId), eq(activities.phase, id), eq(medias.type, 'video')))
+        .groupBy(classrooms.id);
 
-    const label = result[0]?.alias
-        ? result[0].alias
-        : result[0]?.level
-          ? t('Les ${level} de ${name}', { level: result[0].level, name: result[0].name })
-          : result[0]?.name;
-
-    const rows: PhaseActivitiesRow[] = [{ id: result[0].id, name: label, activities: {} }];
-    result.forEach((activity) => {
-        rows[0].activities[activity.type as ActivityType] = activity.count;
+    sqlResult.forEach((r) => {
+        const label = r?.alias ? r.alias : r?.level ? t('Les {level} de {name}', { level: r.level, name: r.name }) : r?.name;
+        r.name = label;
     });
 
-    rows[0].activities.draft = draftCount[0]?.count;
-    rows[0].activities.video = videoCount[0]?.count;
+    const totalElements = await db.select({ count: count() }).from(classrooms).where(eq(classrooms.villageId, villageId));
 
-    return NextResponse.json({ rows, totalElements: result.length });
+    const result = aggregateActivities(sqlResult, draftCount, videoCount);
+
+    return NextResponse.json({ ...result, totalElements: totalElements[0]?.count });
 };
