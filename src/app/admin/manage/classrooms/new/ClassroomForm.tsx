@@ -316,8 +316,8 @@ export function ClassroomForm({ classroom }: ClassroomFormProps) {
                 }
             />
             <div className={styles.buttons}>
-                <Button label="Annuler" variant="outlined" color="grey" type="button" as="a" href="/admin/manage/classrooms" />
-                <Button label="Enregistrer" variant="contained" color="secondary" type="submit" disabled={isDisabled} />
+                <Button label="Annuler" variant="outlined" color="secondary" type="button" as="a" href="/admin/manage/classrooms" />
+                <Button label="Enregistrer" variant="contained" color="primary" type="submit" disabled={isDisabled} />
             </div>
         </form>
     );
