@@ -3,7 +3,7 @@
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { ActivityTimer } from '@frontend/components/activities/ActivityTimer/ActivityTimer';
-import { ACTIVITY_CARD_TITLES, ACTIVITY_ICONS } from '@frontend/components/activities/activities-constants';
+import { ACTIVITY_ICONS, useActivityCardTitle } from '@frontend/components/activities/activities-constants';
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
@@ -46,6 +46,7 @@ interface ActivityHeaderProps {
     showDetails?: boolean;
 }
 export const ActivityHeader = ({ user, classroom, activity, className, showIcon = true, showDetails = true }: ActivityHeaderProps) => {
+    const getActivityCardTitle = useActivityCardTitle();
     if (!activity.type) {
         return null;
     }
@@ -62,7 +63,7 @@ export const ActivityHeader = ({ user, classroom, activity, className, showIcon 
                     {showDetails && (
                         <>
                             {' a '}
-                            <strong>{ACTIVITY_CARD_TITLES[activity.type]}</strong>
+                            <strong>{getActivityCardTitle(activity.type)}</strong>
                         </>
                     )}
                 </span>
