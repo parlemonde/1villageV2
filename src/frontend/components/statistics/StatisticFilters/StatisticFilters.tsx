@@ -36,11 +36,33 @@ export const StatisticFilters = ({ country, village, classroom, phase, setCountr
         { label: t('Phase 3'), value: '3' },
     ];
 
+    const selectVillage = (value: string) => {
+        setVillage(value);
+        setClassroom('');
+    };
+
+    const selectCountry = (value: string) => {
+        setCountry(value);
+        setVillage('');
+        setClassroom('');
+    };
+
+    const { data: countryOptions } = useSWR<string[]>(`/api/available-countries`, jsonFetcher);
+
+    const enhancedVillageOptions = villageOptions.length > 0 ? villageOptions : [{ label: t('Aucun village'), value: 'none' }];
+    const enhancedClassroomOptions = classroomOptions.length > 0 ? classroomOptions : [{ label: t('Aucune classe'), value: 'none' }];
+
     return (
         <div className={styles.container}>
-            <CountrySelect hasCross onChange={setCountry} value={country} placeholder={t('Pays')} />
-            <Select hasCross placeholder={t('Village')} options={villageOptions} value={village} onChange={setVillage} />
-            <Select hasCross placeholder={t('Classe')} options={classroomOptions} value={classroom} onChange={setClassroom} />
+            <CountrySelect
+                hasCross
+                onChange={selectCountry}
+                value={country}
+                placeholder={t('Pays')}
+                filter={(country) => countryOptions?.includes(country) ?? false}
+            />
+            <Select hasCross placeholder={t('Village')} options={enhancedVillageOptions} value={village} onChange={selectVillage} />
+            <Select hasCross placeholder={t('Classe')} options={enhancedClassroomOptions} value={classroom} onChange={setClassroom} />
             <Select hasCross placeholder={t('Phase')} options={phasesOptions} value={phase} onChange={setPhase} />
         </div>
     );
