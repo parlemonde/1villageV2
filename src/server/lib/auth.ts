@@ -6,6 +6,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 import { admin } from 'better-auth/plugins';
 import { adminAc, userAc } from 'better-auth/plugins/admin/access';
+import { getExtracted } from 'next-intl/server';
 
 import { logger } from './logger';
 import { ssoPlugin } from './parlemonde-sso-plugin';
@@ -33,9 +34,10 @@ export const auth = registerService('auth', () =>
             sendResetPassword: async ({ user, url, token }) => {
                 logger.info(`sendResetPassword to user ${user.email}`);
                 logger.info(`sendResetPassword containing url ${url}`, { token: token });
+                const t = await getExtracted('common');
                 void sendEmail({
                     to: user.email,
-                    subject: 'Reset your password',
+                    subject: t('Mot de passe oublié - 1Village'),
                     emailType: 'RESET_PASSWORD' as EmailType,
                     props: {
                         firstName: user.name ?? '',

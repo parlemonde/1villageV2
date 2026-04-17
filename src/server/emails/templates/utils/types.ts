@@ -4,7 +4,7 @@ export enum EmailType {
 }
 
 export interface BaseTemplateData extends React.PropsWithChildren {
-    firstName: string;
+    firstName?: string;
 }
 
 export interface ConfirmAccountTemplateData extends BaseTemplateData {
