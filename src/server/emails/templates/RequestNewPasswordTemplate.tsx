@@ -32,6 +32,12 @@ export default function RequestNewPasswordTemplate({
                     {resetMyPassword}
                 </Link>
             </Section>
+            <Section style={{ textAlign: 'left', marginTop: '16px' }}>
+                <Text style={{ margin: '0' }}>To modify your password, please click on the following link :</Text>
+                <Link style={{ fontSize: '14px' }} href={resetPasswordLink}>
+                    Modify my password
+                </Link>
+            </Section>
         </BaseTemplate>
     );
 }
