@@ -10,11 +10,11 @@ import { checkSSO } from './check-sso';
 export async function requestNewPassword(_previousState: string, formData: FormData): Promise<string> {
     const t = await getExtracted('common');
     const email = getStringValue(formData.get('email'));
-    const result = await checkSSO(email);
     const APP_URL = getEnvVariable('HOST_URL');
+    const response = await checkSSO(email);
 
-    if (result !== 'OK') {
-        return result;
+    if (response.error?.message) {
+        return response.error.message;
     }
 
     try {

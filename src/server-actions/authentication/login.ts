@@ -10,10 +10,10 @@ import { checkSSO } from './check-sso';
 export async function login(_previousState: string, formData: FormData): Promise<string> {
     const email = getStringValue(formData.get('email'));
     const password = getStringValue(formData.get('password'));
-    const result = await checkSSO(email);
+    const response = await checkSSO(email);
 
-    if (result !== 'OK') {
-        return result;
+    if (response.error?.message) {
+        return response.error.message;
     }
 
     let user: User | undefined;
