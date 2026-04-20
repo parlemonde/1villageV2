@@ -4,10 +4,12 @@ import { type User } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { getStringValue } from '@server/lib/get-string-value';
 import { redirect, RedirectType } from 'next/navigation';
+import { getExtracted } from 'next-intl/server';
 
 import { checkSSO } from './check-sso';
 
 export async function login(_previousState: string, formData: FormData): Promise<string> {
+    const t = await getExtracted('common');
     const email = getStringValue(formData.get('email'));
     const password = getStringValue(formData.get('password'));
     const response = await checkSSO(email);
@@ -26,7 +28,7 @@ export async function login(_previousState: string, formData: FormData): Promise
         });
         user = result.user as unknown as User;
     } catch {
-        return 'Identifiants invalides.';
+        return t('Identifiants invalides');
     }
     redirect(user.role === 'admin' ? '/admin' : '/', RedirectType.push);
 }
