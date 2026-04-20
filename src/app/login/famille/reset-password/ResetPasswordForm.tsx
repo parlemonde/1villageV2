@@ -41,8 +41,8 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
                             placeholder={t('Entrez votre mot de passe')}
                             iconAdornment={
                                 <IconButton
-                                    aria-label={t('Afficher/masquer le mot de passe')}
-                                    title={t('Afficher/masquer le mot de passe')}
+                                    aria-label={t('toggle password visibility')}
+                                    title={t('toggle password visibility')}
                                     onClick={() => {
                                         setShowPassword(!showPassword);
                                     }}

@@ -5,7 +5,7 @@ import { Input } from '@frontend/components/ui/Form/Input';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { authClient } from '@frontend/lib/auth-client';
-import { isValidEmail } from '@server/lib/sendEmail';
+import { isValidEmail } from '@lib/email-validation';
 import { useContext, useState } from 'react';
 
 interface UpdateEmailModalProps {

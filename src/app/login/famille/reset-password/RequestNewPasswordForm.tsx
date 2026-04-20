@@ -5,7 +5,7 @@ import { Field, Input } from '@frontend/components/ui/Form';
 import { Link } from '@frontend/components/ui/Link';
 import { Title } from '@frontend/components/ui/Title';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
-import { isValidEmail } from '@server/lib/sendEmail';
+import { isValidEmail } from '@lib/email-validation';
 import { requestNewPassword } from '@server-actions/authentication/request-new-password';
 import { useExtracted } from 'next-intl';
 import { useActionState, useState } from 'react';
@@ -52,6 +52,7 @@ export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) =
                                 isFullWidth
                                 required
                                 onChange={(e) => setEmail(e.target.value.trim())}
+                                hasError={email.length > 0 && !isValidEmail(email)}
                                 placeholder={t('Entrez votre adresse email')}
                             />
                         }
