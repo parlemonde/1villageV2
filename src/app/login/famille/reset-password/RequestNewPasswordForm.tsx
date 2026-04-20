@@ -5,6 +5,7 @@ import { Field, Input } from '@frontend/components/ui/Form';
 import { Link } from '@frontend/components/ui/Link';
 import { Title } from '@frontend/components/ui/Title';
 import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
+import { isValidEmail } from '@server/lib/sendEmail';
 import { requestNewPassword } from '@server-actions/authentication/request-new-password';
 import { useExtracted } from 'next-intl';
 import { useActionState, useState } from 'react';
@@ -13,11 +14,6 @@ import styles from './request-new-password-form.module.css';
 
 type RequestNewPasswordFormProps = {
     error?: string;
-};
-
-const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return email.length > 0 && emailRegex.test(email);
 };
 
 export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) => {

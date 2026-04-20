@@ -14,6 +14,11 @@ export type SendEmailOptions<T extends EmailType = EmailType> = {
     props: EmailTemplateProps[T];
 };
 
+export const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
 export const sendEmail = async <T extends EmailType>(options: SendEmailOptions<T>): Promise<ServerActionResponse> => {
     const { to, subject, emailType, props } = options;
     const t = await getExtracted('common');
