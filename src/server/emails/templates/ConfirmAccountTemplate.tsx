@@ -27,7 +27,9 @@ export default function ConfirmAccountTemplate({
                 {confirmYourAccount}
             </Heading>
             <Text>{clickHereToActivateYourAccount}</Text>
-            <Link href={confirmationLink}>{confirmationLink}</Link>
+            <Link className="link" href={confirmationLink}>
+                {confirmationLink}
+            </Link>
             <Text>{yourAccountWillBeActivatedSoon}</Text>
             <Text>{seeYouSoon}</Text>
         </BaseTemplate>

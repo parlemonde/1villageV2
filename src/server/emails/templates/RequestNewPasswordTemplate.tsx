@@ -28,13 +28,13 @@ export default function RequestNewPasswordTemplate({
             </Heading>
             <Section style={{ textAlign: 'left' }}>
                 <Text style={{ margin: '0' }}>{followLinktoResetPassword}</Text>
-                <Link style={{ fontSize: '14px' }} href={resetPasswordLink}>
+                <Link className="link" href={resetPasswordLink}>
                     {resetMyPassword}
                 </Link>
             </Section>
             <Section style={{ textAlign: 'left', marginTop: '16px' }}>
                 <Text style={{ margin: '0' }}>To modify your password, please click on the following link :</Text>
-                <Link style={{ fontSize: '14px' }} href={resetPasswordLink}>
+                <Link className="link" href={resetPasswordLink}>
                     Modify my password
                 </Link>
             </Section>
