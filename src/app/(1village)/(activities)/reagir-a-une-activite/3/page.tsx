@@ -16,6 +16,7 @@ import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
+import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -32,9 +33,9 @@ export default function ReagirAUneActiviteStep3() {
 
     const router = useRouter();
 
-    const activityData = activity?.type === 'reaction' ? activity.data : undefined;
+    const reaction = activity?.type === 'reaction' ? (activity as ReactionActivityDao) : undefined;
     const { data: activityBeingReacted } = useSWR<Activity>(
-        activityData ? `/api/activities${serializeToQueryUrl({ activityId: activityData.activityId })}` : null,
+        reaction?.data?.activityId ? `/api/activities${serializeToQueryUrl({ activityId: reaction.data.activityId })}` : null,
         jsonFetcher,
     );
 

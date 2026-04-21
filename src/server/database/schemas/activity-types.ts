@@ -25,12 +25,12 @@ export type ReactionActivityDto = {
 export type ReactionActivityDao = {
     type: 'reaction';
     data: {
-        activityId: number;
+        activityId?: number;
         content?: AnyContent[];
     };
 };
 
-export type ReactionActivity = ReactionActivityDao | ReactionActivityDto;
+type ReactionActivity = ReactionActivityDao | ReactionActivityDto;
 
 export type PelicoPresentation = {
     type: 'presentation-pelico';

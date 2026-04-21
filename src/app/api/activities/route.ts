@@ -39,10 +39,13 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             return new NextResponse(null, { status: 404 });
         }
         if (result.type === 'reaction') {
-            const activityBeingReacted = await db.query.activities.findFirst({
-                where: eq(activities.id, (result as ReactionActivityDao).data.activityId),
-            });
-            return NextResponse.json({ ...result, activityBeingReacted });
+            const reaction = result as ReactionActivityDao;
+            if (reaction.data.activityId) {
+                const activityBeingReacted = await db.query.activities.findFirst({
+                    where: eq(activities.id, reaction.data.activityId),
+                });
+                return NextResponse.json({ ...result, activityBeingReacted });
+            }
         }
         return NextResponse.json(result);
     }
@@ -93,7 +96,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                     ...a,
                     data: {
                         ...reaction.data,
-                        activityBeingReacted: referencedActivitiesMap.get(reaction.data.activityId),
+                        activityBeingReacted: reaction.data.activityId ? referencedActivitiesMap.get(reaction.data.activityId) : undefined,
                     },
                 } as ReactionActivityDto;
             }

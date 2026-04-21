@@ -74,11 +74,13 @@ export default async function ActivityPage({ params }: ServerPageProps) {
     if (initialActivity.type === 'reaction') {
         const reaction = initialActivity as ReactionActivityDao;
 
-        const activityBeingReacted = (await db.query.activities.findFirst({
-            where: eq(activities.id, reaction.data.activityId),
-        })) as Activity | undefined;
+        if (reaction.data.activityId) {
+            const activityBeingReacted = (await db.query.activities.findFirst({
+                where: eq(activities.id, reaction.data.activityId),
+            })) as Activity | undefined;
 
-        activity = { ...initialActivity, data: { ...activity.data, activityBeingReacted } };
+            activity = { ...initialActivity, data: { ...activity.data, activityBeingReacted } };
+        }
     }
 
     await updateActivityClassroomViews(initialActivity);

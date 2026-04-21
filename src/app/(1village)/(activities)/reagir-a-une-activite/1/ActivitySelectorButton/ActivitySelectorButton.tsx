@@ -8,7 +8,7 @@ import { Pagination } from '@frontend/components/ui/Pagination/Pagination';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import type { Activity } from '@server/database/schemas/activities';
-import type { ReactionActivity } from '@server/database/schemas/activity-types';
+import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -18,8 +18,8 @@ import styles from './activity-selector-button.module.css';
 const ITEMS_PER_PAGE = 5;
 
 interface ActivitySelectorButtonProps {
-    activity: Partial<ReactionActivity>;
-    setActivity: (activity: Partial<ReactionActivity>) => void;
+    activity: Partial<ReactionActivityDao>;
+    setActivity: (activity: Partial<ReactionActivityDao>) => void;
     title: string;
     activitiesToReact?: Activity[];
 }
