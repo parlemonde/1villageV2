@@ -1,6 +1,6 @@
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
-import type { ActivityType } from '@server/database/schemas/activity-types';
+import type { ActivityType, ReactionActivityDao, ReactionActivityDto } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -38,6 +38,12 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         if (!result) {
             return new NextResponse(null, { status: 404 });
         }
+        if (result.type === 'reaction') {
+            const activityBeingReacted = await db.query.activities.findFirst({
+                where: eq(activities.id, (result as ReactionActivityDao).data.activityId),
+            });
+            return NextResponse.json({ ...result, activityBeingReacted });
+        }
         return NextResponse.json(result);
     }
 
@@ -73,5 +79,29 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
 
     const allActivities = result.map(({ activity }) => activity);
+    const reactions = allActivities.filter((a) => a.type === 'reaction') as ReactionActivityDao[];
+
+    if (reactions.length > 0) {
+        const referencedActivitiesId = reactions.flatMap((r) => r.data?.activityId || []);
+        const referencedActivities = await db.select().from(activities).where(inArray(activities.id, referencedActivitiesId));
+        const referencedActivitiesMap = new Map(referencedActivities.map((a) => [a.id, a]));
+
+        const enrichedActivities = allActivities.map((a) => {
+            if (a.type === 'reaction') {
+                const reaction = a as ReactionActivityDao;
+                return {
+                    ...a,
+                    data: {
+                        ...reaction.data,
+                        activityBeingReacted: referencedActivitiesMap.get(reaction.data.activityId),
+                    },
+                } as ReactionActivityDto;
+            }
+            return a;
+        });
+
+        return NextResponse.json(enrichedActivities);
+    }
+
     return NextResponse.json(allActivities);
 };
