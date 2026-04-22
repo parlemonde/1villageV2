@@ -9,7 +9,7 @@ import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { resetPassword } from '@server-actions/authentication/reset-password';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
-import { useActionState, useState } from 'react';
+import { useActionState, useState, useEffect } from 'react';
 
 import styles from './reset-password-form.module.css';
 
@@ -28,13 +28,15 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
     const [message, dispatchAction, isPending] = useActionState(resetPassword, '');
     const [isRequestSent, setIsRequestSent] = useState(false);
 
-    if (isRequestSent && !isPending) {
-        sendToast({
-            type: message ? 'error' : 'success',
-            message: message ? message : t('Votre changement de mot de passe a été pris en compte'),
-        });
-        if (!message) setTimeout(() => router.push('/login/famille'), 3000);
-    }
+    useEffect(() => {
+        if (isRequestSent && !isPending) {
+            sendToast({
+                type: message ? 'error' : 'success',
+                message: message ? message : t('Votre changement de mot de passe a été pris en compte'),
+            });
+            if (!message) setTimeout(() => router.push('/login/famille'), 3000);
+        }
+    }, [isRequestSent, isPending, message, t, router]);
 
     return (
         <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
