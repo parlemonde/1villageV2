@@ -1,11 +1,13 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import { IconButton } from '@frontend/components/ui/Button/IconButton';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Title } from '@frontend/components/ui/Title';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { resetPassword } from '@server-actions/authentication/reset-password';
+import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useActionState, useState } from 'react';
 
@@ -17,17 +19,31 @@ type ResetPasswordFormProps = {
 
 export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
     const t = useExtracted('app.login.famille.reset-password');
+    const router = useRouter();
+    const handleSubmit = async (formData: FormData) => {
+        setIsRequestSent(true);
+        dispatchAction(formData);
+    };
     const [showPassword, setShowPassword] = useState(false);
-    const [message, resetPasswordAction, isPending] = useActionState(resetPassword, '');
+    const [message, dispatchAction, isPending] = useActionState(resetPassword, '');
+    const [isRequestSent, setIsRequestSent] = useState(false);
+
+    if (isRequestSent && !isPending) {
+        sendToast({
+            type: message ? 'error' : 'success',
+            message: message ? message : t('Votre changement de mot de passe a été pris en compte'),
+        });
+        if (!message) setTimeout(() => router.push('/login/famille'), 3000);
+    }
 
     return (
         <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
             <Title variant="h2" color="inherit" marginY="md">
                 {t('Réinitialisation du mot de passe')}
             </Title>
-            <form action={resetPasswordAction} className={styles.resetForm}>
+            <form action={handleSubmit} className={styles.resetForm}>
                 {isPending && <p style={{ color: 'var(--success-color)', textAlign: 'center' }}>{t('Veuillez patienter...')}</p>}
-                {message && <p style={{ color: 'var(--error-color)', textAlign: 'center' }}>{message}</p>}
+
                 <Field
                     name="password"
                     label={t('Mot de passe')}
