@@ -21,7 +21,16 @@ export async function resetPassword(_previousState: string, formData: FormData):
             },
         });
         return !data.status ? t('Erreur lors de la mise à jour de votre mot de passe') : '';
-    } catch {
-        return t('Token invalide');
+    } catch (error: unknown) {
+        const apiError = error as { body?: { message?: string; code?: string } };
+        let errorMessage = t('Erreur coté serveur: {error}', { error: apiError?.body?.message || 'N/A' });
+        switch (apiError?.body?.code) {
+            case 'PASSWORD_TOO_SHORT':
+                errorMessage = t('Mot de passe trop court');
+                break;
+            default:
+                break;
+        }
+        return errorMessage;
     }
 }
