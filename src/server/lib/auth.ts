@@ -8,6 +8,7 @@ import { admin } from 'better-auth/plugins';
 import { adminAc, userAc } from 'better-auth/plugins/admin/access';
 import { getExtracted } from 'next-intl/server';
 
+import { getEnvVariable } from './get-env-variable';
 import { logger } from './logger';
 import { ssoPlugin } from './parlemonde-sso-plugin';
 import { sendEmail } from './sendEmail';
@@ -31,6 +32,7 @@ export const auth = registerService('auth', () =>
         plugins: ssoPlugin ? [ssoPlugin, adminPlugin, cookiesPlugin] : [adminPlugin, cookiesPlugin], // make sure `nextCookies()` is the last plugin in the array
         emailAndPassword: {
             enabled: true,
+            minPasswordLength: getEnvVariable('NODE_ENV') === 'production' ? 12 : 8,
             sendResetPassword: async ({ user, url, token }) => {
                 logger.info(`sendResetPassword to user ${user.email}`);
                 logger.info(`sendResetPassword containing url ${url}`, { token: token });
