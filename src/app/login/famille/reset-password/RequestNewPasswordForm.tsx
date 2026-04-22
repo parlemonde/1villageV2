@@ -33,7 +33,7 @@ export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) =
             </Title>
             {isRequestSent ? (
                 <div className={styles.resetForm}>
-                    <PelicoSouriant width="260" height="241" style={{ margin: '0 auto' }} />
+                    <PelicoSouriant width="200" height="200" style={{ margin: '0 auto' }} />
                     <p style={{ color: 'var(--success-color)', textAlign: 'center' }}>
                         {t('Si cette adresse e-mail est enregistrée, nous y avons envoyé les instructions afin de réinitialiser votre mot de passe.')}
                     </p>
