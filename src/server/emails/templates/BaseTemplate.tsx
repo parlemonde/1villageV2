@@ -25,6 +25,7 @@ export default function BaseTemplate({ children, baseTranslations }: BaseTemplat
                     {`
                     html {
                         font-size: 14px;
+                        background-color: ${styles.backgroundColor};
                     }
                     .link {
                         color: ${styles.primaryColor} !important;
@@ -34,9 +35,9 @@ export default function BaseTemplate({ children, baseTranslations }: BaseTemplat
                     }
                     .button {
                         display: inline-flex;
-                        justify-content: center;
+                        justify-content: space-between;
                         align-items: center;
-                        gap: 6px;
+                        column-gap: 6px;
                         border-radius: 18px;
                         border: 1px solid ${styles.primaryColor};
                         padding: 6px 12px;
@@ -83,8 +84,8 @@ export default function BaseTemplate({ children, baseTranslations }: BaseTemplat
                                 {joinButton}
                             </Link>
                         </Section>
-                        <Section>
-                            <Text style={{ fontSize: '12px', fontStyle: 'italic', color: styles.grey500 }}>{notification}</Text>
+                        <Section style={{ padding: '16px' }}>
+                            <Text style={{ fontSize: '12px', lineHeight: '20px', fontStyle: 'italic', color: styles.grey500 }}>{notification}</Text>
                         </Section>
                         <Section style={{ padding: '0 0 16px' }}>
                             <Text style={{ fontSize: '16px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>{followUs}</Text>

@@ -43,7 +43,8 @@ ConfirmAccountTemplate.PreviewProps = {
         altText: 'Association Par Le Monde',
         greeting: 'Bonjour',
         notification: 'Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.',
-        joinButton: 'Rejoindre 1Village',
+        joinButton: 'Aller sur 1Village',
+        followUs: 'Suivez-nous !',
         donateButton: 'Faire un don',
     },
     translations: {
