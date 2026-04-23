@@ -163,7 +163,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                     />
                     <Field label={t('Pays :')} input={<CountrySelect value={countryCode} onChange={() => {}} isFullWidth disabled />} />
                     <PanelInput
-                        label={t('Alias :')}
+                        label={t('Pseudo :')}
                         value={profileData.classAlias}
                         onChange={(v) => updateField('classAlias', v)}
                         placeholder={`La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`}
