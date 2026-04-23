@@ -9,29 +9,24 @@ import type { ServerActionResponse } from '@server-actions/common/server-action-
 import { and, eq } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
 
-export const deleteReaction = async (activityId: number, classroomId?: number, userId?: string): Promise<ServerActionResponse> => {
+export const deleteReaction = async (activityId: number): Promise<ServerActionResponse> => {
     const t = await getExtracted('common');
     try {
         const user = await getCurrentUser();
-        if (!user || user.id !== userId) {
-            throw new Error('Unauthorized delete reaction for this user');
+
+        if (!user) {
+            throw new Error('Unauthorized');
         }
 
         const { classroom } = await getCurrentVillageAndClassroomForUser(user);
-        if (classroom && classroom.id !== classroomId) {
-            throw new Error('Unauthorized delete reaction for this classroom');
-        }
-
-        if (!classroomId && !userId) {
-            throw new Error('Either classroomId or userId is required');
-        }
 
         const conditions = [eq(activityReactions.activityId, activityId)];
-        if (classroomId !== undefined) {
-            conditions.push(eq(activityReactions.classroomId, classroomId));
+
+        if (classroom?.id !== undefined) {
+            conditions.push(eq(activityReactions.classroomId, classroom.id));
         }
-        if (userId !== undefined) {
-            conditions.push(eq(activityReactions.userId, userId));
+        if (user.id !== undefined) {
+            conditions.push(eq(activityReactions.userId, user.id));
         }
 
         await db.delete(activityReactions).where(and(...conditions));

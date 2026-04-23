@@ -11,35 +11,25 @@ import { getExtracted } from 'next-intl/server';
 
 export const postReaction = async ({
     activityId,
-    classroomId,
-    userId,
     reaction,
 }: {
     activityId: number;
-    classroomId?: number;
-    userId?: string;
     reaction: string;
 }): Promise<ServerActionResponse<ActivityReaction>> => {
     const t = await getExtracted('common');
 
     try {
         const user = await getCurrentUser();
-        if (!user || user.id !== userId) {
-            throw new Error('Unauthorized post reaction for this user');
+
+        if (!user) {
+            throw new Error('Unauthorized');
         }
 
         const { classroom } = await getCurrentVillageAndClassroomForUser(user);
-        if (classroom && classroom.id !== classroomId) {
-            throw new Error('Unauthorized post reaction for this classroom');
-        }
-
-        if (!classroomId && !userId) {
-            throw new Error('Either classroomId or userId is required');
-        }
 
         const [data] = await db
             .insert(activityReactions)
-            .values({ activityId, classroomId, userId, reaction: reaction })
+            .values({ activityId, classroomId: classroom?.id, userId: user.id, reaction: reaction })
             .onConflictDoUpdate({
                 target: [activityReactions.activityId, activityReactions.classroomId, activityReactions.userId],
                 set: { reaction: reaction },

@@ -220,12 +220,10 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
 
         let result;
         if (_isToggleOff) {
-            result = await deleteReaction(activity.id, classroom?.id, user.id);
+            result = await deleteReaction(activity.id);
         } else {
             result = await postReaction({
                 activityId: activity.id,
-                classroomId: classroom?.id,
-                userId: user.id,
                 reaction: selectedReaction.value,
             });
         }
