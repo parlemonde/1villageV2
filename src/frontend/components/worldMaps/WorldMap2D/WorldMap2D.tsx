@@ -9,18 +9,21 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 
-import { DraggableMarker } from './DraggableMarker';
+import { Marker } from './Marker';
 import { initMap } from './initMap';
 
 type MapProps = {
     coordinates?: Coordinates;
-    setCoordinates: (coordinates: Coordinates) => void;
+    setCoordinates?: (coordinates: Coordinates) => void;
+    width?: string;
+    height?: string;
+    className?: string;
 } & MarginProps &
     PaddingProps;
 
 export const DEFAULT_COORDINATES: Coordinates = { lat: 48.858, lng: 2.294 };
 
-const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates }: MapProps) => {
+const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates, width = '100%', height = '300px', className }: MapProps) => {
     //A ref to store the MapLibre instance (persists across renders)
     const [map, setMap] = useState<Map | null>(null);
     const canvasRef = useRef<HTMLDivElement | null>(null);
@@ -54,12 +57,12 @@ const Map2D = ({ coordinates = DEFAULT_COORDINATES, setCoordinates }: MapProps) 
     }, [map, coordinates]);
 
     return (
-        <div ref={containerRef} style={{ position: 'relative', height: '300px', width: '100%' }}>
-            <div ref={canvasRef} style={{ width: '100%', height: '100%' }}></div>
+        <div ref={containerRef} style={{ position: 'relative', height, width }} className={className}>
+            <div ref={canvasRef} style={{ width: '100%', height: '100%' }} className={className}></div>
             <div style={{ position: 'absolute', left: 8, top: 8, display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {map && (
                     <>
-                        <DraggableMarker map={map} coordinates={coordinates} setCoordinates={setCoordinates} />
+                        <Marker map={map} coordinates={coordinates} setCoordinates={setCoordinates} />
                         <button
                             className={styles.button}
                             onClick={() => {

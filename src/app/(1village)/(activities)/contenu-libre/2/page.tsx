@@ -14,7 +14,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useMemo, useContext, useState } from 'react';
 
 export default function FreeContentStep2() {
-    const { user: currentUser } = useContext(UserContext);
+    const { user: currentUser, classroom } = useContext(UserContext);
     const { activity, setActivity, getOrCreateDraft } = useContext(ActivityContext);
     const [isUploadImageModalOpen, setIsUploadImageModalOpen] = useState(false);
 
@@ -113,7 +113,12 @@ export default function FreeContentStep2() {
                 Aperçu de votre publication
             </Title>
             <p style={{ marginBottom: '16px' }}>Voilà à quoi ressemblera votre publication dans le fil d&apos;activité</p>
-            <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldDisableButtons />
+            <ActivityCard
+                user={currentUser}
+                classroom={classroom}
+                activity={{ ...activity, isPelico, publishDate: currentDate.toISOString() }}
+                shouldDisableButtons
+            />
             <div style={{ textAlign: 'right', marginTop: '16px' }}>
                 <Button as="a" href="/contenu-libre/3" color="primary" label="Étape suivante" rightIcon={<ChevronRightIcon />}></Button>
             </div>

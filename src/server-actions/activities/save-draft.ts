@@ -24,6 +24,7 @@ export const saveDraft = async (activity: Partial<Activity>): Promise<number> =>
         if (!phase || !type) {
             throw new Error('Phase and type are required');
         }
+
         // Delete previous draft for same user and type if it exists
         await db.delete(activities).where(and(eq(activities.userId, user.id), isNull(activities.publishDate), eq(activities.type, type)));
         // Create new draft
@@ -38,6 +39,7 @@ export const saveDraft = async (activity: Partial<Activity>): Promise<number> =>
             .returning({
                 id: activities.id,
             });
+
         return results[0]?.id;
     }
 };

@@ -470,6 +470,72 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.classroom_preferences": {
+      "name": "classroom_preferences",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "classroom_id": {
+          "name": "classroom_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_invitation_message": {
+          "name": "parent_invitation_message",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "classroom_preferences_user_id_users_id_fk": {
+          "name": "classroom_preferences_user_id_users_id_fk",
+          "tableFrom": "classroom_preferences",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "classroom_preferences_classroom_id_classrooms_id_fk": {
+          "name": "classroom_preferences_classroom_id_classrooms_id_fk",
+          "tableFrom": "classroom_preferences",
+          "tableTo": "classrooms",
+          "columnsFrom": [
+            "classroom_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "classroom_preferences_user_id_classroom_id_pk": {
+          "name": "classroom_preferences_user_id_classroom_id_pk",
+          "columns": [
+            "user_id",
+            "classroom_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.classrooms": {
       "name": "classrooms",
       "schema": "",

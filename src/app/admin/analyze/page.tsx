@@ -1,5 +1,6 @@
 'use client';
 
+import { ClassroomCard } from '@frontend/components/statistics/ClassroomCard/ClassroomCard';
 import { ClassroomsEngagementPie } from '@frontend/components/statistics/ClassroomsEngagementPie/ClassroomsEngagementPie';
 import { StatisticFilters } from '@frontend/components/statistics/StatisticFilters/StatisticFilters';
 import { TeamCommentEditor } from '@frontend/components/statistics/TeamCommentEditor/TeamCommentEditor';
@@ -21,11 +22,11 @@ export default function AdminAnalyzePage() {
     const tabs = [
         {
             id: 'classroom',
-            title: t('En classe'),
+            title: t('EN CLASSE'),
         },
         {
             id: 'family',
-            title: t('En famille'),
+            title: t('EN FAMILLE'),
         },
     ];
 
@@ -48,6 +49,7 @@ export default function AdminAnalyzePage() {
             />
             {showWorldComponents && <WorldMapActivity setCountry={setCountry} />}
             {country && <VillagesIncludingCountry countryCode={country} setVillage={setVillage} />}
+            {classroom && <ClassroomCard classroomId={classroom} marginY="lg" />}
             <Tabs tabs={tabs} value={tab} onChange={setTab} marginY="lg" />
             {tab === 'classroom' && country && <ClassroomsEngagementPie country={country} villageId={village} />}
         </PageContainer>

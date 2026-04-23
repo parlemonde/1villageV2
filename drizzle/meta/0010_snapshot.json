@@ -1,5 +1,5 @@
 {
-  "id": "a581c37c-8d70-46ac-b5eb-4ad53a8b4c54",
+  "id": "d9ee6943-9cc5-451c-b07b-aac81380e87a",
   "prevId": "a0598b7b-3d15-466a-bb07-4b2cc5b2a1dd",
   "version": "7",
   "dialect": "postgresql",
@@ -185,106 +185,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.activity_reactions": {
-      "name": "activity_reactions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "activityId": {
-          "name": "activityId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "classroomId": {
-          "name": "classroomId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "userId": {
-          "name": "userId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reaction": {
-          "name": "reaction",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "activity_reactions_activityId_activities_id_fk": {
-          "name": "activity_reactions_activityId_activities_id_fk",
-          "tableFrom": "activity_reactions",
-          "tableTo": "activities",
-          "columnsFrom": [
-            "activityId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "activity_reactions_classroomId_classrooms_id_fk": {
-          "name": "activity_reactions_classroomId_classrooms_id_fk",
-          "tableFrom": "activity_reactions",
-          "tableTo": "classrooms",
-          "columnsFrom": [
-            "classroomId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "activity_reactions_userId_users_id_fk": {
-          "name": "activity_reactions_userId_users_id_fk",
-          "tableFrom": "activity_reactions",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "activity_reactions_activityId_classroomId_userId_unique": {
-          "name": "activity_reactions_activityId_classroomId_userId_unique",
-          "nullsNotDistinct": true,
-          "columns": [
-            "activityId",
-            "classroomId",
-            "userId"
-          ]
-        }
-      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -646,6 +546,19 @@
           "type": "varchar(2)",
           "primaryKey": false,
           "notNull": true
+        },
+        "showOnlyClassroomActivities": {
+          "name": "showOnlyClassroomActivities",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "parentInvitationMessage": {
+          "name": "parentInvitationMessage",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
