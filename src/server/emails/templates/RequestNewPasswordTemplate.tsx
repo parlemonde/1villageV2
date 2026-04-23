@@ -1,7 +1,6 @@
 import { Section, Heading, Link, Text } from '@react-email/components';
 import type { BaseTemplateProps } from '@server/emails/templates/BaseTemplate';
 import BaseTemplate from '@server/emails/templates/BaseTemplate';
-// import styles from '@server/emails/templates/utils/emailStyles';
 import { getExtracted } from 'next-intl/server';
 
 import type { RequestNewPasswordTemplateData } from './utils/types';
@@ -28,13 +27,13 @@ export default function RequestNewPasswordTemplate({
             </Heading>
             <Section style={{ textAlign: 'left' }}>
                 <Text style={{ margin: '0' }}>{followLinktoResetPassword}</Text>
-                <Link style={{ fontSize: '14px' }} href={resetPasswordLink}>
+                <Link className="link" href={resetPasswordLink}>
                     {resetMyPassword}
                 </Link>
             </Section>
             <Section style={{ textAlign: 'left', marginTop: '16px' }}>
                 <Text style={{ margin: '0' }}>To modify your password, please click on the following link :</Text>
-                <Link style={{ fontSize: '14px' }} href={resetPasswordLink}>
+                <Link className="link" href={resetPasswordLink}>
                     Modify my password
                 </Link>
             </Section>
@@ -49,7 +48,8 @@ RequestNewPasswordTemplate.PreviewProps = {
         altText: 'Association Par Le Monde',
         greeting: 'Bonjour',
         notification: 'Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.',
-        joinButton: 'Rejoindre 1Village',
+        joinButton: 'Aller sur 1Village',
+        followUs: 'Suivez-nous !',
         donateButton: 'Faire un don',
     },
     translations: {
