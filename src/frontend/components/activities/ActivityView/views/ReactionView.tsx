@@ -18,7 +18,7 @@ export const ReactionView = ({ activity }: ActivityContentViewProps) => {
 
     return (
         <>
-            <p style={{ marginBottom: '16px' }}>{t('Nous avons créé cette réaction en réponse à cette énigme :')}</p>
+            <p style={{ marginBottom: '16px' }}>{t('Voici notre réaction à')}</p>
             <ActivityCard
                 activity={reaction.data.activityBeingReacted}
                 classroom={
