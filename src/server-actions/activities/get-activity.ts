@@ -1,6 +1,5 @@
 import { db } from '@server/database';
 import { activities, type Activity } from '@server/database/schemas/activities';
-import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { parentsStudents } from '@server/database/schemas/parents-students';
 import { students } from '@server/database/schemas/students';
@@ -31,15 +30,7 @@ export const getActivity = async (id: number | null): Promise<Activity | undefin
             .innerJoin(classrooms, eq(classrooms.id, students.classroomId))
             .innerJoin(villages, eq(villages.id, classrooms.villageId))
             .innerJoin(activities, eq(activities.villageId, villages.id))
-            .innerJoin(activityVisibility, eq(activities.id, activityVisibility.activityId))
-            .where(
-                and(
-                    eq(activities.id, id),
-                    eq(activityVisibility.isHidden, false),
-                    eq(activities.villageId, village.id),
-                    isNotNull(activities.publishDate),
-                ),
-            )
+            .where(and(eq(activities.id, id), eq(activities.villageId, village.id), isNotNull(activities.publishDate)))
             .limit(1);
 
         return row?.activities as Activity | undefined;

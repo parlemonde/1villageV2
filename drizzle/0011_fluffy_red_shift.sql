@@ -4,16 +4,11 @@ CREATE TABLE "parents_students" (
 	CONSTRAINT "parents_students_parentId_studentId_pk" PRIMARY KEY("parentId","studentId")
 );
 --> statement-breakpoint
-CREATE TABLE "user_preferences" (
-	"userId" uuid PRIMARY KEY NOT NULL,
-	"wantsNewsletter" boolean NOT NULL
-);
+ALTER TABLE "students" DROP CONSTRAINT "students_parentId_users_id_fk";
 --> statement-breakpoint
--- ALTER TABLE "students" DROP CONSTRAINT "students_parentId_users_id_fk";
---> statement-breakpoint
+ALTER TABLE "users" ADD COLUMN "wants_newsletter" boolean;--> statement-breakpoint
 ALTER TABLE "parents_students" ADD CONSTRAINT "parents_students_parentId_users_id_fk" FOREIGN KEY ("parentId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "parents_students" ADD CONSTRAINT "parents_students_studentId_students_id_fk" FOREIGN KEY ("studentId") REFERENCES "public"."students"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "user_preferences" ADD CONSTRAINT "user_preferences_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "inviteCode_idx" ON "students" USING btree ("inviteCode");--> statement-breakpoint
--- ALTER TABLE "students" DROP COLUMN "parentId";--> statement-breakpoint
+ALTER TABLE "students" DROP COLUMN "parentId";--> statement-breakpoint
 ALTER TABLE "students" ADD CONSTRAINT "students_inviteCode_unique" UNIQUE("inviteCode");

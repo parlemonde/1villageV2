@@ -7,7 +7,9 @@ import { users, type User } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { getStringValue } from '@server/lib/get-string-value';
 import { PARLEMONDE_SSO_PROVIDER_ID } from '@server/lib/parlemonde-sso-plugin';
+import { isAPIError } from 'better-auth/api';
 import { eq, and } from 'drizzle-orm';
+import { cookies } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
 export async function login(_previousState: string, formData: FormData): Promise<string> {
@@ -35,7 +37,14 @@ export async function login(_previousState: string, formData: FormData): Promise
             },
         });
         user = result.user as unknown as User;
-    } catch {
+    } catch (error) {
+        if (isAPIError(error)) {
+            if (error.body?.code === 'EMAIL_NOT_VERIFIED') {
+                const cookieStore = await cookies();
+                cookieStore.set('pendingEmail', email);
+                redirect('/api/verify-email?fromLogin=true');
+            }
+        }
         return 'Identifiants invalides.';
     }
     redirect(user.role === 'admin' ? '/admin' : '/', RedirectType.push);

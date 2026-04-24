@@ -24,6 +24,7 @@ export const users = pgTable('users', {
     banned: boolean('banned').default(false),
     bannedReason: text('banned_reason'),
     banExpires: timestamp('ban_expires', { withTimezone: true }),
+    wantsNewsletter: boolean('wants_newsletter'),
 });
 
 type FullUser = typeof users.$inferSelect;

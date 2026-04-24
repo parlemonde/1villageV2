@@ -6,7 +6,6 @@ import { Pool } from 'pg';
 
 import { activities } from './schemas/activities';
 import { phaseActivityTypes } from './schemas/activity-types';
-import { activityVisibility } from './schemas/activity-visibility';
 import { auth_sessions, auth_accounts, auth_verifications } from './schemas/auth-schemas';
 import { classrooms } from './schemas/classrooms';
 import { comments } from './schemas/comments';
@@ -15,7 +14,6 @@ import { medias } from './schemas/medias';
 import { parentsStudents } from './schemas/parents-students';
 import { sessions } from './schemas/sessions';
 import { students } from './schemas/students';
-import { userPreferences } from './schemas/user-preferences';
 import { users } from './schemas/users';
 import { villages } from './schemas/villages';
 
@@ -28,13 +26,11 @@ export const db = registerService('db', () =>
         logger: process.env.NODE_ENV !== 'production',
         schema: {
             users,
-            userPreferences,
             classrooms,
             comments,
             languages,
             villages,
             activities,
-            activityVisibility,
             students,
             medias,
             parentsStudents,

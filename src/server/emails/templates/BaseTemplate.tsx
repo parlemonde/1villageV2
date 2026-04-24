@@ -1,4 +1,4 @@
-import { Html, Img, Heading, Section, Font, Text, Link, Row, Column, Container } from '@react-email/components';
+import { Html, Head, Container, Row, Column, Img, Section, Font, Text, Link } from '@react-email/components';
 import styles from '@server/emails/templates/utils/emailStyles';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { getExtracted } from 'next-intl/server';
@@ -11,50 +11,99 @@ export interface BaseTemplateProps extends BaseTemplateData {
         greeting: string;
         notification: string;
         joinButton: string;
-        donateButton: string;
+        followUs: string;
     };
 }
 
-export default function BaseTemplate({ children, firstName, baseTranslations }: BaseTemplateProps) {
-    const { altText, greeting, notification, joinButton, donateButton } = baseTranslations;
-    const appUrl = getEnvVariable('HOST_URL');
+export default function BaseTemplate({ children, baseTranslations }: BaseTemplateProps) {
+    const { altText, notification, joinButton, followUs } = baseTranslations;
+    const baseUrl = getEnvVariable('HOST_URL');
     return (
         <Html>
-            <Font fontFamily="Roboto" fallbackFontFamily="Arial" fontWeight={400} fontStyle="normal" />
-            <Section style={{ padding: '16px 8px', backgroundColor: styles.textOrangeBackground }}>
-                <Img src={getEnvVariable('HOST_URL') + '/static/images/plm-logo.png'} width={90} height={66} alt={altText} />
-                <Heading as="h2" style={{ textAlign: 'center' }}>
-                    {greeting} {firstName}
-                </Heading>
-            </Section>
-            <Section style={{ padding: '16px' }}>{children}</Section>
-            <Section style={{ padding: '16px', textAlign: 'right' }}>
-                <Text style={{ fontSize: '12px', fontStyle: 'italic', color: styles.grey500 }}>{notification}</Text>
-            </Section>
-            <Section style={{ padding: '16px', backgroundColor: styles.textOrangeBackground }}>
-                <Container>
-                    <Row>
-                        <Column align="center">
-                            <Link
-                                href={appUrl}
-                                target="_blank"
-                                style={{ ...styles.button, backgroundColor: styles.secondaryColor, color: styles.fontColor }}
-                            >
+            <Head>
+                <style>
+                    {`
+                    html {
+                        font-size: 14px;
+                        background-color: ${styles.backgroundColor};
+                    }
+                    .link {
+                        color: ${styles.primaryColor} !important;
+                    }
+                    .link:hover {
+                        text-decoration: underline !important;
+                    }
+                    .button {
+                        display: inline-flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        column-gap: 6px;
+                        border-radius: 18px;
+                        border: 1px solid ${styles.primaryColor};
+                        padding: 6px 12px;
+                        line-height: 24px;
+                    }
+                    .button:hover {
+                        background-color: ${styles.primary100};
+                    }
+                    .text-primary {
+                        color: ${styles.primaryColor} !important;
+                    }
+                    .socialButton {
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 5px;
+                        border: 1px solid black;
+                        border-radius: 50%;
+                        margin: 0 4px;
+                    }`}
+                </style>
+            </Head>
+            <Container style={{ padding: '16px', backgroundColor: styles.primaryColor }}>
+                <Section style={{ backgroundColor: 'white' }}>
+                    <Font fontFamily="Roboto" fallbackFontFamily="Arial" fontWeight={400} fontStyle="normal" />
+                    {/* Header */}
+                    <Section>
+                        <Row>
+                            <Column align="center" width="70%">
+                                <Img src={`${baseUrl}/static/images/plm-logo-allonge.jpg`} width="100%" height="auto" alt={altText} />
+                            </Column>
+                            <Column align="center" width="30%">
+                                <Img src={`${baseUrl}/static/images/android-chrome-192x192.png`} alt="1Village" width="48" height="48" />
+                            </Column>
+                        </Row>
+                    </Section>
+
+                    {/* Children */}
+                    <Section style={{ padding: '16px' }}>{children}</Section>
+
+                    {/* Footer */}
+                    <Section style={{ textAlign: 'center' }}>
+                        <Section style={{ padding: '16px' }}>
+                            <Link href={baseUrl} target="_blank" className="button text-primary">
+                                <Img src={`${baseUrl}/static/images/android-chrome-192x192.png`} alt="1Village" width={24} height={24} />
                                 {joinButton}
                             </Link>
-                        </Column>
-                        <Column>
-                            <Link
-                                href="https://parlemonde.org/faire-un-don/"
-                                target="_blank"
-                                style={{ ...styles.button, backgroundColor: styles.primaryColor }}
-                            >
-                                {donateButton}
+                        </Section>
+                        <Section style={{ padding: '16px' }}>
+                            <Text style={{ fontSize: '12px', lineHeight: '20px', fontStyle: 'italic', color: styles.grey500 }}>{notification}</Text>
+                        </Section>
+                        <Section style={{ padding: '0 0 16px' }}>
+                            <Text style={{ fontSize: '16px', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '8px' }}>{followUs}</Text>
+                            <Link href="https://www.facebook.com/associationparlemonde" className="socialButton">
+                                <Img src={`${baseUrl}/static/svg/icon-facebook.svg`} alt="Facebook" width={18} height={18} />
                             </Link>
-                        </Column>
-                    </Row>
-                </Container>
-            </Section>
+                            <Link href="https://www.linkedin.com/company/par-le-monde/" className="socialButton">
+                                <Img src={`${baseUrl}/static/svg/icon-linkedin.svg`} alt="LinkedIn" width={18} height={18} />
+                            </Link>
+                            <Link href="https://www.youtube.com/@parlemonde6324" className="socialButton">
+                                <Img src={`${baseUrl}/static/svg/icon-youtube.svg`} alt="Youtube" width={18} height={18} />
+                            </Link>
+                        </Section>
+                    </Section>
+                </Section>
+            </Container>
         </Html>
     );
 }
@@ -65,8 +114,8 @@ BaseTemplate.PreviewProps = {
         altText: 'Association Par Le Monde',
         greeting: 'Bonjour',
         notification: 'Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.',
-        joinButton: 'Rejoindre 1Village',
-        donateButton: 'Faire un don',
+        joinButton: 'Aller sur 1Village',
+        followUs: 'Suivez-nous !',
     },
 };
 
@@ -77,8 +126,8 @@ export const getBaseTranslations = async () => {
         altText: t('Association Par Le Monde'),
         greeting: t('Bonjour'),
         notification: t('Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.'),
-        joinButton: t('Rejoindre 1Village'),
-        donateButton: t('Faire un don'),
+        joinButton: t('Aller sur 1Village'),
+        followUs: t('Suivez-nous !'),
     };
 
     return translations;

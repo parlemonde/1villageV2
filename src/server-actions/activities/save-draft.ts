@@ -3,7 +3,6 @@
 import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
-import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, isNull } from 'drizzle-orm';
 

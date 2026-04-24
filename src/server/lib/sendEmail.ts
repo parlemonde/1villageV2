@@ -1,4 +1,3 @@
-'use server';
 import { getTemplate } from '@server/emails/templates/utils/getTemplate';
 import type { EmailTemplateProps, EmailType } from '@server/emails/templates/utils/types';
 import { getTransporter } from '@server/emails/transporter';

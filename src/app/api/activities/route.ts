@@ -2,7 +2,6 @@ import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
-import { activityVisibility } from '@server/database/schemas/activity-visibility';
 import { classrooms } from '@server/database/schemas/classrooms';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
@@ -50,14 +49,13 @@ export const GET = async ({ nextUrl }: NextRequest) => {
 
     const result = await db
         .select({
-            activity: { ...activities, isHidden: activityVisibility.isHidden },
+            activity: activities,
         })
         .from(activities)
-        .innerJoin(activityVisibility, eq(activityVisibility.activityId, activities.id))
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                classroom && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
+                classroom && user.role === 'parent' && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
@@ -74,7 +72,6 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
-
     const allActivities = result.map(({ activity }) => activity);
     return NextResponse.json(allActivities);
 };

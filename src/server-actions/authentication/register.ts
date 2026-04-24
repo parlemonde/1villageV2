@@ -3,14 +3,15 @@
 import { db } from '@server/database';
 import { parentsStudents } from '@server/database/schemas/parents-students';
 import { students } from '@server/database/schemas/students';
-import { userPreferences } from '@server/database/schemas/user-preferences';
 import { users } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { getStringValue } from '@server/lib/get-string-value';
+import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { updateLocale } from '@server-actions/settings/update-locale';
-import { APIError } from 'better-auth';
+import { isAPIError } from 'better-auth/api';
 import { count, eq } from 'drizzle-orm';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getExtracted } from 'next-intl/server';
 
@@ -18,6 +19,7 @@ const MAX_ACCOUNTS_PER_CODE = 5;
 
 export async function register(_previousState: ServerActionResponse, formData: FormData): Promise<ServerActionResponse> {
     const t = await getExtracted('common');
+    let redirectPath;
     try {
         const email = getStringValue(formData.get('email'));
         const firstName = getStringValue(formData.get('firstName'));
@@ -50,9 +52,8 @@ export async function register(_previousState: ServerActionResponse, formData: F
             .where(eq(students.inviteCode, inviteCode));
 
         if (result.count >= MAX_ACCOUNTS_PER_CODE) {
-            return { error: { message: t('Le code enfant a expiré') } };
+            return { error: { message: t('Vous avez atteint le nombre maximum de comptes pour ce code enfant') } };
         }
-
         const response = await auth.api.signUpEmail({
             body: {
                 name: firstName + ' ' + lastName,
@@ -60,19 +61,32 @@ export async function register(_previousState: ServerActionResponse, formData: F
                 password,
             },
         });
-        await db.update(users).set({ role: 'parent' }).where(eq(users.id, response.user.id));
-        await db.insert(userPreferences).values({ userId: response.user.id, wantsNewsletter: acceptedNewsletter === 'on' });
 
-        await db.insert(parentsStudents).values({ parentId: response.user.id, studentId: row.studentId });
+        await db.transaction(async (tx) => {
+            await tx
+                .update(users)
+                .set({ role: 'parent', wantsNewsletter: acceptedNewsletter === 'true' })
+                .where(eq(users.id, response.user.id));
+
+            await tx.insert(parentsStudents).values({ parentId: response.user.id, studentId: row.studentId });
+        });
 
         await updateLocale(locale);
+        const cookieStore = await cookies();
+        cookieStore.set('pendingEmail', email);
+        redirectPath = '/api/verify-email';
     } catch (error) {
-        if (error instanceof APIError) {
-            // TODO log
+        logger.error(error);
+        if (isAPIError(error)) {
+            if (error.body?.code === 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL') {
+                return { error: { message: t('Un compte avec cette adresse e-mail existe déjà') } };
+            }
         }
-        console.error(error);
         return { error: { message: t('Une erreur est survenue') } };
+    } finally {
+        if (redirectPath) {
+            redirect(redirectPath);
+        }
+        return {};
     }
-
-    redirect('/');
 }
