@@ -28,12 +28,13 @@ export default function ReagirAUneActiviteStep1() {
         jsonFetcher,
     );
 
-    const activityTypes = [...new Set(activities?.map((a) => a.type))];
     const getActivityCardTitle = useActivityCardTitle();
 
     const activitiesFromOtherClassrooms = useMemo(() => {
         return activities?.filter((a) => a.classroomId !== classroom?.id);
     }, [activities, classroom?.id]);
+
+    const activityTypes = [...new Set(activitiesFromOtherClassrooms?.map((a) => a.type))];
 
     const activitiesByType = useMemo(() => {
         return activitiesFromOtherClassrooms?.reduce(
@@ -61,7 +62,7 @@ export default function ReagirAUneActiviteStep1() {
                 marginBottom="xl"
             />
             <Title variant="h2" marginBottom="md">
-                {t('Reagir à une activité')}
+                {t('Réagir à une activité')}
             </Title>
             <p>{t('Quand un simple texte ne suffit plus, vous pouvez réagir à une activité déjà publiée par vos pélicopains.')}</p>
             <div className={styles.activityButtonsContainer}>

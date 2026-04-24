@@ -142,7 +142,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
                         color="primary"
                         label={t('Réagir')}
                         leftIcon={<ReplyArrow />}
-                        onClick={() => router.push('/reagir-a-une-activite')}
+                        onClick={() => router.push(`/reagir-a-une-activite/${serializeToQueryUrl({ activityId: activityId })}`)}
                     />
                 </div>
             </div>

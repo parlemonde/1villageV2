@@ -11,9 +11,10 @@ interface ThemeSelectorButtonProps extends MarginProps, PaddingProps {
     title: string;
     description?: string;
     isActive?: boolean;
-    onClick: () => void;
+    onClick?: () => void;
     dropdownContent?: React.ReactNode;
     hasHoverEffect?: boolean;
+    isInitiallyOpen?: boolean;
 }
 
 export const ThemeSelectorButton = ({
@@ -35,7 +36,7 @@ export const ThemeSelectorButton = ({
             setIsOpen(!isOpen);
             setHeight(isOpen ? 0 : ref.current?.scrollHeight || 0);
         } else {
-            onClick();
+            onClick?.();
         }
     };
 
@@ -57,7 +58,7 @@ export const ThemeSelectorButton = ({
 
     return (
         <div
-            className={classNames(styles.button, { [styles.active]: isActive, [styles.hoverEffect]: hasHoverEffect })}
+            className={classNames(styles.button, { [styles.active]: isActive && hasHoverEffect, [styles.hoverEffect]: hasHoverEffect })}
             style={getMarginAndPaddingStyle(marginAndPaddingProps)}
         >
             <div className={styles.buttonContent} role="button" onClick={handleClick}>
