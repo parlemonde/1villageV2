@@ -1,6 +1,6 @@
 {
-  "id": "d9ee6943-9cc5-451c-b07b-aac81380e87a",
-  "prevId": "a0598b7b-3d15-466a-bb07-4b2cc5b2a1dd",
+  "id": "24ef923c-d4f3-4c7d-b2b3-9e51fa184e6f",
+  "prevId": "d9ee6943-9cc5-451c-b07b-aac81380e87a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -546,19 +546,6 @@
           "type": "varchar(2)",
           "primaryKey": false,
           "notNull": true
-        },
-        "showOnlyClassroomActivities": {
-          "name": "showOnlyClassroomActivities",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "parentInvitationMessage": {
-          "name": "parentInvitationMessage",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -1097,6 +1084,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'teacher'"
+        },
+        "first_login": {
+          "name": "first_login",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "banned": {
           "name": "banned",
