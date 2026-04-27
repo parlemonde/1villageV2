@@ -165,5 +165,6 @@ function getVillage(plmVillage: PlmVillage): Omit<Village, 'id'> | null {
         activePhase: 1,
         phaseStartDates: { 1: new Date().toISOString() },
         classroomCount: Object.fromEntries(countries.map((c) => [c, 0])),
+        isCrossVisible: false,
     };
 }
