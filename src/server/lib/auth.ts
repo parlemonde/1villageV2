@@ -33,9 +33,8 @@ export const auth = registerService('auth', () =>
         emailAndPassword: {
             enabled: true,
             minPasswordLength: getEnvVariable('NODE_ENV') === 'production' ? 12 : 8,
-            sendResetPassword: async ({ user, url, token }) => {
-                logger.info(`sendResetPassword to user ${user.email}`);
-                logger.info(`sendResetPassword containing url ${url}`, { token: token });
+            sendResetPassword: async ({ user, url }) => {
+                logger.info(`sendResetPassword to user ${user.id}`);
                 const t = await getExtracted('common');
                 void sendEmail({
                     to: user.email,
@@ -48,7 +47,7 @@ export const auth = registerService('auth', () =>
                 });
             },
             onPasswordReset: async ({ user }) => {
-                logger.info(`Password for user ${user.email} has been reset.`);
+                logger.info(`Password for user ${user.id} has been reset.`);
             },
         },
         advanced: {
