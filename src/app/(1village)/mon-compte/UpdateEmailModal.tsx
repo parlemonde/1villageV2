@@ -5,12 +5,8 @@ import { Input } from '@frontend/components/ui/Form/Input';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
 import { authClient } from '@frontend/lib/auth-client';
+import { isValidEmail } from '@lib/email-validation';
 import { useContext, useState } from 'react';
-
-const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
 
 interface UpdateEmailModalProps {
     isOpen: boolean;

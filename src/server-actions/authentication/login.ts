@@ -1,29 +1,20 @@
-/* eslint-disable camelcase */
 'use server';
 
-import { db } from '@server/database';
-import { auth_accounts } from '@server/database/schemas/auth-schemas';
-import { users, type User } from '@server/database/schemas/users';
+import { type User } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
+import { checkSSO } from '@server/lib/check-sso';
 import { getStringValue } from '@server/lib/get-string-value';
-import { PARLEMONDE_SSO_PROVIDER_ID } from '@server/lib/parlemonde-sso-plugin';
-import { eq, and } from 'drizzle-orm';
 import { redirect, RedirectType } from 'next/navigation';
+import { getExtracted } from 'next-intl/server';
 
 export async function login(_previousState: string, formData: FormData): Promise<string> {
+    const t = await getExtracted('common');
     const email = getStringValue(formData.get('email'));
     const password = getStringValue(formData.get('password'));
+    const response = await checkSSO(email);
 
-    const ssoProvider = PARLEMONDE_SSO_PROVIDER_ID;
-    const result = await db
-        .select({
-            providers: auth_accounts.providerId,
-        })
-        .from(auth_accounts)
-        .leftJoin(users, eq(users.id, auth_accounts.userId))
-        .where(and(eq(users.email, email)));
-    if (result.some((r) => r.providers === ssoProvider) && result.every((r) => r.providers !== 'credential')) {
-        return 'Veuillez utiliser la connection par classe pour accéder à votre compte.';
+    if (response.error?.message) {
+        return response.error.message;
     }
 
     let user: User | undefined;
@@ -36,7 +27,7 @@ export async function login(_previousState: string, formData: FormData): Promise
         });
         user = result.user as unknown as User;
     } catch {
-        return 'Identifiants invalides.';
+        return t('Identifiants invalides');
     }
     redirect(user.role === 'admin' ? '/admin' : '/', RedirectType.push);
 }

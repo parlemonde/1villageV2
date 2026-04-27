@@ -27,7 +27,9 @@ export default function ConfirmAccountTemplate({
                 {confirmYourAccount}
             </Heading>
             <Text>{clickHereToActivateYourAccount}</Text>
-            <Link href={confirmationLink}>{confirmationLink}</Link>
+            <Link className="link" href={confirmationLink}>
+                {confirmationLink}
+            </Link>
             <Text>{yourAccountWillBeActivatedSoon}</Text>
             <Text>{seeYouSoon}</Text>
         </BaseTemplate>
@@ -41,7 +43,8 @@ ConfirmAccountTemplate.PreviewProps = {
         altText: 'Association Par Le Monde',
         greeting: 'Bonjour',
         notification: 'Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.',
-        joinButton: 'Rejoindre 1Village',
+        joinButton: 'Aller sur 1Village',
+        followUs: 'Suivez-nous !',
         donateButton: 'Faire un don',
     },
     translations: {
