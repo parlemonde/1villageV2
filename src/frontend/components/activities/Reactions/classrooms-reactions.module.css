@@ -1,0 +1,105 @@
+.reactionsContainer {
+    display: flex;
+    justify-self: start;
+    align-items: center;
+    gap: 4px;
+}
+
+.reactionsContainer button.addReactionButton {
+    color: var(--primary-600);
+    background-color: white;
+    font-size: 16px;
+    padding: 6px;
+}
+
+.reactionsContainer button.addReactionButton:hover {
+    background-color: var(--primary-300);
+}
+
+.reactionsContainer button.addReactionButton:disabled,
+.reactionsContainer button.addReactionButton:disabled:hover {
+    background-color: var(--grey-300);
+}
+
+.reactionsContainer button.reactionButton {
+    background-color: var(--primary-300);
+    font-size: 16px;
+    padding: 6px;
+}
+
+.reactionsContainer button.reactionButton.active,
+.reactionsContainer button.reactionButton:hover {
+    background-color: var(--primary-500);
+}
+
+.reactionsContainer button.reactionButton:disabled,
+.reactionsContainer button.reactionButton:disabled:hover {
+    background-color: var(--grey-100);
+}
+
+.reactionsContainer button.reactionButton:disabled.active {
+    background-color: var(--grey-300);
+}
+
+.counterBadge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    line-height: 1;
+    width: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: 0;
+}
+
+button:disabled .counterBadge {
+    background-color: var(--grey-500);
+}
+
+.reactionButtonWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.setReactionModal button.reactionButton {
+    background-color: var(--primary-300);
+    font-size: 24px;
+    padding: 8px;
+}
+
+.setReactionModal button.reactionButton.active,
+.setReactionModal button.reactionButton:hover {
+    background-color: var(--primary-500);
+}
+
+.allReactionModal {
+    > div {
+        padding: 16px !important;
+    }
+
+    .line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 4px;
+    }
+
+    .active {
+        background-color: var(--primary-100);
+    }
+
+    .left {
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .right {
+        font-size: 24px;
+    }
+}

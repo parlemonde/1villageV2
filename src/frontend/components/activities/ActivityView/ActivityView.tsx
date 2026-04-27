@@ -1,7 +1,7 @@
 'use client';
 
 import { ActivityHeader } from '@frontend/components/activities/ActivityHeader';
-import { UserViews } from '@frontend/components/activities/Reactions/UserViews';
+import { UserViews, ClassroomsReactions } from '@frontend/components/activities/Reactions';
 import { Comments } from '@frontend/components/comments/Comments';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import type { Activity } from '@server/database/schemas/activities';
@@ -59,7 +59,8 @@ export const ActivityView = ({ activity, showDetails = true }: ActivityViewProps
                     <strong>{t('Réaction des pélicopains')}</strong>
                 </div>
             )}
-            {showDetails && <UserViews activity={activity} />}
+            {showDetails && <UserViews activity={activity} marginBottom={'md'} />}
+            {showDetails && <ClassroomsReactions activity={activity} />}
             {showDetails && <Comments activityId={activity.id} />}
         </>
     );
