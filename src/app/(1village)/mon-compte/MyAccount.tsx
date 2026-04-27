@@ -78,6 +78,23 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
                     />
                 </div>
             )}
+            {user.role === 'teacher' && (
+                <div className={styles.settingRow}>
+                    <div className={styles.settingLabel}>
+                        <span className={styles.settingLabelText}>Préférences de notifications</span>
+                        <span className={styles.settingValue}>Gérez vos préférences de notifications par email</span>
+                    </div>
+                    <Button
+                        as="a"
+                        href="/mon-compte/preferences"
+                        label="Gérer les préférences"
+                        color="secondary"
+                        variant="outlined"
+                        isUpperCase={false}
+                        className={styles.button}
+                    />
+                </div>
+            )}
             {!isSSOUser && (
                 <div className={styles.buttonContainer}>
                     <Button
