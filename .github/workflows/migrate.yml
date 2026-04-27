@@ -1,0 +1,35 @@
+name: Migrate
+on:
+    push:
+        branches: [main]
+jobs:
+    migrate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.sha }}
+            - uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: 'pnpm'
+            - run: pnpm install
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+            - name: Get IP address
+              id: get-ip
+              run: echo "ip=$(curl https://api.ipify.org)" >> "$GITHUB_OUTPUT"
+            - name: Add Github Actions IP to security-group for Database
+              run: aws ec2 authorize-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 5432 --cidr ${{ steps.get-ip.outputs.ip }}/32
+            - name: Migrate database
+              run: DATABASE_URL=${{ secrets.DATABASE_URL }} pnpm tsx src/server/database/migrate.ts
+            - name: Revoke Github Actions IP from security-group for Database
+              if: always()
+              run: aws ec2 revoke-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 5432 --cidr ${{ steps.get-ip.outputs.ip }}/32
