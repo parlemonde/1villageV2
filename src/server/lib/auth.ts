@@ -57,6 +57,16 @@ export const auth = registerService('auth', () =>
         },
         user: {
             modelName: 'users',
+            additionalFields: {
+                adminPublicationSubscribed: {
+                    type: 'boolean',
+                    fieldName: 'admin_publication_subscribed',
+                },
+                commentActivitySubscribed: {
+                    type: 'boolean',
+                    fieldName: 'comment_activity_subscribed',
+                },
+            },
             changeEmail: {
                 enabled: true,
                 updateEmailWithoutVerification: true,
