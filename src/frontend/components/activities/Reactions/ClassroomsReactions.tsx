@@ -149,7 +149,11 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
     const onReactionButtonClick = (e: React.MouseEvent<HTMLElement>) => {
         const buttonEl = e.currentTarget as HTMLButtonElement;
         const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === buttonEl.value) || null;
-        setSelectedReactionInModal(reacted);
+        if (reacted?.value === selectedReactionInModal?.value) {
+            setSelectedReactionInModal(null);
+        } else {
+            setSelectedReactionInModal(reacted);
+        }
     };
 
     const updateReactionsOptimistically = (
@@ -353,8 +357,11 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
                         setSelectedReactionInModal(null);
                         setIsChangeReactionModalOpen(false);
                     }}
-                    onConfirm={() => onReactionSubmit(selectedReactionInModal)}
-                    isConfirmDisabled={() => selectedReactionInModal === null}
+                    onConfirm={() => {
+                        const reaction = selectedReactionInModal === null ? currentReaction : selectedReactionInModal;
+                        onReactionSubmit(reaction);
+                    }}
+                    isConfirmDisabled={() => selectedReactionInModal === currentReaction}
                     width="sm"
                     contentClassName={styles.setReactionModal}
                 >
