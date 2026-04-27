@@ -25,6 +25,6 @@ export async function requestNewPassword(_previousState: string, formData: FormD
         });
         return !data.status ? `error: ${data.message}` : '';
     } catch {
-        return t('Identifiants invalides');
+        return t('Error while requesting new password');
     }
 }
