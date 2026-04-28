@@ -42,16 +42,19 @@ export const ssoPlugin = registerService('parlemonde-sso-plugin', () =>
               config: [
                   {
                       providerId: PARLEMONDE_SSO_PROVIDER_ID,
-                      redirectURI: `${getEnvVariable('HOST_URL')}/login`,
+                      redirectURI: `${getEnvVariable('HOST_URL')}/api/auth/callback/parlemonde-sso`,
                       responseType: 'code',
                       clientId: CLIENT_ID,
                       clientSecret: CLIENT_SECRET,
-                      authorizationUrl: `https://prof.parlemonde.org/oauth/authorize`,
-                      tokenUrl: `https://prof.parlemonde.org/oauth/token`,
+                      authorizationUrl: `${getEnvVariable('SSO_BASE_URL')}/oauth/authorize`,
+                      tokenUrl: `${getEnvVariable('SSO_BASE_URL')}/oauth/token`,
                       getUserInfo: async (tokens) => {
-                          const plmUser = await jsonFetcher<PLMUser>(`https://prof.parlemonde.org/oauth/me?access_token=${tokens.accessToken}`, {
-                              method: 'GET',
-                          });
+                          const plmUser = await jsonFetcher<PLMUser>(
+                              `${getEnvVariable('SSO_BASE_URL')}/oauth/me?access_token=${tokens.accessToken}`,
+                              {
+                                  method: 'GET',
+                              },
+                          );
                           // 1. create user in database if not exists
                           let user: { id: string; role: UserRole } | undefined = await db.query.users.findFirst({
                               columns: {

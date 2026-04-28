@@ -190,6 +190,13 @@
     white-space: nowrap;
 }
 
+.classIndexLabel {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin: 0;
+}
+
 .stepProfileSection {
     display: flex;
     flex-direction: column;
@@ -229,4 +236,29 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+}
+
+/* StepProfile inline styles */
+.stepProfileHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.stepProfilePelico {
+    width: 4rem;
+    height: auto;
+    margin-right: 1rem;
+}
+
+.stepProfileCountrySelect {
+    margin-left: 0.5rem;
+    width: 450px;
+    max-width: 100%;
+}
+
+.stepProfileMapHint {
+    font-size: 0.85rem;
+    color: var(--grey-500);
+    margin-bottom: 0.5rem;
 }
