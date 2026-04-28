@@ -11,6 +11,7 @@ const DEFAULT_ENV_VARIABLES = {
     DATABASE_URL: 'postgresql://postgres:example@localhost:5432/un_village',
     CLIENT_ID: '',
     CLIENT_SECRET: '',
+    SSO_BASE_URL: 'https://professeur.parlemonde.org',
     AWS_ACCESS_KEY_ID: 'local',
     AWS_SECRET_ACCESS_KEY: 'local',
     AWS_SESSION_TOKEN: '',
