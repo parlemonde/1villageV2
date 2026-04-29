@@ -2,6 +2,8 @@ import type { ThemeName } from '@frontend/components/activities/enigme-constants
 import type { AnyContent } from '@frontend/components/content/content.types';
 import { pgTable, smallint, jsonb } from 'drizzle-orm/pg-core';
 
+import type { Activity } from './activities';
+
 export type FreeActivity = {
     type: 'libre';
     data: {
@@ -11,6 +13,24 @@ export type FreeActivity = {
         content?: AnyContent[];
     } | null;
 };
+
+export type ReactionActivityDto = {
+    type: 'reaction';
+    data: {
+        activityBeingReacted?: Activity;
+        content?: AnyContent[];
+    };
+};
+
+export type ReactionActivityDao = {
+    type: 'reaction';
+    data: {
+        activityId?: number;
+        content?: AnyContent[];
+    };
+};
+
+type ReactionActivity = ReactionActivityDao | ReactionActivityDto;
 
 export type PelicoPresentation = {
     type: 'presentation-pelico';
@@ -250,7 +270,8 @@ export type Activities =
     | ChallengeActivity
     | QuestionActivity
     | PelicoPresentation
-    | AnthemActivity;
+    | AnthemActivity
+    | ReactionActivity;
 export type ActivityType = Activities['type'];
 export type ActivityData<T extends ActivityType> = Extract<Activities, { type: T }>['data'];
 
@@ -268,6 +289,7 @@ const ACTIVITY_TYPES_MAP: Record<ActivityType, boolean> = {
     defi: true,
     'presentation-pelico': true,
     hymne: true,
+    reaction: true,
 };
 export const ACTIVITY_TYPES_ENUM = Object.keys(ACTIVITY_TYPES_MAP) as ActivityType[];
 

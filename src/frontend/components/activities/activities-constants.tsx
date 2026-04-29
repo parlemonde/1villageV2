@@ -42,6 +42,8 @@ export const useActivityName = () => {
                     return t('Présentation Pélico');
                 case 'hymne':
                     return t('Hymne');
+                case 'reaction':
+                    return t('Réaction');
             }
         },
         [t],
@@ -71,6 +73,8 @@ export const useActivityName = () => {
                     return t('Présentation Pelico');
                 case 'hymne':
                     return t('Créer un hymne');
+                case 'reaction':
+                    return t('Réagir à une activité');
             }
         },
         [t],
@@ -102,13 +106,15 @@ export const useActivityCardTitle = () => {
                 case 'mascotte':
                     return t('créé sa mascotte');
                 case 'defi':
-                    return t('lancé un defi');
+                    return t('lancé un défi');
                 case 'question':
                     return t('posé une question');
                 case 'presentation-pelico':
                     return t('se présente');
                 case 'hymne':
                     return t('créé un hymne');
+                case 'reaction':
+                    return t('réagit à une activité');
             }
         },
         [t],
@@ -129,6 +135,7 @@ export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponen
     question: QuestionIcon,
     'presentation-pelico': null,
     hymne: AnthemIcon,
+    reaction: null,
 };
 
 export const ACTIVITY_URLS: Record<ActivityType, string> = {
@@ -143,6 +150,7 @@ export const ACTIVITY_URLS: Record<ActivityType, string> = {
     question: '/poser-une-question',
     'presentation-pelico': '/pelico',
     hymne: '/admin/create/hymne',
+    reaction: '/reagir-a-une-activite',
 };
 
 type ActivityRoute = string | ((theme: GameType) => string);
@@ -167,6 +175,7 @@ export const ACTIVITY_LAST_PAGE_URLS: Record<ActivityType, ActivityRoute> = {
     question: '/poser-une-question/3',
     'presentation-pelico': '/pelico',
     hymne: '/admin/create/hymne/5',
+    reaction: '/reagir-a-une-activite/3',
 };
 
 // null means all roles
@@ -182,6 +191,7 @@ export const ACTIVITY_ROLES: Record<ActivityType, UserRole[] | null> = {
     question: null,
     'presentation-pelico': ['admin', 'mediator'],
     hymne: ['admin', 'mediator'],
+    reaction: null,
 };
 
 export const getActivityLastPageUrl = (type: ActivityType, theme?: GameType) => {

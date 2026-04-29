@@ -1,0 +1,36 @@
+.activityButtonsContainer {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.activitiesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    margin: 16px 0;
+    justify-content: space-between;
+}
+
+.activityContainer {
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    &:hover {
+        border-color: var(--primary-color);
+    }
+}
+
+.paginationContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 16px 0;
+}

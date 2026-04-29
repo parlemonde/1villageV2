@@ -4,3 +4,18 @@
     gap: 16px;
     padding: 32px 0;
 }
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: top;
+}
+
+.editorContainer {
+    width: 90%;
+}
+
+.react {
+    text-align: center;
+}
