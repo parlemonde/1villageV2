@@ -1,10 +1,12 @@
 import { db } from '@server/database';
 import { classrooms } from '@server/database/schemas/classrooms';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
-export const getTeacherClassroom = async (userId: string) => {
+export const getTeacherClassroom = async (userId: string, classroomId?: number) => {
+    const filters = classroomId ? and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, userId)) : eq(classrooms.teacherId, userId);
+
     const classroom = await db.query.classrooms.findFirst({
-        where: eq(classrooms.teacherId, userId),
+        where: filters,
     });
     return classroom;
 };

@@ -46,15 +46,11 @@ const getVillageCountryClassrooms = async (villageId: number, country: string): 
         .where(and(eq(classrooms.villageId, villageId), eq(classrooms.countryCode, country)));
 };
 
-const getClassroom = async (classroomId: number): Promise<Classroom[]> => {
-    return await db.select().from(classrooms).where(eq(classrooms.id, classroomId));
-};
-
 const getAllClassrooms = async (): Promise<Classroom[]> => {
     return await db.select().from(classrooms).orderBy(classrooms.id);
 };
 
-const buildQuery = async (villageId: number | null, country: string | null, classroomId: number | null): Promise<Classroom[]> => {
+const buildQuery = async (villageId: number | null, country: string | null): Promise<Classroom[]> => {
     if (villageId && country) {
         return await getVillageCountryClassrooms(villageId, country);
     }
@@ -64,9 +60,7 @@ const buildQuery = async (villageId: number | null, country: string | null, clas
     if (country) {
         return await getCountryClassrooms(country);
     }
-    if (classroomId) {
-        return await getClassroom(classroomId);
-    }
+
     return await getAllClassrooms();
 };
 
@@ -78,7 +72,8 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { villageId, country, withVillage, classroomId } = loadSearchParams(nextUrl.searchParams);
+    const { villageId, country, withVillage } = loadSearchParams(nextUrl.searchParams);
+
     if (!villageId && user.role !== 'admin') {
         return new NextResponse(null, { status: 403 });
     }
@@ -86,7 +81,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     if (withVillage) {
         result = await getVillageClassroomsWithVillage();
     } else {
-        result = await buildQuery(villageId, country, classroomId);
+        result = await buildQuery(villageId, country);
     }
     return NextResponse.json(result);
 };

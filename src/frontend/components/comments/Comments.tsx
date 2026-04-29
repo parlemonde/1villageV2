@@ -3,7 +3,6 @@
 import type { UserComment } from '@app/api/comments/route';
 import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
-import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -43,6 +42,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
                 content,
                 activityId,
                 userId: user.id,
+                classroomId: classroom?.id ? classroom.id : null,
                 createDate: new Date().toISOString(),
                 updateDate: new Date().toISOString(),
             },
@@ -50,37 +50,16 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
-        await mutate(
-            async (current = []) => {
-                const { error, data } = await postComment({
-                    activityId,
-                    content,
-                });
-
-                if (error) {
-                    sendToast({
-                        type: 'error',
-                        message: error.message,
-                    });
-                } else {
-                    setContent(defaultContent);
-                }
-
-                const newComment: UserComment = {
-                    comment: data!,
-                    classroom: classroom,
-                    user: user,
-                };
-
-                return [newComment, ...current.filter((c) => c.comment.id !== tempId)];
-            },
-            {
-                optimisticData: (current = []) => [optimisticComment, ...current],
-                rollbackOnError: true,
-                revalidate: false,
-                populateCache: true,
-            },
-        );
+        const { error } = await postComment({ activityId, content });
+        if (error) {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+            return;
+        }
+        setContent('');
+        await mutate(comments ? [...comments, optimisticComment] : [optimisticComment]);
     };
 
     const onDeleteComment = async () => {
@@ -108,8 +87,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     comments?.map((c) => (
                         <CommentCard
                             key={c.comment.id}
-                            canEdit={user.id === c.user.id}
-                            canDelete={user.id === c.user.id || isPelico}
+                            canEdit={user.id === c.user.id && classroom?.id === c?.classroom?.id}
+                            canDelete={(user.id === c.user.id && classroom?.id === c?.classroom?.id) || isPelico}
                             user={c.user}
                             classroom={c.classroom}
                             comment={c.comment}
