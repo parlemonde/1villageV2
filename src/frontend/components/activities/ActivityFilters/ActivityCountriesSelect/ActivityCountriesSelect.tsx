@@ -22,7 +22,8 @@ export const ActivityCountriesSelect = ({ selectedCountries, isPelico, setSelect
     const [phase] = usePhase();
 
     const isPelicoUser = user?.role === 'admin' || user?.role === 'mediator';
-    const isMystery = (countryCode: string) => village?.activePhase === 1 && !isPelicoUser && classroom?.countryCode !== countryCode;
+    const isMystery = (countryCode: string) =>
+        village?.activePhase === 1 && !village?.isCrossVisible && !isPelicoUser && classroom?.countryCode !== countryCode;
 
     const availableCountries = useMemo<string[]>(() => village?.countries ?? [], [village]);
     const selectedCountriesSet = new Set(selectedCountries);
