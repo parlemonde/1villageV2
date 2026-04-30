@@ -1,0 +1,123 @@
+.container {
+    background-color: var(--grey-100);
+    border: 1px solid var(--grey-200);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 16px 0;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+
+    &.expanded {
+        padding-bottom: 16px;
+    }
+}
+
+.arrowIcon {
+    color: var(--primary-color);
+}
+
+.collapsed {
+    display: none;
+}
+
+.tableContainer {
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.tableScroll {
+    overflow-x: auto;
+}
+
+.table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table td {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.table th {
+    padding: 16px;
+}
+
+th::first-letter {
+    text-transform: uppercase;
+}
+
+.totalRow td {
+    border-top: 1px solid var(--primary-color);
+    border-bottom: 2px solid black;
+    font-weight: bold;
+}
+
+.separator {
+    border-bottom: 1px solid var(--grey-200);
+    margin-left: -16px;
+    width: calc(100% + 32px);
+    margin-bottom: 16px;
+}
+
+.footer {
+    padding: 8px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 8px;
+}
+
+.select {
+    border: none;
+    cursor: pointer;
+    width: 60px;
+    color: var(--font-color);
+    margin: 0 8px;
+
+    svg {
+        fill: var(--font-color);
+    }
+}
+
+.paginationButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.itemsPerPageSelector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--grey-100);
+}
