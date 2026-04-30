@@ -1,9 +1,9 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Loader } from '@frontend/components/ui/Loader';
-import { sendToast } from '@frontend/components/Toasts';
 import { jsonFetcher } from '@lib/json-fetcher';
 import type { Village } from '@server/database/schemas/villages';
 import { updateCrossVisibility } from '@server-actions/villages/update-cross-visibility';
