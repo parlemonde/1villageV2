@@ -3,6 +3,7 @@
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Loader } from '@frontend/components/ui/Loader';
+import { sendToast } from '@frontend/components/Toasts';
 import { jsonFetcher } from '@lib/json-fetcher';
 import type { Village } from '@server/database/schemas/villages';
 import { updateCrossVisibility } from '@server-actions/villages/update-cross-visibility';
@@ -12,12 +13,16 @@ import useSWR from 'swr';
 import styles from './cross-visibility-table.module.css';
 
 export const CrossVisibilityTable = () => {
-    const { data: villages, mutate } = useSWR<Village[]>('/api/villages', jsonFetcher);
+    const { data: villages, mutate, error } = useSWR<Village[]>('/api/villages', jsonFetcher);
     const [isSaving, setIsSaving] = React.useState(false);
     const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<string, boolean>>>({});
 
     const togglableVillages = (villages || []).filter((village) => !village.isCrossVisible);
     const isAllChecked = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
+
+    if (error) {
+        return <p>Une erreur est survenue lors du chargement des villages.</p>;
+    }
 
     return (
         <>
@@ -29,10 +34,18 @@ export const CrossVisibilityTable = () => {
                     disabled={Object.keys(pendingChanges).length === 0}
                     onClick={async () => {
                         setIsSaving(true);
-                        await updateCrossVisibility(pendingChanges);
-                        await mutate();
-                        setPendingChanges({});
-                        setIsSaving(false);
+                        try {
+                            await updateCrossVisibility(pendingChanges);
+                            await mutate();
+                            setPendingChanges({});
+                        } catch {
+                            sendToast({
+                                type: 'error',
+                                message: 'Une erreur est survenue lors de la sauvegarde.',
+                            });
+                        } finally {
+                            setIsSaving(false);
+                        }
                     }}
                 />
             </div>
