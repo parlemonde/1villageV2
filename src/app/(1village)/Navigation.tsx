@@ -126,7 +126,7 @@ export const Navigation = ({ village, classroomCountryCode }: NavigationProps) =
                         .filter((country) => country !== classroomCountryCode)
                         .map((country, index) => (
                             <CountryFlag
-                                key={village.activePhase === 1 && !village.isCrossVisible ? `mistery-${index}` : country}
+                                key={village.activePhase === 1 && !village.isCrossVisible ? `mystery-${index}` : country}
                                 country={country}
                                 isMystery={village.activePhase === 1 && !village.isCrossVisible && !isPelico}
                             />
@@ -196,7 +196,7 @@ export const NavigationMobileMenu = ({ onClose }: NavigationMobileMenuProps) => 
                         .filter((country) => country !== classroomCountryCode)
                         .map((country, index) => (
                             <CountryFlag
-                                key={village.activePhase === 1 && !village.isCrossVisible ? `mistery-${index}` : country}
+                                key={village.activePhase === 1 && !village.isCrossVisible ? `mystery-${index}` : country}
                                 country={country}
                                 isMystery={village.activePhase === 1 && !village.isCrossVisible && !isPelico}
                             />
