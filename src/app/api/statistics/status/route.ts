@@ -50,7 +50,7 @@ const getClassroomStatus = async (classroomId: number) => {
         WHERE "classrooms"."id" = ${classroomId}
     `);
 
-    return result.rows[0].status;
+    return result.rows[0]?.status ?? null;
 };
 
 const getVillageOrCountryStatus = async (villageId: number | null, countryCode: string | null) => {
@@ -71,15 +71,22 @@ const getVillageOrCountryStatus = async (villageId: number | null, countryCode: 
     }
 
     const result = await db.execute<{ status: 'active' | 'ghost' | 'observer' | null }>(sql`
-        WITH stats AS (
+        WITH latest_session AS (
+            SELECT
+                user_id,
+                MAX(updated_at) AS "lastSeen"
+            FROM "auth_sessions"
+            GROUP BY user_id
+        ),
+        stats AS (
             SELECT
                 COUNT(DISTINCT "classrooms"."id") AS total,
                 COUNT(DISTINCT "activities"."classroomId") FILTER (WHERE "activities"."publishDate" >= NOW() - INTERVAL '21 days') AS hasPostedRecently,
-                COUNT(DISTINCT "users"."id") FILTER (WHERE "auth_sessions"."updated_at" < NOW() - INTERVAL '21 days' OR "auth_sessions"."updated_at" IS NULL) AS ghost
+                COUNT(DISTINCT "users"."id") FILTER (WHERE "latest_session"."lastSeen" < NOW() - INTERVAL '21 days' OR "latest_session"."lastSeen" IS NULL) AS ghost
             FROM "activities"
             RIGHT JOIN "classrooms" ON "activities"."classroomId" = "classrooms"."id"
             INNER JOIN "users" ON "classrooms"."teacherId" = "users"."id"
-            LEFT JOIN "auth_sessions" ON "users"."id" = "auth_sessions"."user_id"
+            LEFT JOIN "latest_session" ON "users"."id" = "latest_session"."user_id"
             WHERE ${filters}
         )
         SELECT CASE
@@ -91,5 +98,5 @@ const getVillageOrCountryStatus = async (villageId: number | null, countryCode: 
         FROM stats;
     `);
 
-    return result.rows[0].status;
+    return result.rows[0]?.status ?? null;
 };
