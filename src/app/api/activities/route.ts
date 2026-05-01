@@ -27,7 +27,10 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { classroom: _classroom } = await getCurrentVillageAndClassroomForUser(user);
+    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+    if (!classroom) {
+        return new NextResponse(null, { status: 400 });
+    }
 
     const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
 
@@ -63,7 +66,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                // TODO migration classroom && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
+                classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
