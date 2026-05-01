@@ -14,7 +14,6 @@ interface ThemeSelectorButtonProps extends MarginProps, PaddingProps {
     onClick?: () => void;
     dropdownContent?: React.ReactNode;
     hasHoverEffect?: boolean;
-    isInitiallyOpen?: boolean;
 }
 
 export const ThemeSelectorButton = ({

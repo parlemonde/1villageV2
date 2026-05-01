@@ -38,7 +38,7 @@ export const ActivitySelectorButton = ({ title, activitiesToReact, activity, set
 
     return (
         <ThemeSelectorButton
-            isActive={selectedActivity !== undefined && selectedActivity.type === activitiesToReact?.[0].type}
+            isActive={selectedActivity !== undefined && selectedActivity.type === activitiesToReact?.[0]?.type}
             hasHoverEffect={false}
             title={title}
             dropdownContent={
