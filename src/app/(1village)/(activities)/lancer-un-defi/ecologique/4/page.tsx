@@ -31,13 +31,13 @@ export default function LancerUnDefiEcologiqueStep4() {
         return null;
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setIsSubmitting(true);
         try {
             if (activity.publishDate) {
-                onUpdateActivity();
+                await onUpdateActivity();
             } else {
-                onPublishActivity();
+                await onPublishActivity();
             }
             router.push('/lancer-un-defi/success');
         } catch {

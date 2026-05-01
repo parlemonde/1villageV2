@@ -45,13 +45,13 @@ export default function ReagirAUneActiviteStep3() {
         return null;
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setIsSubmitting(true);
         try {
             if (activity.publishDate) {
-                onUpdateActivity();
+                await onUpdateActivity();
             } else {
-                onPublishActivity();
+                await onPublishActivity();
             }
             router.push('/reagir-a-une-activite/success');
         } catch {
@@ -76,7 +76,7 @@ export default function ReagirAUneActiviteStep3() {
                     { label: t('Réaction'), href: '/reagir-a-une-activite/2', status: isReactionStep2Valid(activity) ? 'success' : 'warning' },
                     { label: t('Pré-visualiser'), href: '/reagir-a-une-activite/3' },
                 ]}
-                activeStep={2}
+                activeStep={3}
                 marginBottom="xl"
             />
             <Title variant="h2" marginBottom="md">

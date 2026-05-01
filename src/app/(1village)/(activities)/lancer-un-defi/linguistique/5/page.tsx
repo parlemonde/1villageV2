@@ -35,13 +35,13 @@ export default function LancerUnDefiLinguistiqueStep5() {
 
     const language = isoLanguages.find((l) => l.code === activity.data.language)?.name;
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setIsSubmitting(true);
         try {
             if (activity.publishDate) {
-                onUpdateActivity();
+                await onUpdateActivity();
             } else {
-                onPublishActivity();
+                await onPublishActivity();
             }
             router.push('/lancer-un-defi/success');
         } catch {
