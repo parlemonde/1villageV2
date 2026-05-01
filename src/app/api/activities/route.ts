@@ -1,4 +1,5 @@
 import { db } from '@server/database';
+import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
 import type { ActivityType, ReactionActivityDao, ReactionActivityDto } from '@server/database/schemas/activity-types';
 import { ACTIVITY_TYPES_ENUM } from '@server/database/schemas/activity-types';
@@ -28,9 +29,6 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     }
 
     const { classroom } = await getCurrentVillageAndClassroomForUser(user);
-    if (!classroom) {
-        return new NextResponse(null, { status: 400 });
-    }
 
     const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
 
@@ -45,9 +43,14 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             const reaction = result as ReactionActivityDao;
             if (reaction.data.activityId) {
                 const activityBeingReacted = await db.query.activities.findFirst({
-                    where: eq(activities.id, reaction.data.activityId),
+                    where: and(eq(activities.id, reaction.data.activityId), isNull(activities.deleteDate)),
                 });
-                return NextResponse.json({ ...result, activityBeingReacted });
+                const reactionDto: ReactionActivityDto = {
+                    ...reaction,
+                    type: 'reaction',
+                    data: { ...reaction.data, activityBeingReacted: activityBeingReacted as Activity | undefined },
+                };
+                return NextResponse.json(reactionDto);
             }
         }
         return NextResponse.json(result);
@@ -66,7 +69,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
+                classroom && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
@@ -89,7 +92,10 @@ export const GET = async ({ nextUrl }: NextRequest) => {
 
     if (reactions.length > 0) {
         const referencedActivitiesId = reactions.flatMap((r) => r.data?.activityId || []);
-        const referencedActivities = await db.select().from(activities).where(inArray(activities.id, referencedActivitiesId));
+        const referencedActivities = await db
+            .select()
+            .from(activities)
+            .where(and(isNull(activities.deleteDate), inArray(activities.id, referencedActivitiesId)));
         const referencedActivitiesMap = new Map(referencedActivities.map((a) => [a.id, a]));
 
         const enrichedActivities = allActivities.map((a) => {

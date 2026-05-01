@@ -10,7 +10,7 @@ import type { Activity } from '@server/database/schemas/activities';
 import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { eq, isNotNull, and, sql } from 'drizzle-orm';
+import { eq, isNotNull, and, sql, isNull } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -76,7 +76,7 @@ export default async function ActivityPage({ params }: ServerPageProps) {
 
         if (reaction.data.activityId) {
             const activityBeingReacted = (await db.query.activities.findFirst({
-                where: eq(activities.id, reaction.data.activityId),
+                where: and(isNull(activities.deleteDate), eq(activities.id, reaction.data.activityId)),
             })) as Activity | undefined;
 
             activity = { ...initialActivity, data: { ...activity.data, activityBeingReacted } };

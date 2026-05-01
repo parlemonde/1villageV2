@@ -25,7 +25,7 @@ export const ReactionCard = ({ activity, onEdit, onDelete, shouldDisableButtons,
     }, [isExpanded]);
 
     const reaction = activity as ReactionActivityDto;
-    if (!activity || activity.type !== 'reaction' || !reaction.data?.activityBeingReacted) {
+    if (!activity || activity.type !== 'reaction') {
         return null;
     }
 
@@ -146,14 +146,27 @@ export const ReactionCard = ({ activity, onEdit, onDelete, shouldDisableButtons,
                         marginLeft: '8px',
                     }}
                 >
-                    <ActivityCard
-                        user={usersMap[reaction.data.activityBeingReacted.userId]}
-                        classroom={
-                            reaction.data.activityBeingReacted.classroomId ? classroomsMap[reaction.data.activityBeingReacted.classroomId] : undefined
-                        }
-                        activity={reaction.data.activityBeingReacted}
-                        shouldDisableButtons={shouldDisableButtons}
-                    />
+                    {reaction.data.activityBeingReacted ? (
+                        <ActivityCard
+                            user={usersMap[reaction.data.activityBeingReacted.userId]}
+                            classroom={
+                                reaction.data.activityBeingReacted.classroomId
+                                    ? classroomsMap[reaction.data.activityBeingReacted.classroomId]
+                                    : undefined
+                            }
+                            activity={reaction.data.activityBeingReacted}
+                            shouldDisableButtons={shouldDisableButtons}
+                        />
+                    ) : (
+                        <div
+                            style={{
+                                padding: '8px',
+                                borderRadius: '4px',
+                            }}
+                        >
+                            {t("Cette activité n'est plus disponible.")}
+                        </div>
+                    )}
                 </div>
             </div>
         </>
