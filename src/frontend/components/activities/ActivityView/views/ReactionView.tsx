@@ -2,6 +2,7 @@ import { ActivityCard } from '@frontend/components/activities/ActivityCard';
 import type { ActivityContentViewProps } from '@frontend/components/activities/ActivityView/activity-view.types';
 import { ContentViewer } from '@frontend/components/content/ContentViewer';
 import { VillageContext } from '@frontend/contexts/villageContext';
+import type { Activity } from '@server/database/schemas/activities';
 import type { ReactionActivityDto } from '@server/database/schemas/activity-types';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
@@ -11,7 +12,7 @@ export const ReactionView = ({ activity }: ActivityContentViewProps) => {
 
     const { usersMap, classroomsMap } = useContext(VillageContext);
 
-    const reaction = activity as ReactionActivityDto;
+    const reaction = activity as Activity & ReactionActivityDto;
     if (activity.type !== 'reaction' || !reaction.data.activityBeingReacted) {
         return null;
     }
@@ -26,7 +27,7 @@ export const ReactionView = ({ activity }: ActivityContentViewProps) => {
                 }
                 user={usersMap[reaction.data.activityBeingReacted.userId]}
             />
-            <ContentViewer content={activity.data?.content} activityId={activity.id} />
+            <ContentViewer content={reaction.data?.content} activityId={reaction.id} />
         </>
     );
 };
