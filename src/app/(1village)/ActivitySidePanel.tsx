@@ -6,7 +6,6 @@ import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
 import WorldMap3D from '@frontend/components/worldMaps/WorldMap3D/WorldMap3D';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';

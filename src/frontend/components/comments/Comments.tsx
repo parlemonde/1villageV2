@@ -35,10 +35,18 @@ export const Comments = ({ activityId }: CommentsProps) => {
     const { data: comments, mutate } = useSWR<UserComment[]>(`/api/comments${serializeToQueryUrl({ activityId: activityId })}`, jsonFetcher);
 
     const post = async () => {
-        const tempId = -1;
+        const { data, error } = await postComment({ activityId, content });
+        if (error) {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+            return;
+        }
+
         const optimisticComment: UserComment = {
             comment: {
-                id: tempId,
+                id: data!.commentId,
                 content,
                 activityId,
                 userId: user.id,
@@ -50,16 +58,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
-        const { error } = await postComment({ activityId, content });
-        if (error) {
-            sendToast({
-                type: 'error',
-                message: error.message,
-            });
-            return;
-        }
-        setContent('');
         await mutate(comments ? [...comments, optimisticComment] : [optimisticComment]);
+        setContent('');
     };
 
     const onDeleteComment = async () => {

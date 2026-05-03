@@ -8,7 +8,13 @@ import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
 
-export const postComment = async ({ activityId, content }: { activityId: number; content: unknown }): Promise<ServerActionResponse> => {
+export const postComment = async ({
+    activityId,
+    content,
+}: {
+    activityId: number;
+    content: unknown;
+}): Promise<ServerActionResponse<{ commentId: number }>> => {
     const t = await getExtracted('common');
 
     try {
@@ -17,13 +23,17 @@ export const postComment = async ({ activityId, content }: { activityId: number;
             throw new Error('Unauthorized');
         }
         const { classroom } = await getCurrentVillageAndClassroomForUser(user);
-        await db.insert(comments).values({
-            activityId: activityId,
-            classroomId: classroom?.id,
-            userId: user.id,
-            content: content,
-        });
-        return {};
+        const result = await db
+            .insert(comments)
+            .values({
+                activityId: activityId,
+                classroomId: classroom?.id,
+                userId: user.id,
+                content: content,
+            })
+            .returning({ commentId: comments.id });
+
+        return { data: { commentId: result[0].commentId } };
     } catch (e) {
         logger.error(e);
         return { error: { message: t('Une erreur est survenue lors de la publication du commentaire.') } };
