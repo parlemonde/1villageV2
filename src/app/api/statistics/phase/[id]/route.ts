@@ -43,7 +43,7 @@ export const GET = async (
     const villagesIds = paginatedVillages.map((village) => village.id);
 
     const activityResult = await db
-        .select({ count: count(activities.id), type: activities.type, name: villages.name, id: villages.id })
+        .select({ count: count(activities.id), type: activities.type, name: villages.name, entityId: villages.id })
         .from(villages)
         .leftJoin(
             activities,
@@ -58,14 +58,14 @@ export const GET = async (
         .groupBy(activities.type, villages.id, villages.name);
 
     const draftsCountResult = await db
-        .select({ count: count(), id: villages.id })
+        .select({ count: count(), entityId: villages.id })
         .from(villages)
         .innerJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id)))
         .where(and(inArray(villages.id, villagesIds), isNull(activities.publishDate)))
         .groupBy(villages.id);
 
     const videosCountResult = await db
-        .select({ count: count(), id: villages.id })
+        .select({ count: count(), entityId: villages.id })
         .from(villages)
         .innerJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id)))
         .innerJoin(medias, eq(medias.activityId, activities.id))
