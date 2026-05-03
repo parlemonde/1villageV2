@@ -13,7 +13,6 @@ const classroomsSearchParams = {
     villageId: parseAsInteger,
     country: parseAsString,
     withVillage: parseAsBoolean.withDefault(false),
-    classroomId: parseAsInteger,
 };
 const loadSearchParams = createLoader(classroomsSearchParams);
 

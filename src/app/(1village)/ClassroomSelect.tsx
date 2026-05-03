@@ -1,10 +1,12 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader';
 import type { MarginProps, PaddingProps } from '@frontend/components/ui/css-styles';
 import { UserContext } from '@frontend/contexts/userContext';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import { logger } from '@server/lib/logger';
 import { selectClassroom } from '@server-actions/classrooms/select-classroom';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
@@ -30,14 +32,23 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
         })) ?? [];
 
     const updateClassroom = async (classroomId: string) => {
-        setIsLoading(true);
-        const classroom = classrooms.find((classroom) => classroom.id.toString() === classroomId);
-        if (classroom) {
-            await selectClassroom(classroom.id);
-            setClassroom(classroom);
+        try {
+            setIsLoading(true);
+            const classroom = classrooms.find((classroom) => classroom.id.toString() === classroomId);
+            if (classroom) {
+                await selectClassroom(classroom.id);
+                setClassroom(classroom);
+            }
+            router.push('/');
+        } catch (error) {
+            logger.error(error);
+            sendToast({
+                type: 'error',
+                message: t('Une erreur est survenue lors de la sélection de la classe'),
+            });
+        } finally {
+            setIsLoading(false);
         }
-        router.push('/');
-        setIsLoading(false);
     };
 
     return (

@@ -35,10 +35,7 @@ export const ActivitySidePanel = ({ activityId: activityIdProp }: ActivitySidePa
         jsonFetcher,
     );
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
-    const { data: activityClassroom } = useSWR<Classroom[]>(
-        activity?.classroomId ? `/api/classrooms${serializeToQueryUrl({ classroomId: activity.classroomId })}` : null,
-        jsonFetcher,
-    );
+    const { data: activityClassroom } = useSWR<Classroom[]>(activity?.classroomId ? `/api/classrooms/${activity.classroomId}` : null, jsonFetcher);
 
     const formatPseudo = activityUser?.name.replace(' ', '-');
     const showTeacherSheet = activityUser?.role === 'teacher';

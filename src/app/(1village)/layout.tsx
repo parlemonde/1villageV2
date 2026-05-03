@@ -21,8 +21,7 @@ export default async function VillageLayout({
         redirect('/login');
     }
 
-    const selectedClassroomIdStr = await getSelectedClassroom();
-    const selectedClassroomId = selectedClassroomIdStr ? Number(selectedClassroomIdStr) : undefined;
+    const selectedClassroomId = await getSelectedClassroom();
     const { village, classroom } = await getCurrentVillageAndClassroomForUser(user, selectedClassroomId);
     return (
         <UserProvider initialUser={user} initialClassroom={classroom}>
