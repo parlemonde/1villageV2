@@ -5,8 +5,8 @@ import type { PhaseActivitiesQueryResult, PhaseActivitiesResponse, PhaseTableCol
 
 export const aggregateActivities = (
     activities: PhaseActivitiesQueryResult[],
-    draftsCount: { id: number | string; count: number }[],
-    videosCount: { id: number | string; count: number }[],
+    draftsCount: { entityId: number | string; count: number }[],
+    videosCount: { entityId: number | string; count: number }[],
     totalsQueryResult: { type: string; count: number; draftCount: number; videoCount: number }[] = [],
     villageCountries: string[] = [],
 ): { rows: PhaseActivitiesResponse['rows']; totals?: PhaseActivitiesResponse['totals'] } => {
@@ -14,22 +14,22 @@ export const aggregateActivities = (
     const map = new Map<string | number, { name: string; activities: Partial<Record<PhaseTableColumn, number>> }>();
 
     const draftsMap = new Map<number | string, number>();
-    draftsCount.forEach((draft) => draftsMap.set(draft.id, draft.count));
+    draftsCount.forEach((draft) => draftsMap.set(draft.entityId, draft.count));
 
     const videosMap = new Map<number | string, number>();
-    videosCount.forEach((video) => videosMap.set(video.id, video.count));
+    videosCount.forEach((video) => videosMap.set(video.entityId, video.count));
 
     villageCountries.forEach((country) => map.set(country, { name: COUNTRIES[country] ?? country, activities: {} }));
 
     activities.forEach((activity) => {
-        if (!map.has(activity.id)) {
-            map.set(activity.id, { name: activity.name, activities: {} });
+        if (!map.has(activity.entityId)) {
+            map.set(activity.entityId, { name: activity.name, activities: {} });
         }
 
-        const activitiesByEntity = map.get(activity.id)!;
+        const activitiesByEntity = map.get(activity.entityId)!;
         activitiesByEntity.activities[activity.type as ActivityType] = activity.count;
-        activitiesByEntity.activities.draft = draftsMap.get(activity.id);
-        activitiesByEntity.activities.video = videosMap.get(activity.id);
+        activitiesByEntity.activities.draft = draftsMap.get(activity.entityId);
+        activitiesByEntity.activities.video = videosMap.get(activity.entityId);
     });
 
     totalsQueryResult.forEach((total) => {

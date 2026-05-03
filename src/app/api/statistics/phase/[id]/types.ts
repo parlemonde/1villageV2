@@ -4,7 +4,7 @@ export interface PhaseActivitiesQueryResult {
     count: number;
     type: string | null;
     name: string;
-    id: number | string;
+    entityId: number | string; // classroomId, villageId, countryCode
 }
 
 export type PhaseTableColumn = ActivityType | 'draft' | 'video';

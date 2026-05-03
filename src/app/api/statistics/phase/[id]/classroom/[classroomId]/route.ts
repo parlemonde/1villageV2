@@ -58,7 +58,7 @@ export const GET = async (
             alias: classrooms.alias,
             level: classrooms.level,
             name: classrooms.name,
-            id: classrooms.id,
+            entityId: classrooms.id,
         })
         .from(classrooms)
         .leftJoin(
@@ -71,17 +71,17 @@ export const GET = async (
             ),
         )
         .where(inArray(classrooms.id, classroomIds))
-        .groupBy((a) => [a.id, a.type]);
+        .groupBy((a) => [a.entityId, a.type]);
 
     const draftCount = await db
-        .select({ count: count(activities.id), id: classrooms.id })
+        .select({ count: count(activities.id), entityId: classrooms.id })
         .from(classrooms)
         .innerJoin(activities, eq(classrooms.id, activities.classroomId))
-        .where(and(inArray(classrooms.id, classroomIds), eq(activities.phase, id), isNull(activities.publishDate)))
+        .where(and(inArray(classrooms.id, classroomIds), eq(activities.phase, id), isNull(activities.publishDate), isNull(activities.deleteDate)))
         .groupBy(classrooms.id);
 
     const videoCount = await db
-        .select({ count: count(medias.id), id: classrooms.id })
+        .select({ count: count(medias.id), entityId: classrooms.id })
         .from(medias)
         .innerJoin(activities, eq(medias.activityId, activities.id))
         .innerJoin(classrooms, eq(classrooms.id, activities.classroomId))

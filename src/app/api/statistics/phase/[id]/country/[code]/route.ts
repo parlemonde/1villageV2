@@ -35,14 +35,15 @@ export const GET = async (
     const { page, itemsPerPage } = loadSearchParams(nextUrl.searchParams);
 
     const paginatedCountries = await db
-        .select({ id: classrooms.countryCode })
+        .selectDistinct({ id: classrooms.countryCode })
         .from(classrooms)
+        .orderBy(classrooms.countryCode)
         .offset((page - 1) * itemsPerPage)
         .limit(itemsPerPage);
     const countryIds = paginatedCountries.map((country) => country.id);
 
     const activityResult = await db
-        .select({ count: count(activities.id), type: activities.type, id: classrooms.countryCode, name: classrooms.countryCode })
+        .select({ count: count(activities.id), type: activities.type, entityId: classrooms.countryCode, name: classrooms.countryCode })
         .from(classrooms)
         .leftJoin(
             activities,
@@ -54,21 +55,23 @@ export const GET = async (
             ),
         )
         .where(and(inArray(classrooms.countryCode, countryIds), isNull(activities.deleteDate)))
-        .groupBy((a) => [a.id, a.type]);
+        .groupBy((a) => [a.entityId, a.type]);
 
     activityResult.forEach((a) => {
         a.name = COUNTRIES[a.name] ?? a.name;
     });
 
     const draftCount = await db
-        .select({ count: count(activities.id), id: classrooms.countryCode })
+        .select({ count: count(activities.id), entityId: classrooms.countryCode })
         .from(classrooms)
         .innerJoin(activities, eq(activities.classroomId, classrooms.id))
-        .where(and(eq(activities.phase, id), inArray(classrooms.countryCode, countryIds), isNull(activities.publishDate)))
-        .groupBy((a) => [a.id]);
+        .where(
+            and(eq(activities.phase, id), inArray(classrooms.countryCode, countryIds), isNull(activities.publishDate), isNull(activities.deleteDate)),
+        )
+        .groupBy((a) => [a.entityId]);
 
     const videoCount = await db
-        .select({ count: count(medias.id), id: classrooms.countryCode })
+        .select({ count: count(medias.id), entityId: classrooms.countryCode })
         .from(medias)
         .innerJoin(activities, eq(medias.activityId, activities.id))
         .innerJoin(classrooms, eq(activities.classroomId, classrooms.id))
@@ -81,7 +84,7 @@ export const GET = async (
                 eq(medias.type, 'video'),
             ),
         )
-        .groupBy((a) => [a.id]);
+        .groupBy((a) => [a.entityId]);
 
     const totalElements = await db.select({ count: countDistinct(classrooms.countryCode) }).from(classrooms);
 
