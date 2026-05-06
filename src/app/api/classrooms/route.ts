@@ -79,7 +79,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     }
 
     const { villageId, country, withVillage, classroomId } = loadSearchParams(nextUrl.searchParams);
-    if (!villageId && user.role !== 'admin') {
+
+    // withVillage only passed for GET from admin/manage/classrooms
+    if (withVillage && user.role !== 'admin') {
         return new NextResponse(null, { status: 403 });
     }
 

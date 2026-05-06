@@ -1,0 +1,388 @@
+import { Avatar } from '@frontend/components/Avatar';
+import { Button } from '@frontend/components/ui/Button';
+import { Modal } from '@frontend/components/ui/Modal';
+import { UserContext } from '@frontend/contexts/userContext';
+import AddReactionIcon from '@frontend/svg/addReaction.svg';
+import { jsonFetcher } from '@lib/json-fetcher';
+import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
+import type { Activity } from '@server/database/schemas/activities';
+import type { Classroom } from '@server/database/schemas/classrooms';
+import type { User } from '@server/database/schemas/users';
+import { deleteReaction } from '@server-actions/reactions/delete-reaction';
+import { postReaction } from '@server-actions/reactions/post-reaction';
+import classNames from 'clsx';
+import { useExtracted } from 'next-intl';
+import React, { useState, useContext, useMemo } from 'react';
+import useSWR from 'swr';
+
+import styles from './classrooms-reactions.module.css';
+
+type ReactionCounter = {
+    reactionValue: string;
+    reactionCount: number;
+    classrooms?: Classroom[];
+    users?: User[];
+};
+
+type ReactionRaw = {
+    value: string;
+    label: string;
+    emoji: string;
+};
+
+type ReactionValue = ReactionRaw['value'] | undefined;
+
+type ClassroomReaction = {
+    classroom: Classroom;
+    reaction: ReactionValue;
+};
+
+type UserReaction = {
+    user: User;
+    reaction: ReactionValue;
+};
+
+type PeopleReaction = ClassroomReaction | UserReaction;
+
+const useReactionEmoji = () => {
+    const t = useExtracted('ClassroomsReactions');
+
+    return [
+        { value: 'wahou', label: t('wahou'), emoji: '🤩' },
+        { value: 'love', label: t('love'), emoji: '🫶' },
+        { value: 'miam', label: t('miam'), emoji: '🧑‍🍳' },
+        { value: 'intéressant', label: t('intéressant'), emoji: '​💡' },
+        { value: 'festif', label: t('festif'), emoji: '🎉' },
+        { value: 'bravo', label: t('bravo'), emoji: '​👏' },
+    ] as const;
+};
+
+interface ClassroomsReactionsProps {
+    activity: Partial<Activity>;
+    disabledVersion?: boolean;
+}
+
+export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activity, disabledVersion = false }) => {
+    const t = useExtracted('ClassroomsReactions');
+    const REACTION_EMOJIS = useReactionEmoji();
+    const { user, classroom } = useContext(UserContext);
+    const isPelico = user.role === 'admin' || user.role === 'mediator';
+    const disabledReactions = disabledVersion || !(classroom || isPelico);
+
+    const { data: nbPeoplePerReactions = [], mutate } = useSWR<ReactionCounter[]>(
+        activity
+            ? `/api/reactions${serializeToQueryUrl({
+                  activityId: activity.id,
+              })}`
+            : null,
+        jsonFetcher,
+    );
+
+    const [isChangeReactionModalOpen, setIsChangeReactionModalOpen] = useState(false);
+    const [isAllReactionsModalOpen, setIsAllReactionsModalOpen] = useState(false);
+    const [selectedReactionInModal, setSelectedReactionInModal] = useState<ReactionRaw | null>(null);
+
+    // Memoize reaction lookup maps for O(1) access instead of O(n)
+    const reactionMap = useMemo(() => {
+        const map = new Map<string, ReactionCounter>();
+        nbPeoplePerReactions?.forEach((r) => {
+            map.set(r.reactionValue, r);
+        });
+        return map;
+    }, [nbPeoplePerReactions]);
+
+    // Calculate derived state directly from SWR data (no local state needed)
+    const getAllPeopleReactions = (data: ReactionCounter[]): PeopleReaction[] | null => {
+        if (!data || data.length === 0) return null;
+
+        return data.reduce((acc: PeopleReaction[], item) => {
+            const classroomsReactions =
+                item.classrooms?.map((c) => ({
+                    classroom: c,
+                    reaction: item.reactionValue as ReactionValue,
+                })) ?? [];
+            const pelicoReaction =
+                item.users?.map((u) => ({
+                    user: u,
+                    reaction: item.reactionValue as ReactionValue,
+                })) ?? [];
+            return [...acc, ...classroomsReactions, ...pelicoReaction];
+        }, []);
+    };
+
+    const getCurrentPelicoReaction = (curUser: User, reactions: Map<string, ReactionCounter>) => {
+        for (const [reactionValue, counter] of reactions) {
+            if (counter.users?.some((u) => u.id === curUser.id)) {
+                return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
+            }
+        }
+        return null;
+    };
+
+    const getCurrentClassroomReaction = (curClassroom: Classroom, reactions: Map<string, ReactionCounter>) => {
+        for (const [reactionValue, counter] of reactions) {
+            if (counter.classrooms?.some((c) => c.id === curClassroom.id)) {
+                return REACTION_EMOJIS.find((item) => item.value === reactionValue) ?? null;
+            }
+        }
+        return null;
+    };
+
+    // Derived state from SWR data (not component state)
+    const currentReaction = classroom
+        ? getCurrentClassroomReaction(classroom, reactionMap)
+        : isPelico
+          ? getCurrentPelicoReaction(user, reactionMap)
+          : null;
+
+    const allPeopleReactions = getAllPeopleReactions(nbPeoplePerReactions);
+    const nbTotalReactions = allPeopleReactions?.length ?? 0;
+
+    const getCountForReaction = (value: string) => {
+        return reactionMap.get(value)?.reactionCount || 0;
+    };
+
+    const getEmojiFromValue = (value?: ReactionValue) => {
+        return REACTION_EMOJIS.find((item) => item.value === value)?.emoji ?? undefined;
+    };
+
+    const onReactionButtonClick = (e: React.MouseEvent<HTMLElement>) => {
+        const buttonEl = e.currentTarget as HTMLButtonElement;
+        const reacted = REACTION_EMOJIS.find((reaction) => reaction.value === buttonEl.value) || null;
+        if (reacted?.value === selectedReactionInModal?.value) {
+            setSelectedReactionInModal(null);
+        } else {
+            setSelectedReactionInModal(reacted);
+        }
+    };
+
+    const updateReactionsOptimistically = (
+        data: ReactionCounter[],
+        newReaction: ReactionRaw | null,
+        currentStoredReaction: ReactionRaw | null,
+    ): ReactionCounter[] => {
+        const shouldRemoveReaction = currentStoredReaction !== null;
+        const shouldInsertReaction = currentStoredReaction && currentStoredReaction.value !== newReaction?.value;
+        const arrName = isPelico ? 'users' : 'classrooms';
+
+        const usersFilterFunc = (u: User) => u.id !== user.id;
+        const classroomsFilterFunc = (c: Classroom) => c.id !== classroom?.id;
+
+        const deleteFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || [])].filter((item) =>
+                isPelico ? usersFilterFunc(item as User) : classroomsFilterFunc(item as Classroom),
+            );
+            return {
+                ...counter,
+                reactionCount: Math.max(0, counter.reactionCount - 1),
+                [arrName]: newValue,
+            };
+        };
+
+        const insertFunc = (counter: ReactionCounter) => {
+            const newValue = [...(counter[arrName] || []), isPelico ? user : classroom];
+            return {
+                ...counter,
+                reactionCount: counter.reactionCount + 1,
+                [arrName]: newValue,
+            };
+        };
+
+        let newData =
+            data?.map((counter) => {
+                if (shouldRemoveReaction && counter.reactionValue === currentStoredReaction?.value) {
+                    return deleteFunc(counter);
+                }
+                if (shouldInsertReaction && counter.reactionValue === newReaction?.value) {
+                    return insertFunc(counter);
+                }
+                return counter;
+            }) || [];
+
+        if (newReaction && !newData?.find((counter) => counter?.reactionValue === newReaction?.value)) {
+            newData = [
+                ...newData,
+                insertFunc({
+                    reactionValue: newReaction.value,
+                    reactionCount: 0,
+                    [arrName]: [],
+                }),
+            ];
+        }
+
+        return newData.filter((counter) => counter && counter.reactionCount > 0);
+    };
+
+    const onReactionSubmit = async (selectedReaction: ReactionRaw | null) => {
+        if ((!isPelico && !classroom) || !activity.id || !selectedReaction?.value) return;
+
+        const _isToggleOff = currentReaction?.value === selectedReaction.value;
+        const optimisticData = updateReactionsOptimistically(nbPeoplePerReactions, selectedReaction, currentReaction);
+
+        // Optimistic update: immediately show the change in the UI
+        await mutate(optimisticData, { revalidate: false });
+
+        let result;
+        if (_isToggleOff) {
+            result = await deleteReaction(activity.id);
+        } else {
+            result = await postReaction({
+                activityId: activity.id,
+                reaction: selectedReaction.value,
+            });
+        }
+
+        // Revalidate if there was an error
+        if (result?.error) {
+            mutate();
+        }
+        setIsChangeReactionModalOpen(false);
+    };
+
+    return (
+        <div className={styles.reactionsContainer}>
+            {disabledVersion ? null : (
+                <Button
+                    title={t('Réagir')}
+                    onClick={() => {
+                        setSelectedReactionInModal(currentReaction);
+                        setIsChangeReactionModalOpen(true);
+                    }}
+                    label={<AddReactionIcon className={styles.addReactionIcon} />}
+                    color="primary"
+                    size="sm"
+                    variant="contained"
+                    disabled={disabledReactions}
+                    className={styles.addReactionButton}
+                />
+            )}
+            <div className={styles.reactionsListWrapper}>
+                {/* render already voted reactions (found in reactionMap) */}
+                {REACTION_EMOJIS.filter((reaction) => reactionMap.has(reaction.value)).map((reaction, index) => {
+                    const badgeValue = getCountForReaction(reaction.value);
+                    return (
+                        <Button
+                            key={reaction.value}
+                            title={reaction.label}
+                            value={reaction.value}
+                            onClick={() => onReactionSubmit(reaction)}
+                            label={reaction.emoji}
+                            rightIcon={badgeValue ? <span className={styles.counterBadge}>{badgeValue}</span> : null}
+                            color="primary"
+                            size="sm"
+                            variant="contained"
+                            disabled={disabledReactions}
+                            className={classNames(styles.reactionButton, {
+                                [styles.active]: currentReaction?.value === reaction.value,
+                            })}
+                            style={{
+                                position: 'relative',
+                                zIndex: REACTION_EMOJIS.length - index,
+                                right: `${8 * index}px`,
+                            }}
+                        />
+                    );
+                })}
+            </div>
+            {disabledVersion ? null : (
+                <Button
+                    onClick={() => setIsAllReactionsModalOpen(true)}
+                    label={t('{count, plural, =0 {aucune réaction} other {Voir les réactions (#)}}', {
+                        count: nbTotalReactions,
+                    })}
+                    size="sm"
+                    variant="borderless"
+                    color="primary"
+                    disabled={nbTotalReactions === 0}
+                    style={{ position: 'relative', left: `${(reactionMap.size - 1) * -8}px` }}
+                />
+            )}
+
+            {isAllReactionsModalOpen && (
+                <Modal
+                    title={t('La Réaction de vos Pélicopains')}
+                    isOpen={isAllReactionsModalOpen}
+                    onClose={() => setIsAllReactionsModalOpen(false)}
+                    width="sm"
+                    contentClassName={styles.allReactionModal}
+                >
+                    {(allPeopleReactions?.length ?? 0) > 0 ? (
+                        allPeopleReactions?.map((pr) => {
+                            if ('user' in pr) {
+                                return (
+                                    <div
+                                        key={pr.user.id}
+                                        className={classNames(styles.line, {
+                                            [styles.active]: pr.user.id === user.id,
+                                        })}
+                                    >
+                                        <span className={styles.left}>
+                                            <Avatar user={pr.user} isPelico={true} size="sm" />
+                                            <strong>{pr.user.name}</strong>
+                                        </span>
+                                        <span className={styles.right}>{getEmojiFromValue(pr.reaction)}</span>
+                                    </div>
+                                );
+                            }
+                            return (
+                                <div
+                                    key={pr.classroom.id}
+                                    className={classNames(styles.line, {
+                                        [styles.active]: pr.classroom.id === classroom?.id,
+                                    })}
+                                >
+                                    <span className={styles.left}>
+                                        <Avatar classroom={pr.classroom} isPelico={false} size="sm" />
+                                        <strong>{pr.classroom.name}</strong>
+                                    </span>
+                                    <span className={styles.right}>{getEmojiFromValue(pr.reaction)}</span>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p>{t('Pas encore de réactions')}</p>
+                    )}
+                </Modal>
+            )}
+
+            {isChangeReactionModalOpen && (
+                <Modal
+                    title={t('La Réaction de votre classe')}
+                    isOpen={isChangeReactionModalOpen}
+                    onClose={() => {
+                        setSelectedReactionInModal(null);
+                        setIsChangeReactionModalOpen(false);
+                    }}
+                    onCancel={() => {
+                        setSelectedReactionInModal(null);
+                        setIsChangeReactionModalOpen(false);
+                    }}
+                    onConfirm={() => {
+                        const reaction = selectedReactionInModal === null ? currentReaction : selectedReactionInModal;
+                        onReactionSubmit(reaction);
+                    }}
+                    isConfirmDisabled={() => selectedReactionInModal === currentReaction}
+                    width="sm"
+                    contentClassName={styles.setReactionModal}
+                >
+                    <div className={styles.reactionButtonWrapper}>
+                        {REACTION_EMOJIS.map((reaction) => (
+                            <Button
+                                key={reaction.value}
+                                title={reaction.label}
+                                value={reaction.value}
+                                onClick={(e) => onReactionButtonClick(e)}
+                                label={reaction.emoji}
+                                size="lg"
+                                variant="contained"
+                                className={classNames(styles.reactionButton, {
+                                    [styles.active]: selectedReactionInModal?.value === reaction.value,
+                                })}
+                            />
+                        ))}
+                    </div>
+                </Modal>
+            )}
+        </div>
+    );
+};
