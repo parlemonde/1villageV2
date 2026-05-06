@@ -216,7 +216,7 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
                 helperTextStyle={{ color: isPasswordInvalid ? 'var(--error-color)' : 'var(--secondary-600)' }}
             />
             <div className={styles.buttons}>
-                <Button label="Annuler" variant="outlined" color="grey" type="button" as="a" href="/admin/manage/users" />
+                <Button label="Annuler" variant="outlined" color="secondary" type="button" as="a" href="/admin/manage/users" />
                 <Button
                     label={isNew ? 'Ajouter' : 'Modifier'}
                     variant="contained"

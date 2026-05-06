@@ -37,7 +37,7 @@ export function CountrySelect(props: CountrySelectProps) {
             onChange={(country) => onChange(country)}
             color={color}
             isFullWidth={isFullWidth}
-            options={countryOptions}
+            options={countryOptions.length > 0 ? countryOptions : [{ label: 'Aucun pays', value: 'none' }]}
             placeholder={placeholder}
             id={id}
             name={name}

@@ -5,6 +5,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 
 import { activities } from './schemas/activities';
+import { activityReactions } from './schemas/activity-reactions';
 import { phaseActivityTypes } from './schemas/activity-types';
 import { auth_sessions, auth_accounts, auth_verifications } from './schemas/auth-schemas';
 import { classrooms } from './schemas/classrooms';
@@ -30,6 +31,7 @@ export const db = registerService('db', () =>
             languages,
             villages,
             activities,
+            activityReactions,
             students,
             medias,
             sessions,

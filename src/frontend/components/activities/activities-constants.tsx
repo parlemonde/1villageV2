@@ -56,9 +56,9 @@ export const useActivityName = () => {
                 case 'enigme':
                     return t('Créer une énigme');
                 case 'indice':
-                    return t('Créer un indice');
+                    return t('Publier un indice');
                 case 'reportage':
-                    return t('Créer un reportage');
+                    return t('Publier un reportage');
                 case 'histoire':
                     return t('Inventer une histoire');
                 case 'mascotte':
@@ -82,18 +82,39 @@ export const ActivityName = ({ type }: { type: ActivityType }): React.ReactNode 
     return getActivityName(type);
 };
 
-export const ACTIVITY_CARD_TITLES: Record<ActivityType, string> = {
-    libre: 'envoyé un message à ses Pélicopains',
-    jeu: 'lancé un jeu',
-    enigme: 'créé une énigme',
-    indice: 'créé un indice',
-    mascotte: 'créé sa mascotte',
-    reportage: 'créé un reportage',
-    histoire: 'inventé une histoire',
-    defi: 'lancé un defi',
-    question: 'posé une question',
-    'presentation-pelico': 'se présente',
-    hymne: 'créé un hymne',
+export const useActivityCardTitle = () => {
+    const t = useExtracted('activities-constants');
+    const getActivityCardTitle = React.useCallback(
+        (type: ActivityType): string => {
+            switch (type) {
+                case 'libre':
+                    return t('publié un message');
+                case 'jeu':
+                    return t('lancé un jeu');
+                case 'enigme':
+                    return t('créé une énigme');
+                case 'indice':
+                    return t('publié un indice');
+                case 'reportage':
+                    return t('publié un reportage');
+                case 'histoire':
+                    return t('inventé une histoire');
+                case 'mascotte':
+                    return t('créé sa mascotte');
+                case 'defi':
+                    return t('lancé un defi');
+                case 'question':
+                    return t('posé une question');
+                case 'presentation-pelico':
+                    return t('se présente');
+                case 'hymne':
+                    return t('créé un hymne');
+            }
+        },
+        [t],
+    );
+
+    return getActivityCardTitle;
 };
 
 export const ACTIVITY_ICONS: Record<ActivityType, React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>> | null> = {

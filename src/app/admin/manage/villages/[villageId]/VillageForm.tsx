@@ -161,9 +161,9 @@ export const VillageForm = ({ village, isNew }: VillageFormProps) => {
                 }
             />
             <div className={styles.buttons}>
-                <Button as="a" color="grey" variant="borderless" label="Annuler" href="/admin/manage/villages" marginRight="md" />
+                <Button as="a" color="secondary" variant="outlined" label="Annuler" href="/admin/manage/villages" marginRight="md" />
                 <Button
-                    color="secondary"
+                    color="primary"
                     variant="contained"
                     label={isNew ? 'Créer le village !' : 'Mettre à jour le village !'}
                     type="submit"

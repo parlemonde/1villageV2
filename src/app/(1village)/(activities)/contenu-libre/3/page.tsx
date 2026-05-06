@@ -17,12 +17,14 @@ import { useContext, useMemo, useState } from 'react';
 export default function FreeContentStep3() {
     const router = useRouter();
     const { activity, onPublishActivity, onUpdateActivity } = useContext(ActivityContext);
-    const { user: currentUser } = useContext(UserContext);
+    const { user: currentUser, classroom } = useContext(UserContext);
     const currentDate = useMemo(() => new Date(), []);
     const [isSubmiting, setIsSubmiting] = useState(false);
     if (!activity || activity.type !== 'libre') {
         return null;
     }
+
+    const isPelico = currentUser.role === 'admin' || currentUser.role === 'mediator';
 
     const isFirstStepDone = (activity.data?.content || []).length > 0;
     const isSecondStepDone = !!activity.data?.title;
@@ -76,7 +78,12 @@ export default function FreeContentStep3() {
                 status={isSecondStepDone ? 'success' : 'warning'}
                 style={{ margin: '16px 0' }}
             >
-                <ActivityCard user={currentUser} activity={{ ...activity, publishDate: currentDate.toISOString() }} shouldDisableButtons />
+                <ActivityCard
+                    user={currentUser}
+                    classroom={classroom}
+                    activity={{ ...activity, isPelico, publishDate: currentDate.toISOString() }}
+                    shouldDisableButtons
+                />
             </ActivityStepPreview>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '32px 0' }}>
                 <Button as="a" href="/contenu-libre/2" color="primary" variant="outlined" label="Étape précédente" leftIcon={<ChevronLeftIcon />} />
