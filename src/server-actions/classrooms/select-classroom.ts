@@ -15,11 +15,11 @@ export const selectClassroom = async (classroomId: number): Promise<void> => {
         throw new Error('Not authorized');
     }
 
-    const village = await db.query.classrooms.findFirst({
+    const classroom = await db.query.classrooms.findFirst({
         where: and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, user.id)),
     });
 
-    if (!village) {
+    if (!classroom) {
         throw new Error(`Classroom ${classroomId} not found`);
     }
 
