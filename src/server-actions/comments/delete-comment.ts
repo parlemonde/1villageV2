@@ -17,7 +17,7 @@ export const deleteComment = async (commentId: number): Promise<ServerActionResp
         }
 
         const isPelico = user.role === 'admin' || user.role === 'mediator';
-        const filters = isPelico ? eq(comments.id, commentId) : and((eq(comments.id, commentId), eq(comments.userId, user.id)));
+        const filters = isPelico ? eq(comments.id, commentId) : and(eq(comments.id, commentId), eq(comments.userId, user.id));
 
         await db.delete(comments).where(filters);
         return {};
