@@ -14,36 +14,42 @@ const getNumber = (value: string | undefined) => {
     return undefined;
 };
 
-export const getCurrentVillageAndClassroomForUser = cache(
-    async (user: User, classroomId?: number): Promise<{ village: Village | undefined; classroom: Classroom | undefined }> => {
-        switch (user.role) {
-            case 'teacher': {
-                const classroom = await getTeacherClassroom(user.id, classroomId);
-                if (classroom) {
-                    return {
-                        village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
-                        classroom,
-                    };
-                }
-                break;
-            }
-            case 'mediator':
-            case 'admin': {
-                const cookieStore = await cookies();
-                const villageId = getNumber(cookieStore.get('villageId')?.value);
-                if (villageId) {
-                    return {
-                        village: await getVillage(villageId),
-                        classroom: undefined,
-                    };
-                }
-                break;
-            }
-        }
+const getCurrentVillageAndClassroomForUserImpl = async (
+    user: User,
+    classroomId?: number,
+): Promise<{ village: Village | undefined; classroom: Classroom | undefined }> => {
+    const cookieStore = await cookies();
 
-        return {
-            village: undefined,
-            classroom: undefined,
-        };
-    },
-);
+    switch (user.role) {
+        case 'teacher': {
+            // Use provided classroomId or read from cookie for cache consistency
+            const resolvedClassroomId = classroomId ?? getNumber(cookieStore.get('classroomId')?.value);
+            const classroom = await getTeacherClassroom(user.id, resolvedClassroomId);
+            if (classroom) {
+                return {
+                    village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
+                    classroom,
+                };
+            }
+            break;
+        }
+        case 'mediator':
+        case 'admin': {
+            const villageId = getNumber(cookieStore.get('villageId')?.value);
+            if (villageId) {
+                return {
+                    village: await getVillage(villageId),
+                    classroom: undefined,
+                };
+            }
+            break;
+        }
+    }
+
+    return {
+        village: undefined,
+        classroom: undefined,
+    };
+};
+
+export const getCurrentVillageAndClassroomForUser = cache(getCurrentVillageAndClassroomForUserImpl);
