@@ -7,10 +7,12 @@ import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor'
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
+import ReplyArrow from '@frontend/svg/replyArrow.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import { deleteComment } from '@server-actions/comments/delete-comment';
 import { postComment } from '@server-actions/comments/post-comment';
+import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -23,6 +25,7 @@ interface CommentsProps {
 }
 
 export const Comments = ({ activityId }: CommentsProps) => {
+    const router = useRouter();
     const t = useExtracted('Comments');
     const tCommon = useExtracted('common');
 
@@ -123,11 +126,24 @@ export const Comments = ({ activityId }: CommentsProps) => {
                     <p>{t("Aucune réaction n'a été publiée pour le moment")}</p>
                 )}
             </div>
-            <div className={styles.editorContainer}>
-                <div className={styles.editor}>
-                    <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
-                    <HtmlEditor content={content} onChange={setContent} />
-                    <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+            <div className={styles.row}>
+                <div className={styles.editorContainer}>
+                    <div className={styles.editor}>
+                        <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
+                        <HtmlEditor content={content} onChange={setContent} />
+                        <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+                    </div>
+                </div>
+                <div className={styles.react}>
+                    <strong>{t('Réagissez en image, son ou vidéo :')}</strong>
+                    <Button
+                        marginTop="md"
+                        isFullWidth
+                        color="primary"
+                        label={t('Réagir')}
+                        leftIcon={<ReplyArrow />}
+                        onClick={() => router.push(`/reagir-a-une-activite/${serializeToQueryUrl({ activityId: activityId })}`)}
+                    />
                 </div>
             </div>
 

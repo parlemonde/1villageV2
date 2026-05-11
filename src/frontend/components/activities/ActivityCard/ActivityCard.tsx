@@ -17,6 +17,7 @@ import { HintCard } from './cards/HintCard';
 import { MascotCard } from './cards/MascotCard';
 import { PuzzleCard } from './cards/PuzzleCard';
 import { QuestionCard } from './cards/QuestionCard';
+import { ReactionCard } from './cards/ReactionCard';
 import { ReportCard } from './cards/ReportCard';
 
 const EmptyContentCard = () => {
@@ -35,6 +36,7 @@ const CONTENT_CARDS: Record<ActivityType, React.FC<ActivityContentCardProps>> = 
     question: QuestionCard,
     'presentation-pelico': EmptyContentCard,
     hymne: EmptyContentCard,
+    reaction: ReactionCard,
 };
 
 interface ActivityCardProps {
@@ -47,7 +49,7 @@ interface ActivityCardProps {
     hasActions?: boolean;
 }
 export const ActivityCard = ({ activity, user, classroom, onEdit, onDelete, hasActions, shouldDisableButtons = false }: ActivityCardProps) => {
-    if (!user || !activity.type) {
+    if ((!user && !classroom) || !activity.type) {
         return null;
     }
     const ContentCard = CONTENT_CARDS[activity.type] || EmptyContentCard;

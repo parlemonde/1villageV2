@@ -7,8 +7,8 @@ import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
-export default function LancerUnDefiSuccess() {
-    const t = useExtracted('app.(1village).(activities).lancer-un-defi.success');
+export default function ReagirAUneActiviteSuccess() {
+    const t = useExtracted('app.(1village).(activities).reagir-a-une-activite.success');
     const tCommon = useExtracted('common');
 
     const { activity } = useContext(ActivityContext);
@@ -27,7 +27,7 @@ export default function LancerUnDefiSuccess() {
                 }}
             >
                 <Title variant="h3">
-                    {activity?.publishDate ? t('Votre défi a été modifié avec succès !') : t('Votre défi a été publié avec succès !')}
+                    {activity?.publishDate ? t('Votre réaction a été modifiée avec succès !') : t('Votre réaction a été publiée avec succès !')}
                 </Title>
                 <PelicoSouriant style={{ width: '160px', height: 'auto' }} />
             </div>

@@ -34,13 +34,13 @@ export default function CreerUnJeuMonnaieStep5() {
         return null;
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setisSubmitting(true);
         try {
             if (activity.publishDate) {
-                onUpdateActivity();
+                await onUpdateActivity();
             } else {
-                onPublishActivity();
+                await onPublishActivity();
             }
             router.push('/creer-un-jeu/success');
         } catch {
