@@ -1,8 +1,7 @@
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
-import { getParentClassroom } from '@server/entities/classrooms/get-parent-classroom';
-import { getTeacherClassroom } from '@server/entities/classrooms/get-teacher-classroom';
+import { getTeacherClassrooms } from '@server/entities/classrooms/get-teacher-classrooms';
 import { getVillage } from '@server/entities/villages/get-village';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
@@ -16,24 +15,16 @@ const getNumber = (value: string | undefined) => {
 };
 
 export const getCurrentVillageAndClassroomForUser = cache(
-    async (user: User): Promise<{ village: Village | undefined; classroom: Classroom | undefined }> => {
+    async (user: User): Promise<{ village: Village | undefined; classroom: Classroom | undefined; classrooms: Classroom[] }> => {
         switch (user.role) {
             case 'teacher': {
-                const classroom = await getTeacherClassroom(user.id);
+                const teacherClassrooms = await getTeacherClassrooms(user.id);
+                const classroom = teacherClassrooms[0];
                 if (classroom) {
                     return {
                         village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
                         classroom,
-                    };
-                }
-                break;
-            }
-            case 'parent': {
-                const classroom = await getParentClassroom(user.id);
-                if (classroom) {
-                    return {
-                        village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
-                        classroom,
+                        classrooms: teacherClassrooms,
                     };
                 }
                 break;
@@ -46,6 +37,7 @@ export const getCurrentVillageAndClassroomForUser = cache(
                     return {
                         village: await getVillage(villageId),
                         classroom: undefined,
+                        classrooms: [],
                     };
                 }
                 break;
@@ -55,6 +47,7 @@ export const getCurrentVillageAndClassroomForUser = cache(
         return {
             village: undefined,
             classroom: undefined,
+            classrooms: [],
         };
     },
 );

@@ -1,10 +1,11 @@
 'use server';
 
 import { auth } from '@server/lib/auth';
-import { checkSSO } from '@server/lib/check-sso';
 import { getEnvVariable } from '@server/lib/get-env-variable';
 import { getStringValue } from '@server/lib/get-string-value';
 import { getExtracted } from 'next-intl/server';
+
+import { checkSSO } from './check-sso';
 
 export async function requestNewPassword(_previousState: string, formData: FormData): Promise<string> {
     const t = await getExtracted('common');
@@ -25,6 +26,6 @@ export async function requestNewPassword(_previousState: string, formData: FormD
         });
         return !data.status ? `error: ${data.message}` : '';
     } catch {
-        return t('Error while requesting new password');
+        return t('Identifiants invalides');
     }
 }
