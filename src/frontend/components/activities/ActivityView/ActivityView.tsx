@@ -18,6 +18,7 @@ import { HintView } from './views/HintView';
 import { MascotView } from './views/MascotView';
 import { PuzzleView } from './views/PuzzleView';
 import { QuestionView } from './views/QuestionView';
+import { ReactionView } from './views/ReactionView';
 import { ReportView } from './views/ReportView';
 
 const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = {
@@ -32,6 +33,7 @@ const CONTENT_VIEWS: Record<ActivityType, React.FC<ActivityContentViewProps>> = 
     question: QuestionView,
     'presentation-pelico': FreeContentView,
     hymne: () => null,
+    reaction: ReactionView,
 };
 
 interface ActivityViewProps {
