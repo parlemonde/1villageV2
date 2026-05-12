@@ -8,6 +8,7 @@ import { HtmlViewer } from '@frontend/components/html/HtmlViewer';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { UserContext } from '@frontend/contexts/userContext';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
+import { toFormattedDatetime } from '@lib/date-formatters';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { Comment } from '@server/database/schemas/comments';
@@ -17,10 +18,6 @@ import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import styles from './comment-card.module.css';
-
-const toFormattedDate = (date: string | null): string => {
-    return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';
-};
 
 interface CommentDisplayProps {
     user: User;
@@ -100,7 +97,12 @@ export const CommentCard = ({ user, classroom, comment, onDelete, canEdit, canDe
                         <CommentDisplayName user={user} classroom={classroom} isPelico={isPelico} />
                     </span>
                     <div className={styles.commentHeaderInfo}>
-                        <span>Publié le {toFormattedDate(comment.createDate ?? null)}</span>
+                        <span>Publié le {toFormattedDatetime(comment.createDate ?? null)}</span>
+                        {comment.createDate !== comment.updateDate ? (
+                            <i>
+                                <span>&nbsp;&middot;&nbsp;</span>Modifié le {toFormattedDatetime(comment.updateDate ?? null)}
+                            </i>
+                        ) : null}
                         {isPelico && (
                             <>
                                 <span>&nbsp;&middot;&nbsp;</span>
