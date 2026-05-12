@@ -20,7 +20,14 @@ export default async function MyClassroom() {
     const allActivities = (await db
         .select()
         .from(activities)
-        .where(and(eq(activities.userId, user.id), isNull(activities.deleteDate), eq(activities.villageId, village.id)))
+        .where(
+            and(
+                eq(activities.userId, user.id),
+                classroom ? eq(activities.classroomId, classroom.id) : undefined,
+                eq(activities.villageId, village.id),
+                isNull(activities.deleteDate),
+            ),
+        )
         .orderBy(desc(activities.updateDate))) as Activity[];
 
     const isPelico = user.role === 'admin' || user.role === 'mediator';
