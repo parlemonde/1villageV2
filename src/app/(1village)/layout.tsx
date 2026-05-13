@@ -2,7 +2,6 @@ import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { getSelectedClassroom } from '@server-actions/classrooms/get-selected-classroom';
 import { redirect } from 'next/navigation';
 
 import { ActivitySidePanel } from './ActivitySidePanel';
@@ -21,8 +20,7 @@ export default async function VillageLayout({
         redirect('/login');
     }
 
-    const selectedClassroomId = await getSelectedClassroom();
-    const { village, classroom } = await getCurrentVillageAndClassroomForUser(user, selectedClassroomId);
+    const { village, classroom } = await getCurrentVillageAndClassroomForUser(user);
     return (
         <UserProvider initialUser={user} initialClassroom={classroom}>
             <VillageProvider village={village}>
