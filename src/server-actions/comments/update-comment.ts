@@ -31,7 +31,7 @@ export const updateComment = async (comment: Partial<Comment>): Promise<ServerAc
         await db
             .update(comments)
             .set({ content, updateDate: sql`now()` })
-            .where(and(eq(comments.id, id), eq(comments.userId, user.id)));
+            .where(and(eq(comments.id, id), eq(comments.userId, user.id), eq(comments.classroomId, classroom.id)));
         return {};
     } catch (e) {
         logger.error(e);

@@ -62,7 +62,7 @@ export const CommentCard = ({ user, classroom, comment, onDelete, canEdit, canDe
     const [beforeEdit, setBeforeEdit] = useState(comment.content);
 
     const editComment = async () => {
-        const { error } = await updateComment({ id: comment.id, content });
+        const { error } = await updateComment({ id: comment.id, classroomId: classroom?.id, content });
         if (error) {
             sendToast({
                 type: 'error',
