@@ -1,13 +1,12 @@
 'use server';
 
-import type { HtmlEditorContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { db } from '@server/database';
-import { classrooms } from '@server/database/schemas/classrooms';
+import { students } from '@server/database/schemas/students';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { eq } from 'drizzle-orm';
 
-export const saveParentInvitationMessage = async (parentInvitationMessage?: HtmlEditorContent) => {
+export const updateStudent = async (studentId: number, studentName: string) => {
     const user = await getCurrentUser();
     if (!user) {
         throw new Error('Unauthorized');
@@ -18,10 +17,5 @@ export const saveParentInvitationMessage = async (parentInvitationMessage?: Html
         throw new Error("Teacher doesn't have a classroom");
     }
 
-    await db
-        .update(classrooms)
-        .set({
-            parentInvitationMessage,
-        })
-        .where(eq(classrooms.id, classroom.id));
+    await db.update(students).set({ name: studentName }).where(eq(students.id, studentId));
 };

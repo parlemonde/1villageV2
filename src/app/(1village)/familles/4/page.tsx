@@ -1,5 +1,6 @@
 'use client';
 
+import { useDefaultParentInvitationMessage } from '@app/(1village)/familles/3/page';
 import { downloadPdf } from '@app/(1village)/familles/helpers';
 import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
@@ -7,7 +8,7 @@ import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
-import { FamilyContext } from '@frontend/contexts/familyContext';
+import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import type { Student } from '@server/database/schemas/students';
@@ -18,11 +19,6 @@ import useSWR from 'swr';
 
 import styles from './page.module.css';
 
-const isStep3Valid = (message: unknown) => {
-    const json = JSON.stringify(message);
-    return json.includes('%code');
-};
-
 export default function FamillesStep4() {
     const t = useExtracted('app.(1village).familles.4');
     const tCommon = useExtracted('common');
@@ -31,7 +27,14 @@ export default function FamillesStep4() {
 
     const [checked, setChecked] = useState<number[]>([]);
 
-    const { form } = useContext(FamilyContext);
+    const defaultMessage = useDefaultParentInvitationMessage();
+
+    const { classroom } = useContext(UserContext);
+    if (!classroom) {
+        return null;
+    }
+
+    const parentInvitationMessage = classroom.parentInvitationMessage ?? defaultMessage;
 
     const handleCheck = (id: number) => {
         if (checked.includes(id)) {
@@ -42,7 +45,7 @@ export default function FamillesStep4() {
     };
 
     const download = async (studentIds: number[]) => {
-        const pdfBuffer = await generateInvitationsPdf(form.parentInvitationMessage, studentIds);
+        const pdfBuffer = await generateInvitationsPdf(parentInvitationMessage, studentIds);
         if (!pdfBuffer) {
             sendToast({ type: 'error', message: t('Une erreur est survenue lors de la génération du PDF') });
             return;
@@ -65,7 +68,11 @@ export default function FamillesStep4() {
                 steps={[
                     { label: t('Visibilité'), href: '/familles/1', status: 'success' },
                     { label: t('Ajout enfants'), href: '/familles/2', status: 'success' },
-                    { label: t('Communication'), href: '/familles/3', status: isStep3Valid(form.parentInvitationMessage) ? 'success' : 'warning' },
+                    {
+                        label: t('Communication'),
+                        href: '/familles/3',
+                        status: 'success',
+                    },
                     { label: t('Gestion'), href: '/familles/4' },
                 ]}
                 activeStep={4}

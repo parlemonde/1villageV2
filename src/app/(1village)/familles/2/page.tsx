@@ -2,14 +2,20 @@
 
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
+import { Loader } from '@frontend/components/ui/Loader';
 import { Modal } from '@frontend/components/ui/Modal';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
-import { FamilyContext } from '@frontend/contexts/familyContext';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { ChevronLeftIcon, ChevronRightIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import type { Student } from '@server/database/schemas/students';
+import { createStudent } from '@server-actions/students/create-student';
+import { deleteStudent } from '@server-actions/students/delete-student';
+import { updateStudent } from '@server-actions/students/update-student';
 import { useExtracted } from 'next-intl';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 
 import styles from './page.module.css';
 
@@ -20,51 +26,52 @@ export default function FamillesStep2() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
-    const [idToEdit, setIdToEdit] = useState('');
+    const [idToEdit, setIdToEdit] = useState<number | undefined>();
     const [editFirstName, setEditFirstName] = useState('');
     const [editLastName, setEditLastName] = useState('');
 
-    const [idToDelete, setIdToDelete] = useState<{ tempId: string; id?: number } | undefined>(undefined);
+    const [idToDelete, setIdToDelete] = useState<number | undefined>(undefined);
 
-    const { form, setStudents } = useContext(FamilyContext);
+    const { data: students, isLoading, mutate } = useSWR<Student[]>('/api/students', jsonFetcher, { keepPreviousData: true });
 
-    const addChild = () => {
-        setStudents({
-            students: [...form.students, { tempId: `${firstName}${lastName}${new Date().getTime()}`, firstName, lastName }],
-        });
+    const addChild = async () => {
+        const studentName = `${firstName} ${lastName}`;
+        await createStudent(studentName);
         setFirstName('');
         setLastName('');
+        await mutate();
     };
 
-    const deleteChild = (tempId: string, id?: number) => {
-        if (id) {
-            setStudents({
-                students: form.students.map((student) => (student.id === id ? { ...student, isDeleted: true } : student)),
-            });
-        } else {
-            setStudents({
-                ...form,
-                students: form.students.filter((student) => student.tempId !== tempId),
-            });
+    const deleteChild = async (id: number | undefined) => {
+        if (!id) {
+            return;
         }
 
+        await deleteStudent(id);
         setIdToDelete(undefined);
+        await mutate();
     };
 
-    const editChild = (tempId: string) => {
-        setStudents({
-            students: form.students.map((student) =>
-                student.tempId === tempId ? { ...student, firstName: editFirstName, lastName: editLastName } : student,
-            ),
-        });
+    const editChild = async (id: number | undefined) => {
+        if (!id) {
+            return;
+        }
 
-        setIdToEdit('');
+        await updateStudent(id, `${editFirstName} ${editLastName}`);
+        setIdToEdit(undefined);
+        await mutate();
     };
 
-    const openEditionFields = (tempId: string) => {
-        setIdToEdit(tempId);
-        setEditFirstName(form.students.find((student) => student.tempId === tempId)?.firstName || '');
-        setEditLastName(form.students.find((student) => student.tempId === tempId)?.lastName || '');
+    const openEditionFields = (id: number | undefined) => {
+        if (!id) {
+            return;
+        }
+
+        setIdToEdit(id);
+        const studentToEdit = students?.find((student) => student.id === id);
+        const studentName = studentToEdit?.name?.split(' ');
+        setEditFirstName(studentName?.[0] || '');
+        setEditLastName(studentName?.[1] || '');
     };
 
     return (
@@ -89,30 +96,34 @@ export default function FamillesStep2() {
             <div className={styles.row}>
                 <Input type="text" placeholder={t('Prénom')} value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 <Input type="text" placeholder={t('Nom')} value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                <Button onClick={addChild} color="primary" label={t('Ajouter un enfant')} />
+                <Button disabled={!firstName || !lastName} onClick={addChild} color="primary" label={t('Ajouter un enfant')} />
             </div>
-            {form.students
-                .filter((s) => !s.isDeleted)
-                .map((s) =>
-                    idToEdit === s.tempId ? (
-                        <div key={s.tempId} className={styles.row}>
-                            <Input type="text" placeholder={t('Prénom')} value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} />
-                            <Input type="text" placeholder={t('Nom')} value={editLastName} onChange={(e) => setEditLastName(e.target.value)} />
-                            <Button color="primary" label={tCommon('Enregistrer')} onClick={() => editChild(s.tempId)} />
-                            <Button color="primary" label={tCommon('Annuler')} onClick={() => setIdToEdit('')} />
+            <Loader isLoading={isLoading} />
+            {students?.map((s) =>
+                idToEdit === s.id ? (
+                    <div key={s.id} className={styles.row}>
+                        <Input type="text" placeholder={t('Prénom')} value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} />
+                        <Input type="text" placeholder={t('Nom')} value={editLastName} onChange={(e) => setEditLastName(e.target.value)} />
+                        <Button
+                            disabled={!editFirstName || !editLastName}
+                            color="primary"
+                            label={tCommon('Enregistrer')}
+                            onClick={() => editChild(s.id)}
+                        />
+                        <Button color="primary" label={tCommon('Annuler')} onClick={() => setIdToEdit(undefined)} />
+                    </div>
+                ) : (
+                    <div key={s.id} className={styles.child}>
+                        <p>
+                            {s.name?.split(' ')[0]} {s.name?.split(' ')[1]}
+                        </p>
+                        <div className={styles.buttons}>
+                            <IconButton icon={Pencil1Icon} color="primary" onClick={() => openEditionFields(s.id)} />
+                            <IconButton icon={TrashIcon} color="primary" onClick={() => setIdToDelete(s.id)} />
                         </div>
-                    ) : (
-                        <div key={s.tempId} className={styles.child}>
-                            <p>
-                                {s.firstName} {s.lastName}
-                            </p>
-                            <div className={styles.buttons}>
-                                <IconButton icon={Pencil1Icon} color="primary" onClick={() => openEditionFields(s.tempId)} />
-                                <IconButton icon={TrashIcon} color="primary" onClick={() => setIdToDelete({ tempId: s.tempId, id: s.id })} />
-                            </div>
-                        </div>
-                    ),
-                )}
+                    </div>
+                ),
+            )}
             <div className={styles.buttonsContainer}>
                 <Button as="a" href="/familles/1" color="primary" label={tCommon('Étape précédente')} leftIcon={<ChevronLeftIcon />} />
                 <Button as="a" href="/familles/3" color="primary" label={tCommon('Étape suivante')} rightIcon={<ChevronRightIcon />} />
@@ -123,7 +134,7 @@ export default function FamillesStep2() {
                 title={t("Supprimer l'élève")}
                 confirmLabel={tCommon('Supprimer')}
                 confirmLevel="error"
-                onConfirm={() => deleteChild(idToDelete!.tempId, idToDelete?.id)}
+                onConfirm={() => deleteChild(idToDelete)}
             >
                 {t('Voulez-vous vraiment supprimer cet élève ?')}
             </Modal>

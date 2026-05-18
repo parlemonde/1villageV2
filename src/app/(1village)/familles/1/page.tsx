@@ -6,7 +6,6 @@ import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
-import { FamilyContext } from '@frontend/contexts/familyContext';
 import { UserContext } from '@frontend/contexts/userContext';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { updateClassroom } from '@server-actions/classrooms/update-classroom';
@@ -19,10 +18,9 @@ export default function FamillesStep1() {
     const t = useExtracted('app.(1village).familles.1');
     const tCommon = useExtracted('common');
 
-    const { form } = useContext(FamilyContext);
     const { classroom } = useContext(UserContext);
 
-    const toggleGlobalVisibility = async (value: boolean) => {
+    const toggleActivitiesVisibility = async (value: boolean) => {
         await updateClassroom({
             id: classroom?.id,
             showOnlyClassroomActivities: value,
@@ -51,8 +49,8 @@ export default function FamillesStep1() {
                     { label: t('Les familles peuvent voir toutes les activités publiées sur 1Village'), value: 'false' },
                     { label: t('Les familles ne peuvent voir que les activités publiées par notre classe'), value: 'true' },
                 ]}
-                value={`${form.showOnlyClassroomActivities}`}
-                onChange={(value) => toggleGlobalVisibility(Boolean(value))}
+                value={`${classroom?.showOnlyClassroomActivities}`}
+                onChange={(value) => toggleActivitiesVisibility(Boolean(value))}
                 marginBottom="md"
             />
             <div className={styles.buttonContainer}>

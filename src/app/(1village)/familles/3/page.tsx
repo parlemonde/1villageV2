@@ -8,11 +8,14 @@ import { Button } from '@frontend/components/ui/Button';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
-import { FamilyContext } from '@frontend/contexts/familyContext';
+import { UserContext } from '@frontend/contexts/userContext';
+import { debounce } from '@frontend/lib/debounce';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { logger } from '@server/lib/logger';
 import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
+import { saveParentInvitationMessage } from '@server-actions/families/save-parent-invitation-message';
 import { useExtracted } from 'next-intl';
-import { useContext } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 
 import styles from './page.module.css';
 
@@ -49,7 +52,7 @@ export const useDefaultParentInvitationMessage = () => {
                     {
                         type: 'text',
                         text: t(
-                            'Notre classe participe au projet 1Village, de l’association Par Le Monde, agréée par le ministère de l’éducation nationale français. 1Village est un projet de correspondances avec d’autres classes du monde, accessible de façon sécurisée sur un site internet.',
+                            "Notre classe participe au projet 1Village, de l'association Par Le Monde, agréée par le ministère de l'éducation nationale français. 1Village est un projet de correspondances avec d'autres classes du monde, accessible de façon sécurisée sur un site internet.",
                         ),
                     },
                 ],
@@ -112,7 +115,7 @@ export const useDefaultParentInvitationMessage = () => {
                 content: [
                     {
                         type: 'text',
-                        text: `    ${t('3. Connectez vous sur https://1v.parlemonde.org/inscription et rattachez votre compte à l’identifiant unique')} `,
+                        text: `    ${t("3. Connectez vous sur https://1v.parlemonde.org/inscription et rattachez votre compte à l'identifiant unique")} `,
                     },
                     {
                         type: 'text',
@@ -145,7 +148,7 @@ export const useDefaultParentInvitationMessage = () => {
                     {
                         type: 'text',
                         text: t(
-                            'Jusqu’à 5 personnes de votre famille peuvent créer un compte et le rattacher à l’identifiant unique de votre enfant.',
+                            "Jusqu'à 5 personnes de votre famille peuvent créer un compte et le rattacher à l'identifiant unique de votre enfant.",
                         ),
                     },
                 ],
@@ -186,10 +189,29 @@ export default function FamillesStep3() {
     const t = useExtracted('app.(1village).familles.3');
     const tCommon = useExtracted('common');
 
-    const { form, setParentInvitationMessage } = useContext(FamilyContext);
+    const { classroom } = useContext(UserContext);
+
+    const defaultMessage = useDefaultParentInvitationMessage();
+    const [content, setContent] = useState<HtmlEditorContent>(classroom?.parentInvitationMessage ?? defaultMessage);
+
+    const debouncedSave = useMemo(
+        () =>
+            debounce((message: HtmlEditorContent) => {
+                saveParentInvitationMessage(message).catch(logger.error);
+            }, 2000),
+        [],
+    );
+
+    const handleChange = useCallback(
+        (message: HtmlEditorContent) => {
+            setContent(message);
+            debouncedSave(message);
+        },
+        [debouncedSave],
+    );
 
     const print = async () => {
-        const pdfBuffer = await generateInvitationsPdf(form.parentInvitationMessage);
+        const pdfBuffer = await generateInvitationsPdf(content);
         if (!pdfBuffer) {
             sendToast({ type: 'error', message: t('Une erreur est survenue lors de la génération du PDF') });
             return;
@@ -224,7 +246,7 @@ export default function FamillesStep3() {
                     },
                 )}
             </p>
-            <HtmlEditor content={form.parentInvitationMessage} onChange={setParentInvitationMessage} />
+            <HtmlEditor content={content} onChange={handleChange} />
             <div className={styles.printButtonContainer}>
                 <Button label={t('Imprimer')} color="secondary" variant="contained" onClick={print} />
             </div>
