@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { and, eq, sql } from 'drizzle-orm';
@@ -14,6 +15,11 @@ export const updateComment = async (comment: Partial<Comment>): Promise<ServerAc
     try {
         const user = await getCurrentUser();
         if (!user) {
+            throw new Error('Unauthorized');
+        }
+
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+        if (!classroom || classroom.id !== comment.classroomId) {
             throw new Error('Unauthorized');
         }
 
