@@ -1,5 +1,6 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
@@ -21,10 +22,13 @@ export default function FamillesStep1() {
     const { classroom } = useContext(UserContext);
 
     const toggleActivitiesVisibility = async (value: boolean) => {
-        await updateClassroom({
+        const { error } = await updateClassroom({
             id: classroom?.id,
             showOnlyClassroomActivities: value,
         });
+        if (error) {
+            sendToast({ type: 'error', message: error.message });
+        }
     };
 
     return (

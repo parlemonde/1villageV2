@@ -5,6 +5,7 @@ import { downloadPdf } from '@app/(1village)/familles/helpers';
 import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
+import { Loader } from '@frontend/components/ui/Loader';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';
 import { Title } from '@frontend/components/ui/Title';
@@ -23,7 +24,7 @@ export default function FamillesStep4() {
     const t = useExtracted('app.(1village).familles.4');
     const tCommon = useExtracted('common');
 
-    const { data: students } = useSWR<Student[]>('/api/students', jsonFetcher, { keepPreviousData: true });
+    const { data: students, isLoading } = useSWR<Student[]>('/api/students', jsonFetcher, { keepPreviousData: true });
 
     const [checked, setChecked] = useState<number[]>([]);
 
@@ -85,6 +86,7 @@ export default function FamillesStep4() {
                     'Pour chaque enfant de votre classe, vous pouvez voir le nombre de compte famille crée ainsi que télécharger individuellement le texte de présentation (si une famille a perdu le sien par exemple).',
                 )}
             </p>
+            <Loader isLoading={isLoading} />
             {students && (
                 <>
                     <Button

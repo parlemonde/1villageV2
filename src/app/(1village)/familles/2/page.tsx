@@ -1,5 +1,6 @@
 'use client';
 
+import { sendToast } from '@frontend/components/Toasts';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Loader } from '@frontend/components/ui/Loader';
@@ -36,7 +37,11 @@ export default function FamillesStep2() {
 
     const addChild = async () => {
         const studentName = `${firstName} ${lastName}`;
-        await createStudent(studentName);
+        const { error } = await createStudent(studentName);
+        if (error) {
+            sendToast({ type: 'error', message: error.message });
+        }
+
         setFirstName('');
         setLastName('');
         await mutate();
@@ -47,7 +52,11 @@ export default function FamillesStep2() {
             return;
         }
 
-        await deleteStudent(id);
+        const { error } = await deleteStudent(id);
+        if (error) {
+            sendToast({ type: 'error', message: error.message });
+        }
+
         setIdToDelete(undefined);
         await mutate();
     };
@@ -57,7 +66,11 @@ export default function FamillesStep2() {
             return;
         }
 
-        await updateStudent(id, `${editFirstName} ${editLastName}`);
+        const { error } = await updateStudent(id, `${editFirstName} ${editLastName}`);
+        if (error) {
+            sendToast({ type: 'error', message: error.message });
+        }
+
         setIdToEdit(undefined);
         await mutate();
     };
