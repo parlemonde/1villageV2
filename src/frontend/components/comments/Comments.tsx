@@ -61,7 +61,7 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
-        await mutate(comments ? [...comments, optimisticComment] : [optimisticComment]);
+        await mutate(comments ? [optimisticComment, ...comments] : [optimisticComment]);
         setContent('');
     };
 
