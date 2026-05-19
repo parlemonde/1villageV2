@@ -18,7 +18,7 @@ export const CrossVisibilityTable = () => {
     const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<string, boolean>>>({});
 
     const togglableVillages = (villages || []).filter((village) => !village.isCrossVisible);
-    const isAllChecked = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
+    const isPending = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
 
     if (error) {
         return <p>Une erreur est survenue lors du chargement des villages.</p>;
@@ -57,10 +57,10 @@ export const CrossVisibilityTable = () => {
                             <div className={styles.headerContent}>
                                 <Checkbox
                                     name="cross-visibility-all"
-                                    isChecked={isAllChecked}
+                                    isChecked={isPending}
                                     isDisabled={togglableVillages.length === 0}
                                     onChange={() => {
-                                        if (isAllChecked) {
+                                        if (isPending) {
                                             setPendingChanges({});
                                         } else {
                                             const next: Partial<Record<string, boolean>> = {};
@@ -81,7 +81,7 @@ export const CrossVisibilityTable = () => {
                         const isLocked = village.isCrossVisible;
                         const isChecked = isLocked || pendingChanges[village.id] === true;
                         return (
-                            <tr className={styles.row} key={village.id}>
+                            <tr className={styles.row} key={`cross-visibility-${village.id}`}>
                                 <td className={styles.cell}>{village.name}</td>
                                 <td className={styles.cell}>
                                     <span style={{ display: 'flex', justifyContent: 'center' }}>
