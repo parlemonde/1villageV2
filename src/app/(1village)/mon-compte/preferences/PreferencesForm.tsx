@@ -5,6 +5,7 @@ import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Field } from '@frontend/components/ui/Form/Field';
+import { Title } from '@frontend/components/ui/Title';
 import { updateAdminPublicationSubscription, updateCommentActivitySubscription } from '@server-actions/settings/update-subscriptions';
 import { useExtracted } from 'next-intl';
 import { useState, useTransition } from 'react';
@@ -61,17 +62,21 @@ export const PreferencesForm = ({
 
     return (
         <div style={{ maxWidth: '600px' }}>
+            <Title marginY="md" variant="h2">
+                {t('Préférences de notifications')}
+            </Title>
+            <p style={{ marginBottom: '24px', color: 'var(--font-detail-color)' }}>
+                {t('Choisissez les notifications par email que vous souhaitez recevoir.')}
+            </p>
             <div className={styles.settingRow}>
                 <Field
-                    // className={styles.itemsPerPageLabel}
-                    label={t('Publications Pelico 1')}
-                    helperText={t('Recevoir un email pour chaque nouvelle publication Pelico (admin)')}
-                    helperTextStyle={{ color: 'blue' }}
+                    helperText={t('Recevoir un email pour chaque nouvelle publication Pelico')}
+                    helperTextStyle={{ textAlign: 'left' }}
                     input={
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <Checkbox
                                 name="admin-publication"
-                                label={t('Publications Pelico 2')}
+                                label={t('Publications de Pelico')}
                                 isChecked={adminPublicationSubscribed}
                                 onChange={(checked) => setAdminPublicationSubscribed(checked === true)}
                                 isDisabled={isPending}
@@ -84,15 +89,13 @@ export const PreferencesForm = ({
 
             <div className={styles.settingRow}>
                 <Field
-                    // className={styles.itemsPerPageLabel}
-                    label={t('Commentaires sur vos activités 1')}
                     helperText={t('Recevoir un email pour chaque nouveau commentaire sur une activité de votre classe')}
-                    helperTextStyle={{ color: 'blue' }}
+                    helperTextStyle={{ textAlign: 'left' }}
                     input={
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <Checkbox
                                 name="comment-activity"
-                                label={t('Commentaires sur vos activités 2')}
+                                label={t('Commentaire sous une de nos publications')}
                                 isChecked={commentActivitySubscribed}
                                 onChange={(checked) => setCommentActivitySubscribed(checked === true)}
                                 isDisabled={isPending}

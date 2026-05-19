@@ -1,5 +1,4 @@
 import { PageContainer } from '@frontend/components/ui/PageContainer';
-import { Title } from '@frontend/components/ui/Title';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { notFound } from 'next/navigation';
 
@@ -20,12 +19,6 @@ export default async function PreferencesPage() {
 
     return (
         <PageContainer title="Préférences de notifications">
-            <Title marginY="md" variant="h2">
-                Préférences de notifications
-            </Title>
-            <p style={{ marginBottom: '24px', color: 'var(--font-detail-color)' }}>
-                Choisissez les notifications par email que vous souhaitez recevoir.
-            </p>
             <PreferencesForm
                 adminPublicationSubscribed={user.adminPublicationSubscribed ?? true}
                 commentActivitySubscribed={user.commentActivitySubscribed ?? true}
