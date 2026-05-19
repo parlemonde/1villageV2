@@ -5,7 +5,7 @@ import { villages } from '@server/database/schemas/villages';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { and, eq, inArray } from 'drizzle-orm';
 
-export const updateCrossVisibility = async (villagesCrossVisibility: Partial<Record<string, boolean>>): Promise<void> => {
+export const updateCrossVisibility = async (villagesCrossVisibility: Partial<Record<number, boolean>>): Promise<void> => {
     const currentUser = await getCurrentUser();
     if (currentUser?.role !== 'admin') {
         throw new Error('Not authorized');

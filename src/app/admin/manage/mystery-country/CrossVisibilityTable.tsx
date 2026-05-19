@@ -17,7 +17,7 @@ export const CrossVisibilityTable = () => {
     const t = useExtracted('app.admin.manage.mystery-country');
     const { data: villages, mutate, error } = useSWR<Village[]>('/api/villages', jsonFetcher);
     const [isSaving, setIsSaving] = React.useState(false);
-    const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<string, boolean>>>({});
+    const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<number, boolean>>>({});
 
     const togglableVillages = (villages || []).filter((village) => !village.isCrossVisible);
     const isPending = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
@@ -65,7 +65,7 @@ export const CrossVisibilityTable = () => {
                                         if (isPending) {
                                             setPendingChanges({});
                                         } else {
-                                            const next: Partial<Record<string, boolean>> = {};
+                                            const next: Partial<Record<number, boolean>> = {};
                                             for (const village of togglableVillages) {
                                                 next[village.id] = true;
                                             }
