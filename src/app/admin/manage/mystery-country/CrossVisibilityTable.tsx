@@ -19,9 +19,6 @@ export const CrossVisibilityTable = () => {
     const [isSaving, setIsSaving] = React.useState(false);
     const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<number, boolean>>>({});
 
-    const togglableVillages = villages.filter((village) => !village.isCrossVisible);
-    const isPending = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
-
     if (error) {
         return <p>{t('Une erreur est survenue lors du chargement des villages.')}</p>;
     }
@@ -29,6 +26,9 @@ export const CrossVisibilityTable = () => {
     if (!villages) {
         return <Loader isLoading />;
     }
+
+    const togglableVillages = villages.filter((village) => !village.isCrossVisible);
+    const isPending = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
 
     return (
         <>
