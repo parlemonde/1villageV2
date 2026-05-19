@@ -4,8 +4,13 @@ import { getExtracted } from 'next-intl/server';
 
 export const sendAccountConfirmationEmail = async (to: string, confirmationLink: string) => {
     const t = await getExtracted('common');
-    await sendEmail(to, t('Confirmez votre compte'), EmailType.CONFIRM_ACCOUNT, {
-        firstName: 'John Doe',
-        confirmationLink,
+    await sendEmail({
+        to,
+        subject: t('Confirmez votre compte'),
+        emailType: EmailType.CONFIRM_ACCOUNT,
+        props: {
+            firstName: 'John Doe',
+            confirmationLink,
+        },
     });
 };

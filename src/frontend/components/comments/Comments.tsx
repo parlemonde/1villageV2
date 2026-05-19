@@ -127,24 +127,25 @@ export const Comments = ({ activityId }: CommentsProps) => {
                 )}
             </div>
             {user.role !== 'parent' && (
-            <div className={styles.row}>
-                <div className={styles.editorContainer}>
-                    <div className={styles.editor}>
-                        <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
-                        <HtmlEditor content={content} onChange={setContent} />
-                        <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+                <div className={styles.row}>
+                    <div className={styles.editorContainer}>
+                        <div className={styles.editor}>
+                            <strong>{t("Réagissez à l'écrit avec un commentaire :")}</strong>
+                            <HtmlEditor content={content} onChange={setContent} />
+                            <Button marginTop="md" isFullWidth onClick={post} color="primary" label={t('Commenter')} />
+                        </div>
                     </div>
-                </div>
-                <div className={styles.react}>
-                    <strong>{t('Réagissez en image, son ou vidéo :')}</strong>
-                    <Button
-                        marginTop="md"
-                        isFullWidth
-                        color="primary"
-                        label={t('Réagir')}
-                        leftIcon={<ReplyArrow />}
-                        onClick={() => router.push(`/reagir-a-une-activite/${serializeToQueryUrl({ activityId: activityId })}`)}
-                    />
+                    <div className={styles.react}>
+                        <strong>{t('Réagissez en image, son ou vidéo :')}</strong>
+                        <Button
+                            marginTop="md"
+                            isFullWidth
+                            color="primary"
+                            label={t('Réagir')}
+                            leftIcon={<ReplyArrow />}
+                            onClick={() => router.push(`/reagir-a-une-activite/${serializeToQueryUrl({ activityId: activityId })}`)}
+                        />
+                    </div>
                 </div>
             )}
 
