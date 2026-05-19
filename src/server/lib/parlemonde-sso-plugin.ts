@@ -42,7 +42,7 @@ export const ssoPlugin = registerService('parlemonde-sso-plugin', () =>
               config: [
                   {
                       providerId: PARLEMONDE_SSO_PROVIDER_ID,
-                      redirectURI: `${getEnvVariable('HOST_URL')}/api/auth/callback/parlemonde-sso`,
+                      redirectURI: `${getEnvVariable('HOST_URL')}/api/auth/oauth2/callback/parlemonde-sso`,
                       responseType: 'code',
                       clientId: CLIENT_ID,
                       clientSecret: CLIENT_SECRET,
