@@ -18,7 +18,7 @@ import { TermsModal } from './TermsModal';
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{12,}$/;
 
-export const RegisterForm = () => {
+export const RegisterForm = ({ appUrl }: { appUrl: string }) => {
     const t = useExtracted('app.login.famille.inscription');
     const currentLocale = useLocale();
 
@@ -257,7 +257,7 @@ export const RegisterForm = () => {
                 onChange={() => setTermsAccepted(!termsAccepted)}
             />
             <Button disabled={!isFormValid} label={t("S'inscrire")} type="submit" color="primary" />
-            <TermsModal isOpen={isOpen} setIsOpen={setIsOpen} />
+            <TermsModal appUrl={appUrl} isOpen={isOpen} setIsOpen={setIsOpen} />
         </form>
     );
 };

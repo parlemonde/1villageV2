@@ -2,18 +2,16 @@
 
 import { Modal } from '@frontend/components/ui/Modal';
 import { Title } from '@frontend/components/ui/Title';
-import { getEnvVariable } from '@server/lib/get-env-variable';
 import Link from 'next/link';
 import { useExtracted } from 'next-intl';
 
 interface TermsModalProps {
+    appUrl: string;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
-export const TermsModal = ({ isOpen, setIsOpen }: TermsModalProps) => {
+export const TermsModal = ({ appUrl, isOpen, setIsOpen }: TermsModalProps) => {
     const t = useExtracted('app.login.famille.inscription');
-
-    const appUrl = getEnvVariable('HOST_URL');
     return (
         <Modal hasCancelButton={false} width="lg" isOpen={isOpen} onClose={() => setIsOpen(false)} title={t("Conditions générales d'utilisation")}>
             <Title variant="h3" marginBottom="md">

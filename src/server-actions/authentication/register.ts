@@ -19,7 +19,6 @@ const MAX_ACCOUNTS_PER_CODE = 5;
 
 export async function register(_previousState: ServerActionResponse, formData: FormData): Promise<ServerActionResponse> {
     const t = await getExtracted('common');
-    let redirectPath;
     try {
         const email = getStringValue(formData.get('email'));
         const firstName = getStringValue(formData.get('firstName'));
@@ -74,7 +73,6 @@ export async function register(_previousState: ServerActionResponse, formData: F
         await updateLocale(locale);
         const cookieStore = await cookies();
         cookieStore.set('pendingEmail', email);
-        redirectPath = '/api/verify-email';
     } catch (error) {
         logger.error(error);
         if (isAPIError(error)) {
@@ -83,10 +81,7 @@ export async function register(_previousState: ServerActionResponse, formData: F
             }
         }
         return { error: { message: t('Une erreur est survenue') } };
-    } finally {
-        if (redirectPath) {
-            redirect(redirectPath);
-        }
-        return {};
     }
+
+    redirect('/api/verify-email');
 }

@@ -81,7 +81,7 @@ export const auth = registerService('auth', () =>
         emailVerification: {
             autoSignInAfterVerification: true,
             sendVerificationEmail: async ({ user, url }) => {
-                void sendAccountConfirmationEmail(user.email, url);
+                void sendAccountConfirmationEmail(user.email, user.name, url);
             },
         },
     }),
