@@ -1,6 +1,6 @@
 import { db } from '@server/database';
-import type { EmailType } from '@server/emails/templates/utils/types';
 import { sendAccountConfirmationEmail } from '@server/emails/send-account-confirmation-email';
+import type { EmailType } from '@server/emails/templates/utils/types';
 import { registerService } from '@server/lib/register-service';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';

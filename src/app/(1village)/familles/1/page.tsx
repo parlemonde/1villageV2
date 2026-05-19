@@ -3,7 +3,6 @@
 import { sendToast } from '@frontend/components/Toasts';
 import { BackButton } from '@frontend/components/activities/BackButton/BackButton';
 import { Button } from '@frontend/components/ui/Button';
-import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { RadioGroup } from '@frontend/components/ui/Form/RadioGroup';
 import { PageContainer } from '@frontend/components/ui/PageContainer';
 import { Steps } from '@frontend/components/ui/Steps';

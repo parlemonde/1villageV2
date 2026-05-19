@@ -5,7 +5,6 @@ import { auth } from '@server/lib/auth';
 import { checkSSO } from '@server/lib/check-sso';
 import { getStringValue } from '@server/lib/get-string-value';
 import { isAPIError } from 'better-auth/api';
-import { eq, and } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 import { getExtracted } from 'next-intl/server';
