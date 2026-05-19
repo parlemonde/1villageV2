@@ -79,7 +79,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 villageId === -1 ? isNull(activities.villageId) : villageId !== null ? eq(activities.villageId, villageId) : undefined,
                 isPelico === false ? eq(activities.isPelico, false) : undefined,
                 effectiveCountries !== null && effectiveCountries.length > 0
-                    ? or(inArray(classrooms.countryCode, effectiveCountries), isNull(activities.classroomId))
+                    ? isPhase1Restricted
+                        ? inArray(classrooms.countryCode, effectiveCountries) // exclude classroomId=null activities during Phase 1
+                        : or(inArray(classrooms.countryCode, effectiveCountries), isNull(activities.classroomId))
                     : undefined,
             ),
         )
