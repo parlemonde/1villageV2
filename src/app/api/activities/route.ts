@@ -35,11 +35,12 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     // country unless the village has cross-visibility enabled.
     const isPelicoUser = user.role === 'admin' || user.role === 'mediator';
     const isPhase1Restricted = !isPelicoUser && village?.activePhase === 1 && !village.isCrossVisible;
-    const effectiveCountries = isPhase1Restricted
-        ? classroom?.countryCode
-            ? [classroom.countryCode]
-            : [] // no classroom → block all rather than fall back to user-supplied param
-        : countries;
+
+    if (isPhase1Restricted && !classroom?.countryCode) {
+        return NextResponse.json([]);
+    }
+
+    const effectiveCountries = isPhase1Restricted ? [classroom!.countryCode] : countries;
 
     if (activityId) {
         const result = await db.query.activities.findFirst({
@@ -77,7 +78,9 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 phase !== null ? eq(activities.phase, phase) : undefined,
                 villageId === -1 ? isNull(activities.villageId) : villageId !== null ? eq(activities.villageId, villageId) : undefined,
                 isPelico === false ? eq(activities.isPelico, false) : undefined,
-                effectiveCountries !== null ? or(inArray(classrooms.countryCode, effectiveCountries), isNull(activities.classroomId)) : undefined,
+                effectiveCountries !== null && effectiveCountries.length > 0
+                    ? or(inArray(classrooms.countryCode, effectiveCountries), isNull(activities.classroomId))
+                    : undefined,
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
