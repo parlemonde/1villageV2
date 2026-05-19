@@ -1,7 +1,6 @@
 'use client';
 
-import { useDefaultParentInvitationMessage } from '@app/(1village)/familles/3/page';
-import { downloadPdf } from '@app/(1village)/familles/helpers';
+import { downloadPdf, useDefaultParentInvitationMessage } from '@app/(1village)/familles/helpers';
 import { sendToast } from '@frontend/components/Toasts';
 import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
