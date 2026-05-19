@@ -60,7 +60,7 @@ export const CrossVisibilityTable = () => {
                                 <Checkbox
                                     name="cross-visibility-all"
                                     isChecked={isPending}
-                                    isDisabled={togglableVillages.length === 0}
+                                    isDisabled={togglableVillages.length === 0 || isSaving}
                                     onChange={() => {
                                         if (isPending) {
                                             setPendingChanges({});
@@ -90,7 +90,7 @@ export const CrossVisibilityTable = () => {
                                         <Checkbox
                                             name={`cross-visibility-${village.id}`}
                                             isChecked={isChecked}
-                                            isDisabled={isLocked}
+                                            isDisabled={isLocked || isSaving}
                                             onChange={() => {
                                                 if (isLocked) {
                                                     return;
