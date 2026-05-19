@@ -21,8 +21,8 @@ export const users = pgTable('users', {
         .$onUpdate(() => new Date())
         .notNull(),
     role: text('role', { enum: USER_ROLES_ENUM }).default('teacher').notNull(),
-    adminPublicationSubscribed: boolean('admin_publication_subscribed').default(true),
-    commentActivitySubscribed: boolean('comment_activity_subscribed').default(true),
+    adminPublicationSubscribed: boolean('admin_publication_subscribed').default(true).notNull(),
+    commentActivitySubscribed: boolean('comment_activity_subscribed').default(true).notNull(),
     banned: boolean('banned').default(false),
     bannedReason: text('banned_reason'),
     banExpires: timestamp('ban_expires', { withTimezone: true }),
