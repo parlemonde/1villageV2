@@ -7,12 +7,14 @@ import { Loader } from '@frontend/components/ui/Loader';
 import { jsonFetcher } from '@lib/json-fetcher';
 import type { Village } from '@server/database/schemas/villages';
 import { updateCrossVisibility } from '@server-actions/villages/update-cross-visibility';
+import { useExtracted } from 'next-intl';
 import React from 'react';
 import useSWR from 'swr';
 
 import styles from './cross-visibility-table.module.css';
 
 export const CrossVisibilityTable = () => {
+    const t = useExtracted('app.admin.manage.mystery-country');
     const { data: villages, mutate, error } = useSWR<Village[]>('/api/villages', jsonFetcher);
     const [isSaving, setIsSaving] = React.useState(false);
     const [pendingChanges, setPendingChanges] = React.useState<Partial<Record<string, boolean>>>({});
@@ -21,14 +23,14 @@ export const CrossVisibilityTable = () => {
     const isPending = togglableVillages.length > 0 && togglableVillages.every((village) => pendingChanges[village.id] === true);
 
     if (error) {
-        return <p>Une erreur est survenue lors du chargement des villages.</p>;
+        return <p>{t('Une erreur est survenue lors du chargement des villages.')}</p>;
     }
 
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
                 <Button
-                    label="Enregistrer"
+                    label={t('Enregistrer')}
                     color="primary"
                     variant="contained"
                     disabled={Object.keys(pendingChanges).length === 0}
@@ -41,7 +43,7 @@ export const CrossVisibilityTable = () => {
                         } catch {
                             sendToast({
                                 type: 'error',
-                                message: 'Une erreur est survenue lors de la sauvegarde.',
+                                message: t('Une erreur est survenue lors de la sauvegarde.'),
                             });
                         } finally {
                             setIsSaving(false);
@@ -52,7 +54,7 @@ export const CrossVisibilityTable = () => {
             <table className={styles.table}>
                 <thead>
                     <tr>
-                        <th className={styles.headerCell}>Village-monde</th>
+                        <th className={styles.headerCell}>{t('Village-monde')}</th>
                         <th className={styles.headerCell}>
                             <div className={styles.headerContent}>
                                 <Checkbox
@@ -71,7 +73,7 @@ export const CrossVisibilityTable = () => {
                                         }
                                     }}
                                 />
-                                Pays mystère révélé
+                                {t('Pays mystère révélé')}
                             </div>
                         </th>
                     </tr>
