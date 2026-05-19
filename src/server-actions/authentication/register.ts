@@ -11,7 +11,6 @@ import type { ServerActionResponse } from '@server-actions/common/server-action-
 import { updateLocale } from '@server-actions/settings/update-locale';
 import { isAPIError } from 'better-auth/api';
 import { count, eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getExtracted } from 'next-intl/server';
 
@@ -71,8 +70,6 @@ export async function register(_previousState: ServerActionResponse, formData: F
         });
 
         await updateLocale(locale);
-        const cookieStore = await cookies();
-        cookieStore.set('pendingEmail', email);
     } catch (error) {
         logger.error(error);
         if (isAPIError(error)) {
@@ -83,5 +80,5 @@ export async function register(_previousState: ServerActionResponse, formData: F
         return { error: { message: t('Une erreur est survenue') } };
     }
 
-    redirect('/api/verify-email');
+    redirect('/login/famille/verify-email');
 }

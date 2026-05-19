@@ -5,7 +5,6 @@ import { auth } from '@server/lib/auth';
 import { checkSSO } from '@server/lib/check-sso';
 import { getStringValue } from '@server/lib/get-string-value';
 import { isAPIError } from 'better-auth/api';
-import { cookies } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 import { getExtracted } from 'next-intl/server';
 
@@ -31,9 +30,10 @@ export async function login(_previousState: string, formData: FormData): Promise
     } catch (error) {
         if (isAPIError(error)) {
             if (error.body?.code === 'EMAIL_NOT_VERIFIED') {
-                const cookieStore = await cookies();
-                cookieStore.set('pendingEmail', email);
-                redirect('/api/verify-email?fromLogin=true');
+                await auth.api.sendVerificationEmail({
+                    body: { email, callbackURL: '/' },
+                });
+                redirect('/login/famille/verify-email');
             }
         }
         return t('Identifiants invalides.');
