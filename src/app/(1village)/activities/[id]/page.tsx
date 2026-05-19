@@ -8,9 +8,10 @@ import { getActivity } from '@server-actions/activities/get-activity';
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import type { Activity } from '@server/database/schemas/activities';
+import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { eq, isNotNull, and, sql } from 'drizzle-orm';
+import { eq, isNotNull, and, sql, isNull } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
@@ -59,14 +60,31 @@ const updateActivityClassroomViews = async function (activity: Activity) {
 
 export default async function ActivityPage({ params }: ServerPageProps) {
     const activityId = getActivityId((await params).id);
+    const initialActivity =
+        activityId !== null
+            ? ((await db.query.activities.findFirst({
+                  where: and(eq(activities.id, activityId), isNotNull(activities.publishDate)),
+              })) as Activity | undefined)
+            : undefined;
 
-    const activity = await getActivity(activityId);
-
-    if (!activity) {
+    if (!initialActivity) {
         notFound();
     }
 
-    await updateActivityClassroomViews(activity);
+    let activity = initialActivity;
+    if (initialActivity.type === 'reaction') {
+        const reaction = initialActivity as ReactionActivityDao;
+
+        if (reaction.data.activityId) {
+            const activityBeingReacted = (await db.query.activities.findFirst({
+                where: and(isNull(activities.deleteDate), eq(activities.id, reaction.data.activityId)),
+            })) as Activity | undefined;
+
+            activity = { ...initialActivity, data: { ...activity.data, activityBeingReacted } };
+        }
+    }
+
+    await updateActivityClassroomViews(initialActivity);
 
     return (
         <PageContainer>

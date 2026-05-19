@@ -12,7 +12,7 @@
 }
 
 .button.active,
-.button:hover {
+.button.hoverEffect:hover {
     background-color: var(--grey-200);
     border-color: var(--grey-300);
 }
@@ -21,6 +21,11 @@
     cursor: pointer;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.right {
+    display: flex;
     align-items: center;
 }
 

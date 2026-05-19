@@ -7,7 +7,7 @@ import PelicoSouriant from '@frontend/svg/pelico/pelico-souriant.svg';
 import { useExtracted } from 'next-intl';
 import { useContext } from 'react';
 
-export default function LancerUnnDefiSuccess() {
+export default function LancerUnDefiSuccess() {
     const t = useExtracted('app.(1village).(activities).lancer-un-defi.success');
     const tCommon = useExtracted('common');
 

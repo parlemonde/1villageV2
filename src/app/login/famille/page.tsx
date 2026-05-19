@@ -10,7 +10,7 @@ export default function FamilyLoginPage() {
                 Famille
             </Title>
             <LoginForm />
-            <Link href="/login/famille/forgot-password" style={{ color: 'var(--primary-color)', textDecoration: 'underline', fontSize: '14px' }}>
+            <Link href="/login/famille/reset-password" style={{ color: 'var(--primary-color)', textDecoration: 'underline', fontSize: '14px' }}>
                 Mot de passe oublié ?
             </Link>
             <span style={{ fontSize: '14px', marginTop: '16px' }}>

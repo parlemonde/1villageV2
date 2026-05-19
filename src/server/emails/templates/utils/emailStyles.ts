@@ -52,6 +52,15 @@ const emailStyles = {
 
     textOrangeBackground: 'rgb(243, 121, 52)',
 
+    socialButton: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '5px',
+        border: '1px solid black',
+        borderRadius: '50%',
+    },
+
     button: {
         display: 'inline-flex',
         alignItems: 'center',

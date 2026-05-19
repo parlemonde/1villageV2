@@ -1,4 +1,5 @@
 import { db } from '@server/database';
+import type { EmailType } from '@server/emails/templates/utils/types';
 import { sendAccountConfirmationEmail } from '@server/emails/send-account-confirmation-email';
 import { registerService } from '@server/lib/register-service';
 import { betterAuth } from 'better-auth';
@@ -6,9 +7,12 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 import { admin } from 'better-auth/plugins';
 import { adminAc, userAc } from 'better-auth/plugins/admin/access';
+import { getExtracted } from 'next-intl/server';
 
 import { getEnvVariable } from './get-env-variable';
+import { logger } from './logger';
 import { ssoPlugin } from './parlemonde-sso-plugin';
+import { sendEmail } from './sendEmail';
 
 const adminPlugin = admin({
     defaultRole: 'teacher',
@@ -31,6 +35,23 @@ export const auth = registerService('auth', () =>
         emailAndPassword: {
             enabled: true,
             requireEmailVerification: true,
+            minPasswordLength: getEnvVariable('NODE_ENV') === 'production' ? 12 : 8,
+            sendResetPassword: async ({ user, url }) => {
+                logger.info(`sendResetPassword to user ${user.id}`);
+                const t = await getExtracted('common');
+                void sendEmail({
+                    to: user.email,
+                    subject: t('Mot de passe oublié - 1Village'),
+                    emailType: 'RESET_PASSWORD' as EmailType,
+                    props: {
+                        firstName: user.name ?? '',
+                        resetPasswordLink: url,
+                    },
+                });
+            },
+            onPasswordReset: async ({ user }) => {
+                logger.info(`Password for user ${user.id} has been reset.`);
+            },
         },
         advanced: {
             database: {

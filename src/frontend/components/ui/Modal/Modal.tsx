@@ -15,6 +15,7 @@ type ModalProps = {
     onConfirm?: () => void | Promise<void>;
     title?: string;
     description?: string;
+    contentClassName?: string;
     hasTopSeparator?: boolean;
     hasBottomSeparator?: boolean;
     hasPadding?: boolean;
@@ -25,7 +26,7 @@ type ModalProps = {
     cancelLevel?: 'primary' | 'secondary' | 'error';
     confirmLabel?: string;
     confirmLevel?: 'primary' | 'secondary' | 'error';
-    isConfirmDisabled?: boolean;
+    isConfirmDisabled?: boolean | (() => boolean);
     width?: 'sm' | 'xs' | 'md' | 'lg' | 'xl';
     isFullWidth?: boolean;
     isLoading?: boolean;
@@ -38,6 +39,7 @@ export const Modal = ({
     onConfirm,
     title,
     description,
+    contentClassName = '',
     hasFooter = true,
     hasTopSeparator = true,
     hasBottomSeparator = false,
@@ -67,7 +69,7 @@ export const Modal = ({
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content
-                    className={classNames(styles.modalContent, {
+                    className={classNames(styles.modalContent, contentClassName, {
                         [styles[`width-${width}`]]: width,
                         [styles.isFullWidth]: isFullWidth,
                     })}
@@ -112,7 +114,7 @@ export const Modal = ({
                                     onClick={onConfirm}
                                     color={confirmLevel}
                                     variant="contained"
-                                    disabled={isConfirmDisabled}
+                                    disabled={typeof isConfirmDisabled === 'function' ? isConfirmDisabled() : isConfirmDisabled}
                                     marginLeft="sm"
                                 ></Button>
                             )}
