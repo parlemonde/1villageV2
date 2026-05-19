@@ -34,8 +34,12 @@ export const GET = async ({ nextUrl }: NextRequest) => {
     // Phase 1 country restriction: non-admin/mediator users can only see activities from their own
     // country unless the village has cross-visibility enabled.
     const isPelicoUser = user.role === 'admin' || user.role === 'mediator';
-    const effectiveCountries =
-        !isPelicoUser && village?.activePhase === 1 && !village.isCrossVisible && classroom?.countryCode ? [classroom.countryCode] : countries;
+    const isPhase1Restricted = !isPelicoUser && village?.activePhase === 1 && !village.isCrossVisible;
+    const effectiveCountries = isPhase1Restricted
+        ? classroom?.countryCode
+            ? [classroom.countryCode]
+            : [] // no classroom → block all rather than fall back to user-supplied param
+        : countries;
 
     if (activityId) {
         const result = await db.query.activities.findFirst({
