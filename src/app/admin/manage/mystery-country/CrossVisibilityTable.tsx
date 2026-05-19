@@ -33,7 +33,7 @@ export const CrossVisibilityTable = () => {
                     label={t('Enregistrer')}
                     color="primary"
                     variant="contained"
-                    disabled={Object.keys(pendingChanges).length === 0}
+                    disabled={Object.keys(pendingChanges).length === 0 || isSaving}
                     onClick={async () => {
                         setIsSaving(true);
                         try {
