@@ -59,6 +59,7 @@ export const ActivityCountriesSelect = ({ selectedCountries, isPelico, setSelect
                     name={country}
                     label={<CountryFlag country={country} size="medium" isMystery={isMystery(country)} />}
                     isChecked={selectedCountriesSet.has(country)}
+                    isDisabled={isMystery(country)}
                     size="md"
                     onChange={() => {
                         const newSelectedCountriesSet = new Set(selectedCountriesSet);
