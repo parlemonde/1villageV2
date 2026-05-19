@@ -32,7 +32,7 @@ const getUrl = (phase: number, classroomId: string, villageId: string, countryCo
     } else if (villageId) {
         url = `/api/statistics/phase/${phase}/village/${villageId}`;
     } else if (countryCode) {
-        url = `/api/statistics/phase/${phase}/country/${countryCode}`;
+        url = `/api/statistics/phase/${phase}/country`;
     }
 
     url += serializeToQueryUrl({ page: page, itemsPerPage: itemsPerPage });
@@ -60,9 +60,19 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
 
     const eltLabel = totalElements === 1 ? t('élément') : t('éléments');
 
+    const changeItemsPerPage = (value: number) => {
+        setItemsPerPage(value);
+        setCurrentPage(1);
+    };
+
     return (
         <div className={styles.container}>
-            <div className={classNames(styles.header, { [styles.expanded]: expanded })} onClick={() => setExpanded(!expanded)}>
+            <div
+                className={classNames(styles.header, { [styles.expanded]: expanded })}
+                onClick={() => setExpanded(!expanded)}
+                role="button"
+                tabIndex={0}
+            >
                 <Title variant="h3">
                     {t('Phase')} {phase}
                 </Title>
@@ -108,8 +118,8 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
                                     </tr>
                                 )}
 
-                                {data?.rows.map((row, index) => (
-                                    <tr key={index}>
+                                {data?.rows.map((row) => (
+                                    <tr key={row.id}>
                                         <td>{row.name}</td>
                                         {columns?.map((column) => (
                                             <td key={column}>{row.activities[column] ?? '-'}</td>
@@ -135,7 +145,7 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
                                             size="sm"
                                             className={styles.select}
                                             value={itemsPerPage.toString()}
-                                            onChange={(value) => setItemsPerPage(Number(value))}
+                                            onChange={(value) => changeItemsPerPage(Number(value))}
                                             options={[
                                                 { label: '5', value: '5' },
                                                 { label: '10', value: '10' },

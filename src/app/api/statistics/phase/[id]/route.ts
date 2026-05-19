@@ -52,16 +52,17 @@ export const GET = async (
                 eq(activities.phase, id),
                 isNotNull(activities.classroomId),
                 isNotNull(activities.publishDate),
+                isNull(activities.deleteDate),
             ),
         )
-        .where(and(inArray(villages.id, villagesIds), isNull(activities.deleteDate)))
+        .where(and(inArray(villages.id, villagesIds)))
         .groupBy(activities.type, villages.id, villages.name);
 
     const draftsCountResult = await db
         .select({ count: count(), entityId: villages.id })
         .from(villages)
         .innerJoin(activities, and(eq(activities.villageId, villages.id), eq(activities.phase, id)))
-        .where(and(inArray(villages.id, villagesIds), isNull(activities.publishDate)))
+        .where(and(inArray(villages.id, villagesIds), isNull(activities.publishDate), isNull(activities.deleteDate)))
         .groupBy(villages.id);
 
     const videosCountResult = await db

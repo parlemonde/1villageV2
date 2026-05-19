@@ -19,7 +19,7 @@ const phaseActivitiesSearchParams = {
 const loadSearchParams = createLoader(phaseActivitiesSearchParams);
 
 export const GET = async (
-    _request: NextRequest,
+    { nextUrl }: NextRequest,
     { params }: { params: Promise<{ id: number; classroomId: number }> },
 ): Promise<NextResponse<PhaseActivitiesResponse>> => {
     const t = await getExtracted('common');
@@ -34,7 +34,7 @@ export const GET = async (
 
     const { id, classroomId } = await params;
 
-    const { page, itemsPerPage } = loadSearchParams(_request.nextUrl.searchParams);
+    const { page, itemsPerPage } = loadSearchParams(nextUrl.searchParams);
 
     const villageIdResponse = await db.select({ villageId: classrooms.villageId }).from(classrooms).where(eq(classrooms.id, classroomId));
     const villageId = villageIdResponse[0]?.villageId;
@@ -96,10 +96,10 @@ export const GET = async (
         )
         .groupBy(classrooms.id);
 
-    activityResult.forEach((r) => {
-        const label = r?.alias ? r.alias : r?.level ? t('Les {level} de {name}', { level: r.level, name: r.name }) : r?.name;
-        r.name = label;
-    });
+    const namedActivityResult = activityResult.map((r) => ({
+        ...r,
+        name: r.alias ?? (r.level ? t('Les {level} de {name}', { level: r.level, name: r.name }) : r.name),
+    }));
 
     const totals = await db
         .select({
@@ -116,7 +116,7 @@ export const GET = async (
 
     const totalElements = await db.select({ count: count() }).from(classrooms).where(eq(classrooms.villageId, villageId));
 
-    const result = aggregateActivities(activityResult, draftCount, videoCount, totals);
+    const result = aggregateActivities(namedActivityResult, draftCount, videoCount, totals);
 
     return NextResponse.json({ ...result, totalElements: totalElements[0]?.count });
 };
