@@ -61,10 +61,12 @@ export const auth = registerService('auth', () =>
                 adminPublicationSubscribed: {
                     type: 'boolean',
                     fieldName: 'admin_publication_subscribed',
+                    required: false,
                 },
                 commentActivitySubscribed: {
                     type: 'boolean',
                     fieldName: 'comment_activity_subscribed',
+                    required: false,
                 },
             },
             changeEmail: {

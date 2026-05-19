@@ -63,7 +63,7 @@ export const postComment = async ({ activityId, content }: { activityId: number;
             }
         } catch (emailError) {
             // Log email sending errors but don't fail the comment creation
-            logger.error('Error sending comment notification email:', emailError);
+            logger.error('Error sending comment notification email:', { emailError });
         }
 
         return { data };

@@ -82,7 +82,7 @@ export const publishActivity = async (activity: Partial<Activity>) => {
             }
         } catch (emailError) {
             // Log email sending errors but don't fail the activity publication
-            logger.error('Error sending admin publication notification emails:', emailError);
+            logger.error('Error sending admin publication notification emails:', { emailError });
         }
     }
 };
