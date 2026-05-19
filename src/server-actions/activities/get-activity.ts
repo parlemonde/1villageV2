@@ -1,12 +1,10 @@
+'use server';
+
 import { db } from '@server/database';
 import { activities, type Activity } from '@server/database/schemas/activities';
-import { classrooms } from '@server/database/schemas/classrooms';
-import { parentsStudents } from '@server/database/schemas/parents-students';
-import { students } from '@server/database/schemas/students';
-import { villages } from '@server/database/schemas/villages';
+import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { and, eq, isNotNull } from 'drizzle-orm';
+import { and, eq, isNotNull, isNull } from 'drizzle-orm';
 
 export const getActivity = async (id: number | null): Promise<Activity | undefined> => {
     if (!id) {
@@ -15,28 +13,26 @@ export const getActivity = async (id: number | null): Promise<Activity | undefin
 
     const user = await getCurrentUser();
     if (!user) {
-        return undefined;
-    }
-    const { village } = await getCurrentVillageAndClassroomForUser(user);
-    if (!village) {
-        return undefined;
+        throw new Error('Unauthorized');
     }
 
-    if (user.role == 'parent') {
-        const [row] = await db
-            .select({ activities })
-            .from(parentsStudents)
-            .innerJoin(students, eq(students.id, parentsStudents.studentId))
-            .innerJoin(classrooms, eq(classrooms.id, students.classroomId))
-            .innerJoin(villages, eq(villages.id, classrooms.villageId))
-            .innerJoin(activities, eq(activities.villageId, villages.id))
-            .where(and(eq(activities.id, id), eq(activities.villageId, village.id), isNotNull(activities.publishDate)))
-            .limit(1);
-
-        return row?.activities as Activity | undefined;
-    }
-
-    return (await db.query.activities.findFirst({
-        where: and(eq(activities.id, id), eq(activities.userId, user.id), isNotNull(activities.publishDate)),
+    const activity = (await db.query.activities.findFirst({
+        where: and(eq(activities.id, id), isNotNull(activities.publishDate)),
     })) as Activity | undefined;
+
+    if (!activity) {
+        return undefined;
+    }
+
+    if (activity.type === 'reaction') {
+        const reaction = activity as ReactionActivityDao;
+        if (reaction.data.activityId) {
+            const activityBeingReacted = (await db.query.activities.findFirst({
+                where: and(isNull(activities.deleteDate), eq(activities.id, reaction.data.activityId)),
+            })) as Activity | undefined;
+            return { ...activity, data: { ...activity.data, activityBeingReacted } };
+        }
+    }
+
+    return activity;
 };

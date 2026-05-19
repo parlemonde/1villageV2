@@ -5,19 +5,12 @@ import { PageContainer } from '@frontend/components/ui/PageContainer';
 import HomeSVG from '@frontend/svg/navigation/home.svg';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { getActivity } from '@server-actions/activities/get-activity';
-import { db } from '@server/database';
-import { activities } from '@server/database/schemas/activities';
-import type { Activity } from '@server/database/schemas/activities';
-import type { ReactionActivityDao } from '@server/database/schemas/activity-types';
-import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
-import { eq, isNotNull, and, sql, isNull } from 'drizzle-orm';
+import { updateActivityClassroomViews } from '@server-actions/activities/update-activity-classroom-views';
 import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
 
 interface ServerPageProps {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
     params: Promise<{ [key: string]: string }>;
 }
 
@@ -29,62 +22,15 @@ const getActivityId = (param: string) => {
     return activityId;
 };
 
-const updateActivityClassroomViews = async function (activity: Activity) {
-    const user = await getCurrentUser();
-    if (!user) {
-        return;
-    }
-    const isPelico = user.role === 'admin' || user.role === 'mediator';
-    if (isPelico) {
-        return;
-    }
-
-    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
-    const shouldUpdateViews = classroom?.id && activity.classroomId !== classroom.id && !activity.views?.includes(classroom.id);
-
-    if (shouldUpdateViews) {
-        await db
-            .update(activities)
-            .set({
-                views: sql`array_append(${activities.views}, ${classroom.id})`,
-            })
-            .where(
-                and(
-                    eq(activities.id, activity.id),
-                    isNotNull(activities.publishDate),
-                    sql`NOT (${classroom.id} = ANY(${activities.views}))`, // évite les doublons
-                ),
-            );
-    }
-};
-
 export default async function ActivityPage({ params }: ServerPageProps) {
     const activityId = getActivityId((await params).id);
-    const initialActivity =
-        activityId !== null
-            ? ((await db.query.activities.findFirst({
-                  where: and(eq(activities.id, activityId), isNotNull(activities.publishDate)),
-              })) as Activity | undefined)
-            : undefined;
+    const activity = activityId !== null ? await getActivity(activityId) : undefined;
 
-    if (!initialActivity) {
+    if (!activity) {
         notFound();
     }
 
-    let activity = initialActivity;
-    if (initialActivity.type === 'reaction') {
-        const reaction = initialActivity as ReactionActivityDao;
-
-        if (reaction.data.activityId) {
-            const activityBeingReacted = (await db.query.activities.findFirst({
-                where: and(isNull(activities.deleteDate), eq(activities.id, reaction.data.activityId)),
-            })) as Activity | undefined;
-
-            activity = { ...initialActivity, data: { ...activity.data, activityBeingReacted } };
-        }
-    }
-
-    await updateActivityClassroomViews(initialActivity);
+    await updateActivityClassroomViews(activity);
 
     return (
         <PageContainer>
