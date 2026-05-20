@@ -6,7 +6,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Field } from '@frontend/components/ui/Form/Field';
 import { Title } from '@frontend/components/ui/Title';
-import { updateAdminPublicationSubscription, updateCommentActivitySubscription } from '@server-actions/settings/update-subscriptions';
+import { updateSubscription } from '@server-actions/settings/update-subscriptions';
 import { useExtracted } from 'next-intl';
 import { useState, useTransition } from 'react';
 
@@ -19,22 +19,24 @@ export const PreferencesForm = ({
     adminPublicationSubscribed: initialAdminPublication,
     commentActivitySubscribed: initialCommentActivity,
 }: PreferencesFormProps) => {
-    const [adminPublicationSubscribed, setAdminPublicationSubscribed] = useState(initialAdminPublication);
-    const [commentActivitySubscribed, setCommentActivitySubscribed] = useState(initialCommentActivity);
+    const [adminPublicationSubscribed, setAdminPublicationSubscribed] = useState<boolean>(initialAdminPublication);
+    const [commentActivitySubscribed, setCommentActivitySubscribed] = useState<boolean>(initialCommentActivity);
+    const [adminPublicationEdited, setAdminPublicationEdited] = useState<boolean>(initialAdminPublication);
+    const [commentActivityEdited, setCommentActivityEdited] = useState<boolean>(initialCommentActivity);
     const [isPending, startTransition] = useTransition();
     const t = useExtracted('app.(1village).mon-compte.preferences');
 
-    const hasChanges = adminPublicationSubscribed !== initialAdminPublication || commentActivitySubscribed !== initialCommentActivity;
+    const hasChanges = adminPublicationSubscribed !== adminPublicationEdited || commentActivitySubscribed !== commentActivityEdited;
 
     const handleSave = async () => {
         startTransition(async () => {
             try {
                 const results = await Promise.all([
-                    adminPublicationSubscribed !== initialAdminPublication
-                        ? updateAdminPublicationSubscription(adminPublicationSubscribed)
+                    adminPublicationSubscribed !== adminPublicationEdited
+                        ? updateSubscription('adminPublication', adminPublicationEdited)
                         : Promise.resolve({ error: null }),
-                    commentActivitySubscribed !== initialCommentActivity
-                        ? updateCommentActivitySubscription(commentActivitySubscribed)
+                    commentActivitySubscribed !== commentActivityEdited
+                        ? updateSubscription('commentActivity', commentActivityEdited)
                         : Promise.resolve({ error: null }),
                 ]);
 
@@ -45,6 +47,9 @@ export const PreferencesForm = ({
                         message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
                     });
                 } else {
+                    // save preferences in state when no errors
+                    setAdminPublicationSubscribed(adminPublicationEdited);
+                    setCommentActivitySubscribed(commentActivityEdited);
                     sendToast({
                         type: 'success',
                         message: t('Vos préférences ont été mises à jour avec succès.'),
@@ -76,8 +81,8 @@ export const PreferencesForm = ({
                             <Checkbox
                                 name="admin-publication"
                                 label={t('Publications de Pelico')}
-                                isChecked={adminPublicationSubscribed}
-                                onChange={(checked) => setAdminPublicationSubscribed(checked === true)}
+                                isChecked={adminPublicationEdited}
+                                onChange={(checked) => setAdminPublicationEdited(checked === true)}
                                 isDisabled={isPending}
                             />
                         </div>
@@ -95,8 +100,8 @@ export const PreferencesForm = ({
                             <Checkbox
                                 name="comment-activity"
                                 label={t('Commentaire sous une de nos publications')}
-                                isChecked={commentActivitySubscribed}
-                                onChange={(checked) => setCommentActivitySubscribed(checked === true)}
+                                isChecked={commentActivityEdited}
+                                onChange={(checked) => setCommentActivityEdited(checked === true)}
                                 isDisabled={isPending}
                             />
                         </div>
