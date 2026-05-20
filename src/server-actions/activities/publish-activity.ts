@@ -70,7 +70,7 @@ export const publishActivity = async (activity: Partial<Activity>) => {
                     });
 
                     const hostUrl = getEnvVariable('HOST_URL');
-                    const activityLink = `${hostUrl}/activites/${publishedActivityId}`;
+                    const activityLink = `${hostUrl}/activities/${publishedActivityId}`;
 
                     // Send emails to all subscribed teachers
                     for (const teacher of teachers) {

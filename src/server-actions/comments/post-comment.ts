@@ -55,7 +55,7 @@ export const postComment = async ({ activityId, content }: { activityId: number;
                     if (classroomTeacher && classroomTeacher.commentActivitySubscribed && classroomTeacher.id !== user.id) {
                         const commentPreview = extractTextFromProseMirror(content, 150);
                         const hostUrl = getEnvVariable('HOST_URL');
-                        const activityLink = `${hostUrl}/activites/${activityId}`;
+                        const activityLink = `${hostUrl}/activities/${activityId}`;
 
                         await sendCommentNotificationEmail(classroomTeacher, activity.type, user.name, commentPreview, activityLink);
                     }
