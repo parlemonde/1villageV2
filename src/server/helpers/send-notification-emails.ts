@@ -15,7 +15,7 @@ export async function sendCommentNotificationEmail(
 ): Promise<void> {
     try {
         const t = await getExtracted('Emails');
-        const subject = t('Un nouveau commentaire sous votre activité ${type}', { type: activityType });
+        const subject = t('Un nouveau commentaire sous votre activité {type}', { type: activityType });
 
         await sendEmail({
             to: teacher.email,
