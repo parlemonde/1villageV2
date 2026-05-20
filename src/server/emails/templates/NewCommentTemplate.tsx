@@ -16,7 +16,7 @@ interface NewCommentTemplateProps extends BaseTemplateProps, NewCommentTemplateD
 
 export default function NewCommentTemplate({
     firstName,
-    activityType,
+    activityName,
     commenterName,
     commentPreview,
     link,
@@ -31,7 +31,7 @@ export default function NewCommentTemplate({
                 {newComment}
             </Heading>
             <Text>
-                {newCommentMessage} {activityType}
+                {newCommentMessage} {activityName}
             </Text>
             {commentPreview && commenterName ? (
                 <Section>
@@ -51,7 +51,7 @@ export default function NewCommentTemplate({
 NewCommentTemplate.PreviewProps = {
     firstName: 'John Doe',
     confirmationLink: 'https://1v.parlemonde.org',
-    activityType: 'jeu',
+    activityName: 'Contenu libre',
     commenterName: 'Clint Eastwood',
     commentPreview: '1 Million dollar baby !',
     link: 'http://localhost:3000/activities/45',

@@ -26,7 +26,7 @@ export async function sendCommentNotificationEmail(
             emailType: 'NEW_COMMENT' as EmailType,
             props: {
                 firstName: teacher.name.split(' ')[0],
-                activityType: translatedActivityName,
+                activityName: translatedActivityName,
                 commenterName,
                 commentPreview,
                 link: activityLink,

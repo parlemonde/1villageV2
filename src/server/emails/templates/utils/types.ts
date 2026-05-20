@@ -21,7 +21,7 @@ export interface NewAdminPublicationTemplateData extends BaseTemplateData {
 }
 
 export interface NewCommentTemplateData extends BaseTemplateData {
-    activityType: string;
+    activityName: string;
     commenterName: string;
     commentPreview?: string;
     link: string;
