@@ -4,7 +4,6 @@ import { db } from '@server/database';
 import type { Activity } from '@server/database/schemas/activities';
 import { activities } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
-// import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { sendAdminPublicationNotificationEmail } from '@server/helpers/send-notification-emails';
 import { getEnvVariable } from '@server/lib/get-env-variable';
@@ -75,7 +74,7 @@ export const publishActivity = async (activity: Partial<Activity>) => {
                     // Send emails to all subscribed teachers
                     for (const teacher of teachers) {
                         if (teacher.adminPublicationSubscribed) {
-                            await sendAdminPublicationNotificationEmail(teacher, activityLink);
+                            void sendAdminPublicationNotificationEmail(teacher, activityLink);
                         }
                     }
                 }

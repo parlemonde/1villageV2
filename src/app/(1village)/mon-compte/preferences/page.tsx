@@ -22,7 +22,6 @@ export default async function PreferencesPage() {
             <PreferencesForm
                 adminPublicationSubscribed={user.adminPublicationSubscribed ?? true}
                 commentActivitySubscribed={user.commentActivitySubscribed ?? true}
-                userId={user.id}
             />
         </PageContainer>
     );

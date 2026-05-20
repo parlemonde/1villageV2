@@ -13,7 +13,6 @@ import { useState, useTransition } from 'react';
 interface PreferencesFormProps {
     adminPublicationSubscribed: boolean;
     commentActivitySubscribed: boolean;
-    userId: string;
 }
 
 export const PreferencesForm = ({

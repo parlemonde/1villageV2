@@ -57,7 +57,7 @@ export const postComment = async ({ activityId, content }: { activityId: number;
                         const hostUrl = getEnvVariable('HOST_URL');
                         const activityLink = `${hostUrl}/activities/${activityId}`;
 
-                        await sendCommentNotificationEmail(classroomTeacher, activity.type, user.name, commentPreview, activityLink);
+                        void sendCommentNotificationEmail(classroomTeacher, activity.type, user.name, commentPreview, activityLink);
                     }
                 }
             }
