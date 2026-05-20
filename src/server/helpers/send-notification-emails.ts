@@ -8,14 +8,14 @@ import { getExtracted } from 'next-intl/server';
 
 export async function sendCommentNotificationEmail(
     teacher: User,
-    activityTitle: string,
+    activityType: string,
     commenterName: string,
     commentPreview: string | undefined,
     activityLink: string,
 ): Promise<void> {
     try {
         const t = await getExtracted('Emails');
-        const subject = t('newCommentEmailSubject') || `Nouveau commentaire sur "${activityTitle}"`;
+        const subject = t('Un nouveau commentaire sous votre activité ${type}', { type: activityType });
 
         await sendEmail({
             to: teacher.email,
@@ -23,7 +23,7 @@ export async function sendCommentNotificationEmail(
             emailType: 'NEW_COMMENT' as EmailType,
             props: {
                 firstName: teacher.name.split(' ')[0],
-                activityTitle,
+                activityType,
                 commenterName,
                 commentPreview,
                 link: activityLink,
@@ -42,7 +42,7 @@ export async function sendAdminPublicationNotificationEmail(
 ): Promise<void> {
     try {
         const t = await getExtracted('Emails');
-        const subject = t('newPublicationEmailSubject') || `Nouvelle publication: ${publicationTitle}`;
+        const subject = t('Nouvelle publication de Pelico : ${title}', { title: publicationTitle });
 
         await sendEmail({
             to: teacher.email,

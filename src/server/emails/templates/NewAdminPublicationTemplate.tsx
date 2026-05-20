@@ -33,20 +33,7 @@ export default function NewAdminPublicationTemplate({
                 {title}
             </Heading>
             {description && <Text style={{ margin: '8px 0' }}>{description}</Text>}
-            <Link
-                href={link}
-                style={{
-                    display: 'inline-block',
-                    margin: '16px 0',
-                    padding: '12px 24px',
-                    backgroundColor: '#FF6B35',
-                    color: 'white',
-                    textDecoration: 'none',
-                    borderRadius: '4px',
-                }}
-            >
-                {exploreNow}
-            </Link>
+            <Link href={link}>{exploreNow}</Link>
         </BaseTemplate>
     );
 }
@@ -54,8 +41,8 @@ export default function NewAdminPublicationTemplate({
 export async function getNewAdminPublicationTranslations() {
     const t = await getExtracted('Emails');
     return {
-        newPublication: t('newPublication') || 'Nouvelle publication',
-        newAdminContent: t('newAdminContent') || 'Un nouveau contenu a été publié pour votre village.',
-        exploreNow: t('exploreNow') || 'Découvrir maintenant',
+        newPublication: t('Nouvelle publication de Pelico'),
+        newAdminContent: t('Un nouveau contenu a été publié dans votre village.'),
+        exploreNow: t('Découvrer-le maintenant'),
     };
 }

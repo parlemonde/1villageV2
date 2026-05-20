@@ -16,7 +16,7 @@ interface NewCommentTemplateProps extends BaseTemplateProps, NewCommentTemplateD
 
 export default function NewCommentTemplate({
     firstName,
-    activityTitle,
+    activityType,
     commenterName,
     commentPreview,
     link,
@@ -32,7 +32,7 @@ export default function NewCommentTemplate({
             </Heading>
             <Text>{newCommentMessage}</Text>
             <Heading as="h3" style={{ margin: '16px 0 8px 0', fontSize: '16px' }}>
-                {commentOn}: {activityTitle}
+                {commentOn}: {activityType}
             </Heading>
             <Text style={{ fontStyle: 'italic', margin: '8px 0', color: '#666' }}>
                 Par <strong>{commenterName}</strong>
@@ -42,20 +42,7 @@ export default function NewCommentTemplate({
                     &quot;{commentPreview}&quot;
                 </Text>
             )}
-            <Link
-                href={link}
-                style={{
-                    display: 'inline-block',
-                    margin: '16px 0',
-                    padding: '12px 24px',
-                    backgroundColor: '#FF6B35',
-                    color: 'white',
-                    textDecoration: 'none',
-                    borderRadius: '4px',
-                }}
-            >
-                {viewActivity}
-            </Link>
+            <Link href={link}>{viewActivity}</Link>
         </BaseTemplate>
     );
 }
@@ -63,9 +50,9 @@ export default function NewCommentTemplate({
 export async function getNewCommentTranslations() {
     const t = await getExtracted('Emails');
     return {
-        newComment: t('newComment') || 'Nouveau commentaire',
-        newCommentMessage: t('newCommentMessage') || 'Un nouveau commentaire a été publié sur une activité de votre classe.',
-        commentOn: t('commentOn') || 'Commentaire sur',
-        viewActivity: t('viewActivity') || "Voir l'activité",
+        newComment: t('Nouveau commentaire'),
+        newCommentMessage: t('Un nouveau commentaire a été publié sur une activité de votre classe.'),
+        commentOn: t('Commentaire sur'),
+        viewActivity: t("Voir l'activité"),
     };
 }
