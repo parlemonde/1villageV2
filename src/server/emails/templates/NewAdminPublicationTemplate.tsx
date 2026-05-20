@@ -13,14 +13,7 @@ interface NewAdminPublicationTemplateProps extends BaseTemplateProps, NewAdminPu
     };
 }
 
-export default function NewAdminPublicationTemplate({
-    firstName,
-    title,
-    description,
-    link,
-    translations,
-    baseTranslations,
-}: NewAdminPublicationTemplateProps) {
+export default function NewAdminPublicationTemplate({ firstName, link, translations, baseTranslations }: NewAdminPublicationTemplateProps) {
     const { newPublication, newAdminContent, exploreNow } = translations;
 
     return (
@@ -29,10 +22,6 @@ export default function NewAdminPublicationTemplate({
                 {newPublication}
             </Heading>
             <Text>{newAdminContent}</Text>
-            <Heading as="h3" style={{ margin: '16px 0 8px 0', fontSize: '16px' }}>
-                {title}
-            </Heading>
-            {description && <Text style={{ margin: '8px 0' }}>{description}</Text>}
             <Link href={link}>{exploreNow}</Link>
         </BaseTemplate>
     );

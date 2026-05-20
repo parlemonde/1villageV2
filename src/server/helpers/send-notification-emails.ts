@@ -34,15 +34,10 @@ export async function sendCommentNotificationEmail(
     }
 }
 
-export async function sendAdminPublicationNotificationEmail(
-    teacher: User,
-    publicationTitle: string,
-    publicationDescription: string | undefined,
-    publicationLink: string,
-): Promise<void> {
+export async function sendAdminPublicationNotificationEmail(teacher: User, publicationLink: string): Promise<void> {
     try {
         const t = await getExtracted('Emails');
-        const subject = t('Nouvelle publication de Pelico : ${title}', { title: publicationTitle });
+        const subject = t('Nouvelle publication de Pelico');
 
         await sendEmail({
             to: teacher.email,
@@ -50,8 +45,6 @@ export async function sendAdminPublicationNotificationEmail(
             emailType: 'NEW_ADMIN_PUBLICATION' as EmailType,
             props: {
                 firstName: teacher.name.split(' ')[0],
-                title: publicationTitle,
-                description: publicationDescription,
                 link: publicationLink,
             },
         });

@@ -75,7 +75,7 @@ export const publishActivity = async (activity: Partial<Activity>) => {
                     // Send emails to all subscribed teachers
                     for (const teacher of teachers) {
                         if (teacher.adminPublicationSubscribed) {
-                            await sendAdminPublicationNotificationEmail(teacher, publishedActivity.type, undefined, activityLink);
+                            await sendAdminPublicationNotificationEmail(teacher, activityLink);
                         }
                     }
                 }

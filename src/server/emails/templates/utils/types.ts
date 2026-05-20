@@ -17,8 +17,6 @@ export interface RequestNewPasswordTemplateData extends BaseTemplateData {
 }
 
 export interface NewAdminPublicationTemplateData extends BaseTemplateData {
-    title: string;
-    description?: string;
     link: string;
 }
 
