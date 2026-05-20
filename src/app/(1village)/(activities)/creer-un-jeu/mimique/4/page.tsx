@@ -32,13 +32,13 @@ export default function CreerUnJeuMimiqueStep4() {
         return null;
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         setisSubmitting(true);
         try {
             if (activity.publishDate) {
-                onUpdateActivity();
+                await onUpdateActivity();
             } else {
-                onPublishActivity();
+                await onPublishActivity();
             }
             router.push('/creer-un-jeu/success');
         } catch {
