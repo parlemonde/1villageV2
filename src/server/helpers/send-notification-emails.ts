@@ -1,7 +1,9 @@
 'use server';
 
+import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { User } from '@server/database/schemas/users';
 import type { EmailType } from '@server/emails/templates/utils/types';
+import { getActivityName } from '@server/entities/activity-name';
 import { logger } from '@server/lib/logger';
 import { sendEmail } from '@server/lib/sendEmail';
 import { getExtracted } from 'next-intl/server';
@@ -15,7 +17,8 @@ export async function sendCommentNotificationEmail(
 ): Promise<void> {
     try {
         const t = await getExtracted('Emails');
-        const subject = t('Un nouveau commentaire sous votre activité {type}', { type: activityType });
+        const translatedActivityName = await getActivityName(activityType as ActivityType);
+        const subject = t('Un nouveau commentaire sous votre activité {type}', { type: translatedActivityName });
 
         await sendEmail({
             to: teacher.email,
@@ -23,7 +26,7 @@ export async function sendCommentNotificationEmail(
             emailType: 'NEW_COMMENT' as EmailType,
             props: {
                 firstName: teacher.name.split(' ')[0],
-                activityType,
+                activityType: translatedActivityName,
                 commenterName,
                 commentPreview,
                 link: activityLink,
