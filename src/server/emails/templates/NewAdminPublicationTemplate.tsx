@@ -38,11 +38,32 @@ export default function NewAdminPublicationTemplate({
     );
 }
 
+NewAdminPublicationTemplate.PreviewProps = {
+    firstName: 'John Doe',
+    confirmationLink: 'https://1v.parlemonde.org',
+    link: 'http://localhost:3000/',
+    baseTranslations: {
+        altText: 'Association Par Le Monde',
+        greeting: 'Bonjour',
+        notification: 'Vous recevez cette notification e-mail envoyée automatiquement dans le cadre du projet 1Village.',
+        joinButton: 'Aller sur 1Village',
+        followUs: 'Suivez-nous !',
+        donateButton: 'Faire un don',
+    },
+    translations: {
+        newPublication: 'Nouvelle publication de Pelico',
+        newAdminContent: 'Un nouveau contenu a été publié dans votre village.',
+        exploreNow: 'Découvrer-le maintenant',
+    },
+} as const;
+
 export async function getNewAdminPublicationTranslations() {
     const t = await getExtracted('Emails');
-    return {
+    const translations: NewAdminPublicationTemplateProps['translations'] = {
         newPublication: t('Nouvelle publication de Pelico'),
         newAdminContent: t('Un nouveau contenu a été publié dans votre village.'),
         exploreNow: t('Découvrer-le maintenant'),
     };
+
+    return translations;
 }
