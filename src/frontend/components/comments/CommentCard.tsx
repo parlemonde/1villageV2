@@ -68,8 +68,10 @@ export const CommentCard = ({ user, classroom, comment, onDelete, canEdit, canDe
                 type: 'error',
                 message: error.message,
             });
+            setContent(beforeEdit);
+        } else {
+            setIsEditing(false);
         }
-        setIsEditing(false);
     };
 
     const cancelEdition = () => {
