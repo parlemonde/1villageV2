@@ -1,0 +1,2 @@
+ALTER TABLE "comments" ADD COLUMN "classroomId" integer;--> statement-breakpoint
+ALTER TABLE "comments" ADD CONSTRAINT "comments_classroomId_classrooms_id_fk" FOREIGN KEY ("classroomId") REFERENCES "public"."classrooms"("id") ON DELETE cascade ON UPDATE no action;
