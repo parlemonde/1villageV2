@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, smallint, jsonb, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, integer, smallint, jsonb, text, boolean } from 'drizzle-orm/pg-core';
 
 export const villages = pgTable('villages', {
     id: serial('id').primaryKey(),
@@ -8,5 +8,6 @@ export const villages = pgTable('villages', {
     activePhase: smallint('activePhase').notNull(),
     phaseStartDates: jsonb('phaseStartDates').$type<Record<number, string>>().notNull(),
     classroomCount: jsonb('classroomCount').$type<Record<string, number>>().notNull(),
+    isCrossVisible: boolean('isCrossVisible').notNull().default(false),
 });
 export type Village = typeof villages.$inferSelect;

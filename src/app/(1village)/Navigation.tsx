@@ -87,6 +87,7 @@ export const Navigation = () => {
     const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
+    const isPhase1Hidden = village.activePhase === 1 && !village.isCrossVisible;
 
     let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
@@ -124,9 +125,9 @@ export const Navigation = () => {
                         .filter((country) => country !== classroom?.countryCode)
                         .map((country, index) => (
                             <CountryFlag
-                                key={village.activePhase === 1 ? `mistery-${index}` : country}
+                                key={isPhase1Hidden ? `mystery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1 && !isPelico}
+                                isMystery={isPhase1Hidden && !isPelico}
                             />
                         ))}
                 </div>
@@ -159,6 +160,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
     const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
+    const isPhase1Hidden = village?.activePhase === 1 && !village?.isCrossVisible;
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
@@ -195,9 +197,9 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                         .filter((country) => country !== classroomCountryCode)
                         .map((country, index) => (
                             <CountryFlag
-                                key={village.activePhase === 1 ? `mistery-${index}` : country}
+                                key={isPhase1Hidden ? `mystery-${index}` : country}
                                 country={country}
-                                isMystery={village.activePhase === 1 && !isPelico}
+                                isMystery={isPhase1Hidden && !isPelico}
                             />
                         ))}
                 </div>
