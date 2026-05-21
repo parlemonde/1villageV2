@@ -87,20 +87,24 @@ export const Comments = ({ activityId }: CommentsProps) => {
         <>
             <div className={styles.commentsFeed}>
                 {comments && comments.length > 0 ? (
-                    comments?.map((c) => (
-                        <CommentCard
-                            key={c.comment.id}
-                            canEdit={user.id === c.user.id && classroom?.id === c?.classroom?.id}
-                            canDelete={(user.id === c.user.id && classroom?.id === c?.classroom?.id) || isPelico}
-                            user={c.user}
-                            classroom={c.classroom}
-                            comment={c.comment}
-                            onDelete={() => {
-                                setIsDeleteModalOpen(true);
-                                setCommentIdToDelete(c.comment.id);
-                            }}
-                        />
-                    ))
+                    comments?.map((c) => {
+                        const isAuthor = user.id === c.user.id;
+                        const isInCurrentClassroom = c.comment.classroomId === null || classroom?.id === c?.classroom?.id;
+                        return (
+                            <CommentCard
+                                key={c.comment.id}
+                                canEdit={isAuthor && isInCurrentClassroom}
+                                canDelete={(isAuthor && isInCurrentClassroom) || isPelico}
+                                user={c.user}
+                                classroom={c.classroom}
+                                comment={c.comment}
+                                onDelete={() => {
+                                    setIsDeleteModalOpen(true);
+                                    setCommentIdToDelete(c.comment.id);
+                                }}
+                            />
+                        );
+                    })
                 ) : (
                     <p>{t("Aucune réaction n'a été publiée pour le moment")}</p>
                 )}
