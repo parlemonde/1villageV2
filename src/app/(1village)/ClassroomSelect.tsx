@@ -39,6 +39,7 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
                 setClassroom(classroom);
             }
             router.push('/');
+            router.refresh();
         } catch (error) {
             console.error(error);
             sendToast({
