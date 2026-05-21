@@ -87,7 +87,7 @@ export const Navigation = () => {
     const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
-    const isPhase1Hidden = village.activePhase === 1 && !village.isCrossVisible;
+    const isPhase1Hidden = village?.activePhase === 1 && !village?.isCrossVisible;
 
     let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
         keepPreviousData: true,
