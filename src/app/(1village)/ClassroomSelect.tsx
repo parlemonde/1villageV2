@@ -6,7 +6,6 @@ import { Loader } from '@frontend/components/ui/Loader';
 import type { MarginProps, PaddingProps } from '@frontend/components/ui/css-styles';
 import { UserContext } from '@frontend/contexts/userContext';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import { logger } from '@server/lib/logger';
 import { selectClassroom } from '@server-actions/classrooms/select-classroom';
 import { useRouter } from 'next/navigation';
 import { useExtracted } from 'next-intl';
@@ -41,7 +40,7 @@ export const ClassroomSelect = ({ classrooms, className, ...props }: ClassroomSe
             }
             router.push('/');
         } catch (error) {
-            logger.error(error);
+            console.error(error);
             sendToast({
                 type: 'error',
                 message: t('Une erreur est survenue lors de la sélection de la classe'),
