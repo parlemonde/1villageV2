@@ -31,34 +31,35 @@ export const PreferencesForm = ({
     const handleSave = async () => {
         startTransition(async () => {
             try {
-                const results = await Promise.all([
-                    adminPublicationSubscribed !== adminPublicationEdited
-                        ? updateSubscription('adminPublication', adminPublicationEdited)
-                        : Promise.resolve({ error: null }),
-                    commentActivitySubscribed !== commentActivityEdited
-                        ? updateSubscription('commentActivity', commentActivityEdited)
-                        : Promise.resolve({ error: null }),
-                ]);
+                const updates: Record<string, boolean> = {};
 
-                const hasError = results.some((r) => r.error);
-                if (hasError) {
-                    sendToast({
-                        type: 'error',
-                        message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
-                    });
-                } else {
-                    // save preferences in state when no errors
-                    setAdminPublicationSubscribed(adminPublicationEdited);
-                    setCommentActivitySubscribed(commentActivityEdited);
-                    sendToast({
-                        type: 'success',
-                        message: t('Vos préférences ont été mises à jour avec succès.'),
-                    });
+                if (hasChanges) {
+                    if (adminPublicationSubscribed !== adminPublicationEdited) {
+                        updates.adminPublication = adminPublicationEdited;
+                    }
+                    if (commentActivitySubscribed !== commentActivityEdited) {
+                        updates.commentActivity = commentActivityEdited;
+                    }
                 }
-            } catch {
+
+                await updateSubscription(updates);
+
+                setAdminPublicationSubscribed(adminPublicationEdited);
+                setCommentActivitySubscribed(commentActivityEdited);
+
+                sendToast({
+                    type: 'success',
+                    message: t('Vos préférences ont été mises à jour avec succès.'),
+                });
+            } catch (error) {
+                // Rollback optimistic UI on error
+                setAdminPublicationEdited(adminPublicationSubscribed);
+                setCommentActivityEdited(commentActivitySubscribed);
+
+                const errorMessage = error instanceof Error ? error.message : t('Une erreur est survenue lors de la mise à jour de vos préférences.');
                 sendToast({
                     type: 'error',
-                    message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
+                    message: errorMessage,
                 });
             }
         });
