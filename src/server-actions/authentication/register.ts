@@ -57,14 +57,12 @@ export async function register(_previousState: ServerActionResponse, formData: F
                 name: firstName + ' ' + lastName,
                 email,
                 password,
+                wantsNewsletter: acceptedNewsletter === 'on',
             },
         });
 
         await db.transaction(async (tx) => {
-            await tx
-                .update(users)
-                .set({ role: 'parent', wantsNewsletter: acceptedNewsletter === 'true' })
-                .where(eq(users.id, response.user.id));
+            await tx.update(users).set({ role: 'parent' }).where(eq(users.id, response.user.id));
 
             await tx.insert(parentsStudents).values({ parentId: response.user.id, studentId: row.studentId });
         });

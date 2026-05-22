@@ -39,7 +39,7 @@ export const auth = registerService('auth', () =>
             sendResetPassword: async ({ user, url }) => {
                 logger.info(`sendResetPassword to user ${user.id}`);
                 const t = await getExtracted('common');
-                void sendEmail({
+                sendEmail({
                     to: user.email,
                     subject: t('Mot de passe oublié - 1Village'),
                     emailType: 'RESET_PASSWORD' as EmailType,
@@ -47,6 +47,8 @@ export const auth = registerService('auth', () =>
                         firstName: user.name ?? '',
                         resetPasswordLink: url,
                     },
+                }).catch((error) => {
+                    logger.error('Failed to send reset password email', error);
                 });
             },
             onPasswordReset: async ({ user }) => {
@@ -60,6 +62,14 @@ export const auth = registerService('auth', () =>
         },
         user: {
             modelName: 'users',
+            additionalFields: {
+                wantsNewsletter: {
+                    type: 'boolean',
+                    required: false,
+                    defaultValue: false,
+                    input: true,
+                },
+            },
             changeEmail: {
                 enabled: true,
                 updateEmailWithoutVerification: true,
@@ -81,7 +91,9 @@ export const auth = registerService('auth', () =>
         emailVerification: {
             autoSignInAfterVerification: true,
             sendVerificationEmail: async ({ user, url }) => {
-                void sendAccountConfirmationEmail(user.email, user.name, url);
+                sendAccountConfirmationEmail(user.email, user.name, url).catch((error) => {
+                    logger.error('Failed to send account confirmation email', error);
+                });
             },
         },
     }),
