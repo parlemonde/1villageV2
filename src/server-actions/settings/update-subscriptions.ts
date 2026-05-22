@@ -7,8 +7,8 @@ import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
 
 type SubscriptionUpdates = Partial<{
-    adminPublication: boolean;
-    commentActivity: boolean;
+    adminPublicationSubscribed: boolean;
+    commentActivitySubscribed: boolean;
 }>;
 
 export const updateSubscription = async (updates: SubscriptionUpdates): Promise<void> => {
@@ -22,23 +22,12 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
         throw new Error('Forbidden');
     }
 
-    const updateData: Record<string, boolean> = {};
-    if (updates.adminPublication !== undefined) {
-        updateData.adminPublicationSubscribed = updates.adminPublication;
-    }
-    if (updates.commentActivity !== undefined) {
-        updateData.commentActivitySubscribed = updates.commentActivity;
-    }
-
-    if (Object.keys(updateData).length === 0) {
+    if (Object.keys(updates).length === 0) {
         return; // Nothing to update
     }
 
     try {
-        await db
-            .update(users)
-            .set(updateData as any)
-            .where(eq(users.id, user.id));
+        await db.update(users).set(updates).where(eq(users.id, user.id));
     } catch (error) {
         logger.error(error);
         throw new Error('Failed to update subscription preferences');

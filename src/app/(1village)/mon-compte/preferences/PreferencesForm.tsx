@@ -35,10 +35,10 @@ export const PreferencesForm = ({
 
                 if (hasChanges) {
                     if (adminPublicationSubscribed !== adminPublicationEdited) {
-                        updates.adminPublication = adminPublicationEdited;
+                        updates.adminPublicationSubscribed = adminPublicationEdited;
                     }
                     if (commentActivitySubscribed !== commentActivityEdited) {
-                        updates.commentActivity = commentActivityEdited;
+                        updates.commentActivitySubscribed = commentActivityEdited;
                     }
                 }
 
