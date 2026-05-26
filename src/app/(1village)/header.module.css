@@ -99,3 +99,14 @@
     padding-right: 16px;
     border-right: 1px solid #e0e0e0;
 }
+
+@media (max-width: 900px) {
+    .classroomSelect > button {
+        width: 260px;
+    }
+}
+@media (max-width: 850px) {
+    .classroomSelect {
+        display: none;
+    }
+}

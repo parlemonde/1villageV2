@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import { integer, jsonb, pgTable, serial, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 import { activities } from './activities';
+import { classrooms } from './classrooms';
 import { users } from './users';
 
 export const comments = pgTable('comments', {
@@ -11,6 +12,9 @@ export const comments = pgTable('comments', {
             onDelete: 'cascade',
         })
         .notNull(),
+    classroomId: integer('classroomId').references(() => classrooms.id, {
+        onDelete: 'cascade',
+    }),
     activityId: integer('activityId').references(() => activities.id, { onDelete: 'cascade' }),
     content: jsonb('content'),
     createDate: timestamp('createDate', { mode: 'string', withTimezone: true }).notNull().defaultNow(),

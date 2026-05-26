@@ -3,9 +3,10 @@
 import { db } from '@server/database';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
-import { and, eq } from 'drizzle-orm';
+import { and, or, eq, isNull } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
 
 export const deleteComment = async (commentId: number): Promise<ServerActionResponse> => {
@@ -16,8 +17,16 @@ export const deleteComment = async (commentId: number): Promise<ServerActionResp
             throw new Error('Unauthorized');
         }
 
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+
         const isPelico = user.role === 'admin' || user.role === 'mediator';
-        const filters = isPelico ? eq(comments.id, commentId) : and((eq(comments.id, commentId), eq(comments.userId, user.id)));
+        const filters = isPelico
+            ? eq(comments.id, commentId)
+            : and(
+                  eq(comments.id, commentId),
+                  eq(comments.userId, user.id),
+                  or(isNull(comments.classroomId), eq(comments.classroomId, classroom!.id)),
+              );
 
         await db.delete(comments).where(filters);
         return {};

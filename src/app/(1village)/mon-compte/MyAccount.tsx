@@ -27,7 +27,7 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
         if (!classroom) {
             return '';
         }
-        return [classroom.level, classroom.name, classroom.address, COUNTRIES[classroom.countryCode]].filter(Boolean).join(', ');
+        return [classroom.alias, classroom.level, classroom.name, classroom.address, COUNTRIES[classroom.countryCode]].filter(Boolean).join(', ');
     };
 
     return (

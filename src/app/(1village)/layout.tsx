@@ -19,13 +19,14 @@ export default async function VillageLayout({
     if (!user) {
         redirect('/login');
     }
+
     const { village, classroom } = await getCurrentVillageAndClassroomForUser(user);
     return (
         <UserProvider initialUser={user} initialClassroom={classroom}>
             <VillageProvider village={village}>
                 <Header />
                 <div className={styles.rootLayout}>
-                    {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
+                    {village && <Navigation />}
                     <div className={styles.content}>
                         {village && <Phases />}
                         <main className={styles.main}>{children}</main>

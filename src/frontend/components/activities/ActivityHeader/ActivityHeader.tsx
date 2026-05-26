@@ -7,6 +7,7 @@ import { ACTIVITY_ICONS, useActivityCardTitle } from '@frontend/components/activ
 import { UserContext } from '@frontend/contexts/userContext';
 import PinnedIcon from '@frontend/svg/activities/pinned.svg';
 import PelicoNeutre from '@frontend/svg/pelico/pelico-neutre.svg';
+import { toFormattedDate } from '@lib/date-formatters';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
@@ -14,10 +15,6 @@ import classNames from 'clsx';
 import { useContext } from 'react';
 
 import styles from './activity-header.module.css';
-
-const toFormattedDate = (date: string | null): string => {
-    return date ? Intl.DateTimeFormat('fr', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(date)) : '';
-};
 
 interface ActivityDisplayNameProps {
     user?: User;

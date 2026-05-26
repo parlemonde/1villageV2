@@ -11,11 +11,15 @@ import { UserContext } from '@frontend/contexts/userContext';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
 import FamilyIcon from '@frontend/svg/navigation/family.svg';
+import { jsonFetcher } from '@lib/json-fetcher';
 import { AvatarIcon, ExitIcon, GearIcon, HamburgerMenuIcon, MixerHorizontalIcon, DrawingPinIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
+import type { Classroom } from '@server/database/schemas/classrooms';
 import { logout } from '@server-actions/authentication/logout';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
+import useSWR from 'swr';
 
+import { ClassroomSelect } from './ClassroomSelect';
 import { NavigationMobileMenu } from './Navigation';
 import styles from './header.module.css';
 
@@ -23,6 +27,8 @@ export const Header = () => {
     const { user } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
     const tCommon = useExtracted('common');
+
+    const { data: classrooms } = useSWR<Classroom[]>(user.role === 'teacher' ? `/api/classrooms/me` : undefined, jsonFetcher);
 
     return (
         <div className={styles.headerContainer}>
@@ -43,30 +49,37 @@ export const Header = () => {
                         <span className={styles.title}>1Village</span>
                     </Link>
                     {user?.role === 'teacher' && (
-                        <div className={styles.teacherButtonContainer}>
-                            <Button
-                                leftIcon={<DrawingPinIcon width="24" height="24" />}
-                                variant="borderless"
-                                color="primary"
-                                size="md"
-                                isUpperCase={false}
-                                label={tCommon('Mes ressources')}
-                                hideLabelOnMobile
-                                as="a"
-                                href="https://prof.parlemonde.org/les-ressources/"
-                            />
-                            <Button
-                                leftIcon={<ChatBubbleIcon width="24" height="24" />}
-                                variant="borderless"
-                                color="primary"
-                                size="md"
-                                isUpperCase={false}
-                                label={tCommon('Ma messagerie')}
-                                hideLabelOnMobile
-                                as="a"
-                                href="https://prof.parlemonde.org/la-salle/"
-                            />
-                        </div>
+                        <>
+                            {classrooms && classrooms.length > 1 && (
+                                <div className={styles.classroomSelect}>
+                                    <ClassroomSelect marginLeft="md" classrooms={classrooms} />
+                                </div>
+                            )}
+                            <div className={styles.teacherButtonContainer}>
+                                <Button
+                                    leftIcon={<DrawingPinIcon width="24" height="24" />}
+                                    variant="borderless"
+                                    color="primary"
+                                    size="md"
+                                    isUpperCase={false}
+                                    label={tCommon('Mes ressources')}
+                                    hideLabelOnMobile
+                                    as="a"
+                                    href="https://prof.parlemonde.org/les-ressources/"
+                                />
+                                <Button
+                                    leftIcon={<ChatBubbleIcon width="24" height="24" />}
+                                    variant="borderless"
+                                    color="primary"
+                                    size="md"
+                                    isUpperCase={false}
+                                    label={tCommon('Ma messagerie')}
+                                    hideLabelOnMobile
+                                    as="a"
+                                    href="https://prof.parlemonde.org/la-salle/"
+                                />
+                            </div>
+                        </>
                     )}
                 </div>
                 {user.role === 'admin' && <VillageSelector />}
@@ -80,7 +93,7 @@ export const Header = () => {
             </header>
             {isOpen && (
                 <BackDrop onClick={() => setIsOpen(false)}>
-                    <NavigationMobileMenu onClose={() => setIsOpen(false)} />
+                    <NavigationMobileMenu classrooms={classrooms} onClose={() => setIsOpen(false)} />
                 </BackDrop>
             )}
         </div>

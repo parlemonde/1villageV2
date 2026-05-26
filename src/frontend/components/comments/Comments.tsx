@@ -3,7 +3,6 @@
 import type { UserComment } from '@app/api/comments/route';
 import { sendToast } from '@frontend/components/Toasts';
 import { HtmlEditor } from '@frontend/components/html/HtmlEditor';
-import { defaultContent } from '@frontend/components/html/HtmlEditor/HtmlEditor';
 import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { UserContext } from '@frontend/contexts/userContext';
@@ -39,13 +38,22 @@ export const Comments = ({ activityId }: CommentsProps) => {
     const { data: comments, mutate } = useSWR<UserComment[]>(`/api/comments${serializeToQueryUrl({ activityId: activityId })}`, jsonFetcher);
 
     const post = async () => {
-        const tempId = -1;
+        const { data, error } = await postComment({ activityId, content });
+        if (error) {
+            sendToast({
+                type: 'error',
+                message: error.message,
+            });
+            return;
+        }
+
         const optimisticComment: UserComment = {
             comment: {
-                id: tempId,
+                id: data!.commentId,
                 content,
                 activityId,
                 userId: user.id,
+                classroomId: classroom?.id ? classroom.id : null,
                 createDate: new Date().toISOString(),
                 updateDate: new Date().toISOString(),
             },
@@ -53,37 +61,8 @@ export const Comments = ({ activityId }: CommentsProps) => {
             user,
         };
 
-        await mutate(
-            async (current = []) => {
-                const { error, data } = await postComment({
-                    activityId,
-                    content,
-                });
-
-                if (error) {
-                    sendToast({
-                        type: 'error',
-                        message: error.message,
-                    });
-                } else {
-                    setContent(defaultContent);
-                }
-
-                const newComment: UserComment = {
-                    comment: data!,
-                    classroom: classroom,
-                    user: user,
-                };
-
-                return [newComment, ...current.filter((c) => c.comment.id !== tempId)];
-            },
-            {
-                optimisticData: (current = []) => [optimisticComment, ...current],
-                rollbackOnError: true,
-                revalidate: false,
-                populateCache: true,
-            },
-        );
+        await mutate(comments ? [optimisticComment, ...comments] : [optimisticComment]);
+        setContent('');
     };
 
     const onDeleteComment = async () => {
@@ -108,20 +87,24 @@ export const Comments = ({ activityId }: CommentsProps) => {
         <>
             <div className={styles.commentsFeed}>
                 {comments && comments.length > 0 ? (
-                    comments?.map((c) => (
-                        <CommentCard
-                            key={c.comment.id}
-                            canEdit={user.id === c.user.id}
-                            canDelete={user.id === c.user.id || isPelico}
-                            user={c.user}
-                            classroom={c.classroom}
-                            comment={c.comment}
-                            onDelete={() => {
-                                setIsDeleteModalOpen(true);
-                                setCommentIdToDelete(c.comment.id);
-                            }}
-                        />
-                    ))
+                    comments?.map((c) => {
+                        const isAuthor = user.id === c.user.id;
+                        const isInCurrentClassroom = c.comment.classroomId === null || classroom?.id === c?.classroom?.id;
+                        return (
+                            <CommentCard
+                                key={c.comment.id}
+                                canEdit={isAuthor && isInCurrentClassroom}
+                                canDelete={(isAuthor && isInCurrentClassroom) || isPelico}
+                                user={c.user}
+                                classroom={c.classroom}
+                                comment={c.comment}
+                                onDelete={() => {
+                                    setIsDeleteModalOpen(true);
+                                    setCommentIdToDelete(c.comment.id);
+                                }}
+                            />
+                        );
+                    })
                 ) : (
                     <p>{t("Aucune réaction n'a été publiée pour le moment")}</p>
                 )}
