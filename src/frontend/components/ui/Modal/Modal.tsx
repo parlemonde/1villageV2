@@ -33,7 +33,6 @@ type ModalProps = {
     isLoading?: boolean;
     onOpenAutoFocus?: boolean;
     hasVisibleOverflow?: boolean;
-    className?: string;
 };
 export const Modal = ({
     isOpen,
@@ -60,7 +59,6 @@ export const Modal = ({
     isLoading,
     onOpenAutoFocus = true,
     hasVisibleOverflow = false,
-    className,
     children,
 }: React.PropsWithChildren<ModalProps>) => {
     return (
@@ -75,15 +73,11 @@ export const Modal = ({
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content
-                    className={classNames(
-                        styles.modalContent,
-                        {
-                            [styles[`width-${width}`]]: width,
-                            [styles.isFullWidth]: isFullWidth,
-                            [styles.hasVisibleOverflow]: hasVisibleOverflow,
-                        },
-                        className,
-                    )}
+                    className={classNames(styles.modalContent, contentClassName, {
+                        [styles[`width-${width}`]]: width,
+                        [styles.isFullWidth]: isFullWidth,
+                        [styles.hasVisibleOverflow]: hasVisibleOverflow,
+                    })}
                     onOpenAutoFocus={
                         onOpenAutoFocus
                             ? undefined
