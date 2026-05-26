@@ -1,6 +1,7 @@
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
+import { getParentClassroom } from '@server/entities/classrooms/get-parent-classroom';
 import { getTeacherClassrooms } from '@server/entities/classrooms/get-teacher-classrooms';
 import { getVillage } from '@server/entities/villages/get-village';
 import { cookies } from 'next/headers';
@@ -25,6 +26,17 @@ export const getCurrentVillageAndClassroomForUser = cache(
                         village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
                         classroom,
                         classrooms: teacherClassrooms,
+                    };
+                }
+                break;
+            }
+            case 'parent': {
+                const classroom = await getParentClassroom(user.id);
+                if (classroom) {
+                    return {
+                        village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
+                        classroom,
+                        classrooms: [],
                     };
                 }
                 break;
