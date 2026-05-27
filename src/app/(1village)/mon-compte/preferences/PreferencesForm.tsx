@@ -53,15 +53,13 @@ export const PreferencesForm = ({
                     type: 'success',
                     message: t('Vos préférences ont été mises à jour avec succès.'),
                 });
-            } catch (error) {
+            } catch {
                 // Rollback optimistic UI on error
                 setAdminPublicationEdited(adminPublicationSubscribed);
                 setCommentActivityEdited(commentActivitySubscribed);
-
-                const errorMessage = error instanceof Error ? error.message : t('Une erreur est survenue lors de la mise à jour de vos préférences.');
                 sendToast({
                     type: 'error',
-                    message: errorMessage,
+                    message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
                 });
             }
         });

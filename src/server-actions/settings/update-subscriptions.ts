@@ -29,7 +29,6 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
     try {
         await db.update(users).set(updates).where(eq(users.id, user.id));
     } catch (error) {
-        logger.error(error);
-        throw new Error('Failed to update subscription preferences');
+        logger.error('Failed to update subscription preferences', { error });
     }
 };
