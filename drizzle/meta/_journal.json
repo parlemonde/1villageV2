@@ -99,6 +99,13 @@
       "when": 1779356878206,
       "tag": "0013_lethal_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1779804386183,
+      "tag": "0014_bizarre_chamber",
+      "breakpoints": true
     }
   ]
 }

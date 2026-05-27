@@ -57,6 +57,13 @@ export const auth = registerService('auth', () =>
         },
         user: {
             modelName: 'users',
+            additionalFields: {
+                firstLogin: {
+                    type: 'number',
+                    fieldName: 'first_login',
+                    input: false,
+                },
+            },
             changeEmail: {
                 enabled: true,
                 updateEmailWithoutVerification: true,
