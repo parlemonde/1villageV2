@@ -4,6 +4,7 @@ import { Button } from '@frontend/components/ui/Button';
 import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
+import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
 
 import { UpdateClassroomModal } from './UpdateClassroomModal';
@@ -16,6 +17,7 @@ interface MyAccountProps {
     isSSOUser: boolean;
 }
 export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
+    const t = useExtracted('app.(1village).mon-compte');
     const { user, classroom } = useContext(UserContext);
 
     const [isUpdateNameModalOpen, setIsUpdateNameModalOpen] = useState(false);
@@ -34,11 +36,11 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
         <>
             <div className={styles.settingRow}>
                 <div className={styles.settingLabel}>
-                    <span className={styles.settingLabelText}>Mon nom</span>
+                    <span className={styles.settingLabelText}>{t('Mon nom')}</span>
                     <span className={styles.settingValue}>{user.name}</span>
                 </div>
                 <Button
-                    label="Modifier mon nom"
+                    label={t('Modifier mon nom')}
                     color="secondary"
                     variant="outlined"
                     isUpperCase={false}
@@ -48,12 +50,12 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
             </div>
             <div className={styles.settingRow}>
                 <div className={styles.settingLabel}>
-                    <span className={styles.settingLabelText}>Mon e-mail</span>
+                    <span className={styles.settingLabelText}>{t('Mon e-mail')}</span>
                     <span className={styles.settingValue}>{user.email}</span>
                 </div>
                 {!isSSOUser && (
                     <Button
-                        label="Modifier mon e-mail"
+                        label={t('Modifier mon e-mail')}
                         color="secondary"
                         variant="outlined"
                         isUpperCase={false}
@@ -65,11 +67,11 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
             {user.role === 'teacher' && (
                 <div className={styles.settingRow}>
                     <div className={styles.settingLabel}>
-                        <span className={styles.settingLabelText}>Ma classe</span>
+                        <span className={styles.settingLabelText}>{t('Ma classe')}</span>
                         {classroom && <span className={styles.settingValue}>{displayClassroomInfo()}</span>}
                     </div>
                     <Button
-                        label="Modifier ma classe"
+                        label={t('Modifier ma classe')}
                         color="secondary"
                         variant="outlined"
                         isUpperCase={false}
@@ -81,13 +83,13 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
             {user.role === 'teacher' && (
                 <div className={styles.settingRow}>
                     <div className={styles.settingLabel}>
-                        <span className={styles.settingLabelText}>Préférences de notifications</span>
-                        <span className={styles.settingValue}>Gérez vos préférences de notifications par email</span>
+                        <span className={styles.settingLabelText}>{t('Préférences de notifications')}</span>
+                        <span className={styles.settingValue}>{t('Gérez vos préférences de notifications par email')}</span>
                     </div>
                     <Button
                         as="a"
                         href="/mon-compte/preferences"
-                        label="Gérer les préférences"
+                        label={t('Gérer les préférences')}
                         color="secondary"
                         variant="outlined"
                         isUpperCase={false}
@@ -99,7 +101,7 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
                 <div className={styles.buttonContainer}>
                     <Button
                         marginTop="lg"
-                        label="Modifier mon mot de passe"
+                        label={t('Modifier mon mot de passe')}
                         color="secondary"
                         variant="outlined"
                         isUpperCase={false}
@@ -114,9 +116,9 @@ export const MyAccount = ({ isSSOUser }: MyAccountProps) => {
             <UpdatePasswordModal isOpen={isUpdatePasswordModalOpen} onClose={() => setIsUpdatePasswordModalOpen(false)} />
 
             <Title marginTop="xl" marginBottom="md" variant="h2">
-                Données et confidentialité
+                {t('Données et confidentialité')}
             </Title>
-            <Button label="Supprimer mon compte" color="error" variant="contained" className={styles.button} isUpperCase={false} />
+            <Button label={t('Supprimer mon compte')} color="error" variant="contained" className={styles.button} isUpperCase={false} />
         </>
     );
 };
