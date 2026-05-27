@@ -18,20 +18,21 @@ type RequestNewPasswordFormProps = {
 
 export const RequestNewPasswordForm = ({ error }: RequestNewPasswordFormProps) => {
     const t = useExtracted('app.login.famille.reset-password');
-    const handleSubmit = async (formData: FormData) => {
-        setIsRequestSent(true);
-        dispatchAction(formData);
-    };
     const [email, setEmail] = useState('');
     const [message, dispatchAction, isPending] = useActionState(requestNewPassword, error || '');
     const [isRequestSent, setIsRequestSent] = useState(false);
+
+    const handleSubmit = async (formData: FormData) => {
+        dispatchAction(formData);
+        setIsRequestSent(true);
+    };
 
     return (
         <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
             <Title variant="h2" color="inherit" marginY="md">
                 {t('Réinitialisation du mot de passe')}
             </Title>
-            {isRequestSent ? (
+            {isRequestSent && !message ? (
                 <div className={styles.resetForm}>
                     <PelicoSouriant width="200" height="200" style={{ margin: '0 auto' }} />
                     <p style={{ color: 'var(--success-color)', textAlign: 'center' }}>

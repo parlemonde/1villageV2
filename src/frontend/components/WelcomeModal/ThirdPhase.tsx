@@ -38,7 +38,8 @@ export const ThirdPhase = () => {
             setUser({ ...user, firstLogin: 3 });
             setPhase(3);
             setIsOpen(false);
-        } catch {
+        } catch (e) {
+            console.error(e);
             sendToast({ message: t('Une erreur est survenue'), type: 'error' });
         }
     };

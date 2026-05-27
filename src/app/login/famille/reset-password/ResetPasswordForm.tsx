@@ -20,13 +20,14 @@ type ResetPasswordFormProps = {
 export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
     const t = useExtracted('app.login.famille.reset-password');
     const router = useRouter();
-    const handleSubmit = async (formData: FormData) => {
-        setIsRequestSent(true);
-        dispatchAction(formData);
-    };
     const [showPassword, setShowPassword] = useState(false);
     const [message, dispatchAction, isPending] = useActionState(resetPassword, '');
     const [isRequestSent, setIsRequestSent] = useState(false);
+
+    const handleSubmit = async (formData: FormData) => {
+        dispatchAction(formData);
+        setIsRequestSent(true);
+    };
 
     useEffect(() => {
         if (isRequestSent && !isPending) {

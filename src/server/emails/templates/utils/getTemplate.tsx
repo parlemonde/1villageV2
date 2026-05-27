@@ -1,5 +1,4 @@
 import { render, toPlainText } from '@react-email/render';
-import AdminNotificationTemplate from '@server/emails/templates/AdminNotificationTemplate';
 import { getBaseTranslations } from '@server/emails/templates/BaseTemplate';
 import ConfirmAccountTemplate, { getConfirmAccountTranslations } from '@server/emails/templates/ConfirmAccountTemplate';
 import RequestNewPasswordTemplate, { getRequestNewPasswordTranslations } from '@server/emails/templates/RequestNewPasswordTemplate';
@@ -21,15 +20,6 @@ const templates: TemplateMap = {
         const baseTranslations = await getBaseTranslations();
         const translations = await getRequestNewPasswordTranslations();
         return <RequestNewPasswordTemplate {...props} baseTranslations={baseTranslations} translations={translations} />;
-    },
-    [EmailType.INVALID_VILLAGE]: async (props: EmailTemplateProps[EmailType.INVALID_VILLAGE]) => {
-        return <AdminNotificationTemplate type={EmailType.INVALID_VILLAGE} {...props} />;
-    },
-    [EmailType.INVALID_COUNTRY]: async (props: EmailTemplateProps[EmailType.INVALID_COUNTRY]) => {
-        return <AdminNotificationTemplate type={EmailType.INVALID_COUNTRY} {...props} />;
-    },
-    [EmailType.UNASSIGNED_VILLAGE]: async (props: EmailTemplateProps[EmailType.UNASSIGNED_VILLAGE]) => {
-        return <AdminNotificationTemplate type={EmailType.UNASSIGNED_VILLAGE} {...props} />;
     },
 };
 

@@ -5,7 +5,6 @@ import { Button } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import PelicoVacances from '@frontend/svg/pelico/pelico-vacances.svg';
 import { logout } from '@server-actions/authentication/logout';
-import { requestVillageAssignment } from '@server-actions/users/request-village-assignment';
 import { useExtracted } from 'next-intl';
 import { useRef } from 'react';
 
@@ -14,11 +13,9 @@ export const UnassignedVillageModal = () => {
     const tCommon = useExtracted('common');
     const alreadyAsked = useRef(false);
 
-    const onAskVillage = async () => {
-        if (alreadyAsked.current) return;
-        alreadyAsked.current = true;
-        await requestVillageAssignment();
+    const onAskVillage = () => {
         sendToast({ message: t("Votre demande d'assignation à un village a bien été envoyée à un administrateur !"), type: 'success' });
+        alreadyAsked.current = true;
     };
 
     return (
