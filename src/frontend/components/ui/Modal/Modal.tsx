@@ -77,12 +77,12 @@ export const Modal = ({
                 <Dialog.Content
                     className={classNames(
                         styles.modalContent,
-                        contentClassName,
                         {
                             [styles[`width-${width}`]]: width,
                             [styles.isFullWidth]: isFullWidth,
                             [styles.hasVisibleOverflow]: hasVisibleOverflow,
                         },
+                        contentClassName,
                         className,
                     )}
                     onOpenAutoFocus={
