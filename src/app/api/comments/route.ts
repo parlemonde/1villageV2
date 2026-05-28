@@ -5,7 +5,7 @@ import { comments } from '@server/database/schemas/comments';
 import type { User } from '@server/database/schemas/users';
 import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createLoader, parseAsInteger } from 'nuqs/server';
@@ -37,8 +37,9 @@ export const GET = async ({ nextUrl }: NextRequest): Promise<NextResponse<UserCo
         .select()
         .from(comments)
         .innerJoin(users, eq(comments.userId, users.id))
-        .leftJoin(classrooms, eq(classrooms.teacherId, user.id))
-        .where(eq(comments.activityId, activityId));
+        .leftJoin(classrooms, eq(comments.classroomId, classrooms.id))
+        .where(eq(comments.activityId, activityId))
+        .orderBy(desc(comments.updateDate));
 
     return NextResponse.json(
         result.map((r) => ({

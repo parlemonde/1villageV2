@@ -85,6 +85,27 @@
       "when": 1776945785927,
       "tag": "0011_eager_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1779261994889,
+      "tag": "0012_wide_joshua_kane",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1779356878206,
+      "tag": "0013_lethal_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1779804386183,
+      "tag": "0014_bizarre_chamber",
+      "breakpoints": true
     }
   ]
 }

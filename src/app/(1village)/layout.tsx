@@ -1,3 +1,4 @@
+import { WelcomeModal } from '@frontend/components/WelcomeModal';
 import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -20,19 +21,21 @@ async function VillageLayoutImpl({
     if (!user) {
         redirect('/login');
     }
+
     const { village, classroom } = await getCurrentVillageAndClassroomForUser(user);
     return (
         <UserProvider initialUser={user} initialClassroom={classroom}>
             <VillageProvider village={village}>
                 <Header />
                 <div className={styles.rootLayout}>
-                    {village && <Navigation village={village} classroomCountryCode={classroom?.countryCode} />}
+                    {village && <Navigation />}
                     <div className={styles.content}>
                         {village && <Phases />}
                         <main className={styles.main}>{children}</main>
                     </div>
                     <ActivitySidePanel />
                 </div>
+                <WelcomeModal />
             </VillageProvider>
         </UserProvider>
     );

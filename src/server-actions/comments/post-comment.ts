@@ -3,10 +3,10 @@
 import { db } from '@server/database';
 import { activities } from '@server/database/schemas/activities';
 import { classrooms } from '@server/database/schemas/classrooms';
-import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { sendCommentNotificationEmail } from '@server/helpers/send-notification-emails';
 import { extractTextFromProseMirror } from '@server/lib/extract-text-from-prosemirror';
 import { getEnvVariable } from '@server/lib/get-env-variable';
@@ -15,7 +15,13 @@ import type { ServerActionResponse } from '@server-actions/common/server-action-
 import { eq } from 'drizzle-orm';
 import { getExtracted } from 'next-intl/server';
 
-export const postComment = async ({ activityId, content }: { activityId: number; content: unknown }): Promise<ServerActionResponse<Comment>> => {
+export const postComment = async ({
+    activityId,
+    content,
+}: {
+    activityId: number;
+    content: unknown;
+}): Promise<ServerActionResponse<{ commentId: number }>> => {
     const t = await getExtracted('common');
 
     try {
@@ -23,14 +29,16 @@ export const postComment = async ({ activityId, content }: { activityId: number;
         if (!user) {
             throw new Error('Unauthorized');
         }
-        const [data] = await db
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+        const result = await db
             .insert(comments)
             .values({
                 activityId: activityId,
+                classroomId: classroom?.id,
                 userId: user.id,
                 content: content,
             })
-            .returning();
+            .returning({ commentId: comments.id });
 
         // Send email notifications to subscribed teachers (async, non-blocking)
         try {
@@ -66,7 +74,7 @@ export const postComment = async ({ activityId, content }: { activityId: number;
             logger.error('Error sending comment notification email:', { emailError });
         }
 
-        return { data };
+        return { data: { commentId: result[0].commentId } };
     } catch (e) {
         logger.error(e);
         return { error: { message: t('Une erreur est survenue lors de la publication du commentaire.') } };

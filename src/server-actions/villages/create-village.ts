@@ -33,5 +33,6 @@ export const createVillage = async ({ name, countries, classroomCount: initialCl
         activePhase: 1,
         phaseStartDates: { 1: new Date().toISOString() },
         classroomCount,
+        isCrossVisible: false,
     });
 };

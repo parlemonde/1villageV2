@@ -16,6 +16,7 @@ const getUserExtraDataImpl = async (userId: string) => {
     cacheTag('userExtraData');
     return await db
         .select({
+            firstLogin: users.firstLogin,
             adminPublicationSubscribed: users.adminPublicationSubscribed,
             commentActivitySubscribed: users.commentActivitySubscribed,
         })

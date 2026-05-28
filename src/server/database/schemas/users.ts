@@ -5,7 +5,7 @@
  * Additional fields can be added. In this case, add them to the `additionalFields` object in the `auth` service.
  * See: https://www.better-auth.com/docs/reference/options#user
  */
-import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, uuid, smallint } from 'drizzle-orm/pg-core';
 
 const USER_ROLES_ENUM = ['admin', 'mediator', 'teacher', 'parent'] as const;
 export type UserRole = (typeof USER_ROLES_ENUM)[number];
@@ -21,6 +21,7 @@ export const users = pgTable('users', {
         .$onUpdate(() => new Date())
         .notNull(),
     role: text('role', { enum: USER_ROLES_ENUM }).default('teacher').notNull(),
+    firstLogin: smallint('first_login').default(0).notNull(),
     adminPublicationSubscribed: boolean('admin_publication_subscribed').default(true).notNull(),
     commentActivitySubscribed: boolean('comment_activity_subscribed').default(true).notNull(),
     banned: boolean('banned').default(false),
@@ -29,6 +30,6 @@ export const users = pgTable('users', {
 });
 
 type FullUser = typeof users.$inferSelect;
-export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role' | 'adminPublicationSubscribed' | 'commentActivitySubscribed'> & {
+export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role' | 'firstLogin' | 'adminPublicationSubscribed' | 'commentActivitySubscribed'> & {
     image?: string | null; // set to optional because of better-auth
 };

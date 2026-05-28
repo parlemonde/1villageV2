@@ -28,9 +28,20 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         return new NextResponse(null, { status: 401 });
     }
 
-    const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+    const { classroom, village } = await getCurrentVillageAndClassroomForUser(user);
 
     const { activityId, search, phase, villageId, type, isPelico, countries } = loadSearchParams(nextUrl.searchParams);
+
+    // Phase 1 country restriction: non-admin/mediator users can only see activities from their own
+    // country unless the village has cross-visibility enabled.
+    const isPelicoUser = user.role === 'admin' || user.role === 'mediator';
+    const isPhase1Restricted = !isPelicoUser && village?.activePhase === 1 && !village.isCrossVisible;
+
+    if (isPhase1Restricted && !classroom?.countryCode) {
+        return NextResponse.json([]);
+    }
+
+    const effectiveCountries = isPhase1Restricted ? [classroom!.countryCode] : countries;
 
     if (activityId) {
         const result = await db.query.activities.findFirst({
@@ -82,7 +93,11 @@ export const GET = async ({ nextUrl }: NextRequest) => {
                 phase !== null ? eq(activities.phase, phase) : undefined,
                 villageId === -1 ? isNull(activities.villageId) : villageId !== null ? eq(activities.villageId, villageId) : undefined,
                 isPelico === false ? eq(activities.isPelico, false) : undefined,
-                countries !== null ? or(inArray(classrooms.countryCode, countries), isNull(activities.classroomId)) : undefined,
+                effectiveCountries !== null && effectiveCountries.length > 0
+                    ? isPhase1Restricted
+                        ? inArray(classrooms.countryCode, effectiveCountries) // exclude classroomId=null activities during Phase 1
+                        : or(inArray(classrooms.countryCode, effectiveCountries), isNull(activities.classroomId))
+                    : undefined,
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));

@@ -6,7 +6,6 @@ import { ActivityView } from '@frontend/components/activities/ActivityView';
 import { Button } from '@frontend/components/ui/Button';
 import WorldMap3D from '@frontend/components/worldMaps/WorldMap3D/WorldMap3D';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
 import type { Activity } from '@server/database/schemas/activities';
 import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
@@ -35,10 +34,7 @@ export const ActivitySidePanel = ({ activityId: activityIdProp }: ActivitySidePa
         jsonFetcher,
     );
     const { data: activityUser } = useSWR<User>(activity?.userId ? `/api/user/${activity.userId}` : null, jsonFetcher);
-    const { data: activityClassroom } = useSWR<Classroom[]>(
-        activity?.classroomId ? `/api/classrooms${serializeToQueryUrl({ classroomId: activity.classroomId })}` : null,
-        jsonFetcher,
-    );
+    const { data: activityClassroom } = useSWR<Classroom[]>(activity?.classroomId ? `/api/classrooms/${activity.classroomId}` : null, jsonFetcher);
 
     const formatPseudo = activityUser?.name.replace(' ', '-');
     const showTeacherSheet = activityUser?.role === 'teacher';
