@@ -9,7 +9,7 @@ import { Title } from '@frontend/components/ui/Title';
 import { invalidateUserExtraData } from '@server/helpers/get-current-user';
 import { updateSubscription } from '@server-actions/settings/update-subscriptions';
 import { useExtracted } from 'next-intl';
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 interface PreferencesFormProps {
     adminPublicationSubscribed: boolean;
@@ -24,45 +24,46 @@ export const PreferencesForm = ({
     const [commentActivitySubscribed, setCommentActivitySubscribed] = useState<boolean>(initialCommentActivity);
     const [adminPublicationEdited, setAdminPublicationEdited] = useState<boolean>(initialAdminPublication);
     const [commentActivityEdited, setCommentActivityEdited] = useState<boolean>(initialCommentActivity);
-    const [isPending, startTransition] = useTransition();
+    const [isPending, setIsPending] = useState<boolean>(false);
     const t = useExtracted('app.(1village).mon-compte.preferences');
 
     const hasChanges = adminPublicationSubscribed !== adminPublicationEdited || commentActivitySubscribed !== commentActivityEdited;
 
     const handleSave = async () => {
-        startTransition(async () => {
-            try {
-                const updates: Record<string, boolean> = {};
+        setIsPending(true);
+        try {
+            const updates: Record<string, boolean> = {};
 
-                if (hasChanges) {
-                    if (adminPublicationSubscribed !== adminPublicationEdited) {
-                        updates.adminPublicationSubscribed = adminPublicationEdited;
-                    }
-                    if (commentActivitySubscribed !== commentActivityEdited) {
-                        updates.commentActivitySubscribed = commentActivityEdited;
-                    }
+            if (hasChanges) {
+                if (adminPublicationSubscribed !== adminPublicationEdited) {
+                    updates.adminPublicationSubscribed = adminPublicationEdited;
                 }
-
-                await updateSubscription(updates);
-
-                setAdminPublicationSubscribed(adminPublicationEdited);
-                setCommentActivitySubscribed(commentActivityEdited);
-                invalidateUserExtraData();
-
-                sendToast({
-                    type: 'success',
-                    message: t('Vos préférences ont été mises à jour avec succès.'),
-                });
-            } catch {
-                // Rollback optimistic UI on error
-                setAdminPublicationEdited(adminPublicationSubscribed);
-                setCommentActivityEdited(commentActivitySubscribed);
-                sendToast({
-                    type: 'error',
-                    message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
-                });
+                if (commentActivitySubscribed !== commentActivityEdited) {
+                    updates.commentActivitySubscribed = commentActivityEdited;
+                }
             }
-        });
+
+            await updateSubscription(updates);
+
+            setAdminPublicationSubscribed(adminPublicationEdited);
+            setCommentActivitySubscribed(commentActivityEdited);
+            invalidateUserExtraData();
+
+            sendToast({
+                type: 'success',
+                message: t('Vos préférences ont été mises à jour avec succès.'),
+            });
+        } catch {
+            // Rollback optimistic UI on error
+            setAdminPublicationEdited(adminPublicationSubscribed);
+            setCommentActivityEdited(commentActivitySubscribed);
+            sendToast({
+                type: 'error',
+                message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
+            });
+        } finally {
+            setIsPending(false);
+        }
     };
 
     return (
@@ -113,7 +114,7 @@ export const PreferencesForm = ({
 
             <div className={styles.buttonContainer}>
                 <Button
-                    label="Enregistrer les préférences"
+                    label={t('Enregistrer les préférences')}
                     color="secondary"
                     variant="contained"
                     isUpperCase={false}
