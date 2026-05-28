@@ -3,6 +3,7 @@
 import { db } from '@server/database';
 import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { invalidateUserExtraData } from '@server/helpers/get-current-user';
 import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
 
@@ -28,6 +29,7 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
 
     try {
         await db.update(users).set(updates).where(eq(users.id, user.id));
+        invalidateUserExtraData();
     } catch (error) {
         logger.error('Failed to update subscription preferences', { error });
     }

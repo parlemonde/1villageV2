@@ -60,13 +60,15 @@ export const auth = registerService('auth', () =>
             additionalFields: {
                 adminPublicationSubscribed: {
                     type: 'boolean',
-                    fieldName: 'admin_publication_subscribed',
                     required: false,
+                    defaultValue: true,
+                    input: true,
                 },
                 commentActivitySubscribed: {
                     type: 'boolean',
-                    fieldName: 'comment_activity_subscribed',
                     required: false,
+                    defaultValue: true,
+                    input: true,
                 },
             },
             changeEmail: {

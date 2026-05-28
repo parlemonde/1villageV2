@@ -6,7 +6,6 @@ import { Button } from '@frontend/components/ui/Button';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Field } from '@frontend/components/ui/Form/Field';
 import { Title } from '@frontend/components/ui/Title';
-import { invalidateUserExtraData } from '@server/helpers/get-current-user';
 import { updateSubscription } from '@server-actions/settings/update-subscriptions';
 import { useExtracted } from 'next-intl';
 import { useState } from 'react';
@@ -47,7 +46,6 @@ export const PreferencesForm = ({
 
             setAdminPublicationSubscribed(adminPublicationEdited);
             setCommentActivitySubscribed(commentActivityEdited);
-            invalidateUserExtraData();
 
             sendToast({
                 type: 'success',
