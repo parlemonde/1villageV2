@@ -1,5 +1,5 @@
 {
-  "id": "26dba660-045f-4952-b1a9-7c1ff2ece1a7",
+  "id": "6f612284-4ed6-4a26-9582-6ad1fbd0a3cd",
   "prevId": "35354f15-4ea2-45c2-8cc4-002366ead01c",
   "version": "7",
   "dialect": "postgresql",
@@ -1198,20 +1198,6 @@
           "notNull": true,
           "default": "'teacher'"
         },
-        "admin_publication_subscribed": {
-          "name": "admin_publication_subscribed",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "comment_activity_subscribed": {
-          "name": "comment_activity_subscribed",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
         "banned": {
           "name": "banned",
           "type": "boolean",
@@ -1293,6 +1279,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
+        },
+        "isCrossVisible": {
+          "name": "isCrossVisible",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
