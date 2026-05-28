@@ -6,6 +6,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 import { admin } from 'better-auth/plugins';
 import { adminAc, userAc } from 'better-auth/plugins/admin/access';
+import { cookies } from 'next/headers';
 import { getExtracted } from 'next-intl/server';
 
 import { getEnvVariable } from './get-env-variable';
@@ -91,3 +92,9 @@ export const auth = registerService('auth', () =>
         },
     }),
 );
+
+// Invalidate the session cookie to force fresh auth data
+export const resfreshSessionData = async () => {
+    const cookieStore = await cookies();
+    cookieStore.delete('better-auth.session_data');
+};
