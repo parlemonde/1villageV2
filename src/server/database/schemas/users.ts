@@ -28,6 +28,6 @@ export const users = pgTable('users', {
 });
 
 type FullUser = typeof users.$inferSelect;
-export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role'> & {
+export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role' | 'wantsNewsletter'> & {
     image?: string | null; // set to optional because of better-auth
 };

@@ -5,6 +5,7 @@ import { IconButton } from '@frontend/components/ui/Button/IconButton';
 import { Field, Input } from '@frontend/components/ui/Form';
 import { Checkbox } from '@frontend/components/ui/Form/Checkbox';
 import { Select } from '@frontend/components/ui/Form/Select';
+import { isValidEmail } from '@lib/email-validation';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import type { Language } from '@server/database/schemas/languages';
@@ -15,8 +16,8 @@ import useSWR from 'swr';
 
 import { TermsModal } from './TermsModal';
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{12,}$/;
+const minPasswordLength = process.env.NODE_ENV === 'production' ? 12 : 8;
+const passwordRegex = new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{${minPasswordLength},}$`);
 
 export const RegisterForm = ({ appUrl }: { appUrl: string }) => {
     const t = useExtracted('app.login.famille.inscription');
@@ -43,7 +44,7 @@ export const RegisterForm = ({ appUrl }: { appUrl: string }) => {
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [passwordConfirmationFocused, setPasswordConfirmationFocused] = useState(false);
 
-    const isEmailValid = email.match(emailRegex);
+    const isEmailValid = isValidEmail(email);
     const isInviteCodeValid = inviteCode.length === 10;
     const isPasswordValid = password.match(passwordRegex);
     const isPasswordConfirmationValid = password === passwordConfirmation;
@@ -178,7 +179,9 @@ export const RegisterForm = ({ appUrl }: { appUrl: string }) => {
                         color: !passwordFocused && password.length > 0 && !isPasswordValid ? 'var(--error-color)' : 'inherit',
                     }}
                 >
-                    {t('12 caractères minimum, une majuscule, une minuscule, un caractère spécial et un chiffre')}
+                    {t('{minLength} caractères minimum, une majuscule, une minuscule, un caractère spécial et un chiffre', {
+                        minLength: minPasswordLength.toString(),
+                    })}
                 </p>
             </div>
             <div>
