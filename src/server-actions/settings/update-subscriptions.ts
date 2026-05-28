@@ -6,6 +6,7 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { invalidateUserExtraData } from '@server/helpers/get-current-user';
 import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
 type SubscriptionUpdates = Partial<{
     adminPublicationSubscribed: boolean;
@@ -30,6 +31,8 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
     try {
         await db.update(users).set(updates).where(eq(users.id, user.id));
         invalidateUserExtraData();
+        // Revalidate both the preferences page and parent account pages
+        revalidatePath('/(1village)/mon-compte');
     } catch (error) {
         logger.error('Failed to update subscription preferences', { error });
     }
