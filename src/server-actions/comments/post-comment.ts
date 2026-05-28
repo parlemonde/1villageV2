@@ -1,14 +1,20 @@
 'use server';
 
 import { db } from '@server/database';
-import type { Comment } from '@server/database/schemas/comments';
 import { comments } from '@server/database/schemas/comments';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 import { getExtracted } from 'next-intl/server';
 
-export const postComment = async ({ activityId, content }: { activityId: number; content: unknown }): Promise<ServerActionResponse<Comment>> => {
+export const postComment = async ({
+    activityId,
+    content,
+}: {
+    activityId: number;
+    content: unknown;
+}): Promise<ServerActionResponse<{ commentId: number }>> => {
     const t = await getExtracted('common');
 
     try {
@@ -16,15 +22,18 @@ export const postComment = async ({ activityId, content }: { activityId: number;
         if (!user) {
             throw new Error('Unauthorized');
         }
-        const [data] = await db
+        const { classroom } = await getCurrentVillageAndClassroomForUser(user);
+        const result = await db
             .insert(comments)
             .values({
                 activityId: activityId,
+                classroomId: classroom?.id,
                 userId: user.id,
                 content: content,
             })
-            .returning();
-        return { data };
+            .returning({ commentId: comments.id });
+
+        return { data: { commentId: result[0].commentId } };
     } catch (e) {
         logger.error(e);
         return { error: { message: t('Une erreur est survenue lors de la publication du commentaire.') } };

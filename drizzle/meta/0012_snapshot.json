@@ -1,5 +1,5 @@
 {
-  "id": "e0cd219c-710b-477c-b87d-3785da9b5d51",
+  "id": "6f612284-4ed6-4a26-9582-6ad1fbd0a3cd",
   "prevId": "35354f15-4ea2-45c2-8cc4-002366ead01c",
   "version": "7",
   "dialect": "postgresql",
@@ -999,66 +999,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.parents_students": {
-      "name": "parents_students",
-      "schema": "",
-      "columns": {
-        "parentId": {
-          "name": "parentId",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "studentId": {
-          "name": "studentId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "parents_students_parentId_users_id_fk": {
-          "name": "parents_students_parentId_users_id_fk",
-          "tableFrom": "parents_students",
-          "tableTo": "users",
-          "columnsFrom": [
-            "parentId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "parents_students_studentId_students_id_fk": {
-          "name": "parents_students_studentId_students_id_fk",
-          "tableFrom": "parents_students",
-          "tableTo": "students",
-          "columnsFrom": [
-            "studentId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "parents_students_parentId_studentId_pk": {
-          "name": "parents_students_parentId_studentId_pk",
-          "columns": [
-            "parentId",
-            "studentId"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.sessions": {
       "name": "sessions",
       "schema": "",
@@ -1135,6 +1075,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "parentId": {
+          "name": "parentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "classroomId": {
           "name": "classroomId",
           "type": "integer",
@@ -1148,23 +1094,7 @@
           "notNull": false
         }
       },
-      "indexes": {
-        "inviteCode_idx": {
-          "name": "inviteCode_idx",
-          "columns": [
-            {
-              "expression": "inviteCode",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "students_teacherId_users_id_fk": {
           "name": "students_teacherId_users_id_fk",
@@ -1177,6 +1107,19 @@
             "id"
           ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "students_parentId_users_id_fk": {
+          "name": "students_parentId_users_id_fk",
+          "tableFrom": "students",
+          "tableTo": "users",
+          "columnsFrom": [
+            "parentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         },
         "students_classroomId_classrooms_id_fk": {
@@ -1194,15 +1137,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "students_inviteCode_unique": {
-          "name": "students_inviteCode_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "inviteCode"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1281,12 +1216,6 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
-        },
-        "wants_newsletter": {
-          "name": "wants_newsletter",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -1350,6 +1279,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
+        },
+        "isCrossVisible": {
+          "name": "isCrossVisible",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

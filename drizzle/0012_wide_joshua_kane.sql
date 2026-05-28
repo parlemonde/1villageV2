@@ -1,0 +1,1 @@
+ALTER TABLE "villages" ADD COLUMN "isCrossVisible" boolean DEFAULT false NOT NULL;
