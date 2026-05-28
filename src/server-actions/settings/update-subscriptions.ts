@@ -4,6 +4,7 @@ import { db } from '@server/database';
 import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { invalidateUserExtraData } from '@server/helpers/get-current-user';
+import { resfreshSessionData } from '@server/lib/auth';
 import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -30,9 +31,9 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
 
     try {
         await db.update(users).set(updates).where(eq(users.id, user.id));
-        invalidateUserExtraData();
-        // Revalidate both the preferences page and parent account pages
-        revalidatePath('/(1village)/mon-compte');
+        await invalidateUserExtraData();
+        await resfreshSessionData();
+        revalidatePath('/(1village)/mon-compte/preferences');
     } catch (error) {
         logger.error('Failed to update subscription preferences', { error });
     }
