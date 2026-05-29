@@ -99,7 +99,7 @@ export const auth = registerService('auth', () =>
 );
 
 // Invalidate the session cookie to force fresh auth data
-export const resfreshSessionData = async () => {
+export const refreshSessionData = async () => {
     const cookieStore = await cookies();
     cookieStore.delete('better-auth.session_data');
 };
