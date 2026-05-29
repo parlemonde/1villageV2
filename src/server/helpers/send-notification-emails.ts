@@ -2,7 +2,7 @@
 
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { User } from '@server/database/schemas/users';
-import type { EmailType } from '@server/emails/templates/utils/types';
+import { EmailType } from '@server/emails/templates/utils/types';
 import { getActivityName } from '@server/entities/activity-name';
 import { logger } from '@server/lib/logger';
 import { sendEmail } from '@server/lib/sendEmail';
@@ -16,14 +16,14 @@ export async function sendCommentNotificationEmail(
     activityLink: string,
 ): Promise<void> {
     try {
-        const t = await getExtracted('Emails');
+        const t = await getExtracted('emailing');
         const translatedActivityName = await getActivityName(activityType as ActivityType);
         const subject = t('Un nouveau commentaire sous votre activité {type}', { type: translatedActivityName });
 
         await sendEmail({
             to: teacher.email,
             subject: subject,
-            emailType: 'NEW_COMMENT' as EmailType,
+            emailType: EmailType.NEW_COMMENT,
             props: {
                 firstName: teacher.name.split(' ')[0],
                 activityName: translatedActivityName,
@@ -39,13 +39,13 @@ export async function sendCommentNotificationEmail(
 
 export async function sendAdminPublicationNotificationEmail(teacher: User, publicationLink: string): Promise<void> {
     try {
-        const t = await getExtracted('Emails');
+        const t = await getExtracted('emailing');
         const subject = t('Nouvelle publication de Pelico');
 
         await sendEmail({
             to: teacher.email,
             subject: subject,
-            emailType: 'NEW_ADMIN_PUBLICATION' as EmailType,
+            emailType: EmailType.NEW_ADMIN_PUBLICATION,
             props: {
                 firstName: teacher.name.split(' ')[0],
                 link: publicationLink,
