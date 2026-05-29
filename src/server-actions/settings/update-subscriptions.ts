@@ -36,5 +36,6 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
         revalidatePath('/(1village)/mon-compte/preferences');
     } catch (error) {
         logger.error('Failed to update subscription preferences', { error });
+        throw new Error('Failed to update subscription preferences');
     }
 };

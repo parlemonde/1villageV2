@@ -43,11 +43,8 @@ export const getCurrentUser = cache(async (): Promise<User | undefined> => {
 
             if (user) {
                 const extraData = await getUserExtraData(user.id);
-                if (extraData) {
-                    user = {
-                        ...user,
-                        ...extraData,
-                    };
+                if (extraData && extraData.length > 0) {
+                    user = { ...user, ...extraData[0] };
                 }
             }
 

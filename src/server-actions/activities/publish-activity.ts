@@ -49,16 +49,16 @@ export const publishActivity = async (activity: Partial<Activity>) => {
     }
 
     // Send email notifications to subscribed teachers for Pelico (admin) publications (async, non-blocking)
-    if (publishedActivityId && activity.isPelico && activity.villageId) {
+    if (publishedActivityId) {
         try {
             const publishedActivity = await db.query.activities.findFirst({
                 where: eq(activities.id, publishedActivityId),
             });
 
-            if (publishedActivity) {
+            if (publishedActivity && publishedActivity.isPelico && publishedActivity.villageId) {
                 // Get all classrooms in the village
                 const villageClassrooms = await db.query.classrooms.findMany({
-                    where: eq(classrooms.villageId, activity.villageId),
+                    where: eq(classrooms.villageId, publishedActivity.villageId),
                 });
 
                 // Get all unique teacher IDs and their subscription preferences
