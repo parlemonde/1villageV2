@@ -29,5 +29,7 @@ export async function getActivityName(type: ActivityType): Promise<string> {
             return t('Hymne');
         case 'reaction':
             return t('Réaction');
+        default:
+            return '';
     }
 }
