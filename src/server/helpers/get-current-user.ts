@@ -1,12 +1,37 @@
 import { trace } from '@opentelemetry/api';
 import { db } from '@server/database';
-import { users, type User } from '@server/database/schemas/users';
+import type { User } from '@server/database/schemas/users';
+import { users } from '@server/database/schemas/users';
 import { auth } from '@server/lib/auth';
 import { eq } from 'drizzle-orm';
+import { cacheTag, updateTag } from 'next/cache';
 import { headers } from 'next/headers';
+import { connection } from 'next/server';
 import { cache } from 'react';
 
 const tracer = trace.getTracer('auth');
+
+const getUserExtraDataImpl = async (userId: string) => {
+    'use cache';
+    cacheTag('userExtraData');
+    return await db
+        .select({
+            firstLogin: users.firstLogin,
+            adminPublicationSubscribed: users.adminPublicationSubscribed,
+            commentActivitySubscribed: users.commentActivitySubscribed,
+        })
+        .from(users)
+        .where(eq(users.id, userId));
+};
+
+export async function getUserExtraData(userId: string) {
+    await connection();
+    return getUserExtraDataImpl(userId);
+}
+
+export async function invalidateUserExtraData() {
+    updateTag('userExtraData');
+}
 
 export const getCurrentUser = cache(async (): Promise<User | undefined> => {
     return tracer.startActiveSpan('getCurrentUser', async (span) => {
@@ -14,29 +39,23 @@ export const getCurrentUser = cache(async (): Promise<User | undefined> => {
             const session = await auth.api.getSession({
                 headers: await headers(),
             });
-            const sessionUser = session?.user as User | undefined;
-            if (!sessionUser) {
-                return undefined;
+            let user = session?.user as User | undefined;
+
+            if (user) {
+                const extraData = await getUserExtraData(user.id);
+                if (extraData && extraData.length > 0) {
+                    user = { ...user, ...extraData[0] };
+                }
             }
 
-            span.setAttributes({
-                'user.id': sessionUser.id,
-                'user.email': sessionUser.email,
-                'user.name': sessionUser.name,
-            });
-
-            // Cookie cache doesn't include additionalFields like firstLogin,
-            // so we fetch it directly from the database.
-            const dbUser = await db
-                .select({ firstLogin: users.firstLogin })
-                .from(users)
-                .where(eq(users.id, sessionUser.id))
-                .then((rows) => rows[0]);
-
-            return {
-                ...sessionUser,
-                firstLogin: dbUser?.firstLogin ?? 0,
-            };
+            if (user) {
+                span.setAttributes({
+                    'user.id': user.id,
+                    'user.email': user.email,
+                    'user.name': user.name,
+                });
+            }
+            return user;
         } finally {
             span.end();
         }

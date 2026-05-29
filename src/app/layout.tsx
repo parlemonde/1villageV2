@@ -60,7 +60,7 @@ export const viewport: Viewport = {
     themeColor: '#4c3ed9',
 };
 
-export default async function RootLayout({
+async function RootLayoutImpl({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -83,5 +83,17 @@ export default async function RootLayout({
                 </Suspense>
             </body>
         </html>
+    );
+}
+
+export default async function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <Suspense>
+            <RootLayoutImpl>{children}</RootLayoutImpl>
+        </Suspense>
     );
 }

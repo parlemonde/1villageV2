@@ -17,6 +17,8 @@ export const UserContext = React.createContext<{
         role: 'teacher',
         image: null,
         firstLogin: 0,
+        adminPublicationSubscribed: true,
+        commentActivitySubscribed: true,
     },
     setUser: () => {},
     classroom: undefined,

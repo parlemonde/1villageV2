@@ -1,0 +1,2 @@
+ALTER TABLE "users" ADD COLUMN "admin_publication_subscribed" boolean DEFAULT true NOT NULL;--> statement-breakpoint
+ALTER TABLE "users" ADD COLUMN "comment_activity_subscribed" boolean DEFAULT true NOT NULL;

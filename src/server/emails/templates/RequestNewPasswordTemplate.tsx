@@ -60,7 +60,7 @@ RequestNewPasswordTemplate.PreviewProps = {
 } as const;
 
 export const getRequestNewPasswordTranslations = async () => {
-    const t = await getExtracted('common');
+    const t = await getExtracted('emailing');
 
     const translations: RequestNewPasswordTemplateProps['translations'] = {
         initializeNewPassword: t('Réinitialisation de votre mot de passe'),

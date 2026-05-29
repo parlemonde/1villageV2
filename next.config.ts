@@ -3,6 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
     poweredByHeader: false,
+    cacheComponents: true,
     webpack: (config) => {
         config.module.rules.push({
             test: /\.svg$/,

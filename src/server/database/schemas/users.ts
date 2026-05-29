@@ -22,12 +22,14 @@ export const users = pgTable('users', {
         .notNull(),
     role: text('role', { enum: USER_ROLES_ENUM }).default('teacher').notNull(),
     firstLogin: smallint('first_login').default(0).notNull(),
+    adminPublicationSubscribed: boolean('admin_publication_subscribed').default(true).notNull(),
+    commentActivitySubscribed: boolean('comment_activity_subscribed').default(true).notNull(),
     banned: boolean('banned').default(false),
     bannedReason: text('banned_reason'),
     banExpires: timestamp('ban_expires', { withTimezone: true }),
 });
 
 type FullUser = typeof users.$inferSelect;
-export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role' | 'firstLogin'> & {
+export type User = Pick<FullUser, 'id' | 'name' | 'email' | 'role' | 'firstLogin' | 'adminPublicationSubscribed' | 'commentActivitySubscribed'> & {
     image?: string | null; // set to optional because of better-auth
 };
