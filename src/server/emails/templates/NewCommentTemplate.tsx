@@ -71,7 +71,7 @@ NewCommentTemplate.PreviewProps = {
 } as const;
 
 export const getNewCommentTranslations = async () => {
-    const t = await getExtracted('newCommentEmail');
+    const t = await getExtracted('emailing');
 
     const translations: NewCommentTemplateProps['translations'] = {
         newComment: t('Nouveau commentaire'),

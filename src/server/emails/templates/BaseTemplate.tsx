@@ -118,7 +118,7 @@ BaseTemplate.PreviewProps = {
 };
 
 export const getBaseTranslations = async () => {
-    const t = await getExtracted('common');
+    const t = await getExtracted('emailing');
 
     const translations: BaseTemplateProps['baseTranslations'] = {
         altText: t('Association Par Le Monde'),

@@ -47,7 +47,7 @@ NewAdminPublicationTemplate.PreviewProps = {
 } as const;
 
 export async function getNewAdminPublicationTranslations() {
-    const t = await getExtracted('Emails');
+    const t = await getExtracted('emailing');
     const translations: NewAdminPublicationTemplateProps['translations'] = {
         newPublication: t('Nouvelle publication de Pelico'),
         newAdminContent: t('Un nouveau contenu a été publié dans votre village.'),
