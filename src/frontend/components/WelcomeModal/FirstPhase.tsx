@@ -104,7 +104,6 @@ export const FirstPhase = () => {
                     const data = profileDataArray[i];
                     return updateClassroom({
                         id: c.id,
-                        teacherId: user.id,
                         name: data.schoolName.trim(),
                         level: data.classLevel.trim(),
                         address: data.schoolAddress.trim(),
