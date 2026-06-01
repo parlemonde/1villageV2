@@ -109,8 +109,6 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
         alias: profileData.classAlias || defaultAlias,
     };
 
-    const showMap = true;
-
     return (
         <div className={styles.stepProfileContainer}>
             <div className={styles.stepProfileForm}>
@@ -190,18 +188,16 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         <p className={styles.previewCardText}>........................</p>
                     </div>
                 </div>
-                {showMap && (
-                    <div style={{ marginTop: '1rem' }}>
-                        <span className={styles.stepProfilePreviewTitle}>{t('Est-ce que votre école est bien placée ?')}</span>
-                        <p className={styles.stepProfileMapHint}>
-                            {t('Vérifiez que le marqueur est bien positionné sur votre école. Vous pouvez le déplacer si nécessaire.')}
-                        </p>
-                        <Map2D
-                            coordinates={profileData.coordinates}
-                            setCoordinates={(coords) => onProfileDataChange({ ...profileData, coordinates: coords })}
-                        />
-                    </div>
-                )}
+                <div style={{ marginTop: '1rem' }}>
+                    <span className={styles.stepProfilePreviewTitle}>{t('Est-ce que votre école est bien placée ?')}</span>
+                    <p className={styles.stepProfileMapHint}>
+                        {t('Vérifiez que le marqueur est bien positionné sur votre école. Vous pouvez le déplacer si nécessaire.')}
+                    </p>
+                    <Map2D
+                        coordinates={profileData.coordinates}
+                        setCoordinates={(coords) => onProfileDataChange({ ...profileData, coordinates: coords })}
+                    />
+                </div>
             </div>
         </div>
     );
