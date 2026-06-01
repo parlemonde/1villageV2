@@ -134,7 +134,9 @@ export const FirstPhase = () => {
             setUser({ ...user, name: lastProfile.userName.trim(), firstLogin: 1 });
             const allUpdated = updatedClassroomsResults.flatMap((r) => r.data ?? []);
             if (allUpdated.length > 0) {
-                setClassroom(allUpdated[0]);
+                const currentClassroomId = classroom?.id;
+                const updatedClassroom = currentClassroomId ? (allUpdated.find((c) => c.id === currentClassroomId) ?? allUpdated[0]) : allUpdated[0];
+                setClassroom(updatedClassroom);
                 setClassrooms(allUpdated);
                 invalidateClassrooms();
             }
