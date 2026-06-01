@@ -83,7 +83,6 @@ export const Modal = ({
                             [styles.isFullWidth]: isFullWidth,
                             [styles.hasVisibleOverflow]: hasVisibleOverflow,
                         },
-                        contentClassName,
                         className,
                     )}
                     onOpenAutoFocus={
