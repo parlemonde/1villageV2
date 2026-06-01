@@ -4,19 +4,14 @@ import { parentsStudents } from '@server/database/schemas/parents-students';
 import { students } from '@server/database/schemas/students';
 import { eq } from 'drizzle-orm';
 
-export const getParentClassroom = async (userId: string) => {
-    const row = await db
-        .select({
-            classroomId: students.classroomId,
-        })
+export const getStudentClassroom = async (parentId: string) => {
+    const [row] = await db
+        .select()
         .from(parentsStudents)
         .innerJoin(students, eq(parentsStudents.studentId, students.id))
-        .where(eq(parentsStudents.parentId, userId))
+        .innerJoin(classrooms, eq(students.classroomId, classrooms.id))
+        .where(eq(parentsStudents.parentId, parentId))
         .limit(1);
 
-    if (row.length === 0) return undefined;
-
-    return db.query.classrooms.findFirst({
-        where: eq(classrooms.id, row[0].classroomId),
-    });
+    return row?.classrooms;
 };
