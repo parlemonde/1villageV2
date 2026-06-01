@@ -22,7 +22,10 @@ export const getCurrentVillageAndClassroomForUser = cache(
         switch (user.role) {
             case 'teacher': {
                 const teacherClassrooms = await getTeacherClassrooms(user.id);
-                const classroom = teacherClassrooms[0];
+                const cookieClassroomId = getNumber(cookieStore.get('classroomId')?.value);
+                const classroom = cookieClassroomId
+                    ? (teacherClassrooms.find((c) => c.id === cookieClassroomId) ?? teacherClassrooms[0])
+                    : teacherClassrooms[0];
                 if (classroom) {
                     return {
                         village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
