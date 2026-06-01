@@ -73,15 +73,11 @@ export const Modal = ({
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content
-                    className={classNames(
-                        styles.modalContent,
-                        contentClassName,
-                        {
-                            [styles[`width-${width}`]]: width,
-                            [styles.isFullWidth]: isFullWidth,
-                            [styles.hasVisibleOverflow]: hasVisibleOverflow,
-                        },
-                    )}
+                    className={classNames(styles.modalContent, contentClassName, {
+                        [styles[`width-${width}`]]: width,
+                        [styles.isFullWidth]: isFullWidth,
+                        [styles.hasVisibleOverflow]: hasVisibleOverflow,
+                    })}
                     onOpenAutoFocus={
                         onOpenAutoFocus
                             ? undefined
