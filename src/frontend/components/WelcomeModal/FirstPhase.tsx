@@ -225,7 +225,7 @@ export const FirstPhase = () => {
             width="lg"
             isFullWidth
             onOpenAutoFocus={false}
-            className={styles.modal}
+            contentClassName={styles.modal}
         >
             <div className={styles.stepContainer}>
                 {currentStep === 0 && <StepVillageName villageName={village.name} />}

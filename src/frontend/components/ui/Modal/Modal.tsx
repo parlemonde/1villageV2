@@ -33,7 +33,6 @@ type ModalProps = {
     isLoading?: boolean;
     onOpenAutoFocus?: boolean;
     hasVisibleOverflow?: boolean;
-    className?: string;
 };
 export const Modal = ({
     isOpen,
@@ -60,7 +59,6 @@ export const Modal = ({
     isLoading,
     onOpenAutoFocus = true,
     hasVisibleOverflow = false,
-    className,
     children,
 }: React.PropsWithChildren<ModalProps>) => {
     return (
@@ -83,7 +81,6 @@ export const Modal = ({
                             [styles.isFullWidth]: isFullWidth,
                             [styles.hasVisibleOverflow]: hasVisibleOverflow,
                         },
-                        className,
                     )}
                     onOpenAutoFocus={
                         onOpenAutoFocus
