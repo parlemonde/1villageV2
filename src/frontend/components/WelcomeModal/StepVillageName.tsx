@@ -20,7 +20,12 @@ export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
     const handleReportError = async () => {
         if (alreadyReported.current) return;
         alreadyReported.current = true;
-        await reportInvalidVillage();
+        const result = await reportInvalidVillage();
+        if (result.error) {
+            sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
+            alreadyReported.current = false;
+            return;
+        }
         sendToast({
             message: t('Une demande de changement de village a été envoyée à un administrateur !'),
             type: 'success',

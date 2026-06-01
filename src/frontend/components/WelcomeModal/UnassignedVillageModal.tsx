@@ -17,7 +17,12 @@ export const UnassignedVillageModal = () => {
     const onAskVillage = async () => {
         if (alreadyAsked.current) return;
         alreadyAsked.current = true;
-        await requestVillageAssignment();
+        const result = await requestVillageAssignment();
+        if (result.error) {
+            sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
+            alreadyAsked.current = false;
+            return;
+        }
         sendToast({ message: t("Votre demande d'assignation à un village a bien été envoyée à un administrateur !"), type: 'success' });
     };
 

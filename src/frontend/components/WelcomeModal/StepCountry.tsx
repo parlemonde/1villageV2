@@ -22,7 +22,12 @@ export const StepCountry = ({ countryCode }: StepCountryProps) => {
     const handleReportError = async () => {
         if (alreadyReported.current) return;
         alreadyReported.current = true;
-        await reportInvalidCountry();
+        const result = await reportInvalidCountry();
+        if (result.error) {
+            sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
+            alreadyReported.current = false;
+            return;
+        }
         sendToast({
             message: t('Une demande de changement de pays a été envoyée à un administrateur !'),
             type: 'success',
