@@ -92,7 +92,7 @@ export const useDefaultParentInvitationMessage = () => {
                 content: [
                     {
                         type: 'text',
-                        text: `    ${t('1. Créer un compte sur https://1v.parlemonde.org/inscription, en renseignant une adresse email et un mot de passe.')}`,
+                        text: `    ${t('1. Créer un compte sur https://1v-new.parlemonde.org/login/famille/inscription, en renseignant une adresse email et un mot de passe.')}`,
                     },
                 ],
             },
@@ -116,7 +116,7 @@ export const useDefaultParentInvitationMessage = () => {
                 content: [
                     {
                         type: 'text',
-                        text: `    ${t("3. Connectez vous sur https://1v.parlemonde.org/inscription et rattachez votre compte à l'identifiant unique")} `,
+                        text: `    ${t("3. Connectez vous sur https://1v-new.parlemonde.org/login/famille/inscription et rattachez votre compte à l'identifiant unique")} `,
                     },
                     {
                         type: 'text',
