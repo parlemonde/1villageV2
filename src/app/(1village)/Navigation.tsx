@@ -3,25 +3,27 @@
 import { Avatar } from '@frontend/components/Avatar';
 import { CountryFlag } from '@frontend/components/CountryFlag';
 import { ACTIVITY_ICONS, ACTIVITY_URLS, ACTIVITY_ROLES, useActivityName } from '@frontend/components/activities/activities-constants';
-import { IconButton } from '@frontend/components/ui/Button';
+import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Link } from '@frontend/components/ui/Link';
 import { Menu, MobileMenu } from '@frontend/components/ui/Menu';
 import type { MenuItem } from '@frontend/components/ui/Menu/Menu';
 import { UserContext } from '@frontend/contexts/userContext';
 import { VillageContext } from '@frontend/contexts/villageContext';
 import { usePhase } from '@frontend/hooks/usePhase';
+import { authClient } from '@frontend/lib/auth-client';
 import FreeContentIcon from '@frontend/svg/activities/free-content.svg';
 import FamilyIcon from '@frontend/svg/navigation/family.svg';
 import HomeIcon from '@frontend/svg/navigation/home.svg';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { Cross1Icon, ExitIcon } from '@radix-ui/react-icons';
+import { Cross1Icon, ExitIcon, ResetIcon } from '@radix-ui/react-icons';
 import { AvatarIcon, GearIcon, MixerHorizontalIcon } from '@radix-ui/react-icons';
 import type { ActivityType } from '@server/database/schemas/activity-types';
 import type { Classroom } from '@server/database/schemas/classrooms';
+import { logger } from '@server/lib/logger';
 import { logout } from '@server-actions/authentication/logout';
 import classNames from 'clsx';
 import { usePathname } from 'next/navigation';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import useSWR from 'swr';
 
 import { ClassroomSelect } from './ClassroomSelect';
@@ -170,6 +172,22 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
     const isPhase1Hidden = village?.activePhase === 1 && !village?.isCrossVisible;
 
+    const { data: session } = authClient.useSession();
+    const isImpersonating = Boolean(session?.session.impersonatedBy);
+    const [isStoppingImpersonation, setIsStoppingImpersonation] = useState(false);
+
+    const stopImpersonating = async () => {
+        setIsStoppingImpersonation(true);
+        const { error } = await authClient.admin.stopImpersonating();
+        if (error) {
+            logger.error(error);
+            setIsStoppingImpersonation(false);
+            return;
+        }
+
+        window.location.assign('/admin/manage/users');
+    };
+
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
     let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
@@ -281,6 +299,24 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                     <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: '16px' }} />
                     <ClassroomSelect classrooms={classrooms} className={styles.classroomSelect} />
                 </>
+            )}
+            {isImpersonating && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button
+                        leftIcon={<ResetIcon />}
+                        variant="contained"
+                        color="primary"
+                        size="md"
+                        isUpperCase={false}
+                        label="Revenir au profil admin"
+                        isLoading={isStoppingImpersonation}
+                        onClick={() => {
+                            stopImpersonating().catch();
+                        }}
+                        marginTop="sm"
+                        marginBottom="sm"
+                    />
+                </div>
             )}
             <MobileMenu
                 items={[
