@@ -20,7 +20,7 @@ export const downloadPdf = async (pdfBuffer: Uint8Array<ArrayBufferLike>, suffix
     downloadFile(url, generatePdfName(suffix));
 };
 
-export const useDefaultParentInvitationMessage = () => {
+export const useDefaultParentInvitationMessage = (appUrl: string) => {
     const t = useExtracted('app.(1village).familles');
     const DEFAULT_PARENT_INVITATION_MESSAGE: HtmlEditorContent = {
         type: 'doc',
@@ -92,7 +92,7 @@ export const useDefaultParentInvitationMessage = () => {
                 content: [
                     {
                         type: 'text',
-                        text: `    ${t('1. Créer un compte sur https://1v-new.parlemonde.org/login/famille/inscription, en renseignant une adresse email et un mot de passe.')}`,
+                        text: `    ${t('1. Créer un compte sur {host}/login/famille/inscription, en renseignant une adresse email et un mot de passe.', { host: appUrl })}`,
                     },
                 ],
             },
@@ -116,7 +116,7 @@ export const useDefaultParentInvitationMessage = () => {
                 content: [
                     {
                         type: 'text',
-                        text: `    ${t("3. Connectez vous sur https://1v-new.parlemonde.org/login/famille/inscription et rattachez votre compte à l'identifiant unique")} `,
+                        text: `    ${t("3. Connectez vous sur {host}/login/famille et rattachez votre compte à l'identifiant unique", { host: appUrl })} `,
                     },
                     {
                         type: 'text',
