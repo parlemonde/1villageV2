@@ -2,6 +2,7 @@ import { Button, Heading, Section, Text, Link } from '@react-email/components';
 import type { BaseTemplateProps } from '@server/emails/templates/BaseTemplate';
 import BaseTemplate from '@server/emails/templates/BaseTemplate';
 import styles from '@server/emails/templates/utils/emailStyles';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { getExtracted } from 'next-intl/server';
 
 import type { ConfirmAccountTemplateData } from './utils/types';
@@ -19,7 +20,7 @@ interface ConfirmAccountTemplateProps extends BaseTemplateProps, ConfirmAccountT
 
 export default function ConfirmAccountTemplate({
     firstName,
-    confirmationLink = 'https://1v.parlemonde.org',
+    confirmationLink = getEnvVariable('HOST_URL'),
     translations,
     baseTranslations,
 }: ConfirmAccountTemplateProps) {
