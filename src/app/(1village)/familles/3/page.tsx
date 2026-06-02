@@ -11,6 +11,7 @@ import { Title } from '@frontend/components/ui/Title';
 import { UserContext } from '@frontend/contexts/userContext';
 import { debounce } from '@frontend/lib/debounce';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { logger } from '@server/lib/logger';
 import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
 import { saveParentInvitationMessage } from '@server-actions/families/save-parent-invitation-message';
@@ -24,8 +25,9 @@ export default function FamillesStep3() {
     const tCommon = useExtracted('common');
 
     const { classroom } = useContext(UserContext);
+    const appUrl = getEnvVariable('HOST_URL');
 
-    const defaultMessage = useDefaultParentInvitationMessage();
+    const defaultMessage = useDefaultParentInvitationMessage(appUrl);
     const [content, setContent] = useState<HtmlEditorContent>(classroom?.parentInvitationMessage ?? defaultMessage);
 
     const debouncedSave = useMemo(

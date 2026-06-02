@@ -1,6 +1,7 @@
 import { Section, Heading, Link, Text } from '@react-email/components';
 import type { BaseTemplateProps } from '@server/emails/templates/BaseTemplate';
 import BaseTemplate from '@server/emails/templates/BaseTemplate';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { getExtracted } from 'next-intl/server';
 
 import type { RequestNewPasswordTemplateData } from './utils/types';
@@ -14,7 +15,7 @@ interface RequestNewPasswordTemplateProps extends BaseTemplateProps, RequestNewP
 }
 
 export default function RequestNewPasswordTemplate({
-    resetPasswordLink = 'https://1v.parlemonde.org',
+    resetPasswordLink = getEnvVariable('HOST_URL'),
     translations,
     baseTranslations,
 }: RequestNewPasswordTemplateProps) {

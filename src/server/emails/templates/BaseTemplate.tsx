@@ -42,10 +42,12 @@ export default function BaseTemplate({ children, baseTranslations }: BaseTemplat
                         border: 1px solid ${styles.primaryColor};
                         padding: 6px 12px;
                         line-height: 24px;
-                        color: ${styles.primaryColor} !important;
                     }
                     .button:hover {
                         background-color: ${styles.primary100};
+                    }
+                    .text-primary {
+                        color: ${styles.primaryColor} !important;
                     }
                     .socialButton {
                         display: inline-flex;
@@ -79,7 +81,7 @@ export default function BaseTemplate({ children, baseTranslations }: BaseTemplat
                     {/* Footer */}
                     <Section style={{ textAlign: 'center' }}>
                         <Section style={{ padding: '16px' }}>
-                            <Link href={baseUrl} target="_blank" className="button">
+                            <Link href={baseUrl} target="_blank" className="button text-primary">
                                 <Img src={`${baseUrl}/static/images/android-chrome-192x192.png`} alt="1Village" width={24} height={24} />
                                 {joinButton}
                             </Link>

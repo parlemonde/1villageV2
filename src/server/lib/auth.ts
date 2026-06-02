@@ -1,4 +1,5 @@
 import { db } from '@server/database';
+import { sendAccountConfirmationEmail } from '@server/emails/send-account-confirmation-email';
 import type { EmailType } from '@server/emails/templates/utils/types';
 import { registerService } from '@server/lib/register-service';
 import { betterAuth } from 'better-auth';
@@ -26,17 +27,19 @@ const cookiesPlugin = nextCookies();
 
 export const auth = registerService('auth', () =>
     betterAuth({
+        baseURL: getEnvVariable('HOST_URL'),
         database: drizzleAdapter(db, {
             provider: 'pg',
         }),
         plugins: ssoPlugin ? [ssoPlugin, adminPlugin, cookiesPlugin] : [adminPlugin, cookiesPlugin], // make sure `nextCookies()` is the last plugin in the array
         emailAndPassword: {
             enabled: true,
+            requireEmailVerification: true,
             minPasswordLength: getEnvVariable('NODE_ENV') === 'production' ? 12 : 8,
             sendResetPassword: async ({ user, url }) => {
                 logger.info(`sendResetPassword to user ${user.id}`);
                 const t = await getExtracted('common');
-                void sendEmail({
+                sendEmail({
                     to: user.email,
                     subject: t('Mot de passe oublié - 1Village'),
                     emailType: 'RESET_PASSWORD' as EmailType,
@@ -44,6 +47,8 @@ export const auth = registerService('auth', () =>
                         firstName: user.name ?? '',
                         resetPasswordLink: url,
                     },
+                }).catch((error) => {
+                    logger.error('Failed to send reset password email', error);
                 });
             },
             onPasswordReset: async ({ user }) => {
@@ -63,6 +68,12 @@ export const auth = registerService('auth', () =>
                     fieldName: 'first_login',
                     input: false,
                 },
+                wantsNewsletter: {
+                    type: 'boolean',
+                    required: false,
+                    defaultValue: false,
+                    input: true,
+                },
             },
             changeEmail: {
                 enabled: true,
@@ -81,6 +92,14 @@ export const auth = registerService('auth', () =>
         },
         verification: {
             modelName: 'auth_verifications',
+        },
+        emailVerification: {
+            autoSignInAfterVerification: true,
+            sendVerificationEmail: async ({ user, url }) => {
+                sendAccountConfirmationEmail(user.email, user.name, url).catch((error) => {
+                    logger.error('Failed to send account confirmation email', error);
+                });
+            },
         },
     }),
 );

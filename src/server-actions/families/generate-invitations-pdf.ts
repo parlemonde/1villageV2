@@ -68,7 +68,7 @@ const generateStudentCard = (student: Student, instructions: HtmlEditorContent):
 const generatePdf = async (pdf: string): Promise<Uint8Array<ArrayBufferLike>> => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.setContent(pdf, { waitUntil: 'networkidle0' });
+    await page.setContent(pdf, { waitUntil: 'load' });
     const pdfBuffer = await page.pdf({ format: 'A4', scale: 0.98, margin: { top: '1cm', right: '1cm', bottom: '1cm', left: '1cm' } });
 
     await browser.close();

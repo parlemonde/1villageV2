@@ -80,7 +80,7 @@ export const GET = async ({ nextUrl }: NextRequest) => {
         .leftJoin(classrooms, eq(activities.classroomId, classrooms.id)) // Used to filter by countries
         .where(
             and(
-                classroom && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
+                classroom && user.role === 'parent' && classroom.showOnlyClassroomActivities ? eq(activities.classroomId, classroom.id) : undefined,
                 isNotNull(activities.publishDate),
                 isNull(activities.deleteDate),
                 search !== null
@@ -101,7 +101,6 @@ export const GET = async ({ nextUrl }: NextRequest) => {
             ),
         )
         .orderBy(desc(activities.isPinned), desc(activities.publishDate));
-
     const allActivities = result.map(({ activity }) => activity);
     const reactions = allActivities.filter((a) => a.type === 'reaction') as ReactionActivityDao[];
 

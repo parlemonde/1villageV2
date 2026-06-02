@@ -15,7 +15,7 @@ export default function FamilyLoginPage() {
             </Link>
             <span style={{ fontSize: '14px', marginTop: '16px' }}>
                 Nouveau sur 1Village?{' '}
-                <Link href="/login/famille/register" style={{ color: 'var(--primary-color)', textDecoration: 'underline' }}>
+                <Link href="/login/famille/inscription" style={{ color: 'var(--primary-color)', textDecoration: 'underline' }}>
                     Créer un compte
                 </Link>
             </span>

@@ -9,7 +9,8 @@ import { Select } from '@frontend/components/ui/Form/Select';
 import { Loader } from '@frontend/components/ui/Loader/Loader';
 import { authClient } from '@frontend/lib/auth-client';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
-import type { User, UserRole } from '@server/database/schemas/users';
+import { type User, type UserRole } from '@server/database/schemas/users';
+import { bypassEmailConfirmation } from '@server-actions/authentication/bypass-email-confirmation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -101,16 +102,7 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
         }
 
         setIsLoading(true);
-        const { error } = isNew
-            ? await authClient.admin.createUser({
-                  email,
-                  password,
-                  name,
-                  role,
-              })
-            : user
-              ? await updateUser(user, { name, email, role, password })
-              : { error: null };
+        const { error } = isNew ? await createUser() : user ? await updateUser(user, { name, email, role, password }) : { error: null };
         if (error) {
             setServerError(error.message ?? 'Une erreur est survenue');
         } else {
@@ -119,6 +111,20 @@ export const UserForm = ({ user, isSSOUser = false, isNew = false }: UserFormPro
         setIsLoading(false);
     };
 
+    const createUser = async () => {
+        const response = await authClient.admin.createUser({
+            email,
+            password,
+            name,
+            role,
+        });
+
+        if (!response.error) {
+            await bypassEmailConfirmation(response.data.user.id);
+        }
+
+        return response;
+    };
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
             <Loader isLoading={isLoading} />
