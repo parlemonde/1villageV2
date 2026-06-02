@@ -14,7 +14,7 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Se
             throw new Error('Unauthorized');
         }
 
-        const { id: classroomId, ...rest } = classroom;
+        const { id: classroomId, teacherId: _ignoredTeacherId, ...rest } = classroom;
         if (!classroomId) {
             throw new Error('Classroom ID is required to update classroom');
         }
