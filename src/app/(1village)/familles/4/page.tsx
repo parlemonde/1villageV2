@@ -12,6 +12,7 @@ import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import type { Student } from '@server/database/schemas/students';
+import { getEnvVariable } from '@server/lib/get-env-variable';
 import { generateInvitationsPdf } from '@server-actions/families/generate-invitations-pdf';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -27,7 +28,8 @@ export default function FamillesStep4() {
 
     const [checked, setChecked] = useState<number[]>([]);
 
-    const defaultMessage = useDefaultParentInvitationMessage();
+    const appUrl = getEnvVariable('HOST_URL');
+    const defaultMessage = useDefaultParentInvitationMessage(appUrl);
 
     const { classroom } = useContext(UserContext);
     if (!classroom) {

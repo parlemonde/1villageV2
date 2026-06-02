@@ -19,6 +19,7 @@ export const UserContext = React.createContext<{
         firstLogin: 0,
         adminPublicationSubscribed: true,
         commentActivitySubscribed: true,
+        wantsNewsletter: false,
     },
     setUser: () => {},
     classroom: undefined,

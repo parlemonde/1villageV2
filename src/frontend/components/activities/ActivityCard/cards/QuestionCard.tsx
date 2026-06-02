@@ -57,6 +57,7 @@ export const QuestionCard = ({ activity, onEdit, onDelete, hasActions, shouldDis
                                 label={t('Je me pose la même question')}
                                 color="primary"
                                 variant={classroom?.id && activity.data?.isAskingSameQuestion?.includes(classroom.id) ? 'contained' : 'borderless'}
+                                disabled={user.role === 'parent'}
                             />
                             {activity?.data?.isAskingSameQuestion && (
                                 <p style={{ fontSize: '18px', color: 'var(--primary-color)' }}>+{activity?.data?.isAskingSameQuestion?.length}</p>

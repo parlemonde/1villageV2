@@ -26,6 +26,7 @@ const userColumns = {
     firstLogin: users.firstLogin,
     adminPublicationSubscribed: users.adminPublicationSubscribed,
     commentActivitySubscribed: users.commentActivitySubscribed,
+    wantsNewsletter: users.wantsNewsletter,
 };
 
 const getVillageUsers = async (villageId: number): Promise<User[]> => {
