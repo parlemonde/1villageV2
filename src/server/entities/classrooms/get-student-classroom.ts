@@ -4,7 +4,7 @@ import { parentsStudents } from '@server/database/schemas/parents-students';
 import { students } from '@server/database/schemas/students';
 import { eq } from 'drizzle-orm';
 
-export const getStudentClassroom = async (parentId: string) => {
+export const getClassroomForParentId = async (parentId: string) => {
     const [row] = await db
         .select()
         .from(parentsStudents)
