@@ -14,19 +14,18 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Se
             throw new Error('Unauthorized');
         }
 
-        const { id: classroomId, teacherId: _ignoredTeacherId, ...rest } = classroom;
+        // remove id, teacherId, villageId from ...rest for non-admin users (teachers)
+        const { id: classroomId, teacherId, villageId, ...rest } = classroom;
+        const updateData = user.role === 'admin' ? { ...rest, teacherId, villageId } : rest;
+
         if (!classroomId) {
             throw new Error('Classroom ID is required to update classroom');
-        }
-
-        if (user.role === 'admin') {
-            return { data: await db.update(classrooms).set(rest).where(eq(classrooms.id, classroomId)).returning() };
         }
 
         return {
             data: await db
                 .update(classrooms)
-                .set(rest)
+                .set(updateData)
                 .where(and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, user.id)))
                 .returning(),
         };
