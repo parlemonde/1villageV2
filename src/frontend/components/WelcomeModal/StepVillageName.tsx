@@ -2,7 +2,7 @@
 
 import { sendToast } from '@frontend/components/Toasts/toast-events';
 import { Button } from '@frontend/components/ui/Button';
-import { reportInvalidVillage } from '@server-actions/users/report-invalid-village';
+import { sendAdminNotification } from '@server-actions/users/send-admin-notification';
 import { useExtracted } from 'next-intl';
 import { useRef, useState } from 'react';
 
@@ -20,7 +20,7 @@ export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
     const handleReportError = async () => {
         if (alreadyReported.current) return;
         alreadyReported.current = true;
-        const result = await reportInvalidVillage();
+        const result = await sendAdminNotification('INVALID_VILLAGE', '[1Village] Village invalide — signalement professeur');
         if (result.error) {
             sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
             alreadyReported.current = false;

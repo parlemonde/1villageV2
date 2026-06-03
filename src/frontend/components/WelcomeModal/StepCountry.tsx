@@ -4,7 +4,7 @@ import { CountryFlag } from '@frontend/components/CountryFlag/CountryFlag';
 import { sendToast } from '@frontend/components/Toasts/toast-events';
 import { Button } from '@frontend/components/ui/Button';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
-import { reportInvalidCountry } from '@server-actions/users/report-invalid-country';
+import { sendAdminNotification } from '@server-actions/users/send-admin-notification';
 import { useExtracted } from 'next-intl';
 import { useRef } from 'react';
 
@@ -22,7 +22,7 @@ export const StepCountry = ({ countryCode }: StepCountryProps) => {
     const handleReportError = async () => {
         if (alreadyReported.current) return;
         alreadyReported.current = true;
-        const result = await reportInvalidCountry();
+        const result = await sendAdminNotification('INVALID_COUNTRY', '[1Village] Pays invalide — signalement professeur');
         if (result.error) {
             sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
             alreadyReported.current = false;

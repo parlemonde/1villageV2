@@ -6,7 +6,7 @@ import { getEnvVariable } from '@server/lib/get-env-variable';
 import { sendEmail } from '@server/lib/sendEmail';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
 
-export const requestVillageAssignment = async (): Promise<ServerActionResponse> => {
+export const sendAdminNotification = async (type: string, subject: string): Promise<ServerActionResponse> => {
     const user = await getCurrentUser();
     if (!user) {
         return { error: { message: 'Unauthorized' } };
@@ -14,11 +14,12 @@ export const requestVillageAssignment = async (): Promise<ServerActionResponse> 
 
     const adminEmail = getEnvVariable('ADMIN_EMAIL');
     const frontUrl = getEnvVariable('HOST_URL');
+    const emailType = EmailType[type as keyof typeof EmailType];
 
     return sendEmail({
         to: adminEmail,
-        subject: "[1Village] Demande d'assignation à un village",
-        emailType: EmailType.UNASSIGNED_VILLAGE,
+        subject,
+        emailType,
         props: {
             userName: user.name,
             userEmail: user.email,
