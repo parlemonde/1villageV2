@@ -2,6 +2,7 @@ import type { Classroom } from '@server/database/schemas/classrooms';
 import type { User } from '@server/database/schemas/users';
 import type { Village } from '@server/database/schemas/villages';
 import { getClassroomForParentId } from '@server/entities/classrooms/get-student-classroom';
+import { getTeacherClassroom } from '@server/entities/classrooms/get-teacher-classroom';
 import { getTeacherClassrooms } from '@server/entities/classrooms/get-teacher-classrooms';
 import { getVillage } from '@server/entities/villages/get-village';
 import { cookies } from 'next/headers';
@@ -16,16 +17,18 @@ const getNumber = (value: string | undefined) => {
 };
 
 export const getCurrentVillageAndClassroomForUser = cache(
-    async (user: User): Promise<{ village: Village | undefined; classroom: Classroom | undefined; classrooms: Classroom[] }> => {
+    async (
+        user: User,
+        classroomId?: number,
+    ): Promise<{ village: Village | undefined; classroom: Classroom | undefined; classrooms: Classroom[] }> => {
         const cookieStore = await cookies();
 
         switch (user.role) {
             case 'teacher': {
+                // Use provided classroomId or read from cookie for cache consistency
+                const resolvedClassroomId = classroomId ?? getNumber(cookieStore.get('classroomId')?.value);
+                const classroom = await getTeacherClassroom(user.id, resolvedClassroomId);
                 const teacherClassrooms = await getTeacherClassrooms(user.id);
-                const cookieClassroomId = getNumber(cookieStore.get('classroomId')?.value);
-                const classroom = cookieClassroomId
-                    ? (teacherClassrooms.find((c) => c.id === cookieClassroomId) ?? teacherClassrooms[0])
-                    : teacherClassrooms[0];
                 if (classroom) {
                     return {
                         village: classroom.villageId ? await getVillage(classroom.villageId) : undefined,
