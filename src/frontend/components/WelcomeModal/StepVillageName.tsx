@@ -2,8 +2,9 @@
 
 import { sendToast } from '@frontend/components/Toasts/toast-events';
 import { Button } from '@frontend/components/ui/Button';
+import { sendAdminNotification } from '@server-actions/users/send-admin-notification';
 import { useExtracted } from 'next-intl';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import styles from './welcome-modal.module.css';
 
@@ -14,8 +15,17 @@ interface StepVillageNameProps {
 export const StepVillageName = ({ villageName }: StepVillageNameProps) => {
     const t = useExtracted('StepVillageName');
     const [isVisible, setIsVisible] = useState(false);
+    const alreadyReported = useRef(false);
 
-    const handleReportError = () => {
+    const handleReportError = async () => {
+        if (alreadyReported.current) return;
+        alreadyReported.current = true;
+        const result = await sendAdminNotification('INVALID_VILLAGE', '[1Village] Village invalide — signalement professeur');
+        if (result.error) {
+            sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
+            alreadyReported.current = false;
+            return;
+        }
         sendToast({
             message: t('Une demande de changement de village a été envoyée à un administrateur !'),
             type: 'success',
