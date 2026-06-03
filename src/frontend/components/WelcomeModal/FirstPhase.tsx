@@ -94,7 +94,6 @@ export const FirstPhase = () => {
             });
             if (userError) {
                 sendToast({ message: t('Erreur lors de la mise à jour du nom.'), type: 'error' });
-                setIsLoading(false);
                 return;
             }
 
@@ -118,7 +117,6 @@ export const FirstPhase = () => {
             const firstError = updatedClassroomsResults.find((r) => r.error)?.error;
             if (firstError) {
                 sendToast({ message: firstError.message ?? t('Une erreur est survenue'), type: 'error' });
-                setIsLoading(false);
                 return;
             }
 
@@ -126,7 +124,6 @@ export const FirstPhase = () => {
             const { error: firstLoginError } = await updateFirstLogin(1);
             if (firstLoginError) {
                 sendToast({ message: firstLoginError.message, type: 'error' });
-                setIsLoading(false);
                 return;
             }
 
