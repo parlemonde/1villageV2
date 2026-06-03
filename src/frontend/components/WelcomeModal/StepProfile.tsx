@@ -176,6 +176,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                             type: 'libre',
                             publishDate: new Date().toISOString(),
                         }}
+                        isPreview={true}
                         user={previewUser}
                         classroom={previewClassroom}
                         className={styles.previewCardHeader}

@@ -20,13 +20,14 @@ interface ActivityDisplayNameProps {
     user?: User;
     classroom?: Classroom;
     isPelico?: boolean;
+    isPreview?: boolean;
 }
-const ActivityDisplayName = ({ user, classroom, isPelico }: ActivityDisplayNameProps) => {
+const ActivityDisplayName = ({ user, classroom, isPelico, isPreview }: ActivityDisplayNameProps) => {
     const { classroom: currentClassroom } = useContext(UserContext);
 
     if (isPelico) {
         return 'Pélico';
-    } else if (classroom && classroom.id === currentClassroom?.id) {
+    } else if (classroom && classroom.id === currentClassroom?.id && !isPreview) {
         return 'Votre classe';
     } else if (classroom) {
         return classroom.alias || (classroom.level ? `Les ${classroom.level} de ${classroom.name}` : classroom.name);
@@ -41,8 +42,17 @@ interface ActivityHeaderProps {
     className?: string;
     showIcon?: boolean;
     showDetails?: boolean;
+    isPreview?: boolean;
 }
-export const ActivityHeader = ({ user, classroom, activity, className, showIcon = true, showDetails = true }: ActivityHeaderProps) => {
+export const ActivityHeader = ({
+    user,
+    classroom,
+    activity,
+    className,
+    showIcon = true,
+    showDetails = true,
+    isPreview = false,
+}: ActivityHeaderProps) => {
     const getActivityCardTitle = useActivityCardTitle();
     if (!activity.type) {
         return null;
@@ -56,7 +66,7 @@ export const ActivityHeader = ({ user, classroom, activity, className, showIcon 
             <Avatar user={user} classroom={classroom} isPelico={activity.isPelico} />
             <div className={styles.activityHeaderText}>
                 <span>
-                    <ActivityDisplayName user={user} classroom={classroom} isPelico={activity.isPelico} />
+                    <ActivityDisplayName user={user} classroom={classroom} isPelico={activity.isPelico} isPreview={!!isPreview} />
                     {showDetails && (
                         <>
                             {' a '}
