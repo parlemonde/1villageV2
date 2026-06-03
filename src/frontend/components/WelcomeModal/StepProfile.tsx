@@ -66,11 +66,6 @@ const PanelInput = ({ label, value, onChange, onBlur, placeholder, isRequired = 
     />
 );
 
-const getFrenchOrdinal = (index: number): string => {
-    if (index === 0) return '1ère';
-    return `${index + 1}ème`;
-};
-
 export const StepProfile = ({ profileData, onProfileDataChange, countryCode, user, classroom, classIndex, totalClasses = 1 }: StepProfileProps) => {
     const t = useExtracted('StepProfile');
     const isMultiClass = totalClasses > 1;
@@ -105,7 +100,6 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
 
     const previewClassroom: Classroom = {
         ...classroom,
-        id: -1,
         alias: profileData.classAlias || defaultAlias,
     };
 
@@ -116,9 +110,9 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                     <PelicoSearch className={styles.stepProfilePelico} />
                     {isMultiClass && classIndex !== undefined && (
                         <p className={styles.classIndexLabel}>
-                            {t('Les informations de votre ')}
-                            <strong>{getFrenchOrdinal(classIndex)}</strong>
-                            {t(' classe')}
+                            {t('Les informations de votre {index, selectordinal, one {#ère} two {#ème} few {#ème} other {#ème}} classe', {
+                                index: classIndex + 1,
+                            })}
                         </p>
                     )}
                 </div>
