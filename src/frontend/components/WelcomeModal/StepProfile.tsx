@@ -96,7 +96,10 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
         name: profileData.userName || user.name,
     };
 
-    const defaultAlias = `La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`;
+    const defaultAlias = t('La classe {level} à {schoolName}', {
+        level: profileData.classLevel ? ' de ' + profileData.classLevel : '',
+        schoolName: profileData.schoolName || classroom.name,
+    });
 
     const previewClassroom: Classroom = {
         ...classroom,
@@ -158,7 +161,7 @@ export const StepProfile = ({ profileData, onProfileDataChange, countryCode, use
                         label={t('Pseudo :')}
                         value={profileData.classAlias}
                         onChange={(v) => updateField('classAlias', v)}
-                        placeholder={`La classe${profileData.classLevel ? ' de ' + profileData.classLevel : ''} à ${profileData.schoolName || classroom.name}`}
+                        placeholder={defaultAlias}
                         isRequired={isMultiClass}
                         hasError={isMultiClass && !profileData.classAlias.trim()}
                     />
