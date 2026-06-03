@@ -17,7 +17,10 @@ const getNumber = (value: string | undefined) => {
 };
 
 export const getCurrentVillageAndClassroomForUser = cache(
-    async (user: User, classroomId: number): Promise<{ village: Village | undefined; classroom: Classroom | undefined; classrooms: Classroom[] }> => {
+    async (
+        user: User,
+        classroomId?: number,
+    ): Promise<{ village: Village | undefined; classroom: Classroom | undefined; classrooms: Classroom[] }> => {
         const cookieStore = await cookies();
 
         switch (user.role) {
