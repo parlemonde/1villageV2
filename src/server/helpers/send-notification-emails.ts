@@ -33,7 +33,7 @@ export async function sendCommentNotificationEmail(
             },
         });
     } catch (error) {
-        logger.error(`Failed to send comment notification email to ${teacher.email}:`, { error: JSON.stringify(error) });
+        logger.error(`Failed to send comment notification email to ${teacher.email}:`, { error });
     }
 }
 
@@ -52,6 +52,6 @@ export async function sendAdminPublicationNotificationEmail(teacher: User, publi
             },
         });
     } catch (error) {
-        logger.error(`Failed to send admin publication notification email to ${teacher.email}:`, { error: JSON.stringify(error) });
+        logger.error(`Failed to send admin publication notification email to ${teacher.email}:`, { error });
     }
 }
