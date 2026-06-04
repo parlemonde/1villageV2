@@ -115,7 +115,7 @@ export const Navigation = () => {
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const activityMenuItems = activityTypes
+    const allActivityMenuItems = activityTypes
         .map((type) => {
             const hasVillageReachedPhase = !!(phase && village?.activePhase && village.activePhase >= phase);
             const activityLabel = getActivityLabel(type as ActivityType);
@@ -124,6 +124,13 @@ export const Navigation = () => {
             return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled);
         })
         .filter((item) => item !== null);
+
+    const mascotteItem = allActivityMenuItems.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
+    const mainMenuItems = [
+        ...getMenuItems(firstPath, undefined, avatar, user.role),
+        ...(mascotteItem && user.role !== 'parent' ? [mascotteItem] : []),
+    ];
 
     return (
         <div className={styles.navigationWrapper}>
@@ -142,7 +149,7 @@ export const Navigation = () => {
                         ))}
                 </div>
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
-                    <Menu items={getMenuItems(firstPath, undefined, avatar, user.role)} />
+                    <Menu items={mainMenuItems} />
                 </div>
                 {user.role !== 'parent' && activityMenuItems.length > 0 && (
                     <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
@@ -188,7 +195,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
     }
     activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
 
-    const activityMenuItems = activityTypes
+    const allActivityMenuItems = activityTypes
         .map((type) => {
             const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
             const activityLabel = getActivityLabel(type as ActivityType);
@@ -197,6 +204,9 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
             return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled, onClose);
         })
         .filter((item) => item !== null);
+
+    const mascotteItem = allActivityMenuItems.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
 
     if (activityMenuItems.length > 0) {
         activityMenuItems[0].hasSeparatorTop = true;
@@ -230,6 +240,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                         avatar,
                         user.role,
                     ),
+                    ...(mascotteItem && user.role !== 'parent' ? [mascotteItem] : []),
                     ...(user.role !== 'parent' ? activityMenuItems : []),
                     ...(user?.role === 'admin'
                         ? [

@@ -64,7 +64,7 @@ export const useActivityName = () => {
                 case 'histoire':
                     return t('Inventer une histoire');
                 case 'mascotte':
-                    return t('Créer sa mascotte');
+                    return t('Notre mascotte');
                 case 'defi':
                     return t('Lancer un defi');
                 case 'question':
