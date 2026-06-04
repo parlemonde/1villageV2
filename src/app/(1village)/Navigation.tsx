@@ -65,6 +65,18 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
     ];
 };
 
+const buildMascotteMenuItem = (
+    items: MenuItem[],
+    mascotteId: number | null | undefined,
+    firstPath: string,
+    onClick?: () => void,
+): MenuItem | null => {
+    const baseItem = items.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    if (!baseItem) return null;
+    if (!mascotteId) return baseItem;
+    return { ...baseItem, href: `/activities/${mascotteId}`, isActive: firstPath === 'activities', onClick };
+};
+
 const getActivityMenuItem = (
     type: ActivityType,
     activityLabel: string,
@@ -125,7 +137,7 @@ export const Navigation = () => {
         })
         .filter((item) => item !== null);
 
-    const mascotteItem = allActivityMenuItems.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, firstPath);
     const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
     const mainMenuItems = [
         ...getMenuItems(firstPath, undefined, avatar, user.role),
@@ -205,7 +217,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
         })
         .filter((item) => item !== null);
 
-    const mascotteItem = allActivityMenuItems.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, firstPath, onClose);
     const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
 
     if (activityMenuItems.length > 0) {
