@@ -1,4 +1,5 @@
 import { WelcomeModal } from '@frontend/components/WelcomeModal';
+import { Loader } from '@frontend/components/ui/Loader';
 import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
@@ -46,7 +47,7 @@ export default async function VillageLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <Suspense>
+        <Suspense fallback={<Loader isLoading={true} />}>
             <VillageLayoutImpl>{children}</VillageLayoutImpl>
         </Suspense>
     );

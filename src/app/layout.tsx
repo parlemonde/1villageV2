@@ -1,4 +1,5 @@
 import { Toasts } from '@frontend/components/Toasts';
+import { Loader } from '@frontend/components/ui/Loader';
 import { NProgressDone } from '@frontend/components/ui/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import { getEnvVariable } from '@server/lib/get-env-variable';
@@ -92,7 +93,7 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <Suspense>
+        <Suspense fallback={<Loader isLoading={true} />}>
             <RootLayoutImpl>{children}</RootLayoutImpl>
         </Suspense>
     );
