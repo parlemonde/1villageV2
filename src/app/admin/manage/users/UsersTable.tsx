@@ -1,6 +1,7 @@
 'use client';
 
 import { AdminTable } from '@frontend/components/AdminTable';
+import { sendToast } from '@frontend/components/Toasts';
 import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
@@ -10,7 +11,6 @@ import { authClient } from '@frontend/lib/auth-client';
 import { jsonFetcher } from '@lib/json-fetcher';
 import { EnterIcon, MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { User } from '@server/database/schemas/users';
-import { logger } from '@server/lib/logger';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
 
@@ -33,7 +33,10 @@ export function UsersTable() {
         setImpersonatingUserId(userId);
         const { error } = await authClient.admin.impersonateUser({ userId });
         if (error) {
-            logger.error(error);
+            sendToast({
+                message: "Une erreur est survenue lors du changement d'utilisateur",
+                type: 'error',
+            });
             setImpersonatingUserId(null);
             return;
         }

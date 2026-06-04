@@ -8,6 +8,7 @@ import { DropdownMenuItem } from '@frontend/components/ui/Dropdown/DropdownMenuI
 import { Link } from '@frontend/components/ui/Link/Link';
 import { VillageSelector } from '@frontend/components/village/VillageSelector';
 import { UserContext } from '@frontend/contexts/userContext';
+import { useImpersonation } from '@frontend/hooks/useImpersonation';
 import { authClient } from '@frontend/lib/auth-client';
 import CogIcon from '@frontend/svg/cogIcon.svg';
 import LogoSVG from '@frontend/svg/logo.svg';
@@ -24,7 +25,6 @@ import {
     ResetIcon,
 } from '@radix-ui/react-icons';
 import type { Classroom } from '@server/database/schemas/classrooms';
-import { logger } from '@server/lib/logger';
 import { logout } from '@server-actions/authentication/logout';
 import { useExtracted } from 'next-intl';
 import { useContext, useState } from 'react';
@@ -37,7 +37,6 @@ import styles from './header.module.css';
 export const Header = () => {
     const { user } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
-    const [isStoppingImpersonation, setIsStoppingImpersonation] = useState(false);
     const tCommon = useExtracted('common');
 
     const { data: classrooms } = useSWR<Classroom[]>(user.role === 'teacher' ? `/api/classrooms/me` : undefined, jsonFetcher);
@@ -45,17 +44,7 @@ export const Header = () => {
     const { data: session } = authClient.useSession();
     const isImpersonating = Boolean(session?.session.impersonatedBy);
 
-    const stopImpersonating = async () => {
-        setIsStoppingImpersonation(true);
-        const { error } = await authClient.admin.stopImpersonating();
-        if (error) {
-            logger.error(error);
-            setIsStoppingImpersonation(false);
-            return;
-        }
-
-        window.location.assign('/admin/manage/users');
-    };
+    const { isStopping, stop } = useImpersonation();
 
     return (
         <div className={styles.headerContainer}>
@@ -92,8 +81,8 @@ export const Header = () => {
                                         isUpperCase={false}
                                         label={tCommon('Revenir au profil admin')}
                                         isTabletUpOnly
-                                        isLoading={isStoppingImpersonation}
-                                        onClick={stopImpersonating}
+                                        isLoading={isStopping}
+                                        onClick={stop}
                                     />
                                 )}
                                 <Button
