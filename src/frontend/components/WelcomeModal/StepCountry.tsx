@@ -4,7 +4,9 @@ import { CountryFlag } from '@frontend/components/CountryFlag/CountryFlag';
 import { sendToast } from '@frontend/components/Toasts/toast-events';
 import { Button } from '@frontend/components/ui/Button';
 import { COUNTRIES } from '@lib/iso-3166-countries-french';
+import { sendAdminNotification } from '@server-actions/users/send-admin-notification';
 import { useExtracted } from 'next-intl';
+import { useRef } from 'react';
 
 import styles from './welcome-modal.module.css';
 
@@ -15,8 +17,17 @@ interface StepCountryProps {
 export const StepCountry = ({ countryCode }: StepCountryProps) => {
     const t = useExtracted('StepCountry');
     const countryName = COUNTRIES[countryCode.toUpperCase()] ?? countryCode;
+    const alreadyReported = useRef(false);
 
-    const handleReportError = () => {
+    const handleReportError = async () => {
+        if (alreadyReported.current) return;
+        alreadyReported.current = true;
+        const result = await sendAdminNotification('INVALID_COUNTRY', '[1Village] Pays invalide — signalement professeur');
+        if (result.error) {
+            sendToast({ message: result.error.message ?? t('Une erreur est survenue'), type: 'error' });
+            alreadyReported.current = false;
+            return;
+        }
         sendToast({
             message: t('Une demande de changement de pays a été envoyée à un administrateur !'),
             type: 'success',

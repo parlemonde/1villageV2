@@ -14,22 +14,18 @@ export const updateClassroom = async (classroom: Partial<Classroom>): Promise<Se
             throw new Error('Unauthorized');
         }
 
-        const { id: classroomId, ...rest } = classroom;
+        // remove id, teacherId, villageId from ...rest for non-admin users (teachers)
+        const { id: classroomId, teacherId, villageId, ...rest } = classroom;
+
         if (!classroomId) {
             throw new Error('Classroom ID is required to update classroom');
         }
 
-        if (user.role === 'admin') {
-            return { data: await db.update(classrooms).set(rest).where(eq(classrooms.id, classroomId)).returning() };
-        }
+        const updateData = user.role === 'admin' ? { ...rest, teacherId, villageId } : rest;
+        const whereClause =
+            user.role === 'admin' ? eq(classrooms.id, classroomId) : and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, user.id));
 
-        return {
-            data: await db
-                .update(classrooms)
-                .set(rest)
-                .where(and(eq(classrooms.id, classroomId), eq(classrooms.teacherId, user.id)))
-                .returning(),
-        };
+        return { data: await db.update(classrooms).set(updateData).where(whereClause).returning() };
     } catch (e) {
         logger.error(e);
         return { error: { message: 'Une erreur est survenue lors de la modification de la classe' } };
