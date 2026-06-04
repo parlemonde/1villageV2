@@ -73,13 +73,13 @@ export const auth = registerService('auth', () =>
                     type: 'boolean',
                     required: false,
                     defaultValue: true,
-                    input: true,
+                    input: false,
                 },
                 commentActivitySubscribed: {
                     type: 'boolean',
                     required: false,
                     defaultValue: true,
-                    input: true,
+                    input: false,
                 },
                 wantsNewsletter: {
                     type: 'boolean',
