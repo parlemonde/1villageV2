@@ -12,6 +12,7 @@ export default function FreeContent() {
     const { user } = useContext(UserContext);
     const { onCreateActivity } = useContext(ActivityContext);
     const router = useRouter();
+    const isPelico = user.role === 'admin' || user.role === 'mediator';
 
     return (
         <PageContainer title="Publication de contenu libre">
@@ -25,7 +26,7 @@ export default function FreeContent() {
                     label="Étape suivante"
                     rightIcon={<ChevronRightIcon />}
                     onClick={() => {
-                        onCreateActivity('libre', user.role === 'admin' || user.role === 'teacher');
+                        onCreateActivity('libre', isPelico);
                         router.push('/contenu-libre/1');
                     }}
                 />
