@@ -74,7 +74,12 @@ const buildMascotteMenuItem = (
     const baseItem = items.find((item) => item.href === ACTIVITY_URLS['mascotte']);
     if (!baseItem) return null;
     if (!mascotteId) return baseItem;
-    return { ...baseItem, href: `/activities/${mascotteId}`, isActive: firstPath === 'activities', onClick };
+    return {
+        ...baseItem,
+        href: `/activities/${mascotteId}`,
+        isActive: firstPath === 'activities',
+        onClick: firstPath === 'activities' ? () => {} : onClick,
+    };
 };
 
 const getActivityMenuItem = (
