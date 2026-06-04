@@ -21,12 +21,12 @@ export const PreferencesForm = ({
 }: PreferencesFormProps) => {
     const [adminPublicationSubscribed, setAdminPublicationSubscribed] = useState<boolean>(initialAdminPublication);
     const [commentActivitySubscribed, setCommentActivitySubscribed] = useState<boolean>(initialCommentActivity);
-    const [adminPublicationEdited, setAdminPublicationEdited] = useState<boolean>(initialAdminPublication);
-    const [commentActivityEdited, setCommentActivityEdited] = useState<boolean>(initialCommentActivity);
+    const [currentAdminPublication, setCurrentAdminPublication] = useState<boolean>(initialAdminPublication);
+    const [currentCommentActivity, setCurrentCommentActivity] = useState<boolean>(initialCommentActivity);
     const [isPending, setIsPending] = useState<boolean>(false);
     const t = useExtracted('app.(1village).mon-compte.preferences');
 
-    const hasChanges = adminPublicationSubscribed !== adminPublicationEdited || commentActivitySubscribed !== commentActivityEdited;
+    const hasChanges = adminPublicationSubscribed !== currentAdminPublication || commentActivitySubscribed !== currentCommentActivity;
 
     const handleSave = async () => {
         setIsPending(true);
@@ -34,18 +34,18 @@ export const PreferencesForm = ({
             const updates: Record<string, boolean> = {};
 
             if (hasChanges) {
-                if (adminPublicationSubscribed !== adminPublicationEdited) {
-                    updates.adminPublicationSubscribed = adminPublicationEdited;
+                if (adminPublicationSubscribed !== currentAdminPublication) {
+                    updates.adminPublicationSubscribed = currentAdminPublication;
                 }
-                if (commentActivitySubscribed !== commentActivityEdited) {
-                    updates.commentActivitySubscribed = commentActivityEdited;
+                if (commentActivitySubscribed !== currentCommentActivity) {
+                    updates.commentActivitySubscribed = currentCommentActivity;
                 }
             }
 
             await updateSubscription(updates);
 
-            setAdminPublicationSubscribed(adminPublicationEdited);
-            setCommentActivitySubscribed(commentActivityEdited);
+            setAdminPublicationSubscribed(currentAdminPublication);
+            setCommentActivitySubscribed(currentCommentActivity);
 
             sendToast({
                 type: 'success',
@@ -53,8 +53,8 @@ export const PreferencesForm = ({
             });
         } catch {
             // Rollback optimistic UI on error
-            setAdminPublicationEdited(adminPublicationSubscribed);
-            setCommentActivityEdited(commentActivitySubscribed);
+            setCurrentAdminPublication(adminPublicationSubscribed);
+            setCurrentCommentActivity(commentActivitySubscribed);
             sendToast({
                 type: 'error',
                 message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
@@ -81,8 +81,8 @@ export const PreferencesForm = ({
                             <Checkbox
                                 name="admin-publication"
                                 label={t('Publications de Pelico')}
-                                isChecked={adminPublicationEdited}
-                                onChange={(checked) => setAdminPublicationEdited(checked === true)}
+                                isChecked={currentAdminPublication}
+                                onChange={(checked) => setCurrentAdminPublication(checked === true)}
                                 isDisabled={isPending}
                             />
                         </div>
@@ -100,8 +100,8 @@ export const PreferencesForm = ({
                             <Checkbox
                                 name="comment-activity"
                                 label={t('Commentaire sous une de nos publications')}
-                                isChecked={commentActivityEdited}
-                                onChange={(checked) => setCommentActivityEdited(checked === true)}
+                                isChecked={currentCommentActivity}
+                                onChange={(checked) => setCurrentCommentActivity(checked === true)}
                                 isDisabled={isPending}
                             />
                         </div>
