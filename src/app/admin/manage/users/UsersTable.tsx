@@ -1,14 +1,15 @@
 'use client';
 
 import { AdminTable } from '@frontend/components/AdminTable';
-import { IconButton } from '@frontend/components/ui/Button';
+import { sendToast } from '@frontend/components/Toasts';
+import { Button, IconButton } from '@frontend/components/ui/Button';
 import { Input } from '@frontend/components/ui/Form';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { UserContext } from '@frontend/contexts/userContext';
 import { authClient } from '@frontend/lib/auth-client';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import { EnterIcon, MagnifyingGlassIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import type { User } from '@server/database/schemas/users';
 import { useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -25,7 +26,23 @@ export function UsersTable() {
 
     const [userToDeleteId, setUserToDeleteId] = useState<string | null>(null);
     const [isDeletingUser, setIsDeletingUser] = useState(false);
+    const [impersonatingUserId, setImpersonatingUserId] = useState<string | null>(null);
     const [search, setSearch] = useState('');
+
+    const impersonateUser = async (userId: string) => {
+        setImpersonatingUserId(userId);
+        const { error } = await authClient.admin.impersonateUser({ userId });
+        if (error) {
+            sendToast({
+                message: "Une erreur est survenue lors du changement d'utilisateur",
+                type: 'error',
+            });
+            setImpersonatingUserId(null);
+            return;
+        }
+
+        window.location.assign('/');
+    };
 
     const { data: users, isLoading, mutate } = useSWR<User[]>('/api/users', jsonFetcher);
 
@@ -74,6 +91,25 @@ export function UsersTable() {
                         width: '150px',
                         isSortable: true,
                         getSortValue: (user) => ROLE_LABELS[user.role],
+                    },
+                    {
+                        id: 'impersonate',
+                        header: '',
+                        accessor: (user) =>
+                            user.role === 'teacher' &&
+                            user.id !== currentUser.id && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="sm"
+                                    isUpperCase={false}
+                                    leftIcon={<EnterIcon />}
+                                    label="Se connecter en tant que"
+                                    isLoading={impersonatingUserId === user.id}
+                                    onClick={() => impersonateUser(user.id)}
+                                />
+                            ),
+                        width: '260px',
                     },
                     {
                         id: 'actions',
