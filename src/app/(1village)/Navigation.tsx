@@ -65,20 +65,16 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
     ];
 };
 
-const buildMascotteMenuItem = (
-    items: MenuItem[],
-    mascotteId: number | null | undefined,
-    firstPath: string,
-    onClick?: () => void,
-): MenuItem | null => {
+const buildMascotteMenuItem = (items: MenuItem[], mascotteId: number | null | undefined, pathname: string, onClick?: () => void): MenuItem | null => {
     const baseItem = items.find((item) => item.href === ACTIVITY_URLS['mascotte']);
     if (!baseItem) return null;
     if (!mascotteId) return baseItem;
+    const isOnMascotteDetail = pathname === `/activities/${mascotteId}`;
     return {
         ...baseItem,
         href: `/activities/${mascotteId}`,
-        isActive: firstPath === 'activities',
-        onClick: firstPath === 'activities' ? () => {} : onClick,
+        isActive: isOnMascotteDetail,
+        onClick: isOnMascotteDetail ? () => {} : onClick,
     };
 };
 
@@ -151,7 +147,7 @@ export const Navigation = () => {
 
     const allActivityMenuItems = buildActivityItems(firstPath);
 
-    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, firstPath);
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, pathname);
     const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
     const mainMenuItems = [
         ...getMenuItems(firstPath, undefined, avatar, user.role),
@@ -208,7 +204,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
 
     const allActivityMenuItems = buildActivityItems(firstPath, onClose);
 
-    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, firstPath, onClose);
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, pathname, onClose);
     const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
 
     if (activityMenuItems.length > 0) {
