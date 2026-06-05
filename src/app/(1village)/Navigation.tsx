@@ -205,11 +205,9 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
     const allActivityMenuItems = buildActivityItems(firstPath, onClose);
 
     const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, pathname, onClose);
-    const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
-
-    if (activityMenuItems.length > 0) {
-        activityMenuItems[0].hasSeparatorTop = true;
-    }
+    const activityMenuItems = allActivityMenuItems
+        .filter((item) => item.href !== ACTIVITY_URLS['mascotte'])
+        .map((item, index) => (index === 0 ? { ...item, hasSeparatorTop: true } : item));
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
