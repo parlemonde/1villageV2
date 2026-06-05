@@ -52,12 +52,12 @@ const withNextIntl = createNextIntlPlugin({
     experimental: {
         srcPath: './src',
         extract: {
-            sourceLocale: 'en',
+            sourceLocale: 'fr',
         },
         messages: {
             path: './src/server/i18n/messages',
             format: 'json',
-            locales: ['en'],
+            locales: ['fr'],
         },
     },
 });

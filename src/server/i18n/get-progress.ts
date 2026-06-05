@@ -1,4 +1,8 @@
-import { isObject, fetchMessages, getDefaultMessages } from './request';
+import { db } from '@server/database';
+import { languages } from '@server/database/schemas/languages';
+import { eq } from 'drizzle-orm';
+
+import { isObject, getDefaultMessages } from './request';
 
 export function computeProgress(original: Record<string, unknown>, translated: Record<string, unknown>): number {
     let totalCount = 0;
@@ -9,7 +13,6 @@ export function computeProgress(original: Record<string, unknown>, translated: R
             const transValue = transObj[key];
 
             if (isObject(origValue)) {
-                // Recursively process nested objects
                 processObject(origValue, isObject(transValue) ? transValue : {});
             } else if (typeof origValue === 'string') {
                 totalCount += 1;
@@ -25,7 +28,13 @@ export function computeProgress(original: Record<string, unknown>, translated: R
 
 async function getProgress(locale: string) {
     const original = await getDefaultMessages();
-    const messages = await fetchMessages(locale, locale !== 'fr');
+    if (locale === 'fr') return 100;
+
+    const language = await db.query.languages.findFirst({
+        columns: { locales: true },
+        where: eq(languages.code, locale),
+    });
+    const messages = (language?.locales as Record<string, unknown> | undefined) ?? {};
     return computeProgress(original, messages);
 }
 export async function getAllProgress(locales: string[]) {

@@ -41,8 +41,8 @@ export function TranslationEditor({ language, messages }: TranslationEditorProps
         setTempTranslation('');
         try {
             await saveTranslations(language.code, newGroups);
-        } catch {
-            // Ignore
+        } catch (error) {
+            console.error('Failed to save translation:', error);
         } finally {
             setIsSaving(false);
         }

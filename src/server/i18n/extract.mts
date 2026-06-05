@@ -3,11 +3,11 @@ import { unstable_extractMessages } from 'next-intl/extractor';
 
 await unstable_extractMessages({
     srcPath: './src',
-    sourceLocale: 'en',
+    sourceLocale: 'fr',
     messages: {
         path: './src/server/i18n/messages',
         format: 'json',
-        locales: ['en'],
+        locales: ['fr'],
     },
 });
 
