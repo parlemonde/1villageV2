@@ -68,7 +68,7 @@ ConfirmAccountTemplate.PreviewProps = {
 } as const;
 
 export const getConfirmAccountTranslations = async () => {
-    const t = await getExtracted('common');
+    const t = await getExtracted('emailing');
 
     const translations: ConfirmAccountTemplateProps['translations'] = {
         confirmYourAccount: t('Confirmez votre compte'),

@@ -2,6 +2,8 @@ import { render, toPlainText } from '@react-email/render';
 import AdminNotificationTemplate from '@server/emails/templates/AdminNotificationTemplate';
 import { getBaseTranslations } from '@server/emails/templates/BaseTemplate';
 import ConfirmAccountTemplate, { getConfirmAccountTranslations } from '@server/emails/templates/ConfirmAccountTemplate';
+import NewAdminPublicationTemplate, { getNewAdminPublicationTranslations } from '@server/emails/templates/NewAdminPublicationTemplate';
+import NewCommentTemplate, { getNewCommentTranslations } from '@server/emails/templates/NewCommentTemplate';
 import RequestNewPasswordTemplate, { getRequestNewPasswordTranslations } from '@server/emails/templates/RequestNewPasswordTemplate';
 
 import type { EmailTemplateProps } from './types';
@@ -21,6 +23,16 @@ const templates: TemplateMap = {
         const baseTranslations = await getBaseTranslations();
         const translations = await getRequestNewPasswordTranslations();
         return <RequestNewPasswordTemplate {...props} baseTranslations={baseTranslations} translations={translations} />;
+    },
+    [EmailType.NEW_ADMIN_PUBLICATION]: async (props: EmailTemplateProps[EmailType.NEW_ADMIN_PUBLICATION]) => {
+        const baseTranslations = await getBaseTranslations();
+        const translations = await getNewAdminPublicationTranslations();
+        return <NewAdminPublicationTemplate {...props} baseTranslations={baseTranslations} translations={translations} />;
+    },
+    [EmailType.NEW_COMMENT]: async (props: EmailTemplateProps[EmailType.NEW_COMMENT]) => {
+        const baseTranslations = await getBaseTranslations();
+        const translations = await getNewCommentTranslations();
+        return <NewCommentTemplate {...props} baseTranslations={baseTranslations} translations={translations} />;
     },
     [EmailType.INVALID_VILLAGE]: async (props: EmailTemplateProps[EmailType.INVALID_VILLAGE]) => {
         return <AdminNotificationTemplate type={EmailType.INVALID_VILLAGE} {...props} />;

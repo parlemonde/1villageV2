@@ -1,4 +1,5 @@
 import { Toasts } from '@frontend/components/Toasts';
+import { Loader } from '@frontend/components/ui/Loader';
 import { NProgressDone } from '@frontend/components/ui/NProgress';
 import { alegreyaSansFont, robotoFont } from '@frontend/fonts';
 import { getEnvVariable } from '@server/lib/get-env-variable';
@@ -60,7 +61,7 @@ export const viewport: Viewport = {
     themeColor: '#4c3ed9',
 };
 
-export default async function RootLayout({
+async function RootLayoutImpl({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -83,5 +84,17 @@ export default async function RootLayout({
                 </Suspense>
             </body>
         </html>
+    );
+}
+
+export default async function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <Suspense fallback={<Loader isLoading={true} />}>
+            <RootLayoutImpl>{children}</RootLayoutImpl>
+        </Suspense>
     );
 }

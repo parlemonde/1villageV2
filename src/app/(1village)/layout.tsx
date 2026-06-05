@@ -1,9 +1,11 @@
 import { WelcomeModal } from '@frontend/components/WelcomeModal';
+import { Loader } from '@frontend/components/ui/Loader';
 import { UserProvider } from '@frontend/contexts/userContext';
 import { VillageProvider } from '@frontend/contexts/villageContext';
 import { getCurrentUser } from '@server/helpers/get-current-user';
 import { getCurrentVillageAndClassroomForUser } from '@server/helpers/get-current-village-and-classroom';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 import { ActivitySidePanel } from './ActivitySidePanel';
 import { Header } from './Header';
@@ -11,7 +13,7 @@ import { Navigation } from './Navigation';
 import { Phases } from './Phases';
 import styles from './layout.module.css';
 
-export default async function VillageLayout({
+async function VillageLayoutImpl({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -36,5 +38,17 @@ export default async function VillageLayout({
                 <WelcomeModal />
             </VillageProvider>
         </UserProvider>
+    );
+}
+
+export default async function VillageLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <Suspense fallback={<Loader isLoading={true} />}>
+            <VillageLayoutImpl>{children}</VillageLayoutImpl>
+        </Suspense>
     );
 }
