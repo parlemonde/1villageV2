@@ -65,7 +65,7 @@ importers:
         version: 1.0.20
       better-auth:
         specifier: 1.5.6
-        version: 1.5.6(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))(next@16.2.1(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.20.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 1.5.6(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))(next@16.2.1(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.20.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -80,7 +80,7 @@ importers:
         version: 3.0.0
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
+        version: 0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
       fs-extra:
         specifier: ^11.3.4
         version: 11.3.4
@@ -196,6 +196,12 @@ importers:
       '@dotenvx/dotenvx':
         specifier: 1.59.1
         version: 1.59.1
+      '@electric-sql/pglite':
+        specifier: ^0.5.1
+        version: 0.5.1
+      '@electric-sql/pglite-socket':
+        specifier: ^0.2.1
+        version: 0.2.1(@electric-sql/pglite-age@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_hashids@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_ivm@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_textsearch@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_uuidv7@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pgtap@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pgvector@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite@0.5.1)
       '@eslint/css':
         specifier: ^1.0.0
         version: 1.1.0
@@ -1083,6 +1089,57 @@ packages:
     engines: {bun: '>=1', deno: '>=2', node: '>=16'}
     peerDependencies:
       '@noble/ciphers': ^1.0.0
+
+  '@electric-sql/pglite-age@0.0.2':
+    resolution: {integrity: sha512-0Q+QnbSSZjJt3aF/wycuXpC1HxyemkAumYSodKlIkjobx/Cu/U9a9lazuwlAzB1GOZuCuB6JUiYjGcJMnvN7zA==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_hashids@0.0.2':
+    resolution: {integrity: sha512-fg+V4XOpmMyNyVq21+Cmxi9ZYX6LHPFRBSvMSm69mv4/0xpBCQcUpo9t4pV0os2FACpUIvFDzB+0CUDTvylcTg==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_ivm@0.0.2':
+    resolution: {integrity: sha512-S84QSgUyVuworFPs3W+hQhQa3zhKd9egQvBordM60gryo7zZBa3rMbf4PRYtb/aX44yybzI42WKinC7z3REC6g==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_textsearch@0.0.2':
+    resolution: {integrity: sha512-hqGo0imL0fDVDsc182wB8+tfvNWZWj9unNqjVu2X2M/2wuOzk/6uWsFjLdOHsnRHMjcRhI8X5k/LK4mtZA1j7g==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_uuidv7@0.0.2':
+    resolution: {integrity: sha512-DqV70JhIUY8vGYwTQRlshZyxyxS9i0ThdegJLfyi3T5rw1ov3HoLlCvLZhroI2/MAvF0s4mBH9Op/wSMzjr8Ew==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pgtap@0.0.2':
+    resolution: {integrity: sha512-5nEhiMxS9qK+Yxnx8pnKLREDXymLba7cevTRpQL4hvcW0W4Y+spJbMV2gRwC9qWLQFrEIWlYucP+EBdVUucXSQ==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pgvector@0.0.2':
+    resolution: {integrity: sha512-Gu9Nv7JHlg6BgOLqPCR6lCjI+3xlb7ej5qUtHWmzEYA0ZKzuNgeDK16nRO0ELInwzhLptLqX7VdWyYRElSXjdQ==}
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-socket@0.2.1':
+    resolution: {integrity: sha512-i/vxFji/crDNIEEwwDcIH0Y7dShG039+uepAyHZqvAM/o+LCnM3LXcoIxtQoo2fUIThaUDVF5NMy7NAQkq79FQ==}
+    hasBin: true
+    peerDependencies:
+      '@electric-sql/pglite': 0.5.1
+      '@electric-sql/pglite-age': 0.0.2
+      '@electric-sql/pglite-pg_hashids': 0.0.2
+      '@electric-sql/pglite-pg_ivm': 0.0.2
+      '@electric-sql/pglite-pg_textsearch': 0.0.2
+      '@electric-sql/pglite-pg_uuidv7': 0.0.2
+      '@electric-sql/pglite-pgtap': 0.0.2
+      '@electric-sql/pglite-pgvector': 0.0.2
+
+  '@electric-sql/pglite@0.5.1':
+    resolution: {integrity: sha512-h2Vc+qkQqsEL5kvyN5nBAxn3Vbyvka7QfDW7Io+CdcwU1+X8JbCAN2og+5dI11S3eJuDfroUCxzJaap6k+ezEw==}
 
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
@@ -8897,9 +8954,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@better-auth/core@1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)':
+  '@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)':
     dependencies:
-      '@better-auth/utils': 0.4.0
+      '@better-auth/utils': 0.3.1
       '@better-fetch/fetch': 1.1.21
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/semantic-conventions': 1.40.0
@@ -8910,38 +8967,38 @@ snapshots:
       nanostores: 1.2.0
       zod: 4.3.6
 
-  '@better-auth/drizzle-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))':
+  '@better-auth/drizzle-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
     optionalDependencies:
-      drizzle-orm: 0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
+      drizzle-orm: 0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
 
   '@better-auth/kysely-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(kysely@0.28.15)':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
     optionalDependencies:
       kysely: 0.28.15
 
   '@better-auth/memory-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
 
   '@better-auth/mongo-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
 
   '@better-auth/prisma-adapter@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
 
   '@better-auth/telemetry@1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))':
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.3.1
       '@better-fetch/fetch': 1.1.21
 
@@ -8992,6 +9049,47 @@ snapshots:
   '@ecies/ciphers@0.2.5(@noble/ciphers@1.3.0)':
     dependencies:
       '@noble/ciphers': 1.3.0
+
+  '@electric-sql/pglite-age@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_hashids@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_ivm@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_textsearch@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pg_uuidv7@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pgtap@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-pgvector@0.0.2(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+
+  '@electric-sql/pglite-socket@0.2.1(@electric-sql/pglite-age@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_hashids@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_ivm@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_textsearch@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pg_uuidv7@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pgtap@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite-pgvector@0.0.2(@electric-sql/pglite@0.5.1))(@electric-sql/pglite@0.5.1)':
+    dependencies:
+      '@electric-sql/pglite': 0.5.1
+      '@electric-sql/pglite-age': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pg_hashids': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pg_ivm': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pg_textsearch': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pg_uuidv7': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pgtap': 0.0.2(@electric-sql/pglite@0.5.1)
+      '@electric-sql/pglite-pgvector': 0.0.2(@electric-sql/pglite@0.5.1)
+
+  '@electric-sql/pglite@0.5.1': {}
 
   '@emnapi/core@1.8.1':
     dependencies:
@@ -12230,10 +12328,10 @@ snapshots:
 
   basic-ftp@5.2.0: {}
 
-  better-auth@1.5.6(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))(next@16.2.1(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.20.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  better-auth@1.5.6(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))(next@16.2.1(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.20.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      '@better-auth/core': 1.5.6(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
-      '@better-auth/drizzle-adapter': 1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))
+      '@better-auth/core': 1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0)
+      '@better-auth/drizzle-adapter': 1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(drizzle-orm@0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8))
       '@better-auth/kysely-adapter': 1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)(kysely@0.28.15)
       '@better-auth/memory-adapter': 1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)
       '@better-auth/mongo-adapter': 1.5.6(@better-auth/core@1.5.6(@better-auth/utils@0.3.1)(@better-fetch/fetch@1.1.21)(@opentelemetry/api@1.9.1)(better-call@1.3.2(zod@4.3.6))(jose@6.1.3)(kysely@0.28.15)(nanostores@1.2.0))(@better-auth/utils@0.3.1)
@@ -12251,7 +12349,7 @@ snapshots:
       zod: 4.3.6
     optionalDependencies:
       drizzle-kit: 0.31.10
-      drizzle-orm: 0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
+      drizzle-orm: 0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8)
       next: 16.2.1(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(babel-plugin-macros@3.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       pg: 8.20.0
       react: 19.2.4
@@ -12743,8 +12841,9 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8):
+  drizzle-orm@0.45.2(@electric-sql/pglite@0.5.1)(@opentelemetry/api@1.9.1)(@types/pg@8.20.0)(kysely@0.28.15)(pg@8.20.0)(postgres@3.4.8):
     optionalDependencies:
+      '@electric-sql/pglite': 0.5.1
       '@opentelemetry/api': 1.9.1
       '@types/pg': 8.20.0
       kysely: 0.28.15

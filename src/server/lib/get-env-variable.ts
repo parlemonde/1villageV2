@@ -8,7 +8,7 @@ const DEFAULT_ENV_VARIABLES = {
     HOST_URL: 'http://localhost:3000',
     ADMIN_PASSWORD: 'Admin1234',
     ADMIN_EMAIL: 'admin@example.org',
-    DATABASE_URL: 'postgresql://postgres:example@localhost:5432/un_village',
+    DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable',
     CLIENT_ID: '',
     CLIENT_SECRET: '',
     SSO_BASE_URL: 'https://professeur.parlemonde.org',
