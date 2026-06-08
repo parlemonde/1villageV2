@@ -1,26 +1,12 @@
-version: "3.7"
+version: '3.7'
 services:
-  postgres:
-    image: postgres:16.11-alpine
-    # set shared memory limit when using docker-compose
-    shm_size: 128mb
-    environment:
-      POSTGRES_PASSWORD: example
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./.postgres-data:/var/lib/postgresql/data
-
-  cargo-lambda-watch:
-    build:
-      context: ./server-transcode-videos
-      dockerfile: Dockerfile.dev
-    command: cargo lambda watch
-    volumes:
-      - ./server-transcode-videos:/app
-      - ./tmp:/files
-    env_file:
-      - .env
-    working_dir: /app
-    ports:
-      - "9000:9000"
+    postgres:
+        image: postgres:16.11-alpine
+        # set shared memory limit when using docker-compose
+        shm_size: 128mb
+        environment:
+            POSTGRES_PASSWORD: example
+        ports:
+            - '5432:5432'
+        volumes:
+            - ./.postgres-data:/var/lib/postgresql/data

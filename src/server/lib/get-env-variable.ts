@@ -22,7 +22,7 @@ const DEFAULT_ENV_VARIABLES = {
     NODEMAILER_PORT: '587',
     NODEMAILER_USER: '',
     NODEMAILER_PASS: '',
-    TRANSCODE_VIDEOS_LAMBDA_URL: 'http://localhost:9000',
+    TRANSCODE_VIDEOS_LAMBDA_URL: '',
     TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME: 'server-transcode-videos',
     OPEN_WEATHER_APP_ID: '',
     OTEL_EXPORTER_OTLP_ENDPOINT: 'http://localhost:4318',
@@ -30,4 +30,8 @@ const DEFAULT_ENV_VARIABLES = {
 
 export const getEnvVariable = (variable: keyof typeof DEFAULT_ENV_VARIABLES): string => {
     return process.env[variable] || DEFAULT_ENV_VARIABLES[variable];
+};
+
+export const isTranscodingConfigured = (): boolean => {
+    return getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL') !== '';
 };

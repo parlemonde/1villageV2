@@ -6,7 +6,7 @@ import type { Media } from '@server/database/schemas/medias';
 import { medias } from '@server/database/schemas/medias';
 import { USE_S3 } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getEnvVariable } from '@server/lib/get-env-variable';
+import { getEnvVariable, isTranscodingConfigured } from '@server/lib/get-env-variable';
 
 type NewMedia = Pick<Media, 'type' | 'url' | 'isPelico' | 'metadata' | 'activityId'>;
 
@@ -18,16 +18,25 @@ export const addMedia = async (media: NewMedia) => {
     if (media.isPelico && user.role !== 'admin' && user.role !== 'mediator') {
         throw new Error('Forbidden');
     }
+
+    let url = media.url;
     if (media.type === 'video' && media.metadata && 'originalFilePath' in media.metadata) {
-        await invokeTranscodeVideosLambda(
-            USE_S3
-                ? { key: media.metadata.originalFilePath, bucket: getEnvVariable('S3_BUCKET_NAME') }
-                : { filePath: media.metadata.originalFilePath },
-        );
+        if (isTranscodingConfigured()) {
+            await invokeTranscodeVideosLambda(
+                USE_S3
+                    ? { key: media.metadata.originalFilePath, bucket: getEnvVariable('S3_BUCKET_NAME') }
+                    : { filePath: media.metadata.originalFilePath },
+            );
+        } else {
+            // Keep original video when transcoding is not configured
+            const originalPath = media.metadata.originalFilePath;
+            url = originalPath.startsWith('/') ? originalPath : `/${originalPath}`;
+        }
     }
+
     const newMedia = await db
         .insert(medias)
-        .values({ ...media, userId: user.id })
+        .values({ ...media, url, userId: user.id })
         .returning();
     return newMedia;
 };
