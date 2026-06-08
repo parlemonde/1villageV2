@@ -2,6 +2,7 @@ import type { IContentUserData, IContentUserDataStorage, IFinishedUserData, IUse
 import { H5pError } from '@lumieducation/h5p-server';
 import { db } from '@server/database';
 import { h5pContentUserData, h5pFinishedData } from '@server/database/schemas/h5p';
+import { logger } from '@server/lib/logger';
 import { and, eq } from 'drizzle-orm';
 
 const toContentUserData = (row: typeof h5pContentUserData.$inferSelect): IContentUserData => ({
@@ -61,7 +62,8 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
     public async deleteInvalidatedContentUserData(contentId: string): Promise<void> {
         try {
             await db.delete(h5pContentUserData).where(and(eq(h5pContentUserData.contentId, contentId), eq(h5pContentUserData.invalidate, true)));
-        } catch (_error) {
+        } catch (error) {
+            logger.error(`Error deleting invalidated content user data for content ${contentId}: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -69,7 +71,8 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
     public async deleteAllContentUserDataByUser(user: IUser): Promise<void> {
         try {
             await db.delete(h5pContentUserData).where(eq(h5pContentUserData.userId, user.id));
-        } catch (_error) {
+        } catch (error) {
+            logger.error(`Error deleting all content user data for user ${user.id}: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -77,7 +80,8 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
     public async deleteAllContentUserDataByContentId(contentId: string): Promise<void> {
         try {
             await db.delete(h5pContentUserData).where(eq(h5pContentUserData.contentId, contentId));
-        } catch (_error) {
+        } catch (error) {
+            logger.error(`Error deleting all content user data for content ${contentId}: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('Could not delete content user data');
         }
     }
@@ -169,7 +173,8 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
     public async deleteFinishedDataByContentId(contentId: string): Promise<void> {
         try {
             await db.delete(h5pFinishedData).where(eq(h5pFinishedData.contentId, contentId));
-        } catch (_error) {
+        } catch (error) {
+            logger.error(`Error deleting finished data for content ${contentId}: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('Could not delete finished data');
         }
     }
@@ -177,7 +182,8 @@ export class ContentUserDataStorage implements IContentUserDataStorage {
     public async deleteFinishedDataByUser(user: IUser): Promise<void> {
         try {
             await db.delete(h5pFinishedData).where(eq(h5pFinishedData.userId, user.id));
-        } catch (_error) {
+        } catch (error) {
+            logger.error(`Error deleting finished data for user ${user.id}: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('Could not delete finished data');
         }
     }
