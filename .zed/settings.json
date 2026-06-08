@@ -15,7 +15,6 @@
     "**/.settings",
     "**/.next",
     "**/.postgres-data",
-    "**/.dynamodb",
     "**/tmp",
     "**/.open-next",
     "**/.vscode",

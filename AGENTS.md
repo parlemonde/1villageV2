@@ -26,12 +26,12 @@ Main roles:
 - Radix UI primitives plus custom UI components
 - ProseMirror-based rich text editor
 - H5P integration for interactive content
-- Optional AWS S3 + DynamoDB integrations
+- Optional AWS S3 integration
 - OpenTelemetry instrumentation in production
 
 Runtime and infra notes:
 
-- Local development uses `docker-compose.yml` for PostgreSQL, DynamoDB Local, and the local video transcoding lambda.
+- Local development uses `docker-compose.yml` for PostgreSQL and the local video transcoding lambda.
 - The app supports local file storage and S3. The switch is handled centrally in `src/server/files/file-upload.ts`.
 - Environment variables are centralized in `src/server/lib/get-env-variable.ts`. Do not introduce direct `process.env.FOO` reads when a shared accessor already exists.
 
@@ -50,7 +50,7 @@ Runtime and infra notes:
 - `package.json`: scripts, dependencies, Node version via Volta
 - `next.config.ts`: SVG/raw asset loading, `next-intl`, standalone output
 - `drizzle.config.ts`: Drizzle schema and migration output
-- `docker-compose.yml`: local PostgreSQL, DynamoDB, lambda watcher
+- `docker-compose.yml`: local PostgreSQL, lambda watcher
 - `eslint.config.mjs`: important custom rules for import boundaries and i18n usage
 - `server-transcode-videos/`: Rust lambda used for video transcoding
 
@@ -90,7 +90,7 @@ Server-only code.
 - `helpers`: current-user and current-village resolution
 - `lib`: auth, logging, env access, crypto, shared server utilities
 - `files`: local/S3 file abstraction
-- `aws`: DynamoDB/S3/AWS client helpers
+- `aws`: S3/AWS client helpers
 - `h5p`: H5P runtime/editor integration
 - `i18n`: locale/message loading
 
@@ -221,7 +221,7 @@ Use:
 Messages are loaded from:
 
 - default extracted English messages in `src/server/i18n/messages`
-- locale overrides stored in DynamoDB
+- locale overrides stored in PostgreSQL `languages` table
 
 Locale is driven by a cookie in `src/server/i18n/request.ts`.
 
