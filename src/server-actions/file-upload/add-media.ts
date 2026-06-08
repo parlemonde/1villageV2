@@ -19,11 +19,17 @@ export const addMedia = async (media: NewMedia) => {
         throw new Error('Forbidden');
     }
     if (media.type === 'video' && media.metadata && 'originalFilePath' in media.metadata) {
-        await invokeTranscodeVideosLambda(
-            USE_S3
-                ? { key: media.metadata.originalFilePath, bucket: getEnvVariable('S3_BUCKET_NAME') }
-                : { filePath: media.metadata.originalFilePath },
-        );
+        const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
+        if (lambdaUrl) {
+            await invokeTranscodeVideosLambda(
+                USE_S3
+                    ? { key: media.metadata.originalFilePath, bucket: getEnvVariable('S3_BUCKET_NAME') }
+                    : { filePath: media.metadata.originalFilePath },
+            );
+        } else {
+            // Keep original video when transcoding is not configured
+            media.url = media.metadata.originalFilePath;
+        }
     }
     const newMedia = await db
         .insert(medias)

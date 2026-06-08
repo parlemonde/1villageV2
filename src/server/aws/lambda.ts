@@ -12,23 +12,19 @@ type TranscodeVideosLambdaEvent =
           bucket: string;
       };
 export const invokeTranscodeVideosLambda = async (event: TranscodeVideosLambdaEvent): Promise<boolean> => {
+    const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
+    if (!lambdaUrl) {
+        return false;
+    }
     try {
         const client = getAwsClient();
-        const response = client.fetch(
-            `${getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL')}/2015-03-31/functions/${getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME')}/invocations`,
-            {
-                headers: {
-                    'X-Amz-Invocation-Type': 'Event',
-                },
-                body: JSON.stringify(event),
+        const response = client.fetch(`${lambdaUrl}/2015-03-31/functions/${getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME')}/invocations`, {
+            headers: {
+                'X-Amz-Invocation-Type': 'Event',
             },
-        );
-        // Do not await the response if we are using the local lambda
-        if (getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL') === 'http://localhost:9000') {
-            response.catch(logger.error);
-        } else {
-            await response;
-        }
+            body: JSON.stringify(event),
+        });
+        await response;
         return true;
     } catch (error) {
         logger.error(error);

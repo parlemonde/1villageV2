@@ -26,7 +26,7 @@ export const uploadVideo = async (file: File, isPelicoVideo: boolean, activityId
             throw new Error('Failed to upload video');
         }
         const url = `/${key.split('/').slice(0, -1).join('/')}/hls/master.m3u8`;
-        await addMedia({
+        const newMedia = await addMedia({
             type: 'video',
             url,
             isPelico: isPelicoVideo,
@@ -35,7 +35,7 @@ export const uploadVideo = async (file: File, isPelicoVideo: boolean, activityId
             },
             activityId,
         });
-        return url;
+        return newMedia[0].url;
     } else {
         formData.append('file', file);
         formData.append('isPelicoVideo', `${isPelicoVideo}`);

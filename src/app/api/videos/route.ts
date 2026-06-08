@@ -51,7 +51,9 @@ export async function POST(request: NextRequest) {
         const contentType = mime.lookup(fileName) || undefined;
         const fileBuffer = Buffer.from(await file.arrayBuffer());
 
-        const url = `media/videos/users/${userVideoId}/${uuid}/hls/master.m3u8`;
+        const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
+        const shouldTranscode = lambdaUrl !== '';
+        const url = shouldTranscode ? `media/videos/users/${userVideoId}/${uuid}/hls/master.m3u8` : fileName;
 
         await Promise.all([
             uploadFile(fileName, fileBuffer, contentType),
@@ -68,7 +70,9 @@ export async function POST(request: NextRequest) {
             }),
         ]);
 
-        await invokeTranscodeVideosLambda(USE_S3 ? { key: fileName, bucket: getEnvVariable('S3_BUCKET_NAME') } : { filePath: fileName });
+        if (shouldTranscode) {
+            await invokeTranscodeVideosLambda(USE_S3 ? { key: fileName, bucket: getEnvVariable('S3_BUCKET_NAME') } : { filePath: fileName });
+        }
 
         return Response.json({ url: `/${url}` });
     } catch {
