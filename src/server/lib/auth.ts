@@ -66,7 +66,8 @@ export const auth = registerService('auth', () =>
             additionalFields: {
                 firstLogin: {
                     type: 'number',
-                    fieldName: 'first_login',
+                    required: false,
+                    defaultValue: 0,
                     input: false,
                 },
                 adminPublicationSubscribed: {
@@ -116,9 +117,3 @@ export const auth = registerService('auth', () =>
         },
     }),
 );
-
-// Invalidate the session cookie to force fresh auth data
-export const refreshSessionData = async () => {
-    const cookieStore = await cookies();
-    cookieStore.delete('better-auth.session_data');
-};
