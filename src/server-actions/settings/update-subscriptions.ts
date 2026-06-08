@@ -1,21 +1,23 @@
 'use server';
 
-import { db } from '@server/database';
-import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { invalidateUserExtraData } from '@server/helpers/get-current-user';
-import { refreshSessionData } from '@server/lib/auth';
+import { auth } from '@server/lib/auth';
 import { logger } from '@server/lib/logger';
-import { eq } from 'drizzle-orm';
+import type { ServerActionResponse } from '@server-actions/common/server-action-response';
+import { isAPIError } from 'better-auth/api';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import { getExtracted } from 'next-intl/server';
 
 type SubscriptionUpdates = Partial<{
     adminPublicationSubscribed: boolean;
     commentActivitySubscribed: boolean;
 }>;
 
-export const updateSubscription = async (updates: SubscriptionUpdates): Promise<void> => {
+export const updateSubscription = async (updates: SubscriptionUpdates): Promise<ServerActionResponse> => {
     const user = await getCurrentUser();
+    const t = await getExtracted('common');
+
     if (!user) {
         throw new Error('Unauthorized');
     }
@@ -26,16 +28,20 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
     }
 
     if (Object.keys(updates).length === 0) {
-        return; // Nothing to update
+        return {}; // Nothing to update
     }
 
     try {
-        await db.update(users).set(updates).where(eq(users.id, user.id));
-        await invalidateUserExtraData();
-        await refreshSessionData();
-        revalidatePath('/(1village)/mon-compte/preferences');
+        const data = await auth.api.updateUser({
+            body: updates,
+            headers: await headers(),
+        });
+        revalidatePath('/(1village)/mon-compte');
+        return !data.status ? { error: { message: t('Erreur lors de la mise à jour de vos préférences') } } : {};
     } catch (error) {
-        logger.error('Failed to update subscription preferences', { error });
-        throw new Error('Failed to update subscription preferences');
+        if (isAPIError(error)) {
+            logger.error('Error while updating user preferences', { error });
+        }
+        return { error: { message: t('Erreur lors de la mise à jour de vos préférences') } };
     }
 };
