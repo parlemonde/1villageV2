@@ -3,7 +3,9 @@ on: [push]
 jobs:
     test:
         runs-on: ubuntu-latest
+        timeout-minutes: 15
         strategy:
+            fail-fast: false
             matrix:
                 script: [test:unit --runInBand, typecheck, lint, build]
         steps:

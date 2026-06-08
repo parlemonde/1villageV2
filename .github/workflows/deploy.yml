@@ -4,6 +4,7 @@ concurrency: deploy
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       # Build the app in the dist directory
       - uses: actions/checkout@v6
