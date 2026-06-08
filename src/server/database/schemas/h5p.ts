@@ -41,7 +41,9 @@ export const h5pContents = pgTable('h5p_contents', {
 export const h5pContentUserData = pgTable(
     'h5p_content_user_data',
     {
-        contentId: text('content_id').notNull(),
+        contentId: uuid('content_id')
+            .references(() => h5pContents.id, { onDelete: 'cascade' })
+            .notNull(),
         userId: text('user_id').notNull(),
         dataType: text('data_type').notNull(),
         subContentId: text('sub_content_id').notNull().default(''),
@@ -60,7 +62,9 @@ export const h5pContentUserData = pgTable(
 export const h5pFinishedData = pgTable(
     'h5p_finished_data',
     {
-        contentId: text('content_id').notNull(),
+        contentId: uuid('content_id')
+            .references(() => h5pContents.id, { onDelete: 'cascade' })
+            .notNull(),
         userId: text('user_id').notNull(),
         score: integer('score'),
         maxScore: integer('max_score'),

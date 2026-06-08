@@ -36,7 +36,6 @@ export class ContentStorage implements IContentStorage {
                     set: {
                         metadata: metadata as typeof h5pContents.$inferInsert.metadata,
                         parameters: content as typeof h5pContents.$inferInsert.parameters,
-                        creatorId: user.id,
                     },
                 });
             return newContentId;

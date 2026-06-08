@@ -19,11 +19,11 @@ const toContentUserData = (row: typeof h5pContentUserData.$inferSelect): IConten
 const toFinishedData = (row: typeof h5pFinishedData.$inferSelect): IFinishedUserData => ({
     contentId: row.contentId,
     userId: row.userId,
-    score: row.score ?? 0,
-    maxScore: row.maxScore ?? 0,
-    openedTimestamp: row.openedTimestamp ?? 0,
-    finishedTimestamp: row.finishedTimestamp ?? 0,
-    completionTime: row.completionTime ?? 0,
+    score: row.score as number,
+    maxScore: row.maxScore as number,
+    openedTimestamp: row.openedTimestamp as number,
+    finishedTimestamp: row.finishedTimestamp as number,
+    completionTime: row.completionTime as number,
 });
 
 export class ContentUserDataStorage implements IContentUserDataStorage {

@@ -357,21 +357,34 @@ export class LibraryStorage implements ILibraryStorage {
         if (!library) {
             throw new Error('You must specify a library name when calling updateAdditionalMetadata.');
         }
+        const ubername = LibraryName.toUberName(library);
         try {
             const rows = await db
                 .select({ currentMetadata: h5pLibraries.additionalMetadata })
                 .from(h5pLibraries)
-                .where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)))
+                .where(eq(h5pLibraries.ubername, ubername))
                 .limit(1);
             const current = rows[0]?.currentMetadata as Record<string, unknown> | undefined;
-            await db
-                .update(h5pLibraries)
-                .set({ additionalMetadata: { ...(current ?? {}), ...additionalMetadata } as typeof h5pLibraries.$inferInsert.additionalMetadata })
-                .where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)));
+
+            if (current === undefined) {
+                await db.insert(h5pLibraries).values({
+                    ubername,
+                    machineName: library.machineName,
+                    metadata: {} as typeof h5pLibraries.$inferInsert.metadata,
+                    additionalMetadata: additionalMetadata as typeof h5pLibraries.$inferInsert.additionalMetadata,
+                });
+            } else {
+                await db
+                    .update(h5pLibraries)
+                    .set({
+                        additionalMetadata: { ...(current ?? {}), ...additionalMetadata } as typeof h5pLibraries.$inferInsert.additionalMetadata,
+                    })
+                    .where(eq(h5pLibraries.ubername, ubername));
+            }
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:update-additional-metadata-error', {
-                ubername: LibraryName.toUberName(library),
+                ubername,
             });
         }
         return true;
@@ -381,21 +394,28 @@ export class LibraryStorage implements ILibraryStorage {
         const ubername = LibraryName.toUberName(libraryMetadata);
 
         try {
+            await db
+                .insert(h5pLibraries)
+                .values({
+                    ubername,
+                    machineName: libraryMetadata.machineName,
+                    metadata: libraryMetadata as typeof h5pLibraries.$inferInsert.metadata,
+                    additionalMetadata: {},
+                })
+                .onConflictDoUpdate({
+                    target: h5pLibraries.ubername,
+                    set: {
+                        machineName: libraryMetadata.machineName,
+                        metadata: libraryMetadata as typeof h5pLibraries.$inferInsert.metadata,
+                    },
+                });
+
             const rows = await db
                 .select({ additionalMetadata: h5pLibraries.additionalMetadata })
                 .from(h5pLibraries)
                 .where(eq(h5pLibraries.ubername, ubername))
                 .limit(1);
             const additionalMetadata = (rows[0]?.additionalMetadata as Record<string, unknown>) ?? {};
-
-            await db
-                .update(h5pLibraries)
-                .set({
-                    machineName: libraryMetadata.machineName,
-                    metadata: libraryMetadata as typeof h5pLibraries.$inferInsert.metadata,
-                    additionalMetadata: additionalMetadata as typeof h5pLibraries.$inferInsert.additionalMetadata,
-                })
-                .where(eq(h5pLibraries.ubername, ubername));
 
             return InstalledLibrary.fromMetadata({
                 ...libraryMetadata,

@@ -1,5 +1,5 @@
 {
-  "id": "8b59c8a3-43af-4a13-8f94-e2292966599e",
+  "id": "c567da8e-8fdb-435f-a56a-3cf7bf923e2d",
   "prevId": "c5ac5798-f4bc-4ca0-8756-9393d4390885",
   "version": "7",
   "dialect": "postgresql",
@@ -888,7 +888,7 @@
       "columns": {
         "content_id": {
           "name": "content_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -971,7 +971,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "h5p_content_user_data_content_id_h5p_contents_id_fk": {
+          "name": "h5p_content_user_data_content_id_h5p_contents_id_fk",
+          "tableFrom": "h5p_content_user_data",
+          "tableTo": "h5p_contents",
+          "columnsFrom": [
+            "content_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {
         "h5p_content_user_data_content_id_user_id_data_type_sub_content_id_context_id_pk": {
           "name": "h5p_content_user_data_content_id_user_id_data_type_sub_content_id_context_id_pk",
@@ -1060,7 +1074,7 @@
       "columns": {
         "content_id": {
           "name": "content_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1133,7 +1147,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "h5p_finished_data_content_id_h5p_contents_id_fk": {
+          "name": "h5p_finished_data_content_id_h5p_contents_id_fk",
+          "tableFrom": "h5p_finished_data",
+          "tableTo": "h5p_contents",
+          "columnsFrom": [
+            "content_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {
         "h5p_finished_data_content_id_user_id_pk": {
           "name": "h5p_finished_data_content_id_user_id_pk",

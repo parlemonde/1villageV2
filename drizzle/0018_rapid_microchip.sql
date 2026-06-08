@@ -1,5 +1,5 @@
 CREATE TABLE "h5p_content_user_data" (
-	"content_id" text NOT NULL,
+	"content_id" uuid NOT NULL,
 	"user_id" text NOT NULL,
 	"data_type" text NOT NULL,
 	"sub_content_id" text DEFAULT '' NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE "h5p_contents" (
 );
 --> statement-breakpoint
 CREATE TABLE "h5p_finished_data" (
-	"content_id" text NOT NULL,
+	"content_id" uuid NOT NULL,
 	"user_id" text NOT NULL,
 	"score" integer,
 	"max_score" integer,
@@ -44,7 +44,9 @@ CREATE TABLE "h5p_libraries" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "h5p_content_user_data" ADD CONSTRAINT "h5p_content_user_data_content_id_h5p_contents_id_fk" FOREIGN KEY ("content_id") REFERENCES "public"."h5p_contents"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "h5p_contents" ADD CONSTRAINT "h5p_contents_creator_id_users_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "h5p_finished_data" ADD CONSTRAINT "h5p_finished_data_content_id_h5p_contents_id_fk" FOREIGN KEY ("content_id") REFERENCES "public"."h5p_contents"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "idx_h5p_user_data_user_id" ON "h5p_content_user_data" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "idx_h5p_user_data_content_id" ON "h5p_content_user_data" USING btree ("content_id");--> statement-breakpoint
 CREATE INDEX "idx_h5p_finished_data_user_id" ON "h5p_finished_data" USING btree ("user_id");--> statement-breakpoint
