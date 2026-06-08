@@ -43,13 +43,11 @@ export const PreferencesForm = ({
         try {
             const updates: Record<string, boolean> = {};
 
-            if (hasChanges) {
-                if (adminPublicationSubscribed !== currentAdminPublication) {
-                    updates.adminPublicationSubscribed = currentAdminPublication;
-                }
-                if (commentActivitySubscribed !== currentCommentActivity) {
-                    updates.commentActivitySubscribed = currentCommentActivity;
-                }
+            if (adminPublicationSubscribed !== currentAdminPublication) {
+                updates.adminPublicationSubscribed = currentAdminPublication;
+            }
+            if (commentActivitySubscribed !== currentCommentActivity) {
+                updates.commentActivitySubscribed = currentCommentActivity;
             }
 
             const { error } = await updateSubscription(updates);
