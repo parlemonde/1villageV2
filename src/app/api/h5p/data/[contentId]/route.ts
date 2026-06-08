@@ -1,10 +1,7 @@
-import { db } from '@server/database';
-import { medias } from '@server/database/schemas/medias';
 import { getErrorResponse } from '@server/h5p/get-error-response';
 import { getH5pEditors } from '@server/h5p/get-h5p-editor';
 import { getH5pUser } from '@server/h5p/get-h5p-user';
 import { getJsonBody } from '@server/h5p/get-json-body';
-import { eq } from 'drizzle-orm';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ contentId: string }> }) => {
@@ -57,7 +54,6 @@ export const DELETE = async (_request: NextRequest, { params }: { params: Promis
 
     try {
         await h5pEditor.contentManager.deleteContent(contentId, user);
-        await db.delete(medias).where(eq(medias.id, contentId));
         return NextResponse.json({ success: true });
     } catch (error) {
         return getErrorResponse(error);
