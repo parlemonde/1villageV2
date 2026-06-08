@@ -28,6 +28,16 @@ export const PreferencesForm = ({
 
     const hasChanges = adminPublicationSubscribed !== currentAdminPublication || commentActivitySubscribed !== currentCommentActivity;
 
+    // Rollback optimistic UI on error
+    const rollbackChanges = async () => {
+        setCurrentAdminPublication(adminPublicationSubscribed);
+        setCurrentCommentActivity(commentActivitySubscribed);
+        sendToast({
+            type: 'error',
+            message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
+        });
+    };
+
     const handleSave = async () => {
         setIsPending(true);
         try {
@@ -42,7 +52,12 @@ export const PreferencesForm = ({
                 }
             }
 
-            await updateSubscription(updates);
+            const { error } = await updateSubscription(updates);
+
+            if (error) {
+                await rollbackChanges();
+                return;
+            }
 
             setAdminPublicationSubscribed(currentAdminPublication);
             setCommentActivitySubscribed(currentCommentActivity);
@@ -52,13 +67,7 @@ export const PreferencesForm = ({
                 message: t('Vos préférences ont été mises à jour avec succès.'),
             });
         } catch {
-            // Rollback optimistic UI on error
-            setCurrentAdminPublication(adminPublicationSubscribed);
-            setCurrentCommentActivity(commentActivitySubscribed);
-            sendToast({
-                type: 'error',
-                message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
-            });
+            await rollbackChanges();
         } finally {
             setIsPending(false);
         }
