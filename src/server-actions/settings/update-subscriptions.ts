@@ -1,10 +1,9 @@
 'use server';
 
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { auth } from '@server/lib/auth';
+import { auth, refreshSessionData } from '@server/lib/auth';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
-import { isAPIError } from 'better-auth/api';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { getExtracted } from 'next-intl/server';
@@ -32,16 +31,15 @@ export const updateSubscription = async (updates: SubscriptionUpdates): Promise<
     }
 
     try {
-        const data = await auth.api.updateUser({
+        await auth.api.updateUser({
             body: updates,
             headers: await headers(),
         });
-        revalidatePath('/(1village)/mon-compte');
-        return !data.status ? { error: { message: t('Erreur lors de la mise à jour de vos préférences') } } : {};
+        await refreshSessionData();
+        revalidatePath('/(1village)/mon-compte/preferences');
+        return {};
     } catch (error) {
-        if (isAPIError(error)) {
-            logger.error('Error while updating user preferences', { error });
-        }
+        logger.error('Error while updating user preferences', { error });
         return { error: { message: t('Erreur lors de la mise à jour de vos préférences') } };
     }
 };

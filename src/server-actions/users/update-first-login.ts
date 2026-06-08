@@ -4,7 +4,6 @@ import { getCurrentUser } from '@server/helpers/get-current-user';
 import { auth, refreshSessionData } from '@server/lib/auth';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
-import { isAPIError } from 'better-auth/api';
 import { headers } from 'next/headers';
 import { getExtracted } from 'next-intl/server';
 
@@ -17,18 +16,16 @@ export const updateFirstLogin = async (firstLogin: number): Promise<ServerAction
             throw new Error('Unauthorized');
         }
 
-        const data = await auth.api.updateUser({
+        await auth.api.updateUser({
             body: {
                 firstLogin: firstLogin,
             },
             headers: await headers(),
         });
         await refreshSessionData(); // clear session_data cookie in order to reset it with fresh information
-        return !data.status ? { error: { message: t('Une erreur est survenue lors de la mise à jour du statut de connexion') } } : {};
-    } catch (e) {
-        if (isAPIError(e)) {
-            logger.error(e);
-        }
+        return {};
+    } catch (error) {
+        logger.error('Error while updating user login status', { error });
         return { error: { message: t('Une erreur est survenue lors de la mise à jour du statut de connexion') } };
     }
 };
