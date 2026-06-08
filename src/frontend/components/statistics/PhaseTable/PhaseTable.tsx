@@ -108,10 +108,10 @@ export const PhaseTable = ({ phase, countryCode, villageId, classroomId }: Phase
                             </thead>
                             <tbody>
                                 {data?.totals && (
-                                    <tr className={styles.totalRow}>
+                                    <tr key="total" className={styles.totalRow}>
                                         <td>{t('Total')}</td>
                                         {columns?.map((column) => (
-                                            <td key={column}>{data.totals?.[column] ?? '-'}</td>
+                                            <td key={column}>{data.totals?.[column] || '-'}</td>
                                         ))}
                                         <td>{data.totals.video || '-'}</td>
                                         <td>{data.totals.draft || '-'}</td>

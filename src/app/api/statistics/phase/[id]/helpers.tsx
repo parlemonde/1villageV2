@@ -26,10 +26,12 @@ export const aggregateActivities = (
             map.set(activity.entityId, { name: activity.name, activities: {} });
         }
 
-        const activitiesByEntity = map.get(activity.entityId)!;
-        activitiesByEntity.activities[activity.type as ActivityType] = activity.count;
-        activitiesByEntity.activities.draft = draftsMap.get(activity.entityId);
-        activitiesByEntity.activities.video = videosMap.get(activity.entityId);
+        const activitiesByEntity = map.get(activity.entityId);
+        if (activitiesByEntity) {
+            activitiesByEntity.activities[activity.type as ActivityType] = activity.count;
+            activitiesByEntity.activities.draft = draftsMap.get(activity.entityId);
+            activitiesByEntity.activities.video = videosMap.get(activity.entityId);
+        }
     });
 
     totalsQueryResult.forEach((total) => {

@@ -20,7 +20,7 @@ const loadSearchParams = createLoader(phaseActivitiesSearchParams);
 
 export const GET = async (
     { nextUrl }: NextRequest,
-    { params }: { params: Promise<{ id: number; code: string }> },
+    { params }: { params: Promise<{ id: number }> },
 ): Promise<NextResponse<PhaseActivitiesResponse>> => {
     const user = await getCurrentUser();
     if (!user) {
@@ -52,14 +52,16 @@ export const GET = async (
                 eq(activities.phase, id),
                 isNotNull(activities.classroomId),
                 isNotNull(activities.publishDate),
+                isNull(activities.deleteDate),
             ),
         )
-        .where(and(inArray(classrooms.countryCode, countryIds), isNull(activities.deleteDate)))
+        .where(and(inArray(classrooms.countryCode, countryIds)))
         .groupBy((a) => [a.entityId, a.type]);
 
-    activityResult.forEach((a) => {
-        a.name = COUNTRIES[a.name] ?? a.name;
-    });
+    const mappedResult = activityResult.map((a) => ({
+        ...a,
+        name: COUNTRIES[a.name] ?? a.name,
+    }));
 
     const draftCount = await db
         .select({ count: count(activities.id), entityId: classrooms.countryCode })
@@ -100,7 +102,7 @@ export const GET = async (
         .where(and(eq(activities.phase, id), isNotNull(activities.classroomId), isNull(activities.deleteDate)))
         .groupBy(activities.type);
 
-    const result = aggregateActivities(activityResult, draftCount, videoCount, totals);
+    const result = aggregateActivities(mappedResult, draftCount, videoCount, totals);
 
     return NextResponse.json({ ...result, totalElements: totalElements[0]?.count });
 };
