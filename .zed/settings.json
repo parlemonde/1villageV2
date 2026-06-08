@@ -14,7 +14,7 @@
     "**/.classpath",
     "**/.settings",
     "**/.next",
-    "**/.postgres-data",
+    "**/.pglite",
     "**/tmp",
     "**/.open-next",
     "**/.vscode",

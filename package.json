@@ -7,9 +7,9 @@
   "homepage": "https://1v.parlemonde.org",
   "scripts": {
     "dev:next": "next dev",
-    "dev:services": "docker compose up",
+    "dev:db": "node dev-services/pglite.js",
     "dev:email": "email dev --port 3001 --dir ./src/server/emails/templates",
-    "dev": "concurrently --names nextjs,docker -c green,blue --kill-others-on-fail \"pnpm run dev:next\" \"pnpm run dev:services\"",
+    "dev": "concurrently --names nextjs,pglite -c green,blue --kill-others-on-fail \"pnpm run dev:next\" \"pnpm run dev:db\"",
     "build": "next build",
     "build:lambda": "rm -rf .open-next && open-next build --config-path ./open-next/open-next.config.ts && node ./open-next/install-deps.mjs",
     "start": "next start",
@@ -86,6 +86,8 @@
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "1.59.1",
+    "@electric-sql/pglite": "^0.5.1",
+    "@electric-sql/pglite-socket": "^0.2.1",
     "@eslint/css": "^1.0.0",
     "@eslint/js": "9.39.4",
     "@eslint/json": "^1.2.0",
