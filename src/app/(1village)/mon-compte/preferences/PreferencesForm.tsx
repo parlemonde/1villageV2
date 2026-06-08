@@ -29,7 +29,7 @@ export const PreferencesForm = ({
     const hasChanges = adminPublicationSubscribed !== currentAdminPublication || commentActivitySubscribed !== currentCommentActivity;
 
     // Rollback optimistic UI on error
-    const rollbackChanges = async () => {
+    const rollbackChanges = () => {
         setCurrentAdminPublication(adminPublicationSubscribed);
         setCurrentCommentActivity(commentActivitySubscribed);
         sendToast({
@@ -55,7 +55,7 @@ export const PreferencesForm = ({
             const { error } = await updateSubscription(updates);
 
             if (error) {
-                await rollbackChanges();
+                rollbackChanges();
                 return;
             }
 
@@ -67,7 +67,7 @@ export const PreferencesForm = ({
                 message: t('Vos préférences ont été mises à jour avec succès.'),
             });
         } catch {
-            await rollbackChanges();
+            rollbackChanges();
         } finally {
             setIsPending(false);
         }
