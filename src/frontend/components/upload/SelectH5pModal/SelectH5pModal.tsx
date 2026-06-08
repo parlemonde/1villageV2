@@ -6,12 +6,15 @@ import { CircularProgress } from '@frontend/components/ui/CircularProgress';
 import { Field } from '@frontend/components/ui/Form';
 import { Select } from '@frontend/components/ui/Form/Select';
 import { Modal } from '@frontend/components/ui/Modal';
-import { UserContext } from '@frontend/contexts/userContext';
 import { jsonFetcher } from '@lib/json-fetcher';
-import { serializeToQueryUrl } from '@lib/serialize-to-query-url';
-import type { Media } from '@server/database/schemas/medias';
-import { useContext, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import useSWR from 'swr';
+
+interface H5pListItem {
+    contentId: string;
+    title: string;
+    mainLibrary: string;
+}
 
 interface SelectH5pModalProps {
     isOpen: boolean;
@@ -22,16 +25,9 @@ interface SelectH5pModalProps {
 
 export const SelectH5pModal = ({ isOpen, onClose, initialContentId = null, onSelect }: SelectH5pModalProps) => {
     const id = useId();
-    const { user } = useContext(UserContext);
     const [contentId, setContentId] = useState<string | null>(initialContentId);
 
-    const { data: medias, isLoading } = useSWR<Media[]>(
-        `/api/medias${serializeToQueryUrl({
-            type: 'h5p',
-            isPelico: user.role === 'admin' || user.role === 'mediator',
-        })}`,
-        jsonFetcher,
-    );
+    const { data: h5pList, isLoading } = useSWR<H5pListItem[]>('/api/h5p/data', jsonFetcher);
 
     // -- reset state when modal is closed --
     if (!isOpen && contentId !== initialContentId) {
@@ -80,9 +76,9 @@ export const SelectH5pModal = ({ isOpen, onClose, initialContentId = null, onSel
                                     id="h5p-select"
                                     isFullWidth
                                     color="secondary"
-                                    options={(medias || []).map((media) => ({
-                                        label: media.metadata !== null && 'title' in media.metadata ? media.metadata.title : media.id,
-                                        value: media.id,
+                                    options={(h5pList || []).map((item) => ({
+                                        label: item.title || item.contentId,
+                                        value: item.contentId,
                                     }))}
                                     value={contentId || ''}
                                     onChange={(value) => setContentId(value)}

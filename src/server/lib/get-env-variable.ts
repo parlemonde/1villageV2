@@ -16,8 +16,6 @@ const DEFAULT_ENV_VARIABLES = {
     AWS_SECRET_ACCESS_KEY: 'local',
     AWS_SESSION_TOKEN: '',
     AWS_REGION: 'local',
-    DYNAMODB_TABLE_NAME: '1village',
-    DYNAMODB_ENDPOINT: 'http://localhost:8000',
     S3_BUCKET_NAME: '',
     HOST_DOMAIN: '',
     NODEMAILER_HOST: 'smtp.ethereal.email',

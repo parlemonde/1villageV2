@@ -1,14 +1,14 @@
 import type { ContentId, IContentMetadata, IContentStorage, IFileStats, ILibraryName, IUser } from '@lumieducation/h5p-server';
 import { H5pError } from '@lumieducation/h5p-server';
-import { deleteDynamoDBItem, getDynamoDBItem, scanDynamoDB, setDynamoDBItem } from '@server/aws/dynamodb';
+import { db } from '@server/database';
+import { h5pContents } from '@server/database/schemas/h5p';
 import { deleteFile, getFile, getFileData, listFiles, uploadFile } from '@server/files/file-upload';
 import { logger } from '@server/lib/logger';
+import { and, eq, sql } from 'drizzle-orm';
 import type { Readable } from 'stream';
 import { v4 } from 'uuid';
 
 import { validateFilename } from './sanitize-filename';
-
-const CONTENT_PREFIX = `H5P_Content_`;
 
 const getStaticStorageKey = (contentId: ContentId, filename: string) => {
     const key = `h5p/content/${contentId}/${filename}`;
@@ -23,14 +23,24 @@ export class ContentStorage implements IContentStorage {
     public async addContent(metadata: IContentMetadata, content: unknown, user: IUser, contentId?: string | undefined): Promise<string> {
         try {
             const newContentId = contentId || v4();
-            await setDynamoDBItem(`${CONTENT_PREFIX}${newContentId}`, {
-                metadata,
-                parameters: content,
-                creator: user.id,
-            });
+            await db
+                .insert(h5pContents)
+                .values({
+                    id: newContentId,
+                    metadata,
+                    parameters: content,
+                    creatorId: user.id,
+                })
+                .onConflictDoUpdate({
+                    target: h5pContents.id,
+                    set: {
+                        metadata: metadata as typeof h5pContents.$inferInsert.metadata,
+                        parameters: content as typeof h5pContents.$inferInsert.parameters,
+                    },
+                });
             return newContentId;
         } catch (error) {
-            logger.error(`Error when adding or updating content in MongoDB: ${error instanceof Error ? error.message : ''}`);
+            logger.error(`Error when adding or updating content: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('content-storage:add-update-error', {}, 500);
         }
     }
@@ -47,8 +57,8 @@ export class ContentStorage implements IContentStorage {
 
     public async contentExists(contentId: string): Promise<boolean> {
         try {
-            const result = await getDynamoDBItem<unknown>(`${CONTENT_PREFIX}${contentId}`);
-            return result !== undefined;
+            const rows = await db.select({ id: h5pContents.id }).from(h5pContents).where(eq(h5pContents.id, contentId)).limit(1);
+            return rows.length > 0;
         } catch (error) {
             logger.error(error);
             return false;
@@ -58,8 +68,6 @@ export class ContentStorage implements IContentStorage {
     public async deleteContent(contentId: string): Promise<void> {
         logger.warn(`Deleting content with id ${contentId}.`);
         try {
-            // 1. Delete all files from the storage
-            // S3 batch deletes only work with 1000 files at a time, so we might have to do this in several requests.
             const filesToDelete = await this.listFiles(contentId);
             while (filesToDelete.length > 0) {
                 const next1000Files = filesToDelete.splice(0, 1000);
@@ -67,9 +75,7 @@ export class ContentStorage implements IContentStorage {
                     await Promise.all(next1000Files.map((f) => deleteFile(getStaticStorageKey(contentId, f))));
                 }
             }
-
-            // 2. Delete the content object from DynamoDB
-            await deleteDynamoDBItem(`${CONTENT_PREFIX}${contentId}`);
+            await db.delete(h5pContents).where(eq(h5pContents.id, contentId));
         } catch (error) {
             logger.error(`There was an error while deleting the content object: ${error instanceof Error ? error.message : ''}`);
             throw new H5pError('content-storage:deleting-content-error', {}, 500);
@@ -133,48 +139,54 @@ export class ContentStorage implements IContentStorage {
     }
 
     public async getMetadata(contentId: string): Promise<IContentMetadata> {
-        const result = await getDynamoDBItem<{ metadata: IContentMetadata }>(`${CONTENT_PREFIX}${contentId}`);
-        if (!result) {
+        const rows = await db.select({ metadata: h5pContents.metadata }).from(h5pContents).where(eq(h5pContents.id, contentId)).limit(1);
+        if (rows.length === 0) {
             throw new H5pError('content-storage:content-not-found', {}, 404);
         }
-        return result.metadata;
+        return rows[0].metadata as IContentMetadata;
     }
 
     public async getParameters(contentId: string): Promise<unknown> {
-        const result = await getDynamoDBItem<{ parameters: unknown }>(`${CONTENT_PREFIX}${contentId}`);
-        if (!result) {
+        const rows = await db.select({ parameters: h5pContents.parameters }).from(h5pContents).where(eq(h5pContents.id, contentId)).limit(1);
+        if (rows.length === 0) {
             throw new H5pError('content-storage:content-not-found', {}, 404);
         }
-        return result.parameters;
+        return rows[0].parameters;
     }
 
     public async getUsage(library: ILibraryName): Promise<{ asDependency: number; asMainLibrary: number }> {
         try {
-            const asMainLibraryResults = await scanDynamoDB<unknown>({
-                filterExpression:
-                    'begins_with(#key, :prefix )AND #value.metadata.mainLibrary = :machineName AND contains(#value.metadata.preloadedDependencies, :mainLibrary)',
-                expressionAttributeNames: { '#key': 'key', '#value': 'value' },
-                expressionAttributeValues: {
-                    ':prefix': CONTENT_PREFIX,
-                    ':machineName': library.machineName,
-                    ':mainLibrary': { machineName: library.machineName, majorVersion: library.majorVersion, minorVersion: library.minorVersion },
-                },
+            const libraryJson = JSON.stringify({
+                machineName: library.machineName,
+                majorVersion: library.majorVersion,
+                minorVersion: library.minorVersion,
             });
-            const asDependencyResults = await scanDynamoDB<unknown>({
-                filterExpression:
-                    'begins_with(#key, :prefix )AND #value.metadata.mainLibrary <> :machineName AND (contains(#value.metadata.preloadedDependencies, :library) OR contains(#value.metadata.dynamicDependencies, :library) OR contains(#value.metadata.editorDependencies, :library))',
-                expressionAttributeNames: { '#key': 'key', '#value': 'value' },
-                expressionAttributeValues: {
-                    ':prefix': CONTENT_PREFIX,
-                    ':machineName': library.machineName,
-                    ':library': {
-                        machineName: library.machineName,
-                        majorVersion: library.majorVersion,
-                        minorVersion: library.minorVersion,
-                    },
-                },
-            });
-            return { asMainLibrary: asMainLibraryResults.length, asDependency: asDependencyResults.length };
+
+            const [asMainLibraryResult] = await db
+                .select({ count: sql<number>`count(*)::int` })
+                .from(h5pContents)
+                .where(
+                    and(
+                        sql`${h5pContents.metadata}->>'mainLibrary' = ${library.machineName}`,
+                        sql`${h5pContents.metadata}->'preloadedDependencies' @> ${libraryJson}::jsonb`,
+                    ),
+                );
+
+            const [asDependencyResult] = await db
+                .select({ count: sql<number>`count(*)::int` })
+                .from(h5pContents)
+                .where(
+                    and(
+                        sql`${h5pContents.metadata}->>'mainLibrary' <> ${library.machineName}`,
+                        sql`(
+                            ${h5pContents.metadata}->'preloadedDependencies' @> ${libraryJson}::jsonb
+                            OR ${h5pContents.metadata}->'dynamicDependencies' @> ${libraryJson}::jsonb
+                            OR ${h5pContents.metadata}->'editorDependencies' @> ${libraryJson}::jsonb
+                        )`,
+                    ),
+                );
+
+            return { asMainLibrary: asMainLibraryResult.count, asDependency: asDependencyResult.count };
         } catch (error) {
             logger.error(error);
             return { asMainLibrary: 0, asDependency: 0 };
@@ -183,12 +195,8 @@ export class ContentStorage implements IContentStorage {
 
     public async listContent(): Promise<string[]> {
         try {
-            const result = await scanDynamoDB<unknown>({
-                filterExpression: 'begins_with(#key, :prefix)',
-                expressionAttributeNames: { '#key': 'key' },
-                expressionAttributeValues: { ':prefix': CONTENT_PREFIX },
-            });
-            return result.map((r) => r.key.slice(CONTENT_PREFIX.length));
+            const rows = await db.select({ id: h5pContents.id }).from(h5pContents);
+            return rows.map((r) => r.id);
         } catch (error) {
             logger.error(error);
             return [];

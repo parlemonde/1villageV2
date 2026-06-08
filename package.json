@@ -23,7 +23,6 @@
     "i18n:extract": "tsx src/server/i18n/extract.mts"
   },
   "dependencies": {
-    "@aws-sdk/util-dynamodb": "^3.996.2",
     "@better-auth/utils": "^0.4.0",
     "@lumieducation/h5p-react": "^10.0.4",
     "@lumieducation/h5p-server": "^10.0.4",
@@ -131,8 +130,7 @@
   "pnpm": {
     "overrides": {
       "@types/react": "19.2.14",
-      "@types/react-dom": "19.2.3",
-      "@aws-sdk/client-dynamodb": "3.967.0"
+      "@types/react-dom": "19.2.3"
     },
     "onlyBuiltDependencies": [
       "esbuild",

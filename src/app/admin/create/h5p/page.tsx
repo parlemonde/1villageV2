@@ -4,13 +4,12 @@ import { PageContainer } from '@frontend/components/ui/PageContainer/PageContain
 import { Title } from '@frontend/components/ui/Title';
 import { ChevronLeftIcon, PlusIcon } from '@radix-ui/react-icons';
 import { db } from '@server/database';
-import { medias } from '@server/database/schemas/medias';
-import { eq } from 'drizzle-orm';
+import { h5pContents } from '@server/database/schemas/h5p';
 
 import { H5pTable } from './h5pTable';
 
 export default async function AdminCreateH5pPage() {
-    const h5pMedias = await db.select().from(medias).where(eq(medias.type, 'h5p'));
+    const h5pContentsList = await db.select().from(h5pContents);
     return (
         <PageContainer>
             <Breadcrumbs breadcrumbs={[{ label: 'Créer', href: '/admin' }, { label: 'Activités H5P' }]} />
@@ -35,7 +34,7 @@ export default async function AdminCreateH5pPage() {
                     label="Ajouter une activité H5P"
                 />
             </div>
-            <H5pTable h5pMedias={h5pMedias} />
+            <H5pTable h5pContents={h5pContentsList} />
             <Button
                 as="a"
                 color="primary"
