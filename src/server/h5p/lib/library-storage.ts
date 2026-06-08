@@ -205,7 +205,13 @@ export class LibraryStorage implements ILibraryStorage {
             const [result] = await db
                 .select({ count: sql<number>`count(*)::int` })
                 .from(h5pLibraries)
-                .where(sql`${h5pLibraries.metadata}->'preloadedDependencies' @> ${libraryJson}::jsonb`);
+                .where(
+                    sql`(
+                        ${h5pLibraries.metadata}->'preloadedDependencies' @> ${libraryJson}::jsonb
+                        OR ${h5pLibraries.metadata}->'editorDependencies' @> ${libraryJson}::jsonb
+                        OR ${h5pLibraries.metadata}->'dynamicDependencies' @> ${libraryJson}::jsonb
+                    )`,
+                );
             return result.count;
         } catch (error) {
             logger.error(error);
@@ -367,21 +373,19 @@ export class LibraryStorage implements ILibraryStorage {
             const current = rows[0]?.currentMetadata as Record<string, unknown> | undefined;
 
             if (current === undefined) {
-                await db.insert(h5pLibraries).values({
-                    ubername,
-                    machineName: library.machineName,
-                    metadata: {} as typeof h5pLibraries.$inferInsert.metadata,
-                    additionalMetadata: additionalMetadata as typeof h5pLibraries.$inferInsert.additionalMetadata,
-                });
-            } else {
-                await db
-                    .update(h5pLibraries)
-                    .set({
-                        additionalMetadata: { ...(current ?? {}), ...additionalMetadata } as typeof h5pLibraries.$inferInsert.additionalMetadata,
-                    })
-                    .where(eq(h5pLibraries.ubername, ubername));
+                throw new H5pError('library-storage:library-not-found');
             }
+
+            await db
+                .update(h5pLibraries)
+                .set({
+                    additionalMetadata: { ...current, ...additionalMetadata } as typeof h5pLibraries.$inferInsert.additionalMetadata,
+                })
+                .where(eq(h5pLibraries.ubername, ubername));
         } catch (error) {
+            if (error instanceof H5pError) {
+                throw error;
+            }
             logger.error(error);
             throw new H5pError('library-storage:update-additional-metadata-error', {
                 ubername,
