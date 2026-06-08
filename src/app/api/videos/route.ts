@@ -3,7 +3,7 @@ import { db } from '@server/database';
 import { medias } from '@server/database/schemas/medias';
 import { uploadFile, USE_S3 } from '@server/files/file-upload';
 import { getCurrentUser } from '@server/helpers/get-current-user';
-import { getEnvVariable } from '@server/lib/get-env-variable';
+import { getEnvVariable, isTranscodingConfigured } from '@server/lib/get-env-variable';
 import mime from 'mime-types';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -51,8 +51,7 @@ export async function POST(request: NextRequest) {
         const contentType = mime.lookup(fileName) || undefined;
         const fileBuffer = Buffer.from(await file.arrayBuffer());
 
-        const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
-        const shouldTranscode = lambdaUrl !== '';
+        const shouldTranscode = isTranscodingConfigured();
         const url = shouldTranscode ? `media/videos/users/${userVideoId}/${uuid}/hls/master.m3u8` : fileName;
 
         await Promise.all([

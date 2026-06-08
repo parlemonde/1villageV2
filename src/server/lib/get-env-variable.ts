@@ -31,3 +31,7 @@ const DEFAULT_ENV_VARIABLES = {
 export const getEnvVariable = (variable: keyof typeof DEFAULT_ENV_VARIABLES): string => {
     return process.env[variable] || DEFAULT_ENV_VARIABLES[variable];
 };
+
+export const isTranscodingConfigured = (): boolean => {
+    return getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL') !== '';
+};

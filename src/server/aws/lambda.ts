@@ -1,4 +1,4 @@
-import { getEnvVariable } from '@server/lib/get-env-variable';
+import { getEnvVariable, isTranscodingConfigured } from '@server/lib/get-env-variable';
 import { logger } from '@server/lib/logger';
 
 import { getAwsClient } from './aws-client';
@@ -12,12 +12,12 @@ type TranscodeVideosLambdaEvent =
           bucket: string;
       };
 export const invokeTranscodeVideosLambda = async (event: TranscodeVideosLambdaEvent): Promise<boolean> => {
-    const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
-    if (!lambdaUrl) {
+    if (!isTranscodingConfigured()) {
         return false;
     }
     try {
         const client = getAwsClient();
+        const lambdaUrl = getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL');
         const response = client.fetch(`${lambdaUrl}/2015-03-31/functions/${getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME')}/invocations`, {
             headers: {
                 'X-Amz-Invocation-Type': 'Event',
