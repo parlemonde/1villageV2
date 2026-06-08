@@ -1,24 +1,34 @@
 'use server';
 
-import { db } from '@server/database';
-import { users } from '@server/database/schemas/users';
 import { getCurrentUser } from '@server/helpers/get-current-user';
+import { auth } from '@server/lib/auth';
 import { logger } from '@server/lib/logger';
 import type { ServerActionResponse } from '@server-actions/common/server-action-response';
-import { eq } from 'drizzle-orm';
+import { isAPIError } from 'better-auth/api';
+import { headers } from 'next/headers';
+import { getExtracted } from 'next-intl/server';
 
 export const updateFirstLogin = async (firstLogin: number): Promise<ServerActionResponse> => {
+    const t = await getExtracted('common');
+
     try {
         const user = await getCurrentUser();
         if (!user) {
             throw new Error('Unauthorized');
         }
 
-        await db.update(users).set({ firstLogin }).where(eq(users.id, user.id));
+        const data = await auth.api.updateUser({
+            body: {
+                firstLogin: firstLogin,
+            },
+            headers: await headers(),
+        });
 
-        return {};
+        return !data.status ? { error: { message: t('Une erreur est survenue lors de la mise à jour du statut de connexion') } } : {};
     } catch (e) {
-        logger.error(e);
-        return { error: { message: 'Une erreur est survenue lors de la mise à jour du statut de connexion' } };
+        if (isAPIError(e)) {
+            logger.error(e);
+        }
+        return { error: { message: t('Une erreur est survenue lors de la mise à jour du statut de connexion') } };
     }
 };
