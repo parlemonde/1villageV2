@@ -6,10 +6,6 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
     return typeof value === 'object' && value !== null;
 };
 
-export const getDefaultMessages = async () => {
-    return (await import(`./messages/fr.json`)).default;
-};
-
 export default getRequestConfig(async () => {
     const currentLocale = await getRequestLocale();
 

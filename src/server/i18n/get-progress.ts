@@ -2,7 +2,8 @@ import { db } from '@server/database';
 import { languages } from '@server/database/schemas/languages';
 import { eq } from 'drizzle-orm';
 
-import { isObject, getDefaultMessages } from './request';
+import { isObject } from './request';
+import { getDefaultMessages } from './server';
 
 export function computeProgress(original: Record<string, unknown>, translated: Record<string, unknown>): number {
     let totalCount = 0;

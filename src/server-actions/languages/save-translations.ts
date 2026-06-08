@@ -3,8 +3,8 @@
 import { db } from '@server/database';
 import { languages } from '@server/database/schemas/languages';
 import type { TranslationGroup } from '@server/i18n/get-grouped-messages';
-import { getDefaultMessages, isObject } from '@server/i18n/request';
-import { revalidateLocalesCacheTag } from '@server/i18n/server';
+import { isObject } from '@server/i18n/request';
+import { getDefaultMessages, revalidateLocalesCacheTag } from '@server/i18n/server';
 import { logger } from '@server/lib/logger';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
@@ -40,7 +40,7 @@ function transformGroupedToJson(groups: TranslationGroup[]): Record<string, unkn
 /**
  * Removes keys that match the default messages so they don't become frozen overrides.
  */
-async function removeDefaultValues(translations: Record<string, unknown>, defaults: Record<string, unknown>): Promise<Record<string, unknown>> {
+function removeDefaultValues(translations: Record<string, unknown>, defaults: Record<string, unknown>): Record<string, unknown> {
     const result: Record<string, unknown> = {};
 
     for (const key of Object.keys(translations)) {
@@ -48,7 +48,7 @@ async function removeDefaultValues(translations: Record<string, unknown>, defaul
         const defaultValue = defaults[key];
 
         if (isObject(translationValue) && isObject(defaultValue)) {
-            const cleanedNested = await removeDefaultValues(translationValue, defaultValue);
+            const cleanedNested = removeDefaultValues(translationValue, defaultValue);
             if (Object.keys(cleanedNested).length > 0) {
                 result[key] = cleanedNested;
             }
@@ -64,7 +64,7 @@ export async function saveTranslations(languageCode: string, translationGroups: 
     try {
         const jsonTranslations = transformGroupedToJson(translationGroups);
         const defaultMessages = await getDefaultMessages();
-        const cleanedTranslations = await removeDefaultValues(jsonTranslations, defaultMessages);
+        const cleanedTranslations = removeDefaultValues(jsonTranslations, defaultMessages);
 
         if (Object.keys(cleanedTranslations).length === 0) {
             await db.update(languages).set({ locales: null }).where(eq(languages.code, languageCode));

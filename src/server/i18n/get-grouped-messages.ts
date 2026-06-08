@@ -3,7 +3,8 @@ import { languages } from '@server/database/schemas/languages';
 import { eq } from 'drizzle-orm';
 
 import { computeProgress } from './get-progress';
-import { getDefaultMessages, isObject } from './request';
+import { isObject } from './request';
+import { getDefaultMessages } from './server';
 
 export interface TranslationMessage {
     key: string;

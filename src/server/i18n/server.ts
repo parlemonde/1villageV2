@@ -9,19 +9,20 @@ import type { AbstractIntlMessages } from 'next-intl';
 const LOCALE_COOKIE_NAME = 'locale';
 const DEFAULT_LOCALE = 'fr';
 
+export async function getDefaultMessages(): Promise<AbstractIntlMessages> {
+    return (await import(`./messages/fr.json`)).default as AbstractIntlMessages;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 function mergeMessages(baseMessages: AbstractIntlMessages, overrideMessages: AbstractIntlMessages): AbstractIntlMessages {
     const mergedMessages: AbstractIntlMessages = { ...baseMessages };
 
     for (const [key, value] of Object.entries(overrideMessages)) {
         const currentValue = mergedMessages[key];
-        if (
-            value !== null &&
-            typeof value === 'object' &&
-            !Array.isArray(value) &&
-            currentValue !== null &&
-            typeof currentValue === 'object' &&
-            !Array.isArray(currentValue)
-        ) {
+        if (isPlainObject(value) && isPlainObject(currentValue)) {
             mergedMessages[key] = mergeMessages(currentValue, value);
         } else {
             mergedMessages[key] = value;
@@ -37,10 +38,6 @@ export function getLocalesCacheTag(languageCode: string): string {
 
 export function revalidateLocalesCacheTag(languageCode: string): void {
     revalidateTag(getLocalesCacheTag(languageCode), 'max');
-}
-
-async function getDefaultMessages(): Promise<AbstractIntlMessages> {
-    return (await import(`./messages/fr.json`)).default as AbstractIntlMessages;
 }
 
 export async function getLocalesForLanguage(languageCode: string) {

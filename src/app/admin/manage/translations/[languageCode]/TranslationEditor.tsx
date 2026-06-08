@@ -37,12 +37,16 @@ export function TranslationEditor({ language, messages }: TranslationEditorProps
                   }
                 : group,
         );
+        const prevMessageToEditIndex = messageToEditIndex;
+        const prevTempTranslation = tempTranslation;
         setMessageToEditIndex(null);
         setTempTranslation('');
         try {
             await saveTranslations(language.code, newGroups);
         } catch (error) {
             console.error('Failed to save translation:', error);
+            setMessageToEditIndex(prevMessageToEditIndex);
+            setTempTranslation(prevTempTranslation);
         } finally {
             setIsSaving(false);
         }
