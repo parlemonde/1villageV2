@@ -127,6 +127,13 @@
       "when": 1780679857113,
       "tag": "0017_first_puff_adder",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1780937035997,
+      "tag": "0018_youthful_pretty_boy",
+      "breakpoints": true
     }
   ]
 }
