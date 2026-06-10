@@ -5,16 +5,16 @@ import { IconButton } from '@frontend/components/ui/Button';
 import { Modal } from '@frontend/components/ui/Modal';
 import { Tooltip } from '@frontend/components/ui/Tooltip/Tooltip';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import type { Media } from '@server/database/schemas/medias';
+import type { H5pContent } from '@server/database/schemas/h5p';
 import { useState } from 'react';
 
 interface H5pTableProps {
-    h5pMedias: Media[];
+    h5pContents: H5pContent[];
 }
 
-export const H5pTable = ({ h5pMedias }: H5pTableProps) => {
+export const H5pTable = ({ h5pContents }: H5pTableProps) => {
     const [h5pToDeleteId, setH5pToDeleteId] = useState<string | null>(null);
-    const mediaToDelete = h5pMedias.find((media) => media.id === h5pToDeleteId);
+    const contentToDelete = h5pContents.find((content) => content.id === h5pToDeleteId);
     const [isDeletingH5p, setIsDeletingH5p] = useState(false);
     return (
         <div>
@@ -23,31 +23,37 @@ export const H5pTable = ({ h5pMedias }: H5pTableProps) => {
                     {
                         id: 'title',
                         header: 'Titre',
-                        accessor: 'metadata.title',
+                        accessor: (content) => {
+                            const metadata = content.metadata as { title?: string } | null;
+                            return metadata?.title ?? content.id;
+                        },
                         isSortable: true,
                     },
                     {
                         id: 'library',
                         header: 'Type',
-                        accessor: 'metadata.library',
+                        accessor: (content) => {
+                            const metadata = content.metadata as { mainLibrary?: string } | null;
+                            return metadata?.mainLibrary ?? '';
+                        },
                         isSortable: true,
                     },
                     {
                         id: 'actions',
                         header: 'Actions',
-                        accessor: (media) => (
+                        accessor: (content) => (
                             <>
                                 <Tooltip content="Modifier l'activité H5P" hasArrow>
                                     <IconButton
                                         as="a"
-                                        href={`/admin/create/h5p/${media.id}`}
+                                        href={`/admin/create/h5p/${content.id}`}
                                         variant="borderless"
                                         color="primary"
                                         icon={Pencil1Icon}
                                     />
                                 </Tooltip>
                                 <Tooltip content="Supprimer l'activité H5P" hasArrow>
-                                    <IconButton variant="borderless" color="error" icon={TrashIcon} onClick={() => setH5pToDeleteId(media.id)} />
+                                    <IconButton variant="borderless" color="error" icon={TrashIcon} onClick={() => setH5pToDeleteId(content.id)} />
                                 </Tooltip>
                             </>
                         ),
@@ -56,7 +62,7 @@ export const H5pTable = ({ h5pMedias }: H5pTableProps) => {
                         cellPadding: '0 8px',
                     },
                 ]}
-                data={h5pMedias}
+                data={h5pContents}
                 emptyState="Aucun contenu H5P trouvé !"
             />
             <Modal
@@ -83,10 +89,10 @@ export const H5pTable = ({ h5pMedias }: H5pTableProps) => {
                 }}
                 isLoading={isDeletingH5p}
             >
-                {h5pToDeleteId !== undefined && (
+                {contentToDelete && (
                     <p>
                         Êtes-vous sûr de vouloir supprimer l&apos;activité H5P{' '}
-                        {mediaToDelete?.metadata && 'title' in mediaToDelete.metadata && <strong>{mediaToDelete.metadata.title}</strong>}?
+                        <strong>{(contentToDelete.metadata as { title?: string } | null)?.title ?? contentToDelete.id}</strong>?
                     </p>
                 )}
             </Modal>

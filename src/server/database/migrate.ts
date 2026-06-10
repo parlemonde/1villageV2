@@ -7,7 +7,7 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Client } from 'pg';
 
 import { db } from './database';
-import { auth_sessions } from './schemas/auth-schemas';
+import { auth_accounts } from './schemas/auth-schemas';
 import { languages } from './schemas/languages';
 import { users } from './schemas/users';
 
@@ -44,22 +44,26 @@ async function createAdminUser(): Promise<void> {
         if (results.length > 0) {
             return;
         }
-        const result = await auth.api.signUpEmail({
-            body: {
-                email: adminEmail,
-                password: adminPassword,
+        const [admin] = await db
+            .insert(users)
+            .values({
                 name: 'Admin',
-            },
-        });
-        await db
-            .update(users)
-            .set({
+                email: adminEmail,
+                emailVerified: true,
                 role: 'admin',
             })
-            .where(eq(users.id, result.user.id));
-        if (result.token !== null) {
-            await db.delete(auth_sessions).where(eq(auth_sessions.token, result.token));
+            .returning();
+        if (!admin) {
+            return;
         }
+        const ctx = await auth.$context;
+        const hashedPassword = await ctx.password.hash(adminPassword);
+        await db.insert(auth_accounts).values({
+            accountId: admin.id,
+            providerId: 'credential',
+            userId: admin.id,
+            password: hashedPassword,
+        });
     } catch (error) {
         logger.error(error);
         return;

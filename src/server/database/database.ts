@@ -10,6 +10,7 @@ import { phaseActivityTypes } from './schemas/activity-types';
 import { auth_sessions, auth_accounts, auth_verifications } from './schemas/auth-schemas';
 import { classrooms } from './schemas/classrooms';
 import { comments } from './schemas/comments';
+import { h5pContentUserData, h5pContents, h5pFinishedData, h5pKeyValue, h5pLibraries } from './schemas/h5p';
 import { languages } from './schemas/languages';
 import { medias } from './schemas/medias';
 import { parentsStudents } from './schemas/parents-students';
@@ -41,6 +42,11 @@ export const db = registerService('db', () =>
             auth_sessions,
             auth_accounts,
             auth_verifications,
+            h5pKeyValue,
+            h5pLibraries,
+            h5pContents,
+            h5pContentUserData,
+            h5pFinishedData,
         },
     }),
 );

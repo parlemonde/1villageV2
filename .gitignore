@@ -40,7 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .postgres-data
-.dynamodb
+.pglite
 .clickhouse-data
 docker-compose-otel.yml
 otel-collector-config.yaml

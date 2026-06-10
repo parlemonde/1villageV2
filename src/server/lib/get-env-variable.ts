@@ -8,7 +8,7 @@ const DEFAULT_ENV_VARIABLES = {
     HOST_URL: 'http://localhost:3000',
     ADMIN_PASSWORD: 'Admin1234',
     ADMIN_EMAIL: 'admin@example.org',
-    DATABASE_URL: 'postgresql://postgres:example@localhost:5432/un_village',
+    DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable',
     CLIENT_ID: '',
     CLIENT_SECRET: '',
     SSO_BASE_URL: 'https://professeur.parlemonde.org',
@@ -16,15 +16,13 @@ const DEFAULT_ENV_VARIABLES = {
     AWS_SECRET_ACCESS_KEY: 'local',
     AWS_SESSION_TOKEN: '',
     AWS_REGION: 'local',
-    DYNAMODB_TABLE_NAME: '1village',
-    DYNAMODB_ENDPOINT: 'http://localhost:8000',
     S3_BUCKET_NAME: '',
     HOST_DOMAIN: '',
     NODEMAILER_HOST: 'smtp.ethereal.email',
     NODEMAILER_PORT: '587',
     NODEMAILER_USER: '',
     NODEMAILER_PASS: '',
-    TRANSCODE_VIDEOS_LAMBDA_URL: 'http://localhost:9000',
+    TRANSCODE_VIDEOS_LAMBDA_URL: '',
     TRANSCODE_VIDEOS_LAMBDA_FUNCTION_NAME: 'server-transcode-videos',
     OPEN_WEATHER_APP_ID: '',
     OTEL_EXPORTER_OTLP_ENDPOINT: 'http://localhost:4318',
@@ -32,4 +30,8 @@ const DEFAULT_ENV_VARIABLES = {
 
 export const getEnvVariable = (variable: keyof typeof DEFAULT_ENV_VARIABLES): string => {
     return process.env[variable] || DEFAULT_ENV_VARIABLES[variable];
+};
+
+export const isTranscodingConfigured = (): boolean => {
+    return getEnvVariable('TRANSCODE_VIDEOS_LAMBDA_URL') !== '';
 };

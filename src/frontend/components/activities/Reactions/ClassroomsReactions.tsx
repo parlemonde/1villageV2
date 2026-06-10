@@ -162,7 +162,7 @@ export const ClassroomsReactions: React.FC<ClassroomsReactionsProps> = ({ activi
         currentStoredReaction: ReactionRaw | null,
     ): ReactionCounter[] => {
         const shouldRemoveReaction = currentStoredReaction !== null;
-        const shouldInsertReaction = currentStoredReaction && currentStoredReaction.value !== newReaction?.value;
+        const shouldInsertReaction = !currentStoredReaction || currentStoredReaction.value !== newReaction?.value;
         const arrName = isPelico ? 'users' : 'classrooms';
 
         const usersFilterFunc = (u: User) => u.id !== user.id;

@@ -6,6 +6,7 @@ jobs:
     review:
         name: 'OpenCode review'
         runs-on: ubuntu-latest
+        timeout-minutes: 15
         if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/opencode') }}
         permissions:
             id-token: write

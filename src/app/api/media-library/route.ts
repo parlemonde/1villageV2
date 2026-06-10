@@ -2,7 +2,7 @@ import { db } from '@server/database/database';
 import { activities } from '@server/database/schemas/activities';
 import { ACTIVITY_TYPES_ENUM, type ActivityType } from '@server/database/schemas/activity-types';
 import { classrooms } from '@server/database/schemas/classrooms';
-import type { AudioMetadata, H5pMetadata, ImageMetadata, MediaType, VideoMetadata } from '@server/database/schemas/medias';
+import type { AudioMetadata, ImageMetadata, MediaType, VideoMetadata } from '@server/database/schemas/medias';
 import { medias } from '@server/database/schemas/medias';
 import { users } from '@server/database/schemas/users';
 import { villages } from '@server/database/schemas/villages';
@@ -20,7 +20,7 @@ export interface MediaLibraryItem {
     mediaType: MediaType;
     mediaUrl: string;
     mediaId: string;
-    mediaMetadata: ImageMetadata | VideoMetadata | AudioMetadata | H5pMetadata | null;
+    mediaMetadata: ImageMetadata | VideoMetadata | AudioMetadata | null;
     villageName: string;
     isPelico: boolean;
 }

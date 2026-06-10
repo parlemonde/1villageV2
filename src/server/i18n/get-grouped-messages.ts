@@ -1,5 +1,10 @@
+import { db } from '@server/database';
+import { languages } from '@server/database/schemas/languages';
+import { eq } from 'drizzle-orm';
+
 import { computeProgress } from './get-progress';
-import { getDefaultMessages, fetchMessages, isObject } from './request';
+import { isObject } from './request';
+import { getDefaultMessages } from './server';
 
 export interface TranslationMessage {
     key: string;
@@ -12,10 +17,6 @@ export interface TranslationGroup {
     messages: TranslationMessage[];
 }
 
-/**
- * Transforms nested JSON translation objects into a grouped format
- * Groups messages by their parent path, excluding the last key segment
- */
 function transformToGroupedFormat(
     original: Record<string, unknown>,
     translated: Record<string, unknown>,
@@ -30,11 +31,8 @@ function transformToGroupedFormat(
             const fullPath = [...currentPath, key];
 
             if (isObject(origValue)) {
-                // Recursively process nested objects
                 processObject(origValue, isObject(transValue) ? transValue : {}, fullPath);
             } else if (typeof origValue === 'string') {
-                // This is a leaf node - create a message entry
-                // Group path is everything except the last segment (the message key)
                 const groupPath = currentPath.join('.');
 
                 if (!groups.has(groupPath)) {
@@ -52,10 +50,8 @@ function transformToGroupedFormat(
 
     processObject(original, translated, parentPath);
 
-    // Convert the Map to an array of TranslationGroup objects
     const result: TranslationGroup[] = [];
     for (const [path, messages] of groups.entries()) {
-        // Skip empty paths (root level)
         if (path || messages.length > 0) {
             result.push({
                 path: path || 'root',
@@ -64,12 +60,19 @@ function transformToGroupedFormat(
         }
     }
 
-    // Sort by path for consistent output
     return result.sort((a, b) => a.path.localeCompare(b.path));
 }
 
 export async function getGroupedMessages(locale: string): Promise<{ messages: TranslationGroup[]; progress: number }> {
     const original = await getDefaultMessages();
-    const messages = await fetchMessages(locale, locale !== 'fr');
-    return { messages: transformToGroupedFormat(original, messages), progress: computeProgress(original, messages) };
+
+    const language = await db.query.languages.findFirst({
+        columns: { locales: true },
+        where: eq(languages.code, locale),
+    });
+    const translated = (language?.locales as Record<string, unknown> | undefined) ?? {};
+    return {
+        messages: transformToGroupedFormat(original, translated),
+        progress: locale === 'fr' ? 100 : computeProgress(original, translated),
+    };
 }

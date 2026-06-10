@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 import { createLoader, parseAsBoolean, parseAsStringEnum } from 'nuqs/server';
 
 const GetMediasParams = {
-    type: parseAsStringEnum(['image', 'audio', 'video', 'h5p', 'pdf']),
+    type: parseAsStringEnum(['image', 'audio', 'video', 'pdf']),
     isPelico: parseAsBoolean.withDefault(false),
 };
 const loadSearchParams = createLoader(GetMediasParams);

@@ -7,15 +7,15 @@ import type {
     IFileStats,
 } from '@lumieducation/h5p-server';
 import { InstalledLibrary, streamToString, LibraryName, H5pError } from '@lumieducation/h5p-server';
-import { deleteDynamoDBItem, getDynamoDBItem, scanDynamoDB, setDynamoDBItem } from '@server/aws/dynamodb';
+import { db } from '@server/database';
+import { h5pLibraries } from '@server/database/schemas/h5p';
 import { deleteFile, getFile, getFileData, listFiles, uploadFile } from '@server/files/file-upload';
 import { logger } from '@server/lib/logger';
+import { eq, sql } from 'drizzle-orm';
 import * as path from 'path';
 import { Readable } from 'stream';
 
 import { validateFilename } from './sanitize-filename';
-
-const LIBRARY_PREFIX = `H5P_libraries_`;
 
 type LibraryDep = {
     dynamicDependencies: ILibraryName[];
@@ -26,8 +26,6 @@ type LibraryDep = {
     preloadedDependencies: ILibraryName[];
     ubername: string;
 };
-type AdditionalMetadata = Record<string, unknown>;
-type ExtendedLibraryMetadata = ILibraryMetadata & { additionalMetadata?: AdditionalMetadata };
 
 const getKey = (library: ILibraryName, filename: string): string => {
     const key = `h5p/libraries/${LibraryName.toUberName(library)}/${filename}`;
@@ -47,12 +45,15 @@ export class LibraryStorage implements ILibraryStorage {
         if (!library) {
             throw new Error('You must pass in a library name to getLibrary.');
         }
-        const result = await getDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`);
-        if (!result) {
+        const rows = await db
+            .select({ metadata: h5pLibraries.metadata })
+            .from(h5pLibraries)
+            .where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)))
+            .limit(1);
+        if (rows.length === 0) {
             throw new H5pError('storage:error-getting-library-metadata', { ubername: LibraryName.toUberName(library) });
         }
-        const { additionalMetadata, ...metadata } = result;
-        return metadata;
+        return rows[0].metadata as unknown as ILibraryMetadata;
     }
 
     public async addFile(library: ILibraryName, filename: string, readStream: Readable): Promise<boolean> {
@@ -69,7 +70,22 @@ export class LibraryStorage implements ILibraryStorage {
     public async addLibrary(libraryData: ILibraryMetadata, restricted: boolean): Promise<IInstalledLibrary> {
         const ubername = LibraryName.toUberName(libraryData);
         try {
-            await setDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${ubername}`, { ...libraryData, additionalMetadata: { restricted } });
+            await db
+                .insert(h5pLibraries)
+                .values({
+                    ubername,
+                    machineName: libraryData.machineName,
+                    metadata: libraryData as typeof h5pLibraries.$inferInsert.metadata,
+                    additionalMetadata: { restricted },
+                })
+                .onConflictDoUpdate({
+                    target: h5pLibraries.ubername,
+                    set: {
+                        machineName: libraryData.machineName,
+                        metadata: libraryData as typeof h5pLibraries.$inferInsert.metadata,
+                        additionalMetadata: { restricted },
+                    },
+                });
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-adding-metadata');
@@ -86,8 +102,6 @@ export class LibraryStorage implements ILibraryStorage {
         const filesToDelete = await this.listFiles(library, {
             withMetadata: false,
         });
-        // S3 batch deletes only work with 1000 files at a time, so we
-        // might have to do this in several requests.
         try {
             while (filesToDelete.length > 0) {
                 const next1000Files = filesToDelete.splice(0, 1000);
@@ -108,7 +122,7 @@ export class LibraryStorage implements ILibraryStorage {
         await this.clearFiles(library);
 
         try {
-            await deleteDynamoDBItem(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`);
+            await db.delete(h5pLibraries).where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)));
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-deleting', {
@@ -131,26 +145,26 @@ export class LibraryStorage implements ILibraryStorage {
     public async getAllDependentsCount(): Promise<{ [ubername: string]: number }> {
         let libraryDeps: LibraryDep[] = [];
         try {
-            const allLibraries = await scanDynamoDB<ExtendedLibraryMetadata>({
-                filterExpression: 'begins_with(#key, :prefix)',
-                expressionAttributeNames: { '#key': 'key' },
-                expressionAttributeValues: { ':prefix': LIBRARY_PREFIX },
+            const allLibraries = await db
+                .select({ ubername: h5pLibraries.ubername, machineName: h5pLibraries.machineName, metadata: h5pLibraries.metadata })
+                .from(h5pLibraries);
+            libraryDeps = allLibraries.map<LibraryDep>((row) => {
+                const metadata = row.metadata as unknown as ILibraryMetadata;
+                return {
+                    dynamicDependencies: metadata.dynamicDependencies || [],
+                    editorDependencies: metadata.editorDependencies || [],
+                    machineName: row.machineName,
+                    majorVersion: metadata.majorVersion,
+                    minorVersion: metadata.minorVersion,
+                    preloadedDependencies: metadata.preloadedDependencies || [],
+                    ubername: row.ubername,
+                };
             });
-            libraryDeps = allLibraries.map<LibraryDep>((row) => ({
-                dynamicDependencies: row.value.dynamicDependencies || [],
-                editorDependencies: row.value.editorDependencies || [],
-                machineName: row.value.machineName,
-                majorVersion: row.value.majorVersion,
-                minorVersion: row.value.minorVersion,
-                preloadedDependencies: row.value.preloadedDependencies || [],
-                ubername: row.key.slice(LIBRARY_PREFIX.length),
-            }));
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-getting-dependents');
         }
 
-        // the dependency map allows faster access to libraries by ubername
         const librariesDepsMap: {
             [ubername: string]: LibraryDep;
         } = libraryDeps.reduce<{
@@ -160,8 +174,6 @@ export class LibraryStorage implements ILibraryStorage {
             return prev;
         }, {});
 
-        // Remove circular dependencies caused by editor dependencies in
-        // content types like H5P.InteractiveVideo.
         for (const lib of libraryDeps) {
             for (const dependency of lib.editorDependencies ?? []) {
                 const ubername = LibraryName.toUberName(dependency);
@@ -172,7 +184,6 @@ export class LibraryStorage implements ILibraryStorage {
             }
         }
 
-        // Count dependencies
         const dependencies: Record<string, number> = {};
         for (const lib of libraryDeps) {
             for (const dependency of (lib.preloadedDependencies ?? []).concat(lib.editorDependencies ?? []).concat(lib.dynamicDependencies ?? [])) {
@@ -186,12 +197,22 @@ export class LibraryStorage implements ILibraryStorage {
 
     public async getDependentsCount(library: ILibraryName): Promise<number> {
         try {
-            const results = await scanDynamoDB<ExtendedLibraryMetadata>({
-                filterExpression: 'begins_with(#key, :prefix )AND #value.preloadedDependencies = :library',
-                expressionAttributeNames: { '#key': 'key', '#value': 'value' },
-                expressionAttributeValues: { ':prefix': LIBRARY_PREFIX, ':library': library },
+            const libraryJson = JSON.stringify({
+                machineName: library.machineName,
+                majorVersion: library.majorVersion,
+                minorVersion: library.minorVersion,
             });
-            return results.length;
+            const [result] = await db
+                .select({ count: sql<number>`count(*)::int` })
+                .from(h5pLibraries)
+                .where(
+                    sql`(
+                        ${h5pLibraries.metadata}->'preloadedDependencies' @> ${libraryJson}::jsonb
+                        OR ${h5pLibraries.metadata}->'editorDependencies' @> ${libraryJson}::jsonb
+                        OR ${h5pLibraries.metadata}->'dynamicDependencies' @> ${libraryJson}::jsonb
+                    )`,
+                );
+            return result.count;
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-getting-dependents', {
@@ -213,7 +234,6 @@ export class LibraryStorage implements ILibraryStorage {
     public async getFileStats(library: ILibraryName, file: string): Promise<IFileStats> {
         validateFilename(file);
 
-        // As the metadata is not S3, we need to get it from MongoDB.
         if (file === 'library.json') {
             const metadata = JSON.stringify(await this.getMetadata(library));
             return { size: metadata.length, birthtime: new Date() };
@@ -229,7 +249,6 @@ export class LibraryStorage implements ILibraryStorage {
     public async getFileStream(library: ILibraryName, filename: string): Promise<Readable> {
         validateFilename(filename);
 
-        // As the metadata is not S3, we need to get it from dynamoDB.
         if (filename === 'library.json') {
             const metadata = JSON.stringify(await this.getMetadata(library));
             return Readable.from([metadata]);
@@ -244,21 +263,13 @@ export class LibraryStorage implements ILibraryStorage {
 
     public async getInstalledLibraryNames(machineName?: string | undefined): Promise<ILibraryName[]> {
         try {
-            let results: { key: string; value: ExtendedLibraryMetadata }[] = [];
+            let rows: { ubername: string }[];
             if (machineName) {
-                results = await scanDynamoDB<ExtendedLibraryMetadata>({
-                    filterExpression: 'begins_with(#key, :prefix )AND #value.machineName = :machineName',
-                    expressionAttributeNames: { '#key': 'key', '#value': 'value' },
-                    expressionAttributeValues: { ':prefix': LIBRARY_PREFIX, ':machineName': machineName },
-                });
+                rows = await db.select({ ubername: h5pLibraries.ubername }).from(h5pLibraries).where(eq(h5pLibraries.machineName, machineName));
             } else {
-                results = await scanDynamoDB<ExtendedLibraryMetadata>({
-                    filterExpression: 'begins_with(#key, :prefix)',
-                    expressionAttributeNames: { '#key': 'key' },
-                    expressionAttributeValues: { ':prefix': LIBRARY_PREFIX },
-                });
+                rows = await db.select({ ubername: h5pLibraries.ubername }).from(h5pLibraries);
             }
-            return results.map((d) => LibraryName.fromUberName(d.key.slice(LIBRARY_PREFIX.length)));
+            return rows.map((d) => LibraryName.fromUberName(d.ubername));
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-getting-libraries');
@@ -287,17 +298,29 @@ export class LibraryStorage implements ILibraryStorage {
         if (!library) {
             throw new Error('You must pass in a library name to getLibrary.');
         }
-        const result = await getDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`);
-        if (!result) {
+        const rows = await db
+            .select({ metadata: h5pLibraries.metadata, additionalMetadata: h5pLibraries.additionalMetadata })
+            .from(h5pLibraries)
+            .where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)))
+            .limit(1);
+        if (rows.length === 0) {
             throw new H5pError('library-storage:error-getting-library-metadata', { ubername: LibraryName.toUberName(library) });
         }
-        const { additionalMetadata, ...metadata } = result;
-        return InstalledLibrary.fromMetadata(metadata);
+        const { metadata, additionalMetadata } = rows[0];
+        return InstalledLibrary.fromMetadata({
+            ...(metadata as unknown as ILibraryMetadata),
+            ...(additionalMetadata as unknown as Record<string, unknown>),
+        });
     }
 
     public async isInstalled(library: ILibraryName): Promise<boolean> {
         try {
-            return (await getDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`)) !== undefined;
+            const rows = await db
+                .select({ ubername: h5pLibraries.ubername })
+                .from(h5pLibraries)
+                .where(eq(h5pLibraries.ubername, LibraryName.toUberName(library)))
+                .limit(1);
+            return rows.length > 0;
         } catch (error) {
             logger.error(error);
             return false;
@@ -306,12 +329,11 @@ export class LibraryStorage implements ILibraryStorage {
 
     public async listAddons(): Promise<ILibraryMetadata[]> {
         try {
-            const results = await scanDynamoDB<ExtendedLibraryMetadata>({
-                filterExpression: 'begins_with(#key, :prefix )AND attribute_exists(#value.addTo)',
-                expressionAttributeNames: { '#key': 'key', '#value': 'value' },
-                expressionAttributeValues: { ':prefix': LIBRARY_PREFIX },
-            });
-            return results.map((row) => row.value).map(({ additionalMetadata, ...metadata }) => metadata);
+            const rows = await db
+                .select({ metadata: h5pLibraries.metadata })
+                .from(h5pLibraries)
+                .where(sql`${h5pLibraries.metadata} ? 'addTo'`);
+            return rows.map((row) => row.metadata as unknown as ILibraryMetadata);
         } catch (error) {
             logger.error(error);
             throw new H5pError('library-storage:error-getting-addons');
@@ -341,16 +363,32 @@ export class LibraryStorage implements ILibraryStorage {
         if (!library) {
             throw new Error('You must specify a library name when calling updateAdditionalMetadata.');
         }
+        const ubername = LibraryName.toUberName(library);
         try {
-            const libraryMetadata = await this.getMetadata(library);
-            await setDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${LibraryName.toUberName(library)}`, {
-                ...libraryMetadata,
-                additionalMetadata,
-            });
+            const rows = await db
+                .select({ currentMetadata: h5pLibraries.additionalMetadata })
+                .from(h5pLibraries)
+                .where(eq(h5pLibraries.ubername, ubername))
+                .limit(1);
+            const current = rows[0]?.currentMetadata as Record<string, unknown> | undefined;
+
+            if (current === undefined) {
+                throw new H5pError('library-storage:library-not-found');
+            }
+
+            await db
+                .update(h5pLibraries)
+                .set({
+                    additionalMetadata: { ...current, ...additionalMetadata } as typeof h5pLibraries.$inferInsert.additionalMetadata,
+                })
+                .where(eq(h5pLibraries.ubername, ubername));
         } catch (error) {
+            if (error instanceof H5pError) {
+                throw error;
+            }
             logger.error(error);
             throw new H5pError('library-storage:update-additional-metadata-error', {
-                ubername: LibraryName.toUberName(library),
+                ubername,
             });
         }
         return true;
@@ -360,8 +398,29 @@ export class LibraryStorage implements ILibraryStorage {
         const ubername = LibraryName.toUberName(libraryMetadata);
 
         try {
-            const additionalMetadata = (await getDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${ubername}`))?.additionalMetadata || {};
-            await setDynamoDBItem<ExtendedLibraryMetadata>(`${LIBRARY_PREFIX}${ubername}`, { ...libraryMetadata, additionalMetadata });
+            await db
+                .insert(h5pLibraries)
+                .values({
+                    ubername,
+                    machineName: libraryMetadata.machineName,
+                    metadata: libraryMetadata as typeof h5pLibraries.$inferInsert.metadata,
+                    additionalMetadata: {},
+                })
+                .onConflictDoUpdate({
+                    target: h5pLibraries.ubername,
+                    set: {
+                        machineName: libraryMetadata.machineName,
+                        metadata: libraryMetadata as typeof h5pLibraries.$inferInsert.metadata,
+                    },
+                });
+
+            const rows = await db
+                .select({ additionalMetadata: h5pLibraries.additionalMetadata })
+                .from(h5pLibraries)
+                .where(eq(h5pLibraries.ubername, ubername))
+                .limit(1);
+            const additionalMetadata = (rows[0]?.additionalMetadata as Record<string, unknown>) ?? {};
+
             return InstalledLibrary.fromMetadata({
                 ...libraryMetadata,
                 ...additionalMetadata,

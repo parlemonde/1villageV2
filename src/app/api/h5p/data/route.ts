@@ -1,5 +1,3 @@
-import { db } from '@server/database';
-import { medias } from '@server/database/schemas/medias';
 import { getErrorResponse } from '@server/h5p/get-error-response';
 import { getH5pEditors } from '@server/h5p/get-h5p-editor';
 import { getH5pUser } from '@server/h5p/get-h5p-user';
@@ -63,16 +61,6 @@ export const POST = async (request: NextRequest) => {
             body.library,
             user,
         );
-        await db.insert(medias).values({
-            id: contentId,
-            userId: user.id,
-            type: 'h5p',
-            url: '',
-            metadata: {
-                title: body.params.metadata.title,
-                library: body.library,
-            },
-        });
         return NextResponse.json({
             contentId,
             metadata,

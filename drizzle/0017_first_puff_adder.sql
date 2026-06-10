@@ -1,0 +1,1 @@
+ALTER TABLE "languages" ADD COLUMN "locales" jsonb;

@@ -65,6 +65,19 @@ const getMenuItems = (firstPath: string, onClick?: () => void, avatar?: React.Re
     ];
 };
 
+const buildMascotteMenuItem = (items: MenuItem[], mascotteId: number | null | undefined, pathname: string, onClick?: () => void): MenuItem | null => {
+    const baseItem = items.find((item) => item.href === ACTIVITY_URLS['mascotte']);
+    if (!baseItem) return null;
+    if (!mascotteId) return baseItem;
+    const isOnMascotteDetail = pathname === `/activities/${mascotteId}`;
+    return {
+        ...baseItem,
+        href: `/activities/${mascotteId}`,
+        isActive: isOnMascotteDetail,
+        onClick: isOnMascotteDetail ? () => {} : onClick,
+    };
+};
+
 const getActivityMenuItem = (
     type: ActivityType,
     activityLabel: string,
@@ -89,13 +102,11 @@ const getActivityMenuItem = (
     };
 };
 
-export const Navigation = () => {
+const useNavigationData = () => {
     const { user, classroom } = useContext(UserContext);
     const { village } = useContext(VillageContext);
     const [phase] = usePhase();
-    const pathname = usePathname();
     const { getActivityLabel } = useActivityName();
-    const firstPath = pathname.split('/')[1];
     const isPelico = user?.role === 'admin' || user?.role === 'mediator';
     const isPhase1Hidden = village?.activePhase === 1 && !village?.isCrossVisible;
 
@@ -108,6 +119,25 @@ export const Navigation = () => {
     }
     activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
 
+    const buildActivityItems = (firstPath: string, onClick?: () => void) =>
+        activityTypes
+            .map((type) => {
+                const hasVillageReachedPhase = !!(phase && village?.activePhase && village.activePhase >= phase);
+                const activityLabel = getActivityLabel(type as ActivityType);
+                const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
+                const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
+                return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled, onClick);
+            })
+            .filter((item) => item !== null);
+
+    return { user, classroom, village, isPelico, isPhase1Hidden, buildActivityItems };
+};
+
+export const Navigation = () => {
+    const { user, classroom, village, isPelico, isPhase1Hidden, buildActivityItems } = useNavigationData();
+    const pathname = usePathname();
+    const firstPath = pathname.split('/')[1];
+
     // Do not display navigation on activity or pelico page
     if (pathname.startsWith('/activities/') || pathname.startsWith('/pelico')) {
         return null;
@@ -115,15 +145,14 @@ export const Navigation = () => {
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    const activityMenuItems = activityTypes
-        .map((type) => {
-            const hasVillageReachedPhase = !!(phase && village?.activePhase && village.activePhase >= phase);
-            const activityLabel = getActivityLabel(type as ActivityType);
-            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
-            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
-            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled);
-        })
-        .filter((item) => item !== null);
+    const allActivityMenuItems = buildActivityItems(firstPath);
+
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, pathname);
+    const activityMenuItems = allActivityMenuItems.filter((item) => item.href !== ACTIVITY_URLS['mascotte']);
+    const mainMenuItems = [
+        ...getMenuItems(firstPath, undefined, avatar, user.role),
+        ...(mascotteItem && user.role !== 'parent' ? [mascotteItem] : []),
+    ];
 
     return (
         <div className={styles.navigationWrapper}>
@@ -142,7 +171,7 @@ export const Navigation = () => {
                         ))}
                 </div>
                 <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
-                    <Menu items={getMenuItems(firstPath, undefined, avatar, user.role)} />
+                    <Menu items={mainMenuItems} />
                 </div>
                 {user.role !== 'parent' && activityMenuItems.length > 0 && (
                     <div className={classNames(styles.navigationCard, styles.navigationCardMenu)}>
@@ -162,15 +191,9 @@ interface NavigationMobileMenuProps {
     classrooms?: Classroom[];
 }
 export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMenuProps) => {
-    const { user, classroom } = useContext(UserContext);
-    const [phase] = usePhase();
-    const classroomCountryCode = classroom?.countryCode;
-    const { village } = useContext(VillageContext);
+    const { user, classroom, village, isPelico, isPhase1Hidden, buildActivityItems } = useNavigationData();
     const pathname = usePathname();
-    const { getActivityLabel } = useActivityName();
     const firstPath = pathname.split('/')[1];
-    const isPelico = user?.role === 'admin' || user?.role === 'mediator';
-    const isPhase1Hidden = village?.activePhase === 1 && !village?.isCrossVisible;
 
     const { data: session } = authClient.useSession();
     const isImpersonating = Boolean(session?.session.impersonatedBy);
@@ -179,37 +202,21 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
 
     const avatar = <Avatar user={user} classroom={classroom} isPelico={isPelico} size="sm" isLink={false} />;
 
-    let { data: activityTypes = [] } = useSWR<ActivityType[]>(phase !== null ? `/api/activities/types?phase=${phase}` : null, jsonFetcher, {
-        keepPreviousData: true,
-    });
+    const allActivityMenuItems = buildActivityItems(firstPath, onClose);
 
-    if (isPelico) {
-        activityTypes = activityTypes.filter((type) => type !== 'libre');
-    }
-    activityTypes = activityTypes.filter((type) => type !== 'presentation-pelico');
-
-    const activityMenuItems = activityTypes
-        .map((type) => {
-            const hasVillageReachedPhase = !!(village && phase && village.activePhase >= phase);
-            const activityLabel = getActivityLabel(type as ActivityType);
-            const hasActivityRole = ACTIVITY_ROLES[type] === null || ACTIVITY_ROLES[type]?.includes(user.role);
-            const isActivityEnabled = hasVillageReachedPhase && hasActivityRole;
-            return getActivityMenuItem(type, activityLabel, firstPath, isActivityEnabled, onClose);
-        })
-        .filter((item) => item !== null);
-
-    if (activityMenuItems.length > 0) {
-        activityMenuItems[0].hasSeparatorTop = true;
-    }
+    const mascotteItem = buildMascotteMenuItem(allActivityMenuItems, classroom?.mascotteId, pathname, onClose);
+    const activityMenuItems = allActivityMenuItems
+        .filter((item) => item.href !== ACTIVITY_URLS['mascotte'])
+        .map((item, index) => (index === 0 ? { ...item, hasSeparatorTop: true } : item));
 
     return (
         <div className={styles.navigationMobileMenu} onClick={(e) => e.stopPropagation()}>
             <div className={styles.navigationMobileMenuHeader}>
                 <div className={classNames(styles.navigationCardTitle, styles.navigationCardTitleMobile)}>
                     <strong>Village-monde</strong>
-                    {classroomCountryCode && <CountryFlag country={classroomCountryCode} />}
+                    {classroom?.countryCode && <CountryFlag country={classroom.countryCode} />}
                     {village?.countries
-                        .filter((country) => country !== classroomCountryCode)
+                        .filter((country) => country !== classroom?.countryCode)
                         .map((country, index) => (
                             <CountryFlag
                                 key={isPhase1Hidden ? `mystery-${index}` : country}
@@ -222,14 +229,8 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
             </div>
             <MobileMenu
                 items={[
-                    ...getMenuItems(
-                        firstPath,
-                        () => {
-                            onClose();
-                        },
-                        avatar,
-                        user.role,
-                    ),
+                    ...getMenuItems(firstPath, onClose, avatar, user.role),
+                    ...(mascotteItem && user.role !== 'parent' ? [mascotteItem] : []),
                     ...(user.role !== 'parent' ? activityMenuItems : []),
                     ...(user?.role === 'admin'
                         ? [
@@ -239,9 +240,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                                   label: 'Portail admin',
                                   href: '/admin',
                                   isActive: firstPath === 'admin',
-                                  onClick: () => {
-                                      onClose();
-                                  },
+                                  onClick: onClose,
                               },
                           ]
                         : []),
@@ -251,9 +250,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                         label: 'Mon compte',
                         href: '/mon-compte',
                         isActive: firstPath === 'mon-compte',
-                        onClick: () => {
-                            onClose();
-                        },
+                        onClick: onClose,
                     },
                     ...(user?.role === 'teacher'
                         ? [
@@ -262,9 +259,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                                   label: 'Mes familles',
                                   href: '/familles/1',
                                   isActive: firstPath === 'familles',
-                                  onClick: () => {
-                                      onClose();
-                                  },
+                                  onClick: onClose,
                               },
                           ]
                         : []),
@@ -275,9 +270,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                                   label: 'Paramètres',
                                   href: '/parametres',
                                   isActive: firstPath === 'parametres',
-                                  onClick: () => {
-                                      onClose();
-                                  },
+                                  onClick: onClose,
                               },
                           ]
                         : []),
@@ -320,7 +313,7 @@ export const NavigationMobileMenu = ({ onClose, classrooms }: NavigationMobileMe
                     },
                 ]}
             />
-            <Link href={'/cgu'} className={classNames(styles.cguLink)} onClick={() => onClose()}>
+            <Link href={'/cgu'} className={classNames(styles.cguLink)} onClick={onClose}>
                 Conditions générales d&apos;utilisation
             </Link>
         </div>

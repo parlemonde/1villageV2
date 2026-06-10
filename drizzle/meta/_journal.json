@@ -120,6 +120,20 @@
       "when": 1780568080961,
       "tag": "0016_smart_talkback",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1780679857113,
+      "tag": "0017_first_puff_adder",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1780938372207,
+      "tag": "0018_rapid_microchip",
+      "breakpoints": true
     }
   ]
 }
