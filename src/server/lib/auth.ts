@@ -66,20 +66,21 @@ export const auth = registerService('auth', () =>
             additionalFields: {
                 firstLogin: {
                     type: 'number',
-                    fieldName: 'first_login',
-                    input: false,
+                    required: false,
+                    defaultValue: 0,
+                    input: true,
                 },
                 adminPublicationSubscribed: {
                     type: 'boolean',
                     required: false,
                     defaultValue: true,
-                    input: false,
+                    input: true,
                 },
                 commentActivitySubscribed: {
                     type: 'boolean',
                     required: false,
                     defaultValue: true,
-                    input: false,
+                    input: true,
                 },
                 wantsNewsletter: {
                     type: 'boolean',

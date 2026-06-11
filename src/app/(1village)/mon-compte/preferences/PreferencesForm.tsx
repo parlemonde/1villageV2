@@ -28,21 +28,34 @@ export const PreferencesForm = ({
 
     const hasChanges = adminPublicationSubscribed !== currentAdminPublication || commentActivitySubscribed !== currentCommentActivity;
 
+    // Rollback optimistic UI on error
+    const rollbackChanges = () => {
+        setCurrentAdminPublication(adminPublicationSubscribed);
+        setCurrentCommentActivity(commentActivitySubscribed);
+        sendToast({
+            type: 'error',
+            message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
+        });
+    };
+
     const handleSave = async () => {
         setIsPending(true);
         try {
             const updates: Record<string, boolean> = {};
 
-            if (hasChanges) {
-                if (adminPublicationSubscribed !== currentAdminPublication) {
-                    updates.adminPublicationSubscribed = currentAdminPublication;
-                }
-                if (commentActivitySubscribed !== currentCommentActivity) {
-                    updates.commentActivitySubscribed = currentCommentActivity;
-                }
+            if (adminPublicationSubscribed !== currentAdminPublication) {
+                updates.adminPublicationSubscribed = currentAdminPublication;
+            }
+            if (commentActivitySubscribed !== currentCommentActivity) {
+                updates.commentActivitySubscribed = currentCommentActivity;
             }
 
-            await updateSubscription(updates);
+            const { error } = await updateSubscription(updates);
+
+            if (error) {
+                rollbackChanges();
+                return;
+            }
 
             setAdminPublicationSubscribed(currentAdminPublication);
             setCommentActivitySubscribed(currentCommentActivity);
@@ -52,13 +65,7 @@ export const PreferencesForm = ({
                 message: t('Vos préférences ont été mises à jour avec succès.'),
             });
         } catch {
-            // Rollback optimistic UI on error
-            setCurrentAdminPublication(adminPublicationSubscribed);
-            setCurrentCommentActivity(commentActivitySubscribed);
-            sendToast({
-                type: 'error',
-                message: t('Une erreur est survenue lors de la mise à jour de vos préférences.'),
-            });
+            rollbackChanges();
         } finally {
             setIsPending(false);
         }
