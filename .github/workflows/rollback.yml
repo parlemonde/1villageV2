@@ -1,0 +1,43 @@
+name: Rollback to specific build
+on:
+    workflow_dispatch:
+        inputs:
+            sha:
+                description: 'The sha to rollback to'
+                required: true
+                type: string
+concurrency: production
+jobs:
+    rollback:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - run: echo "Rolling back to sha ${{ github.event.inputs.sha }}"
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v6
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ secrets.AWS_REGION }}
+            - name: Get IP address
+              id: get-ip
+              run: echo "ip=$(curl https://api.ipify.org)" >> "$GITHUB_OUTPUT"
+            - name: Add Github Actions IP to security-group
+              run: aws ec2 authorize-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 22 --cidr ${{ steps.get-ip.outputs.ip }}/32
+            - run: mkdir -p ~/.ssh/ && echo "${{secrets.SSH_KNOWN_HOSTS}}" > ~/.ssh/known_hosts
+            - run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > server-key.pem && chmod 600 server-key.pem
+            - name: Deploy
+              run: ssh -i server-key.pem ${{ secrets.SERVER_URL}} "exec sh ./deploy.sh ${{ github.event.inputs.sha }}"
+            - name: Update live commit in dev-portal
+              if: success()
+              env:
+                  DEV_PORTAL_URL: ${{ secrets.DEV_PORTAL_URL }}
+                  DEV_PORTAL_DEPLOY_TOKEN: ${{ secrets.DEV_PORTAL_DEPLOY_TOKEN }}
+              run: |
+                  curl -fsS -X POST -H "Authorization: Bearer $DEV_PORTAL_DEPLOY_TOKEN" \
+                      -H "Content-Type: application/json" \
+                      -d "{\"liveCommitId\":\"${{ github.event.inputs.sha }}\"}" \
+                      "$DEV_PORTAL_URL/api/apps/1village/deploy-state"
+            - name: Revoke Github Actions IP from security-group
+              if: always()
+              run: aws ec2 revoke-security-group-ingress --group-name ${{ secrets.AWS_SECURITY_GROUP_NAME }} --protocol tcp --port 22 --cidr ${{ steps.get-ip.outputs.ip }}/32
